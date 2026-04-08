@@ -136,4 +136,32 @@ class Folio::File::ImageKeywordSearchTest < ActiveSupport::TestCase
     # Should use XMP-dc:Subject (first in FIELD_MAPPINGS priority)
     assert_equal "XMP keyword", image.keywords_for_search
   end
+
+  test "searches by ActsAsTaggableOn tags (CMS-added tags)" do
+    # User manually adds tags via CMS (not from IPTC metadata)
+    image = create(:folio_file_image, 
+      file_metadata: {},
+      tag_list: ["Pardubice", "město"]
+    )
+
+    results = Folio::File::Image.by_query("Pardubice")
+    assert_includes results, image
+  end
+
+  test "searches both IPTC keywords and CMS tags" do
+    # Image has IPTC keywords
+    image_with_iptc = create(:folio_file_image, 
+      file_metadata: { "keywords" => ["Praha"] }
+    )
+    
+    # Image has CMS tags
+    image_with_tags = create(:folio_file_image,
+      file_metadata: {},
+      tag_list: ["Brno"]
+    )
+
+    # Should find both
+    assert_includes Folio::File::Image.by_query("Praha"), image_with_iptc
+    assert_includes Folio::File::Image.by_query("Brno"), image_with_tags
+  end
 end

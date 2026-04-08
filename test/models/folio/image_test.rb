@@ -46,7 +46,7 @@ class Folio::File::ImageTest < ActiveSupport::TestCase
       end
 
       image.save!
-      image.reload
+      image = image.class.find(image.id)
 
       assert_equal "John Doe", image.mapped_metadata[:creator]
       assert_equal "Test image description", image.description
@@ -83,7 +83,7 @@ class Folio::File::ImageTest < ActiveSupport::TestCase
     end
 
     image.save!
-    image.reload
+    image = image.class.find(image.id)
 
     # Should not overwrite existing data (auto-population only for blank fields)
     assert_equal "Existing description", image.description
@@ -197,6 +197,7 @@ class Folio::File::ImageTest < ActiveSupport::TestCase
       gps_latitude: 50.0,
       gps_longitude: 14.0
     )
+    image = image.class.find(image.id)
 
     # Test mapped metadata accessor
     mapped = image.mapped_metadata
@@ -219,6 +220,7 @@ class Folio::File::ImageTest < ActiveSupport::TestCase
       "XMP-iptcCore:CountryName" => "Czech Republic"
     }
     image.update!(file_metadata: raw_metadata)
+    image = image.class.find(image.id)
 
     mapped = image.mapped_metadata
     assert_equal "Old Town", mapped[:sublocation]
@@ -273,7 +275,7 @@ class Folio::File::ImageTest < ActiveSupport::TestCase
   mapped_data.each { |field, value| image.file_metadata[field.to_s] = value if value.present? }
   image.save!
 
-  image.reload
+  image = image.class.find(image.id)
   assert_equal "Manual Author", image.mapped_metadata[:creator]
 end
 

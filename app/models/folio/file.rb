@@ -136,10 +136,27 @@ class Folio::File < Folio::ApplicationRecord
     return none if query.blank?
 
     sanitized = sanitize_filename_for_search(query)
-    slug_match = where("slug ILIKE ?", "%#{sanitize_sql_like(query.to_s)}%")
-
-    ids = where(id: by_query_raw(sanitized)).or(slug_match).select(:id)
-    where(id: ids)
+    
+    # Search in file fields (filename, headline, description, keywords_for_search)
+    file_fields_ids = by_query_raw(sanitized).pluck(:id)
+    
+    # Search in slug
+    slug_ids = where("folio_files.slug ILIKE ?", "%#{sanitize_sql_like(query.to_s)}%").pluck(:id)
+    
+    # Search in ActsAsTaggableOn tags (CMS-added tags)
+    begin
+      tags_ids = tagged_with(query, wild: true, any: true).pluck(:id)
+    rescue => e
+      Rails.logger.warn("Error searching tags: #{e.message}")
+      tags_ids = []
+    end
+    
+    # Combine all matching IDs and remove duplicates
+    all_ids = (file_fields_ids + slug_ids + tags_ids).uniq
+    
+    # Return scope with all matching records
+    return none if all_ids.empty?
+    where(id: all_ids)
   end
 
   pg_search_scope :by_file_name_for_search,
