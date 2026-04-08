@@ -99,4 +99,41 @@ class Folio::File::ImageKeywordSearchTest < ActiveSupport::TestCase
     assert_includes results, image
     assert_includes results, video
   end
+
+  test "extracts keywords from IPTC XMP-dc:Subject field" do
+    # Real IPTC metadata structure with XMP namespace
+    image = create(:folio_file_image, file_metadata: {
+      "XMP-dc:Subject" => ["Kroměříž", "město"]
+    })
+
+    # Keywords should be extracted and indexed
+    assert_equal "Kroměříž město", image.keywords_for_search
+
+    results = Folio::File::Image.by_query("Kroměříž")
+    assert_includes results, image
+  end
+
+  test "extracts keywords from IPTC Keywords field" do
+    # Real IPTC metadata structure with IPTC namespace
+    image = create(:folio_file_image, file_metadata: {
+      "IPTC:Keywords" => ["Pardubice", "Czech Republic"]
+    })
+
+    # Keywords should be extracted and indexed
+    assert_equal "Pardubice Czech Republic", image.keywords_for_search
+
+    results = Folio::File::Image.by_query("Pardubice")
+    assert_includes results, image
+  end
+
+  test "prefers XMP-dc:Subject over IPTC:Keywords" do
+    # When both are present, XMP should take precedence (per IptcFieldMapper)
+    image = create(:folio_file_image, file_metadata: {
+      "XMP-dc:Subject" => ["XMP keyword"],
+      "IPTC:Keywords" => ["IPTC keyword"]
+    })
+
+    # Should use XMP-dc:Subject (first in FIELD_MAPPINGS priority)
+    assert_equal "XMP keyword", image.keywords_for_search
+  end
 end
