@@ -468,10 +468,22 @@ class Folio::File < Folio::ApplicationRecord
     end
 
     def set_keywords_for_search
-      keywords = file_metadata&.dig("keywords")
+      # Try to get keywords from mapped_metadata (IPTC/XMP fields)
+      keywords = if respond_to?(:mapped_metadata)
+        mapped_metadata[:keywords]
+      else
+        # Fallback for non-Image files or simplified test metadata
+        file_metadata&.dig("keywords")
+      end
+
+      # If mapped_metadata didn't find anything, try the plain 'keywords' key
+      # (used in tests and some simplified metadata structures)
+      keywords ||= file_metadata&.dig("keywords")
+
       self.keywords_for_search = case keywords
       when Array then keywords.join(" ")
       when String then keywords
+      else nil
       end
     end
 
