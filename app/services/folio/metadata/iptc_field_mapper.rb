@@ -75,6 +75,7 @@ module Folio::Metadata
       keywords: [
         "XMP-dc:Subject",  # Array/bag, store as JSONB array (uppercase)
         "XMP-dc:subject",  # Array/bag, store as JSONB array (lowercase)
+        "Subject",         # ExifTool default output without -G1 group prefix
         "IPTC:Keywords",   # IIM fallback (may be comma-separated String)
         "Keywords"         # IIM fallback without group prefix
       ],

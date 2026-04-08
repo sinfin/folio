@@ -100,6 +100,18 @@ class Folio::File::ImageKeywordSearchTest < ActiveSupport::TestCase
     assert_includes results, video
   end
 
+  test "extracts keywords from Subject field (ExifTool default output without -G1)" do
+    # ExifTool without -G1 flag outputs XMP Subject as "Subject" (no namespace prefix)
+    image = create(:folio_file_image, file_metadata: {
+      "Subject" => ["Kroměříž", "město"]
+    })
+
+    assert_equal "Kroměříž město", image.keywords_for_search
+
+    results = Folio::File::Image.by_query("Kroměříž")
+    assert_includes results, image
+  end
+
   test "extracts keywords from IPTC XMP-dc:Subject field" do
     # Real IPTC metadata structure with XMP namespace
     image = create(:folio_file_image, file_metadata: {
