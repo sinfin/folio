@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - **hyperlinks in tiptap editor**: Added autolink to config file to allow override
+- **keep tags field editable**: after choosing a suggestion
 
 ## [7.5.1] - 2026-03-19
 
