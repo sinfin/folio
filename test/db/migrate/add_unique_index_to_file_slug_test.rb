@@ -42,7 +42,7 @@ class AddUniqueIndexToFileSlugTest < ActiveSupport::TestCase
   end
 
   test "renamed file gets a unique valid slug" do
-    older, newer = create_duplicate_pair
+    _older, newer = create_duplicate_pair
 
     run_data_steps
 
@@ -62,22 +62,23 @@ class AddUniqueIndexToFileSlugTest < ActiveSupport::TestCase
   end
 
   test "renamed file is findable via its new slug" do
-    _older, newer = create_duplicate_pair
+    older, newer = create_duplicate_pair
+    original_slug = older.slug
 
     run_data_steps
 
     newer.reload
     found = Folio::File.friendly.find(newer.slug)
     assert_equal newer.id, found.id
+
+    assert_equal older.id, Folio::File.friendly.find(original_slug).id
   end
 
   test "handles three-way duplicates correctly" do
     base = track(create(:folio_file_image, media_source: nil))
-    mid  = track(create(:folio_file_image, media_source: nil))
-    late = track(create(:folio_file_image, media_source: nil))
+    mid  = track(create(:folio_file_image, media_source: nil, created_at: base.created_at + 1.second))
+    late = track(create(:folio_file_image, media_source: nil, created_at: base.created_at + 2.seconds))
 
-    mid.update_column(:created_at, base.created_at + 1.second)
-    late.update_column(:created_at, base.created_at + 2.seconds)
     mid.update_column(:slug, base.slug)
     late.update_column(:slug, base.slug)
 
@@ -89,7 +90,6 @@ class AddUniqueIndexToFileSlugTest < ActiveSupport::TestCase
   end
 
   private
-
     def track(file)
       @files_to_cleanup << file
       file

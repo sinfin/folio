@@ -4,12 +4,16 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 ### Added
 - **Unique index on file slugs**: Added unique index on `folio_files.slug` with deduplication + null backfill migration.
+- remote scripts: optional `integrity` on script data (Subresource Integrity; sets `crossOrigin` when used)
+- console file placements multi picker: `placement_attributes` to choose which placement fields are shown; title field with prefilled title and hints/placeholders hidden when appropriate; updated alt label i18n
 
 ### Changed
 - **Folio::File slug generation**: Slugs now use a neutral `timestamp-hex` fallback (`Time.current`) instead of filename-derived candidates.
 
 ### Fixed
+
 - **hyperlinks in tiptap editor**: Added autolink to config file to allow override
+
 ## [7.5.1] - 2026-03-19
 
 ### Fixed
@@ -33,8 +37,6 @@ All notable changes to this project will be documented in this file.
 
 - `ShowComponent` now exposes `aasmState` as a Stimulus value and reloads via Turbo on state transitions (encoding progress, file updates)
 - `ShowComponent` layout: state badge moved to right side (`ms-auto`), encoding info rendered inline after state
-
-### Fixed
 
 - add `try` to `dont_run_after_save_jobs` to enable thumbnail generation for `private_attachments`
 

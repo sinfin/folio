@@ -21,7 +21,6 @@ class AddUniqueIndexToFileSlug < ActiveRecord::Migration[8.0]
   end
 
   private
-
     def try_add_unique_index_with_retry
       add_index :folio_files, :slug, unique: true, name: NEW_INDEX_NAME, algorithm: :concurrently
     rescue ActiveRecord::StatementInvalid => e
@@ -80,13 +79,10 @@ class AddUniqueIndexToFileSlug < ActiveRecord::Migration[8.0]
     end
 
     def generate_neutral_unique_slug
-      candidate = nil
-
-      loop do
+      100.times do
         candidate = "#{Time.current.to_i}-#{SecureRandom.hex(5)}"
-        break unless Folio::File.exists?(slug: candidate)
+        return candidate unless Folio::File.exists?(slug: candidate)
       end
-
-      candidate
+      raise "Could not generate a unique slug after 100 attempts"
     end
 end
