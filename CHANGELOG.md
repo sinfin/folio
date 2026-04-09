@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 ### Added
+- **File search by CMS tags**: Top search bar now searches manually-added CMS keywords (tags) in addition to filename, headline, and description.
 - **Unique index on file slugs**: Added unique index on `folio_files.slug` with deduplication + null backfill migration.
 - remote scripts: optional `integrity` on script data (Subresource Integrity; sets `crossOrigin` when used)
 - console file placements multi picker: `placement_attributes` to choose which placement fields are shown; title field with prefilled title and hints/placeholders hidden when appropriate; updated alt label i18n
