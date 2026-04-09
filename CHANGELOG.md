@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+
+### Changed
+- **test factories**: Dummy-app-specific factories moved from `test/factories.rb` to `test/factories_dummy.rb`. Loaded by folio's test helper but excluded from host apps that use `Folio::Engine.root.join("test/factories")` in `FactoryBot.definition_file_paths`.
+
 ### Fixed
 - **hyperlinks in tiptap editor**: Added autolink to config file to allow override
 ## [7.5.1] - 2026-03-19
