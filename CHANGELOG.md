@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## Changed
+- **Console files batch form is updated**:  When new file is de/selected or some of selected files gets update in background, bacth form get XHR update. Such update was erasing already written values in form.
+This is now changed. On XHR refresh, all non blank values are sent and overrides values comming from files.
+Also number of unprocessed files are displayed. And processing state for each file.
+
 ## [7.5.1] - 2026-03-19
 
 ### Fixed
