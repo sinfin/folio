@@ -100,7 +100,7 @@ class Folio::File < Folio::ApplicationRecord
   # Scopes
   scope :ordered, -> { order(created_at: :desc) }
 
-  # scope :by_placement, -> (placement_title) { order(created_at: :desc) }
+  scope :by_placement, -> (placement_title) { order(created_at: :desc) }
 
   scope :created_by_current_user, Proc.new {
     if Folio::Current.user.present?
