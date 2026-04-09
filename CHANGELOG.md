@@ -2,6 +2,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+
+## [7.6.0] - 2026-04-09
 ### Added
 - **Unique index on file slugs**: Added unique index on `folio_files.slug` with deduplication + null backfill migration.
 - remote scripts: optional `integrity` on script data (Subresource Integrity; sets `crossOrigin` when used)
