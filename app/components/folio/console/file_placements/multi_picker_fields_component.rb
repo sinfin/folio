@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
 class Folio::Console::FilePlacements::MultiPickerFieldsComponent < Folio::Console::ApplicationComponent
-  def initialize(f:, placement_klass:, embed_input_options: nil)
+  DEFAULT_PLACEMENT_ATTRIBUTES = %i[title description alt folio_embed_data]
+
+  def initialize(f:, placement_klass:, embed_input_options: nil, placement_attributes: nil)
     @f = f
     @placement_klass = placement_klass
     @embed_input_options = embed_input_options
+    @placement_attributes = placement_attributes || DEFAULT_PLACEMENT_ATTRIBUTES
 
     @placement_key = placement_klass.reflect_on_association(:placement).options[:inverse_of]
     @file_klass = placement_klass.reflect_on_association(:file).options[:class_name].constantize
@@ -29,21 +32,26 @@ class Folio::Console::FilePlacements::MultiPickerFieldsComponent < Folio::Consol
     end
 
     def tabs
-      [
+      tab_items = [
         {
           label: t(".select/#{@file_klass.human_type}", default: t(".select/default")),
           active: true,
         },
-        {
+      ]
+
+      if @placement_klass.folio_file_placement_supports_embed? && @placement_attributes.include?(:folio_embed_data)
+        tab_items << {
           icon: :plus_circle,
           label: t(".add_embed"),
           dont_bind_tab_toggle: true,
           text_color: "green",
           data: stimulus_controller("f-c-file-placements-multi-picker-fields-add-embed",
                                     inline: true,
-                                    action: { click: "onAddEmbedClick" })
+                                    action: { click: "onAddEmbedClick" }),
         }
-      ]
+      end
+
+      tab_items
     end
 
     def non_unique_file_ids
@@ -69,6 +77,7 @@ class Folio::Console::FilePlacements::MultiPickerFieldsComponent < Folio::Consol
       render(component_klass.new(g:,
                                  non_unique_file_id:,
                                  placement_key: @placement_key,
-                                 embed_input_options: @embed_input_options))
+                                 embed_input_options: @embed_input_options,
+                                 placement_attributes: @placement_attributes))
     end
 end
