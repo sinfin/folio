@@ -10,7 +10,9 @@ class AddUniqueIndexToFileSlug < ActiveRecord::Migration[8.0]
     transaction { backfill_null_slugs }
     transaction { deduplicate_slugs }
 
-    remove_index :folio_files, name: OLD_INDEX_NAME, algorithm: :concurrently
+    if index_exists?(:folio_files, :slug, name: OLD_INDEX_NAME)
+      remove_index :folio_files, name: OLD_INDEX_NAME, algorithm: :concurrently
+    end
 
     try_add_unique_index_with_retry
   end
