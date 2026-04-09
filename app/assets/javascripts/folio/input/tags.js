@@ -16,6 +16,15 @@ window.Folio.Input.Tags.bind = (input, opts) => {
     plugins: ['remove_button'],
     maxOptions: 50000,
     preload: 'focus',
+
+    onItemAdd: function () {
+      const self = this
+      window.setTimeout(function () {
+        self.setActiveItem(null)
+        self.showInput()
+        self.focus()
+      }, 0)
+    },
     render: {
       option_create: (data, escape) => (`
         <div class="create option">
