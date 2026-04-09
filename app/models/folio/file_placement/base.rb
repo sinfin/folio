@@ -122,6 +122,14 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
     end
   end
 
+  def title_with_fallback
+    if title.blank?
+      file.try(:title)
+    else
+      title
+    end
+  end
+
   def alt_with_fallback
     if alt.blank?
       file.try(:alt)
