@@ -50,7 +50,7 @@ class Folio::Console::Files::Batch::FormComponent < Folio::Console::ApplicationC
       Rails.logger.info("Batch::FormComponent.input(#{attribute}) value from override")
       [@attribute_overrides[attribute]]
     else
-      @files.filter_map { |file| file.public_send(attribute).presence }.uniq
+      @files.map { |file| file.public_send(attribute).presence }.uniq
     end
     Rails.logger.info("Batch::FormComponent.input(#{attribute}) values -> #{values}")
 
