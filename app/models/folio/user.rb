@@ -33,6 +33,10 @@ class Folio::User < Folio::ApplicationRecord
     def self.should_confirm_email_change?
       true
     end
+
+    def confirmation_required?
+      false
+    end
   end
 
   selected_device_modules << :omniauthable if Rails.application.config.folio_users_omniauth_providers.present?

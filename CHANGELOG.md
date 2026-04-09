@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - **Folio::File slug generation**: Slugs now use a neutral `timestamp-hex` fallback (`Time.current`) instead of filename-derived candidates.
+- **test factories**: Dummy-app-specific factories moved from `test/factories.rb` to `test/factories_dummy.rb`. Loaded by folio's test helper but excluded from host apps that use `Folio::Engine.root.join("test/factories")` in `FactoryBot.definition_file_paths`.
 
 ### Fixed
 
