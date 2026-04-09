@@ -126,7 +126,7 @@ class Folio::File < Folio::ApplicationRecord
   end
 
   pg_search_scope :by_query_raw,
-                  against: [:file_name_for_search, :headline, :description, :keywords_for_search],
+                  against: [:file_name_for_search, :headline, :description],
                   ignoring: :accents,
                   using: {
                     tsearch: { prefix: true }
@@ -136,25 +136,10 @@ class Folio::File < Folio::ApplicationRecord
     return none if query.blank?
 
     sanitized = sanitize_filename_for_search(query)
-    
-    # Search in file fields (filename, headline, description, keywords_for_search)
     file_fields_ids = by_query_raw(sanitized).pluck(:id)
-    
-    # Search in slug
     slug_ids = where("folio_files.slug ILIKE ?", "%#{sanitize_sql_like(query.to_s)}%").pluck(:id)
-    
-    # Search in ActsAsTaggableOn tags (CMS-added tags)
-    begin
-      tags_ids = tagged_with(query, wild: true, any: true).pluck(:id)
-    rescue => e
-      Rails.logger.warn("Error searching tags: #{e.message}")
-      tags_ids = []
-    end
-    
-    # Combine all matching IDs and remove duplicates
+    tags_ids = tagged_with(query, wild: true, any: true).pluck(:id)
     all_ids = (file_fields_ids + slug_ids + tags_ids).uniq
-    
-    # Return scope with all matching records
     return none if all_ids.empty?
     where(id: all_ids)
   end
@@ -185,7 +170,6 @@ class Folio::File < Folio::ApplicationRecord
   before_validation :set_file_track_duration, if: :file_uid_changed?
   before_validation :set_video_file_dimensions, if: :file_uid_changed?
   before_save :set_file_name_for_search, if: :file_name_changed?
-  before_save :set_keywords_for_search, if: :file_metadata_changed?
   before_destroy :check_usage_before_destroy
   after_save :run_after_save_job
   after_commit :process!, if: :attached_file_changed?
@@ -484,26 +468,6 @@ class Folio::File < Folio::ApplicationRecord
       self.file_name_for_search = self.class.sanitize_filename_for_search(file_name)
     end
 
-    def set_keywords_for_search
-      # Try to get keywords from mapped_metadata (IPTC/XMP fields)
-      keywords = if respond_to?(:mapped_metadata)
-        mapped_metadata[:keywords]
-      else
-        # Fallback for non-Image files or simplified test metadata
-        file_metadata&.dig("keywords")
-      end
-
-      # If mapped_metadata didn't find anything, try the plain 'keywords' key
-      # (used in tests and some simplified metadata structures)
-      keywords ||= file_metadata&.dig("keywords")
-
-      self.keywords_for_search = case keywords
-      when Array then keywords.join(" ")
-      when String then keywords
-      else nil
-      end
-    end
-
     def check_usage_before_destroy
       throw(:abort) if indestructible_reason.present?
       throw(:abort) if file_placements.exists?
@@ -628,7 +592,6 @@ end
 #  index_folio_files_on_created_at                (created_at)
 #  index_folio_files_on_created_by_folio_user_id  (created_by_folio_user_id)
 #  index_folio_files_on_file_name                 (file_name)
-#  index_folio_files_on_keywords_for_search       (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(keywords_for_search, ''::text)))) USING gin
 #  index_folio_files_on_media_source_id           (media_source_id)
 #  index_folio_files_on_published_usage_count     (published_usage_count)
 #  index_folio_files_on_site_id                   (site_id)
