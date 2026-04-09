@@ -89,18 +89,26 @@ window.Folio.Tooltip.createTooltip = ({ element, title, placement, variant, tool
     data.element,
     data.tooltipElement,
     () => {
-      const options = {
-        middleware: [
-          window.FloatingUIDOM.offset({ mainAxis: 8 }),
-          window.FloatingUIDOM.arrow({ element: data.tooltipElement.querySelector('.tooltip-arrow') })
-        ]
-      }
+      const middleware = [
+        window.FloatingUIDOM.offset({ mainAxis: 8 })
+      ]
+
+      const options = { middleware }
 
       if (placement === 'auto') {
-        options.middleware.push(window.FloatingUIDOM.autoPlacement())
+        middleware.push(window.FloatingUIDOM.autoPlacement())
       } else {
         options.placement = placement
       }
+
+      // Keep tooltip inside viewport (e.g. mobile near screen edges).
+      // Arrow middleware must run after shift — https://floating-ui.com/docs/computePosition#middleware
+      middleware.push(
+        window.FloatingUIDOM.shift({ padding: 12 }),
+        window.FloatingUIDOM.arrow({
+          element: data.tooltipElement.querySelector('.tooltip-arrow')
+        })
+      )
 
       window.FloatingUIDOM.computePosition(element, data.tooltipElement, options).then(({
         x,
