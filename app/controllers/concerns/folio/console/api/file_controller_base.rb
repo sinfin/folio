@@ -513,7 +513,6 @@ module Folio::Console::Api::FileControllerBase
 
     def render_batch_bar_component(flash: nil, change_to_propagate: nil, attribute_overrides: update_params(required: false))
       # attribute_overrides = {} unless batch_service.form_open?
-      Rails.logger.info("render_batch_bar_component with attribute_overrides: #{attribute_overrides}")
 
       component = Folio::Console::Files::Batch::BarComponent.new(file_klass: @klass,
                                                                  updated_at: @batch_bar_updated_at || Time.current,

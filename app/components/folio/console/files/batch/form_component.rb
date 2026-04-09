@@ -5,7 +5,6 @@ class Folio::Console::Files::Batch::FormComponent < Folio::Console::ApplicationC
     @file_klass = file_klass
     @files = files
     @attribute_overrides = attribute_overrides&.symbolize_keys || {}
-    Rails.logger.info("Batch::FormComponent.init -> attribute_overrides: #{attribute_overrides}")
   end
 
   def data
@@ -47,12 +46,10 @@ class Folio::Console::Files::Batch::FormComponent < Folio::Console::ApplicationC
     opts[:input_html] ||= {}
 
     values = if @attribute_overrides[attribute].present?
-      Rails.logger.info("Batch::FormComponent.input(#{attribute}) value from override")
       [@attribute_overrides[attribute]]
     else
       @files.map { |file| file.public_send(attribute).presence }.uniq
     end
-    Rails.logger.info("Batch::FormComponent.input(#{attribute}) values -> #{values}")
 
     if values.blank?
       opts.delete(:input_html)
@@ -60,7 +57,6 @@ class Folio::Console::Files::Batch::FormComponent < Folio::Console::ApplicationC
       if values.size == 1
         opts[:input_html][:value] = values.first
       else
-        Rails.logger.error("More values for #{attribute}: #{values}")
         opts[:wrapper_html][:class] += " f-c-files-batch-form__form-group--has-values form-group-invalid"
         opts[:input_html][:class] = "is-invalid"
         opts[:hint] = t(".has_values_hint")
