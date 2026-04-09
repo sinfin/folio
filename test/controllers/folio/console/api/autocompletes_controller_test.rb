@@ -340,6 +340,24 @@ class Folio::Console::Api::AutocompletesControllerTest < Folio::Console::BaseCon
     assert_equal("Foo bar baz", json["data"][0]["text"])
   end
 
+  test "show prioritizes exact match over partial match" do
+    create(:folio_page, title: "Foo bar baz")
+    create(:folio_page, title: "Foo")
+
+    get console_api_autocomplete_path(klass: "Folio::Page", q: "Foo")
+    json = JSON.parse(response.body)
+    assert_equal "Foo", json["data"].first
+  end
+
+  test "react_select prioritizes exact match over partial match" do
+    create(:folio_page, title: "Foo bar baz")
+    create(:folio_page, title: "Foo")
+
+    get react_select_console_api_autocomplete_path(class_names: "Folio::Page", q: "Foo")
+    json = JSON.parse(response.body)
+    assert_equal "Foo", json["data"].first["text"]
+  end
+
   test "react_select with multiple classes ignores short queries" do
     create(:folio_page, title: "Foo page")
 

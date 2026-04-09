@@ -34,6 +34,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
 
       if q.present?
         if q.length >= AUTOCOMPLETE_QUERY_MIN_LENGTH
+          scope = apply_exact_match_priority(scope, klass, q)
           scope = scope.by_label_query(q)
         else
           render json: { data: [], meta: { page: 1, pages: 1, from: nil, to: nil, count: 0, next: nil } }
@@ -45,19 +46,14 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
 
       if p_order.present? && scope.respond_to?(p_order)
         if has_type_ordering
-          # Type ordering is primary, add p_order as secondary
           scope = scope.send(p_order)
         else
-          # No type ordering, unscope and apply p_order as primary
           scope = scope.unscope(:order).send(p_order)
         end
       elsif q.blank? && p_order.blank? && scope.respond_to?(:ordered)
-        # No query and no order scope, use default ordered scope
         if has_type_ordering
-          # Type ordering is primary, add ordered as secondary
           scope = scope.ordered
         else
-          # No type ordering, unscope and apply ordered as primary
           scope = scope.unscope(:order).ordered
         end
       end
@@ -157,6 +153,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
 
       if q.present?
         if q.length >= AUTOCOMPLETE_QUERY_MIN_LENGTH
+          scope = apply_exact_match_priority(scope, klass, q)
           scope = scope.by_label_query(q)
         else
           render_selectize_options([])
@@ -206,6 +203,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
 
       if q.present?
         if q.length >= AUTOCOMPLETE_QUERY_MIN_LENGTH
+          scope = apply_exact_match_priority(scope, klass, q)
           scope = scope.by_label_query(q)
         else
           render_select2_options([])
@@ -278,6 +276,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
           end
 
           if q.present?
+            scope = apply_exact_match_priority(scope, klass, q)
             scope = scope.by_label_query(q)
           else
             scope = scope.all
@@ -341,6 +340,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
             end
 
             if q.present?
+              scope = apply_exact_match_priority(scope, klass, q)
               scope = scope.by_label_query(q)
             else
               scope = scope.all
@@ -448,6 +448,19 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
       end
 
       scope
+    end
+
+    def apply_exact_match_priority(scope, klass, q)
+      label_column = if klass.column_names.include?("title")
+        "title"
+      elsif klass.column_names.include?("name")
+        "name"
+      end
+
+      return scope unless label_column
+
+      quoted_q = ActiveRecord::Base.connection.quote(q.downcase)
+      scope.order(Arel.sql("CASE WHEN LOWER(#{klass.table_name}.#{label_column}) = #{quoted_q} THEN 0 ELSE 1 END"))
     end
 
     def apply_param_scope(scope)
