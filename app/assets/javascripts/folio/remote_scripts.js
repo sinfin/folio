@@ -78,6 +78,10 @@ window.Folio.RemoteScripts.load = (key) => {
       if (metaData.urls) {
         data.urls = metaData.urls
       }
+
+      if (metaData.integrity) {
+        data.integrity = metaData.integrity
+      }
     }
   }
 
@@ -107,6 +111,11 @@ window.Folio.RemoteScripts.load = (key) => {
 
     script.src = url
 
+    if (data.integrity) {
+      script.integrity = data.integrity
+      script.crossOrigin = 'anonymous'
+    }
+
     document.head.appendChild(script)
 
     return script
@@ -123,10 +132,20 @@ window.Folio.RemoteScripts.run = (script, successCallback, errorCallback) => {
       key = script.key
 
       if (!window.Folio.RemoteScripts.Data[key]) {
-        window.Folio.RemoteScripts.Data[key] = {
+        const entry = {
           urls: script.urls || (script.url ? [script.url] : []),
           cssUrls: script.cssUrls || []
         }
+
+        if (script.integrity) {
+          entry.integrity = script.integrity
+        }
+
+        if (script.meta) {
+          entry.meta = script.meta
+        }
+
+        window.Folio.RemoteScripts.Data[key] = entry
       }
     }
   }

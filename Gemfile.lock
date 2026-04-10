@@ -19,7 +19,7 @@ GIT
 PATH
   remote: .
   specs:
-    folio (7.5.1)
+    folio (7.6.0)
       aasm
       acts-as-taggable-on
       after_commit_everywhere
