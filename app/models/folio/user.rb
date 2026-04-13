@@ -171,7 +171,7 @@ class Folio::User < Folio::ApplicationRecord
     end
   }
 
-  audited only: %i[email unconfirmed_email first_name last_name company_name nickname phone subscribed_to_newsletter superadmin bank_account_number],
+  audited only: %i[email unconfirmed_email first_name last_name company_name nickname phone subscribed_to_newsletter superadmin bank_account_number last_sign_in_at last_sign_in_ip],
           relations: %i[site_user_links],
           console: false
 
