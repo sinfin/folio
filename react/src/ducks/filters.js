@@ -87,7 +87,7 @@ export const makePlacementsSelector = (fileType) => (state) => {
 // State
 
 const defaultFiltersKeysState = {
-  query: '',
+  file_name: '',
   tags: [],
   placement: ''
 }

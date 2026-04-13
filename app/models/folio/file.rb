@@ -136,12 +136,9 @@ class Folio::File < Folio::ApplicationRecord
     return none if query.blank?
 
     sanitized = sanitize_filename_for_search(query)
-    file_fields_ids = by_query_raw(sanitized).pluck(:id)
-    slug_ids = where("folio_files.slug ILIKE ?", "%#{sanitize_sql_like(query.to_s)}%").pluck(:id)
-    tags_ids = tagged_with(query, wild: true, any: true).pluck(:id)
-    all_ids = (file_fields_ids + slug_ids + tags_ids).uniq
-    return none if all_ids.empty?
-    where(id: all_ids)
+    where(id: by_query_raw(sanitized).reselect("folio_files.id"))
+      .or(where("folio_files.slug ILIKE ?", "%#{sanitize_sql_like(query.to_s)}%"))
+      .or(where(id: tagged_with(query, wild: true, any: true).reselect("folio_files.id")))
   end
 
   pg_search_scope :by_file_name_for_search,

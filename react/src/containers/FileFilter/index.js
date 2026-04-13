@@ -50,10 +50,10 @@ class FileFilter extends Component {
           <div className='col-12 col-sm-6 col-xl-3'>
             <FormGroup className='mb-2 mb-sm-2 mb-xl-0'>
               <InputWithSearchIcon
-                value={filters.query || ''}
+                value={filters.file_name || ''}
                 onChange={this.onInputChange}
                 placeholder={window.FolioConsole.translations.fileNameFilter}
-                name='query'
+                name='file_name'
               />
             </FormGroup>
           </div>
