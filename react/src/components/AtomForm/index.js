@@ -245,6 +245,7 @@ class AtomForm extends React.PureComponent {
           {this.props.form.atoms.map((atom, index) => {
             const asMolecule = molecule && !atom.record.meta.molecule_singleton
             if (asMolecule) { nonSingletonIndex++ }
+            const atomKey = atom.record.id || atom.record.lodashId
 
             const fillOutput = (input) => {
               let zIndex = 100
@@ -306,7 +307,7 @@ class AtomForm extends React.PureComponent {
                   return (
                     <Associations
                       atom={atom}
-                      key={input}
+                      key={`${atomKey}-${input}`}
                       asyncData={asMolecule ? asyncData : undefined}
                       onChange={this.onAssociationChange}
                       onBlur={() => { this.setState({ focusedIndex: null }) }}
@@ -319,7 +320,7 @@ class AtomForm extends React.PureComponent {
                 } else if (input === 'STRUCTURE') {
                   return (
                     <Fields
-                      key={input}
+                      key={`${atomKey}-${input}`}
                       atom={atom}
                       onChange={this.onChange}
                       onValueChange={this.onValueChange}
@@ -331,7 +332,7 @@ class AtomForm extends React.PureComponent {
                 } else if (input === 'ATTACHMENTS') {
                   return (
                     <SingleAttachments
-                      key={input}
+                      key={`${atomKey}-${input}`}
                       attachments={atom.record.meta.attachments}
                       atom={atom.record}
                       index={index}
@@ -343,7 +344,7 @@ class AtomForm extends React.PureComponent {
                 } else if (input.indexOf('STRUCTURE/') !== -1) {
                   return (
                     <Field
-                      key={input}
+                      key={`${atomKey}-${input}`}
                       atom={atom}
                       field={input.replace('STRUCTURE/', '')}
                       onChange={this.onChange}

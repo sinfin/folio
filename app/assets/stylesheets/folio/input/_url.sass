@@ -9,8 +9,17 @@
     position: relative
     height: 44px
     width: 44px
+    overflow: hidden
 
   .form-control,
-  &[data-f-c-input-form-group-url-loaded-value="false"] &__control-bar-wrap,
-  &[data-f-c-input-form-group-url-loaded-value="true"] &__loader-wrap
+  &[data-f-c-input-form-group-url-loaded-value="false"] &__control-bar-wrap
     display: none
+
+// Scoped outside parent so it applies even when f-c-input-form-group-url class is absent
+// (e.g. after partial cleanup when Stimulus controller disconnects mid-cycle)
+.f-c-input-form-group-url__loader-wrap
+  display: none
+
+.f-c-input-form-group-url[data-f-c-input-form-group-url-loaded-value="false"]
+  .f-c-input-form-group-url__loader-wrap
+    display: block

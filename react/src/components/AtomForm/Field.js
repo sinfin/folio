@@ -35,6 +35,7 @@ class Field extends React.PureComponent {
     const { atom, field, index, onChange, onValueChange, startSplittingAtom } = this.props
     const { meta } = atom.record
     const isCheck = meta.structure[field] && meta.structure[field].type === 'boolean'
+    const atomKey = atom.record.id || atom.record.lodashId
 
     return (
       <div
@@ -48,7 +49,7 @@ class Field extends React.PureComponent {
         >
           {isCheck && (
             <AtomInput
-              key={field}
+              key={`${atomKey}-${field}`}
               field={field}
               atom={atom}
               index={index}
@@ -62,7 +63,7 @@ class Field extends React.PureComponent {
 
         {!isCheck && (
           <AtomInput
-            key={field}
+            key={`${atomKey}-${field}`}
             field={field}
             atom={atom}
             index={index}
