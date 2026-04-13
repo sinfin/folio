@@ -2,6 +2,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+### Added
+- **Console sidebar `:separator` support**: Sites can now include `:separator` in `console_sidebar_prepended_links` (and `before_menu`/`before_site` variants) to insert visual dividers inside custom sidebar sections.
 
 ## [7.6.0] - 2026-04-09
 ### Added
