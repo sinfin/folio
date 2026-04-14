@@ -5,6 +5,8 @@
     title=data[:title]
     alt=(data[:alt] || '')
     fetchpriority=data[:fetchpriority]
+    width=(data[:width] || '')
+    height=(data[:height] || '')
   ]
 - else
   img.f-image__img.f-lazyload[
@@ -13,5 +15,7 @@
     data-alt=data[:alt]
     data-title=data[:title]
     fetchpriority=data[:fetchpriority]
+    width=(data[:width] || '')
+    height=(data[:height] || '')
     alt=''
   ]
