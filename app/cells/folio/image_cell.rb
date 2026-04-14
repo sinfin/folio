@@ -40,6 +40,7 @@ class Folio::ImageCell < Folio::ApplicationCell
 
       {
         alt: options[:alt] || "",
+        fetchpriority: options[:fetchpriority] || "auto",
         src: model[:normal],
         srcset: model[:retina] ? "#{model[:normal]} 1x, #{model[:retina]} #{retina_multiplier}x" : nil,
         webp_src: model[:webp_normal],
@@ -62,6 +63,7 @@ class Folio::ImageCell < Folio::ApplicationCell
         normal:,
         src: normal.url,
         alt: alt || description || "",
+        fetchpriority: options[:fetchpriority] || "auto",
         width: normal[:width],
         height: normal[:height],
         title: options[:title] || model.try(:title),
