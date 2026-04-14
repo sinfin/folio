@@ -308,7 +308,7 @@ module Folio::Console::DefaultActions
         render json: {
           data: {
             console_ui_boolean_toggle_data: folio_console_record.try(:console_ui_boolean_toggle_data),
-            f_c_catalogue_published_dates: cell("folio/console/catalogue/published_dates", folio_console_record).show,
+            f_c_catalogue_published_dates: view_context.render(Folio::Console::Catalogue::PublishedDatesComponent.new(record: folio_console_record)),
           },
           meta: params[:_flash] == false ? {} : {
             flash: {

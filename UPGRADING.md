@@ -12,6 +12,54 @@ gem "activejob-unique", github: "nordinvestments/activejob-uniqueness", ref: "80
 
 This will be moved back to the gemspec once a compatible version is released on RubyGems.
 
+### Console catalogue: Cells → ViewComponents
+
+**BREAKING CHANGE** for host apps that extend the console catalogue: the main table is now `Folio::Console::CatalogueComponent`. Nested pieces (`DateComponent`, `PublishedDatesComponent`, `CatalogueSortArrowsComponent`, `ConsoleNotes::CatalogueTooltipComponent`) are ViewComponents too. The `catalogue()` helper in `Folio::Console::Ui::IndexHelper` renders `CatalogueComponent`.
+
+**`locals:` for block-only data**
+
+Extra keyword arguments are no longer merged into an implicit `model` hash for `ruby:` blocks. Pass data the block needs under `locals:` and read `locals[:key]` inside the block.
+
+**Before:**
+
+```slim
+= helpers.catalogue(@articles, list: @list, list_article_links: list_article_links)
+  ruby:
+    if link = model[:list_article_links][record.id]
+```
+
+**After:**
+
+```slim
+= helpers.catalogue(@articles,
+                     locals: { list: @list, list_article_links: list_article_links })
+  ruby:
+    if link = locals[:list_article_links][record.id]
+```
+
+**`ancestry`**
+
+Do not use `model[:ancestry]` in catalogue `ruby:` blocks. Use the predicate `ancestry?` (for example `position_controls if ancestry?`). Pass `ancestry:` in the options hash to the helper as before.
+
+**Thin wrapper “catalogue cells” in host apps**
+
+If you used `rails generate folio:console:catalogue` or copied the old pattern (`CatalogueCell` + `catalogue(model)` in a cell template), you can either:
+
+- **Inline** (like `app/views/folio/console/leads/index.slim`): wrap with a BEM block if needed, then `= catalogue(@records, klass: YourModel, …)` and a `ruby:` column block in the same view; the `catalogue` helper is available on console index views.
+
+- **Or** keep a small ViewComponent that includes `Folio::Console::Ui::IndexHelper` and calls `catalogue` inside its template. The generator still creates `app/components/folio/console/.../catalogue_component.rb` and an index that `render(...CatalogueComponent.new(...))`.
+
+**Assets**
+
+If you override or duplicate console asset requires, update paths:
+
+- `folio/console/catalogue/catalogue` → `folio/console/catalogue_component`
+- `folio/console/console_notes/catalogue_tooltip/catalogue_tooltip` → `folio/console/console_notes/catalogue_tooltip_component`
+
+**API responses**
+
+`Folio::Console::Api::ConsoleNotesController` and `Folio::Console::DefaultActions` (boolean toggle + published dates fragment) render tooltip / published-dates markup via ViewComponents; JSON keys are unchanged (`catalogue_tooltip`, `f_c_catalogue_published_dates`).
+
 ## 7.2.* to 7.3.0
 
 ### has_folio_tiptap? Method Change

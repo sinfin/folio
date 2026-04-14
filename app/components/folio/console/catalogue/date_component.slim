@@ -1,0 +1,13 @@
+.f-c-catalogue-date class=bem_class_name
+  .f-c-catalogue-date__flex
+    .f-c-catalogue-date__content
+      - if time?
+        .f-c-catalogue-date__date
+          = l(@value, format: :console_short_date)
+        .f-c-catalogue-date__time.small
+          = l(@value, format: :console_short_time)
+      - else
+        = l(@value, format: :console_short_date)
+
+    - if @alert
+      = folio_icon(:alert, class: "f-c-catalogue-date__ico", height: 16)

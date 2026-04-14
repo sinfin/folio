@@ -1,30 +1,58 @@
 # frozen_string_literal: true
 
-class Folio::Console::CatalogueCell < Folio::ConsoleCell
+class Folio::Console::CatalogueComponent < Folio::Console::ApplicationComponent
   include SimpleForm::ActionViewExtensions::FormHelper
 
-  attr_reader :record
+  attr_reader :klass, :locals, :record
 
-  def show
-    @labels = {}
-    render
+  delegate :through_aware_console_url_for,
+           :safe_url_for,
+           to: :controller
+
+  def initialize(records:, block:, klass:, merge: nil, pagy: nil,
+                 ancestry: nil, allow_sorting: true, js_data: nil,
+                 collection_actions: nil, row_class_lambda: nil,
+                 before_lambda: nil, after_lambda: nil,
+                 group_by_day: nil, group_by_day_label_before: nil,
+                 group_by_day_label_lambda: nil, new_button: nil,
+                 types: nil, create_defaults_path: nil,
+                 locals: {})
+    @records = records
+    @block = block
+    @klass = klass
+    @merge = merge
+    @pagy = pagy
+    @ancestry = ancestry
+    @allow_sorting = allow_sorting
+    @js_data = js_data
+    @collection_actions_option = collection_actions
+    @row_class_lambda_option = row_class_lambda
+    @before_lambda_option = before_lambda
+    @after_lambda_option = after_lambda
+    @group_by_day = group_by_day
+    @group_by_day_label_before = group_by_day_label_before
+    @group_by_day_label_lambda = group_by_day_label_lambda
+    @new_button = new_button
+    @types = types
+    @create_defaults_path = create_defaults_path
+    @locals = locals.freeze
   end
 
-  def klass
-    @klass ||= model[:klass]
+  def ancestry?
+    @ancestry.present?
   end
 
   def header_html
     return @header_html if @header_html
 
-    if model[:ancestry]
-      @record, _children = model[:records].first
+    if @ancestry
+      @record, _children = @records.first
     else
-      @record = model[:records].first
+      @record = @records.first
     end
 
     @header_html = ""
-    instance_eval(&model[:block])
+    instance_eval(&@block)
     @header_html
   end
 
@@ -34,7 +62,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     @html_to_first_cell = html_to_first_cell
     @record = rec
     @record_html = ""
-    instance_eval(&model[:block])
+    instance_eval(&@block)
     @record_html
   end
 
@@ -44,21 +72,13 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
 
   def catalogue_data
     stimulus_lightbox.merge(boundaries_hash)
-                     .merge(model[:js_data] || {})
+                     .merge(@js_data || {})
   end
 
   def collection_actions
-    return nil # TODO components
-    return @collection_actions unless @collection_actions.nil?
-
-    @collection_actions = if !model[:merge] && model[:collection_actions].present?
-      model[:collection_actions]
-    else
-      false
-    end
+    nil
   end
 
-  # every method call should use the attribute method
   def attribute(name = nil, value = nil, class_name: nil, spacey: false, compact: false, media_query: nil, skip_desktop_header: false, small: false, aligned: false, sanitize: false, hidden: false, &block)
     content = nil
 
@@ -72,14 +92,14 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
                                       skip_desktop_header:)
 
     if rendering_header?
-      allow_sorting = model.fetch(:allow_sorting, true)
+      allow_sorting = @allow_sorting
       @header_html += content_tag(:div,
                                   label_for(name, skip_desktop_header:, allow_sorting:),
                                   class: full_class_name,
                                   hidden: hidden ? "" : nil)
     else
       if block_given?
-        content = block.call(self.record)
+        content = block.call(record)
       else
         content = value || record.send(name)
       end
@@ -105,26 +125,24 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   def association(name, separator: ", ", small: false, link: false, minimal: false)
     assoc = record.send(name)
 
-    handle_record = Proc.new do |record, link|
-      label = record.to_label
+    handle_record = proc do |assoc_record, link_arg|
+      label = assoc_record.to_label
 
       if minimal
         content_tag(:span, label, class: "f-c-catalogue__cell-value-minimal", title: label)
-      elsif link
-        link_to(label, url_for([*link, record]))
+      elsif link_arg
+        link_to(label, url_for([*link_arg, assoc_record]))
       else
         label
       end
     end
 
-    if assoc.is_a?(Enumerable)
-      val = assoc.map do |record|
-        handle_record.call(record, link)
+    val = if assoc.is_a?(Enumerable)
+      assoc.map do |assoc_record|
+        handle_record.call(assoc_record, link)
       end.join(minimal ? " " : separator)
     elsif assoc.respond_to?(:to_label)
-      val = handle_record.call(assoc, link)
-    else
-      val = nil
+      handle_record.call(assoc, link)
     end
 
     attribute(name, val, small:)
@@ -154,7 +172,6 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     resource_link(through_aware_console_url_for(record, action: :edit), attr, sanitize:, &block)
   end
 
-  # capturing legacy usage
   def edit_link(attr = nil, sanitize: false, &block)
     show_or_edit_link(attr, sanitize:, &block)
   end
@@ -171,20 +188,21 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
         record.send(attr)
       end
 
-      cell("folio/console/catalogue/date", value, small:, alert_threshold:)
+      render_catalogue_child(Folio::Console::Catalogue::DateComponent.new(value:,
+                                                                          alert_threshold:))
     end
   end
 
   def published_dates
     attribute(:published_dates, compact: true) do
-      cell("folio/console/catalogue/published_dates", record)
+      render_catalogue_child(Folio::Console::Catalogue::PublishedDatesComponent.new(record:))
     end
   end
 
   def locale_flag(locale_attr = :locale)
     attribute(locale_attr, compact: true, aligned: true, skip_desktop_header: true) do
       if record.send(locale_attr)
-        render_view_component(Folio::Console::Ui::FlagComponent.new(locale: record.send(locale_attr)))
+        render_catalogue_child(Folio::Console::Ui::FlagComponent.new(locale: record.send(locale_attr)))
       end
     end
   end
@@ -207,8 +225,8 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
 
   def toggle(attr, opts = {})
     attribute(attr, class_name: "toggle", aligned: true) do
-      render_view_component(Folio::Console::Ui::BooleanToggleComponent.new(**opts.merge(record:,
-                                                                                        attribute: attr)))
+      render_catalogue_child(Folio::Console::Ui::BooleanToggleComponent.new(**opts.merge(record:,
+                                                                                          attribute: attr)))
     end
   end
 
@@ -226,7 +244,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
 
   def actions(*act)
     attribute(:actions, compact: true) do
-      cell("folio/console/index/actions", record, actions: act)
+      helpers.cell("folio/console/index/actions", record, actions: act)
     end
   end
 
@@ -269,7 +287,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
 
   def state(active: true, spacey: false)
     attribute(:state, spacey:) do
-      cell("folio/console/state", record, active:)
+      helpers.cell("folio/console/state", record, active:)
     end
   end
 
@@ -277,9 +295,9 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     return unless can_now?(:update, record)
 
     attribute(:position, class_name: "position-buttons") do
-      cell("folio/console/index/position_buttons",
-           record,
-           opts.merge(ancestry: model[:ancestry]))
+      helpers.cell("folio/console/index/position_buttons",
+                   record,
+                   opts.merge(ancestry: @ancestry))
     end
   end
 
@@ -294,9 +312,9 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
                href
       end
 
-      render_view_component(Folio::Console::Catalogue::CoverComponent.new(file: file || record.cover_placement.try(:file),
-                                                                          href:,
-                                                                          lightbox: href ? false : lightbox))
+      render_catalogue_child(Folio::Console::Catalogue::CoverComponent.new(file: file || record.cover_placement.try(:file),
+                                                                           href:,
+                                                                           lightbox: href ? false : lightbox))
     end
   end
 
@@ -322,9 +340,9 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
 
   def private_attachment(name, type, opts = {})
     attribute(name, compact: true, aligned: true) do
-      cell("folio/console/private_attachments/single_dropzone",
-           record,
-           opts.merge(name:, minimal: true, type:))
+      helpers.cell("folio/console/private_attachments/single_dropzone",
+                   record,
+                   opts.merge(name:, minimal: true, type:))
     end
   end
 
@@ -332,20 +350,168 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     return unless ::Rails.application.config.folio_show_transportable_frontend
     return unless record.try(:transportable?)
     return unless can_now?(:update, record)
-    # allows tom create record() from YAML dump
+
     attribute(:transportable_dropdown, compact: true, skip_desktop_header: true) do
-      cell("folio/console/transportable/dropdown", record)
+      helpers.cell("folio/console/transportable/dropdown", record)
     end
   end
 
   def console_notes
-    # TODO: restrict - only for can_now?(:update, record)
     attribute(:console_notes, compact: true, skip_desktop_header: true) do
-      cell("folio/console/console_notes/catalogue_tooltip", record)
+      render_catalogue_child(Folio::Console::ConsoleNotes::CatalogueTooltipComponent.new(record:))
+    end
+  end
+
+  def no_records_cell_options
+    { klass: @klass, types: @types, new_button: @new_button, create_defaults_path: @create_defaults_path }
+  end
+
+  def sanitize_string(str)
+    if str.present? && str.is_a?(String)
+      ActionController::Base.helpers.sanitize(str, tags: [], attributes: [])
+    else
+      str
+    end
+  end
+
+  def wrap_class_name
+    cn = "f-c-catalogue"
+
+    if @merge
+      cn += " f-c-catalogue--merge"
+    end
+
+    if collection_actions
+      cn += " f-c-catalogue--collection-actions"
+    end
+
+    if @ancestry
+      cn += " f-c-catalogue--ancestry"
+    end
+
+    cn
+  end
+
+  def row_class_lambda
+    return @row_class_lambda_memo unless @row_class_lambda_memo.nil?
+
+    @row_class_lambda_memo = @row_class_lambda_option || false
+  end
+
+  def before_lambda
+    return @before_lambda_memo unless @before_lambda_memo.nil?
+
+    if @before_lambda_option
+      @before_lambda_memo = @before_lambda_option
+    elsif @group_by_day
+      @before_lambda_label = @group_by_day_label_before
+      @before_lambda_label_lambda = @group_by_day_label_lambda
+      @before_lambda_memo = lambda do |rec, collection, i|
+        date = rec.send(@group_by_day)
+        day = date.try(:beginning_of_day)
+
+        return if day.blank?
+
+        prev_day = if i > 0
+          collection[i - 1].send(@group_by_day).try(:beginning_of_day)
+        end
+
+        return if day == prev_day
+
+        helpers.cell("folio/console/group_by_day_header",
+                     scope: @records,
+                     date:,
+                     attribute: @group_by_day,
+                     before_label: @before_lambda_label,
+                     label_lambda: @before_lambda_label_lambda,
+                     klass:).show.try(:html_safe)
+      end
+    else
+      @before_lambda_memo = false
+    end
+  end
+
+  def after_lambda
+    return @after_lambda_memo unless @after_lambda_memo.nil?
+
+    @after_lambda_memo = @after_lambda_option || false
+  end
+
+  def render_ancestry_children(children, depth = 1)
+    html = ""
+
+    if children.present?
+      children.each do |child, subchildren|
+        class_name = "f-c-catalogue__row "\
+                     "f-c-catalogue__row--ancestry-child "\
+                     "f-c-catalogue__row--ancestry-depth-#{depth}"
+
+        if row_class_lambda
+          class_name += " #{row_class_lambda.call(child)}"
+        end
+
+        ancestry_icon = folio_icon(:subdirectory_arrow_right,
+                                   class: "f-c-catalogue__ancestry-icon",
+                                   height: 18)
+
+        html += content_tag(:div,
+                            record_html(child, html_to_first_cell: ancestry_icon),
+                            class: class_name,
+                            "data-depth" => depth)
+
+        html += render_ancestry_children(subchildren, depth + 1)
+      end
+    end
+
+    html
+  end
+
+  def collection_action_for(action)
+    opts = {
+      class_name: "f-c-catalogue__collection-actions-bar-button f-c-catalogue__collection-actions-bar-button--#{action}",
+      label: I18n.t("folio.console.catalogue.actions.#{action}"),
+      variant: :secondary,
+    }
+
+    if %i[destroy discard undiscard].include?(action)
+      opts[:type] = :submit
+
+      if action == :destroy
+        opts[:variant] = :danger
+        opts[:icon] = :delete
+        method = :delete
+      elsif action == :discard
+        opts[:icon] = :delete
+        method = :delete
+      else
+        opts[:icon] = :arrow_u_left_top
+        method = :post
+      end
+
+      opts[:data] = { confirm: I18n.t("folio.console.confirmation") }
+
+      simple_form_for("",
+                      url: url_for(["collection_#{action}".to_sym, :console, @klass]),
+                      method:,
+                      html: { class: "f-c-catalogue__collection-actions-bar-form" }) do |_f|
+        render_catalogue_child(Folio::Console::Ui::ButtonComponent.new(**opts))
+      end
+    elsif action == :csv
+      href = url_for([:collection_csv, :console, @klass])
+      opts[:icon] = :download
+      opts[:href] = href
+      opts[:target] = "_blank"
+      opts[:data] = { url_base: href }
+
+      render_catalogue_child(Folio::Console::Ui::ButtonComponent.new(**opts))
     end
   end
 
   private
+    def render_catalogue_child(component)
+      helpers.render(component)
+    end
+
     def resource_link(url_or_args, attr = nil, sanitize: false)
       attribute(attr, spacey: true) do
         if block_given?
@@ -368,6 +534,10 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
 
         link_to(content, url)
       end
+    end
+
+    def before_render
+      @labels = {}
     end
 
     def cell_class_name(attr = nil, class_name: "", spacey: false, compact: false, media_query: nil, skip_desktop_header: false, small: false, aligned: false)
@@ -433,9 +603,9 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
       else
         base = klass.human_attribute_name(attr)
 
-        if allow_sorting && arrows = cell("folio/console/catalogue_sort_arrows",
-                                          klass:,
-                                          attr:).show
+        sort_component = Folio::Console::CatalogueSortArrowsComponent.new(klass:, attr:)
+        if allow_sorting && sort_component.render?
+          arrows = render_catalogue_child(sort_component)
           content_tag(:span, "#{base} #{arrows}", class: "f-c-catalogue__label-with-arrows")
         else
           base
@@ -449,100 +619,9 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
                   class: "f-c-catalogue__label f-c-catalogue__cell-label")
     end
 
-    def wrap_class_name
-      cn = "f-c-catalogue"
-
-      if model[:merge]
-        cn += " f-c-catalogue--merge"
-      end
-
-      if collection_actions
-        cn += " f-c-catalogue--collection-actions"
-      end
-
-      if model[:ancestry]
-        cn += " f-c-catalogue--ancestry"
-      end
-
-      cn
-    end
-
-    def row_class_lambda
-      return @row_class_lambda unless @row_class_lambda.nil?
-      @row_class_lambda = model[:row_class_lambda] || false
-    end
-
-    def before_lambda
-      return @before_lambda unless @before_lambda.nil?
-
-      if model[:before_lambda]
-        @before_lambda = model[:before_lambda]
-      elsif model[:group_by_day]
-        @before_lambda_label = model[:group_by_day_label_before]
-        @before_lambda_label_lambda = model[:group_by_day_label_lambda]
-        @before_lambda = -> (rec, collection, i) do
-          date = rec.send(model[:group_by_day])
-          day = date.try(:beginning_of_day)
-
-          return if day.blank?
-
-          if i > 0
-            prev_day = collection[i - 1].send(model[:group_by_day]).try(:beginning_of_day)
-          else
-            prev_day = nil
-          end
-
-          return if day == prev_day
-
-          cell("folio/console/group_by_day_header",
-               scope: model[:records],
-               date:,
-               attribute: model[:group_by_day],
-               before_label: @before_lambda_label,
-               label_lambda: @before_lambda_label_lambda,
-               klass:).show.try(:html_safe)
-        end
-      else
-        @before_lambda = false
-      end
-    end
-
-    def after_lambda
-      return @after_lambda unless @after_lambda.nil?
-      @after_lambda = model[:after_lambda] || false
-    end
-
-    def render_ancestry_children(children, depth = 1)
-      html = ""
-
-      if children.present?
-        children.each do |child, subchildren|
-          class_name = "f-c-catalogue__row "\
-                       "f-c-catalogue__row--ancestry-child "\
-                       "f-c-catalogue__row--ancestry-depth-#{depth}"
-
-          if row_class_lambda
-            class_name += " #{row_class_lambda.call(child)}"
-          end
-
-          ancestry_icon = folio_icon(:subdirectory_arrow_right,
-                                     class: "f-c-catalogue__ancestry-icon",
-                                     height: 18)
-
-          html += content_tag(:div,
-                              record_html(child, html_to_first_cell: ancestry_icon),
-                              class: class_name,
-                              "data-depth" => depth)
-
-          html += render_ancestry_children(subchildren, depth + 1)
-        end
-      end
-
-      html
-    end
-
     def boundaries_hash
       return {} if boundary_positions.blank?
+
       {
         "f-c-catalogue-prev-boundary-id" => boundary_positions[:prev_id],
         "f-c-catalogue-prev-boundary-position" => boundary_positions[:prev_position],
@@ -557,17 +636,16 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
       @boundary_positions = {}
 
       return @boundary_positions unless klass.try(:has_folio_positionable?)
-      return @boundary_positions unless model[:pagy].present?
-      return @boundary_positions if model[:records].blank?
+      return @boundary_positions unless @pagy.present?
+      return @boundary_positions if @records.blank?
 
-      first_record = model[:records].first
-      last_record = model[:records].last
+      first_record = @records.first
+      last_record = @records.last
       descending = klass.try(:positionable_descending?)
 
       scope = klass.ordered
       scope = scope.by_site(first_record.site) if klass.try(:has_belongs_to_site?) && first_record.try(:site)
 
-      # Find adjacent records outside visible page
       if descending
         prev = scope.where("position > ?", first_record.position).first
         nxt = scope.where("position < ?", last_record.position).last
@@ -582,47 +660,5 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
       @boundary_positions[:next_position] = nxt.position if nxt
 
       @boundary_positions
-    end
-
-    def collection_action_for(action)
-      opts = {
-        class_name: "f-c-catalogue__collection-actions-bar-button f-c-catalogue__collection-actions-bar-button--#{action}}",
-        label: t(".actions.#{action}"),
-        variant: :secondary,
-      }
-
-      if %i[destroy discard undiscard].include?(action)
-        opts[:type] = :submit
-
-        if action == :destroy
-          opts[:variant] = :danger
-          opts[:icon] = :delete
-          method = :delete
-        elsif action == :discard
-          opts[:icon] = :delete
-          method = :delete
-        else
-          opts[:icon] = :arrow_u_left_top
-          method = :post
-        end
-
-        opts[:data] = { confirm: t("folio.console.confirmation") }
-
-        simple_form_for("",
-                        url: url_for(["collection_#{action}".to_sym, :console, model[:klass]]),
-                        method:,
-                        html: { class: "f-c-catalogue__collection-actions-bar-form" }) do |f|
-          render_view_component(Folio::Console::Ui::ButtonComponent.new(**opts))
-        end
-      elsif action == :csv
-        opts[:icon] = :download
-        opts[:href] = url_for([:collection_csv, :console, model[:klass]])
-        opts[:target] = "_blank"
-        opts[:data][:url_base] = opts[:href]
-
-        render_view_component(Folio::Console::Ui::ButtonComponent.new(**opts))
-      else
-        nil
-      end
     end
 end

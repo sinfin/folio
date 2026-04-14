@@ -1,0 +1,7 @@
+.small class=bem_class_name
+  - if range?
+    ' #{t(".from")}: #{pretty(@record.published_from)}
+    br
+    ' #{t(".until")}: #{pretty(@record.published_until)}
+  - elsif published_at?
+    = pretty(@record.published_at)

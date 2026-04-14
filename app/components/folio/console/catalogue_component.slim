@@ -2,16 +2,16 @@ div[
   class=wrap_class_name
   data=catalogue_data
 ]
-  - if model[:merge]
-    == cell('folio/console/merges/index/header')
+  - if @merge
+    == helpers.cell("folio/console/merges/index/header")
 
-  - if model && model[:records].present?
+  - if @records.present?
     - if collection_actions
       .f-c-catalogue__collection-actions-bar hidden=true
         .f-c-catalogue__collection-actions-bar-count-wrap
           .f-c-catalogue__collection-actions-bar-count 0
           = folio_icon(:content_copy,
-                       class: 'f-c-catalogue__collection-actions-bar-count-ico')
+                       class: "f-c-catalogue__collection-actions-bar-count-ico")
 
         - collection_actions.each do |action|
           = collection_action_for(action)
@@ -21,7 +21,7 @@ div[
 
     .f-c-catalogue__table
       .f-c-catalogue__header
-        - if model[:merge]
+        - if @merge
           .f-c-catalogue__header-cell[
             class="f-c-catalogue__header-cell--merge"
           ]
@@ -41,8 +41,8 @@ div[
 
         = header_html
 
-      - if model[:ancestry]
-        - model[:records].each do |rec, children|
+      - if @ancestry
+        - @records.each do |rec, children|
           .f-c-catalogue__row.f-c-catalogue__row--ancestry-root[
             data-depth="0"
             class=(row_class_lambda ? row_class_lambda.call(rec) : nil)
@@ -52,8 +52,8 @@ div[
           = render_ancestry_children(children)
 
       - else
-        - model[:records].each_with_index do |rec, i|
-          = before_lambda.call(rec, model[:records], i) if before_lambda
+        - @records.each_with_index do |rec, i|
+          = before_lambda.call(rec, @records, i) if before_lambda
 
           - html = record_html(rec)
 
@@ -61,9 +61,9 @@ div[
             .f-c-catalogue__row[
               class=(row_class_lambda ? row_class_lambda.call(rec) : nil)
             ]
-              - if model[:merge]
+              - if @merge
                 .f-c-catalogue__cell.f-c-catalogue__cell--merge
-                  == cell('folio/console/merges/index/radios', rec)
+                  == helpers.cell("folio/console/merges/index/radios", rec)
 
               - if collection_actions
                 .f-c-catalogue__cell.f-c-catalogue__cell--collection-actions
@@ -80,13 +80,12 @@ div[
 
               = html
 
-          = after_lambda.call(rec, model[:records], i) if after_lambda
+          = after_lambda.call(rec, @records, i) if after_lambda
 
   - else
-    == cell('folio/console/index/no_records',
-            model.slice(:klass, :types, :new_button, :create_defaults_path))
+    == helpers.cell("folio/console/index/no_records", no_records_cell_options)
 
   span.folio-loader.f-c-catalogue__loader
 
-- if model[:merge]
-  == cell('folio/console/merges/index/footer', klass)
+- if @merge
+  == helpers.cell("folio/console/merges/index/footer", klass)

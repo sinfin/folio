@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- **Console catalogue**: `Folio::Console::CatalogueCell` and related cells (`catalogue/date`, `catalogue/published_dates`, `catalogue_sort_arrows`, `console_notes/catalogue_tooltip`) migrated to ViewComponents. `catalogue()` helper now renders `Folio::Console::CatalogueComponent`. Pass block-only data via `locals: { ... }`; use `ancestry?` in catalogue `ruby:` blocks instead of `model[:ancestry]`. Leads index inlines `catalogue` in the view (like other console indexes). `folio:console:catalogue` generator outputs components under `app/components/`. JS/CSS paths: `folio/console/catalogue_component`, `folio/console/console_notes/catalogue_tooltip_component`.
+
 ## [7.6.0] - 2026-04-09
 ### Added
 - **Unique index on file slugs**: Added unique index on `folio_files.slug` with deduplication + null backfill migration.

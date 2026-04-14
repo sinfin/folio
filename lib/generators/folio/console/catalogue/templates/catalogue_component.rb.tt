@@ -1,0 +1,9 @@
+# frozen_string_literal: true
+
+class Folio::Console::<%= class_name.pluralize %>::CatalogueComponent < Folio::Console::ApplicationComponent
+  include Folio::Console::Ui::IndexHelper
+
+  def initialize(<%= index_variable_name %>:)
+    @<%= index_variable_name %> = <%= index_variable_name %>
+  end
+end

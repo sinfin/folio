@@ -1,6 +1,6 @@
-$catalogue-orange: $orange !default
-$catalogue-red: $red !default
-$catalogue-green: $green !default
+$f-c-catalogue__orange: $orange !default
+$f-c-catalogue__red: $red !default
+$f-c-catalogue__green: $green !default
 
 .f-c-catalogue
   $this: &
@@ -43,15 +43,15 @@ $catalogue-green: $green !default
 
     &-orange,
     #{$this}__row:hover &-orange
-      background: $catalogue-orange !important
+      background: $f-c-catalogue__orange !important
 
     &-red,
     #{$this}__row:hover &-red
-      background: $catalogue-red !important
+      background: $f-c-catalogue__red !important
 
     &-green,
     #{$this}__row:hover &-green
-      background: $catalogue-green !important
+      background: $f-c-catalogue__green !important
 
   &__collection-actions-label
     display: flex

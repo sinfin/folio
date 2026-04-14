@@ -1,5 +1,0 @@
-.<%= cell_css_class_name %>
-  = catalogue(model, no_collection_actions: true)
-    ruby:
-      edit_link :to_label
-      actions

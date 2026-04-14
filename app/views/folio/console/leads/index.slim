@@ -1,3 +1,14 @@
 = index_header
 
-== cell('folio/console/leads/catalogue', @leads)
+.f-c-leads-catalogue
+  = catalogue(@leads, klass: Folio::Lead)
+    ruby:
+      show_link(:name, sanitize: true)
+
+      email(sanitize: true)
+
+      date(:created_at)
+
+      state
+
+      actions :show, :edit, :destroy

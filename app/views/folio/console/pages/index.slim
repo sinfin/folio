@@ -12,7 +12,7 @@
 
     date(:published_at)
 
-    position_controls if model && model[:ancestry]
+    position_controls if ancestry?
 
     locale = (Folio::Current.site.locales.size > 1 || Rails.application.config.folio_console_add_locale_to_preview_links) ? I18n.locale : nil
 

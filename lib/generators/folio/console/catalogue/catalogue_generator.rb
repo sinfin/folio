@@ -11,10 +11,10 @@ class Folio::Console::CatalogueGenerator < Rails::Generators::NamedBase
     template "index.slim.tt", "app/views/folio/console/#{base_path}/index.slim"
   end
 
-  def cell
-    template "cell.rb.tt", "app/cells/folio/console/#{base_path}/catalogue_cell.rb"
-    template "cell.slim.tt", "app/cells/folio/console/#{base_path}/catalogue/show.slim"
-    template "cell_test.rb.tt", "test/cells/folio/console/#{base_path}/catalogue_cell_test.rb"
+  def component
+    template "catalogue_component.rb.tt", "app/components/folio/console/#{base_path}/catalogue_component.rb"
+    template "catalogue_component.slim.tt", "app/components/folio/console/#{base_path}/catalogue_component.slim"
+    template "catalogue_component_test.rb.tt", "test/components/folio/console/#{base_path}/catalogue_component_test.rb"
   end
 
   private
@@ -24,10 +24,6 @@ class Folio::Console::CatalogueGenerator < Rails::Generators::NamedBase
 
     def index_variable_name
       class_name.split("::").pop.downcase.pluralize
-    end
-
-    def cell_name
-      "folio/console/#{base_path}/catalogue"
     end
 
     def cell_css_class_name
