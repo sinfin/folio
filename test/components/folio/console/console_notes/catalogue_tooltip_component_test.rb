@@ -13,6 +13,8 @@ class Folio::Console::ConsoleNotes::CatalogueTooltipComponentTest < Folio::Conso
 
     render_inline(Folio::Console::ConsoleNotes::CatalogueTooltipComponent.new(record: model))
 
+    assert_selector(".f-c-console-notes-catalogue-tooltip[data-controller='f-c-console-notes-catalogue-tooltip']")
+    assert_includes rendered_content, "f-c-console-notes-catalogue-tooltip#onNoteChange"
     assert_selector(".f-c-console-notes-catalogue-tooltip--some-open")
     assert_no_selector(".f-c-console-notes-catalogue-tooltip--only-closed")
 

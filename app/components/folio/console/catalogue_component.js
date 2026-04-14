@@ -1,54 +1,83 @@
-// converted via https://coffeescript.org/#try
-// once you update it, remove it from package.json standard js ignored files
+window.Folio.Stimulus.register('f-c-catalogue', class extends window.Stimulus.Controller {
+  static targets = ['collectionBar']
 
-window.jQuery(function () {
-  let $catalogues, onCheckboxChange
-  $catalogues = window.jQuery('.f-c-catalogue--collection-actions')
-  if ($catalogues.length === 0) {
-    return
+  connect () {
+    this.syncCollectionBar()
   }
-  onCheckboxChange = function ($catalogue) {
-    let $all, $bar, $checked, ids
-    ids = []
-    $all = $catalogue.find('.f-c-catalogue__collection-actions-checkbox')
-    $checked = $all.filter(':checked')
-    $checked.each(function () {
-      return ids.push(this.value)
-    })
-    $bar = $catalogue.find('.f-c-catalogue__collection-actions-bar')
-    $bar.data('ids', ids.join(','))
-    $bar.prop('hidden', ids.length === 0).find('.f-c-catalogue__collection-actions-bar-count').text(ids.length)
-    $bar.find('[data-url-base]').each(function () {
-      let $this
-      $this = window.jQuery(this)
-      return $this.prop('href', `${$this.data('url-base')}?ids=${ids}`)
-    })
-    return $catalogue.find('.f-c-catalogue__collection-actions-checkbox-all').prop('checked', $all.length === $checked.length)
+
+  onRowCheckboxChange () {
+    this.syncCollectionBar()
   }
-  return window.jQuery(document).on('change', '.f-c-catalogue__collection-actions-checkbox', function () {
-    return onCheckboxChange(window.jQuery(this).closest('.f-c-catalogue'))
-  }).on('change', '.f-c-catalogue__collection-actions-checkbox-all', function () {
-    let $catalogue, $this
-    console.log('all')
-    $this = window.jQuery(this)
-    $catalogue = $this.closest('.f-c-catalogue')
-    $catalogue.find('.f-c-catalogue__collection-actions-checkbox').prop('checked', $this.prop('checked'))
-    return onCheckboxChange($catalogue)
-  }).on('click', '.f-c-catalogue__collection-actions-bar-close', function () {
-    let $catalogue
-    $catalogue = window.jQuery(this).closest('.f-c-catalogue')
-    $catalogue.find('.f-c-catalogue__collection-actions-checkbox').prop('checked', false)
-    return onCheckboxChange($catalogue)
-  }).on('submit', '.f-c-catalogue__collection-actions-bar-form', function (e) {
-    let $bar, $form, ids
-    $form = window.jQuery(this)
-    $bar = $form.closest('.f-c-catalogue__collection-actions-bar')
-    ids = $bar.data('ids')
-    if (ids) {
-      $form.find('.f-c-catalogue__collection-actions-bar-input').remove()
-      return $form.append(`<input type="hidden" class="f-c-catalogue__collection-actions-bar-input" name="ids" value="${ids}">`)
-    } else {
-      return e.preventDefault()
+
+  onCheckboxAllChange (event) {
+    const checked = event.target.checked
+
+    for (const cb of this.element.querySelectorAll('.f-c-catalogue__collection-actions-checkbox')) {
+      cb.checked = checked
     }
-  })
+
+    this.syncCollectionBar()
+  }
+
+  clearCollectionCheckboxes () {
+    for (const cb of this.element.querySelectorAll('.f-c-catalogue__collection-actions-checkbox')) {
+      cb.checked = false
+    }
+
+    this.syncCollectionBar()
+  }
+
+  syncCollectionBar () {
+    if (!this.hasCollectionBarTarget) return
+
+    const ids = []
+
+    for (const cb of this.element.querySelectorAll('.f-c-catalogue__collection-actions-checkbox')) {
+      if (cb.checked) ids.push(cb.value)
+    }
+
+    const bar = this.collectionBarTarget
+    bar.dataset.ids = ids.join(',')
+    bar.hidden = ids.length === 0
+
+    const countEl = bar.querySelector('.f-c-catalogue__collection-actions-bar-count')
+
+    if (countEl) countEl.textContent = String(ids.length)
+
+    const qs = ids.join(',')
+
+    for (const link of bar.querySelectorAll('[data-url-base]')) {
+      const base = link.dataset.urlBase
+
+      if (base) link.setAttribute('href', `${base}?ids=${qs}`)
+    }
+
+    const rowBoxes = this.element.querySelectorAll('.f-c-catalogue__collection-actions-checkbox')
+    const allCb = this.element.querySelector('.f-c-catalogue__collection-actions-checkbox-all')
+
+    if (allCb && rowBoxes.length) {
+      allCb.checked = [...rowBoxes].every((cb) => cb.checked)
+    }
+  }
+
+  submitCollectionBarForm (event) {
+    const form = event.target
+    const ids = this.collectionBarTarget.dataset.ids
+
+    if (!ids) {
+      event.preventDefault()
+      return
+    }
+
+    for (const el of form.querySelectorAll('.f-c-catalogue__collection-actions-bar-input')) {
+      el.remove()
+    }
+
+    const input = document.createElement('input')
+    input.type = 'hidden'
+    input.className = 'f-c-catalogue__collection-actions-bar-input'
+    input.name = 'ids'
+    input.value = ids
+    form.appendChild(input)
+  }
 })

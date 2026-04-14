@@ -38,4 +38,20 @@ class Folio::Console::CatalogueComponentTest < Folio::Console::ComponentTest
     assert_no_selector(".f-c-catalogue__header-cell")
     assert_selector(".f-c-index-no-records")
   end
+
+  test "adds Stimulus catalogue controller when collection actions present" do
+    klass = Folio::Page
+    records = create_list(:folio_page, 1)
+    block = proc { edit_link(:title) }
+
+    render_inline(Folio::Console::CatalogueComponent.new(
+      klass:,
+      records:,
+      block:,
+      collection_actions: [:csv],
+    ))
+
+    assert_match(/data-controller="[^"]*\bf-c-catalogue\b/, rendered_content)
+    assert_selector(".f-c-catalogue__collection-actions-bar[data-f-c-catalogue-target='collectionBar']")
+  end
 end

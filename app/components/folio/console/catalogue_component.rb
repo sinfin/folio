@@ -71,12 +71,21 @@ class Folio::Console::CatalogueComponent < Folio::Console::ApplicationComponent
   end
 
   def catalogue_data
-    stimulus_lightbox.merge(boundaries_hash)
-                     .merge(@js_data || {})
+    base = stimulus_merge_data(
+      stimulus_lightbox,
+      boundaries_hash
+    ).merge(@js_data || {})
+
+    return base unless collection_actions.present?
+
+    stimulus_merge_data(
+      base,
+      stimulus_controller("f-c-catalogue")
+    )
   end
 
   def collection_actions
-    nil
+    @collection_actions_option
   end
 
   def attribute(name = nil, value = nil, class_name: nil, spacey: false, compact: false, media_query: nil, skip_desktop_header: false, small: false, aligned: false, sanitize: false, hidden: false, &block)
@@ -493,7 +502,10 @@ class Folio::Console::CatalogueComponent < Folio::Console::ApplicationComponent
       simple_form_for("",
                       url: url_for(["collection_#{action}".to_sym, :console, @klass]),
                       method:,
-                      html: { class: "f-c-catalogue__collection-actions-bar-form" }) do |_f|
+                      html: {
+                        class: "f-c-catalogue__collection-actions-bar-form",
+                        data: stimulus_action(submit: "submitCollectionBarForm"),
+                      }) do |_f|
         render_catalogue_child(Folio::Console::Ui::ButtonComponent.new(**opts))
       end
     elsif action == :csv

@@ -128,12 +128,22 @@ function * triggerDirtyFormOrSubmit (action) {
       yield put(setNotesFieldsData({ ...response.data.react, submitting: false }))
 
       if (notesFields.classNameParent && notesFields.classNameTooltipParent) {
-        window
-          .jQuery(notesFields.domRoot)
-          .closest(`.${notesFields.classNameParent}`)
-          .trigger('folioConsole:success', response)
-          .find(`.${notesFields.classNameTooltipParent}`)
-          .html(response.data.catalogue_tooltip)
+        const parent = notesFields.domRoot.closest(`.${notesFields.classNameParent}`)
+
+        if (parent) {
+          parent.dispatchEvent(new CustomEvent('folioConsole:success', {
+            bubbles: true,
+            detail: response
+          }))
+
+          if (window.jQuery) {
+            window.jQuery(parent).trigger('folioConsole:success', response)
+          }
+
+          const tooltipParent = parent.querySelector(`.${notesFields.classNameTooltipParent}`)
+
+          if (tooltipParent) tooltipParent.innerHTML = response.data.catalogue_tooltip
+        }
       }
     } catch (e) {
       yield put(setSubmitting(false))

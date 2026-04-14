@@ -25,4 +25,21 @@ class Folio::Console::ConsoleNotes::CatalogueTooltipComponent < Folio::Console::
     classes << "f-c-console-notes-catalogue-tooltip--only-closed" if only_closed?
     classes.join(" ")
   end
+
+  def catalogue_tooltip_data
+    stimulus_merge_data(
+      stimulus_controller("f-c-console-notes-catalogue-tooltip",
+                          action: { change: "onNoteChange" },
+                          inline: true),
+      tooltip_note_parent_data
+    )
+  end
+
+  private
+    def tooltip_note_parent_data
+      {
+        class_name_parent: Folio::Console::ReactHelper::REACT_NOTE_PARENT_CLASS_NAME,
+        class_name_form_parent: Folio::Console::ReactHelper::REACT_NOTE_FORM_PARENT_CLASS_NAME,
+      }
+    end
 end

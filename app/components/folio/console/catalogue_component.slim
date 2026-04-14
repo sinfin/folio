@@ -7,7 +7,10 @@ div[
 
   - if @records.present?
     - if collection_actions
-      .f-c-catalogue__collection-actions-bar hidden=true
+      .f-c-catalogue__collection-actions-bar[
+        hidden=true
+        data=stimulus_target("collectionBar")
+      ]
         .f-c-catalogue__collection-actions-bar-count-wrap
           .f-c-catalogue__collection-actions-bar-count 0
           = folio_icon(:content_copy,
@@ -16,7 +19,9 @@ div[
         - collection_actions.each do |action|
           = collection_action_for(action)
 
-        span.f-c-catalogue__collection-actions-bar-close
+        span.f-c-catalogue__collection-actions-bar-close[
+          data=stimulus_action(click: "clearCollectionCheckboxes")
+        ]
           = folio_icon(:close)
 
     .f-c-catalogue__table
@@ -37,6 +42,7 @@ div[
                 class="form-check-input"
                 class="f-c-catalogue__collection-actions-checkbox-all"
                 type="checkbox"
+                data=stimulus_action(change: "onCheckboxAllChange")
               ]
 
         = header_html
@@ -76,6 +82,7 @@ div[
                       type="checkbox"
                       name="ids[]"
                       value=rec.id
+                      data=stimulus_action(change: "onRowCheckboxChange")
                     ]
 
               = html

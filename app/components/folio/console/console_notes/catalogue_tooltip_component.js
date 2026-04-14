@@ -1,70 +1,87 @@
 window.FolioConsole = window.FolioConsole || {}
 
-window.FolioConsole.NotesCatalogueTooltip = {}
+window.FolioConsole.NotesCatalogueTooltip = window.FolioConsole.NotesCatalogueTooltip || {}
 
-window.FolioConsole.NotesCatalogueTooltip.onSuccess = ($tooltip, res) => {
-  // to be overriden in app
+window.FolioConsole.NotesCatalogueTooltip.onSuccess = (tooltipEl, res) => {
+  // Override in host app when needed
 }
 
-window.FolioConsole.NotesCatalogueTooltip.onChange = (e) => {
-  const $input = window.jQuery(e.target)
-  const $tooltip = $input.closest('.f-c-console-notes-catalogue-tooltip')
+window.Folio.Stimulus.register('f-c-console-notes-catalogue-tooltip', class extends window.Stimulus.Controller {
+  onNoteChange (event) {
+    const input = event.target
 
-  if ($tooltip.hasClass('f-c-console-notes-catalogue-tooltip--submitting')) return
+    if (!input.classList.contains('f-c-console-notes-catalogue-tooltip__note-input')) return
 
-  $tooltip.addClass('f-c-console-notes-catalogue-tooltip--submitting')
+    const tooltip = this.element
 
-  window.jQuery.ajax({
-    url: $input.data('url'),
-    method: 'POST',
-    data: {
-      closed: $input.prop('checked')
-    },
-    success: (res) => {
+    if (tooltip.classList.contains('f-c-console-notes-catalogue-tooltip--submitting')) return
+
+    tooltip.classList.add('f-c-console-notes-catalogue-tooltip--submitting')
+
+    window.Folio.Api.apiPost(input.dataset.url, {
+      closed: input.checked
+    }).then((res) => {
       if (res && res.data) {
-        const $parent = $tooltip.closest(`.${$tooltip.data('class-name-parent')}`)
-        $parent.trigger('folioConsole:success', res)
+        const parentClass = tooltip.dataset.classNameParent
+        const formParentClass = tooltip.dataset.classNameFormParent
+        const parent = parentClass ? tooltip.closest(`.${parentClass}`) : null
+
+        if (parent) {
+          parent.dispatchEvent(new CustomEvent('folioConsole:success', {
+            bubbles: true,
+            detail: res
+          }))
+
+          if (window.jQuery) {
+            window.jQuery(parent).trigger('folioConsole:success', res)
+          }
+        }
 
         if (res.data.catalogue_tooltip) {
-          $tooltip.replaceWith(window.jQuery(res.data.catalogue_tooltip))
+          const tpl = document.createElement('template')
+          tpl.innerHTML = res.data.catalogue_tooltip.trim()
+          const newEl = tpl.content.firstElementChild
+
+          if (newEl) {
+            tooltip.replaceWith(newEl)
+          } else {
+            tooltip.remove()
+          }
         } else {
-          $tooltip.remove()
+          tooltip.remove()
         }
 
-        if (res.data.form) {
-          const $formParent = $parent.find(`.${$tooltip.data('class-name-form-parent')}`)
+        if (res.data.form && parent) {
+          const formParent = formParentClass ? parent.querySelector(`.${formParentClass}`) : null
 
-          $formParent.find('.folio-react-wrap--notes-fields').each((i, el) => {
-            window.FolioConsole.React.destroy(el)
-          })
+          if (formParent) {
+            for (const el of formParent.querySelectorAll('.folio-react-wrap--notes-fields')) {
+              window.FolioConsole.React.destroy(el)
+            }
 
-          $formParent.html(res.data.form)
+            formParent.innerHTML = res.data.form
 
-          $formParent.find('.folio-react-wrap--notes-fields').each((i, el) => {
-            window.FolioConsole.React.init(el)
-          })
+            for (const el of formParent.querySelectorAll('.folio-react-wrap--notes-fields')) {
+              window.FolioConsole.React.init(el)
+            }
+          }
         }
 
-        window.FolioConsole.NotesCatalogueTooltip.onSuccess($tooltip, res)
+        window.FolioConsole.NotesCatalogueTooltip.onSuccess(tooltip, res)
+      }
+    }).catch((err) => {
+      const json = err.responseData
+      if (json && Array.isArray(json.errors)) {
+        const content = json.errors.map((obj) => `${obj.title} - ${obj.detail}`).join('<br>')
+        document.dispatchEvent(new CustomEvent('folio:flash', {
+          bubbles: true,
+          detail: { flash: { content, variant: 'danger' } }
+        }))
       }
 
-      $tooltip.removeClass('f-c-console-notes-catalogue-tooltip--submitting')
-
-      window.FolioConsole.Ui.Flash.flashMessageFromMeta(res)
-    },
-    error: (jxHr) => {
-      if (jxHr.responseText) {
-        try {
-          window.FolioConsole.Ui.Flash.flashMessageFromApiErrors(JSON.parse(jxHr.responseText))
-        } catch (_e) {}
-      }
-
-      $tooltip.removeClass('f-c-console-notes-catalogue-tooltip--submitting')
-      $input.prop('checked', !$input.prop('checked'))
-    }
-  })
-}
-
-window.jQuery(document).on('change',
-  '.f-c-console-notes-catalogue-tooltip__note-input',
-  window.FolioConsole.NotesCatalogueTooltip.onChange)
+      input.checked = !input.checked
+    }).finally(() => {
+      tooltip.classList.remove('f-c-console-notes-catalogue-tooltip--submitting')
+    })
+  }
+})
