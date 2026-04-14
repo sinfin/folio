@@ -68,12 +68,30 @@ app/components/
 - **JavaScript Integration:**
   - Use Stimulus for behavior
   - Place JS in the same directory as the component
+- **Ruby:**
+  - Most instance methods can be `private`; ViewComponent still exposes them to the template
+- **Composition vs inheritance:**
+  - Avoid subclassing one ViewComponent from another when each has its own template; prefer **composition** (render a child component) instead
+- **Dependencies (no hidden global state):**
+  - Pass data in explicitly (`initialize` arguments, slots) rather than reading `params`, the current URL, or other request-global state inside the component—improves reuse and makes behavior obvious in tests
 - **Templates:**
   - Use Slim for templates
   - Keep templates minimal and focused
+  - Avoid heavy inline Ruby in templates; move logic to instance methods on the component class
+- **Partials, helpers, and markup:**
+  - Prefer ViewComponents over partials and over helpers that return HTML
+  - Prefer **slots** for nested markup; avoid passing HTML via `html_safe` string arguments (that bypasses Rails sanitization and is risky)
+- **Testing:**
+  - Always assert against **rendered output** (for example with `render_inline` and expectations on the HTML or text), not by calling component instance methods in isolation
+  - Treat the component as a black box from the user’s perspective: what matters is what appears in the response
+  - **One render per test:** issue a single `render_inline` (or equivalent) per example; split different props or states into separate tests instead of one long test with several renders
+- **Migrations from partials/views:**
+  - A large `initialize` often reflects real dependencies—that is useful signal for later refactors, not something to hide
 - **Documentation:**
   - Document public interface and usage
   - Include usage examples
+
+For broader guidance aligned with upstream ViewComponent, see [ViewComponent: Best practices](https://viewcomponent.org/best_practices.html).
 
 ---
 
@@ -121,8 +139,8 @@ The generator `rails generate folio:component TogglableFields` shows the full pa
 - [← Back to Architecture](architecture.md)
 - [Next: Atoms →](atoms.md)
 - [Admin Console](admin.md) | [Files & Media](files.md)
-- [Extending & Customization](extending.md) 
+- [Extending & Customization](extending.md)
 
 ---
 
-*For more details, see the individual chapters linked above. This components overview will be updated as the documentation evolves.* 
+*For more details, see the individual chapters linked above. This components overview will be updated as the documentation evolves.*
