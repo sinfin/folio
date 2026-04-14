@@ -4,7 +4,7 @@
 
 The CRA (CraMediaCloud) integration encodes uploaded videos into multiple quality profiles (SD/HD), HLS/DASH streaming manifests, and generates thumbnails/cover images. Videos become progressively available — SD quality is playable while HD encoding continues.
 
-**Repos:** folio gem (core engine) + economia app (overrides, player, UI)
+**Repos:** folio gem (core engine) + host app (overrides, player, UI)
 
 ---
 
@@ -43,7 +43,7 @@ When a video is uploaded, the encoder generates a **presigned S3 URL** (7-day ex
 
 ## 2. Two-Phase Encoding
 
-When `encoder_processing_phases` returns `> 1` (economia overrides to `2`), a **single manifest** is submitted with the `processingPhases="2"` XML attribute (same format as shown in §1). The profile group is always `VoDHDAuto` — CRA handles phasing internally.
+When `encoder_processing_phases` returns `> 1` (host_app overrides to `2`), a **single manifest** is submitted with the `processingPhases="2"` XML attribute (same format as shown in §1). The profile group is always `VoDHDAuto` — CRA handles phasing internally.
 
 CRA creates multiple internal jobs (one per phase), each with a `phase` field in API responses:
 
@@ -58,7 +58,7 @@ When `CheckProgressJob` sees a phase-1 job reach DONE, `save_intermediate_phase_
 
 When `encoder_processing_phases` is `1` or `nil` (default), the manifest is submitted without the `processingPhases` attribute. All existing behavior preserved.
 
-### economia override (`feature/cra-encoding-improvements` branch)
+### host_app override (`feature/cra-encoding-improvements` branch)
 
 ```ruby
 # app/overrides/models/folio/file/video_override.rb
@@ -227,14 +227,14 @@ If S3 returns 404 during `CreateMediaJob`, video is marked `source_file_missing`
 
 After phase 1 completes, `save_intermediate_phase_data` writes SD manifest/cover paths to the same top-level keys the player reads (`manifest_hls_path`, `manifest_dash_path`, `cover_path`). The video is playable at SD quality while AASM state remains `processing`.
 
-The economia `PlayerComponent` gates on manifest URL presence (not AASM `ready?`):
+The host_app `PlayerComponent` gates on manifest URL presence (not AASM `ready?`):
 ```ruby
 @valid = @file.remote_manifest_hls_url.present? || @file.remote_manifest_dash_url.present?
 ```
 
 When phase 2 completes, `process_output_hash` overwrites with HD paths. Next page load serves HD.
 
-### Console video detail (economia)
+### Console video detail (host_app)
 
 `AdditionalHtmlComponent` shows:
 - **Iframe with player** when manifest URL is present (same gate as PlayerComponent — manifest is available as soon as phase 1 completes, so this covers the SD-quality interim state)
@@ -275,7 +275,7 @@ Videos >4K (2160p) skip ffmpeg decoding entirely — HEVC reference frame buffer
 
 ---
 
-## 9. Legacy Video Support (economia)
+## 9. Legacy Video Support (host_app)
 
 Videos imported from old Wowza/CDN77 system have `legacy_data["skip_cra_encoding"] = true`. These:
 - Skip CRA encoding entirely (`process_attached_file` → just thumbnails + `processing_done!`)
@@ -283,18 +283,18 @@ Videos imported from old Wowza/CDN77 system have `legacy_data["skip_cra_encoding
 - Override `remote_manifest_url_base` and `remote_content_url_base` to match import domain
 - Skip CRA delete on destroy
 
-### Files (economia, branch `feature/cra-encoding-improvements`)
+### Files (host_app, branch `feature/cra-encoding-improvements`)
 
 | File | Purpose |
 |---|---|
 | `app/overrides/models/folio/file/video_override.rb` | CRA concern inclusion, profile group, 2-phase config, legacy video handling |
 | `app/overrides/jobs/folio/cra_media_cloud/create_media_job_override.rb` | Sets queue to `:video` |
-| `app/components/economia/cra_media_cloud/player_component.rb` | OTT player rendering with manifest-based gate, subtitles, Gemius analytics |
-| `app/components/economia/cra_media_cloud/player_component.js` | Stimulus controller: player lifecycle, viewport awareness, multi-instance coordination |
-| `app/components/folio/console/economia/files/additional_html_component.rb` | Console video detail: iframe player (manifest gate) + manifest URL links |
-| `app/components/folio/console/economia/files/additional_html_component.slim` | Template with manifest gate — shows player iframe or "not ready" |
-| `app/jobs/economia/import_video_from_url_job.rb` | Legacy video import from article URLs |
-| `app/lib/economia/article_storage/video_creator.rb` | Creates video records from Article Storage API |
+| `app/components/host_app/cra_media_cloud/player_component.rb` | OTT player rendering with manifest-based gate, subtitles, Gemius analytics |
+| `app/components/host_app/cra_media_cloud/player_component.js` | Stimulus controller: player lifecycle, viewport awareness, multi-instance coordination |
+| `app/components/folio/console/host_app/files/additional_html_component.rb` | Console video detail: iframe player (manifest gate) + manifest URL links |
+| `app/components/folio/console/host_app/files/additional_html_component.slim` | Template with manifest gate — shows player iframe or "not ready" |
+| `app/jobs/host_app/import_video_from_url_job.rb` | Legacy video import from article URLs |
+| `app/lib/host_app/article_storage/video_creator.rb` | Creates video records from Article Storage API |
 | `lib/tasks/cra_audit.rake` | CRA audit rake task (330 lines) |
 
 ---
@@ -337,6 +337,6 @@ S3_BUCKET_NAME / S3_REGION / AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY
 - [x] CreateFileJob: S3 server-side copy path for videos
 - [x] AASM state transition integration tests with CRA concern
 
-### Test coverage gaps (economia)
+### Test coverage gaps (host_app)
 
 - [x] `AdditionalHtmlComponent` — additional state coverage (legacy video, unprocessed video, ready video)
