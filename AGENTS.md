@@ -21,6 +21,7 @@ When a task matches a skill’s description, **read that `SKILL.md` and follow i
 | **folio-stimulus** | Stimulus controllers: registration, StimulusHelper data attributes, values/targets/actions, `inline: true`; uses **folio-javascript** |
 | **folio-tiptap-node** | Create or edit custom Tiptap block-editor nodes; `rails g folio:tiptap:node`; node structure, icons, groups, paste config; uses **folio-view-component** |
 | **folio-view-component-migration-from-cells** | Replace Trailblazer `*Cell` with `*Component`; `cell(` → `render`; uses **folio-view-component** |
+| **folio-file-editing** | File hygiene: trailing whitespace, single trailing newline, no BOM, LF line endings; applies to every file edit |
 | **folio-stimulus-migration-from-legacy-js** | Migrate jQuery / `$(document).on` / legacy bundles to Stimulus + vanilla DOM; uses **folio-stimulus** |
 
 ## Code Formatting and Linting
