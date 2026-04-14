@@ -6,6 +6,23 @@ AGENTS.md files can be placed at the project root or in subdirectories. When mul
 
 **Example:** Files in the `tiptap/` directory use `tiptap/AGENTS.md` which overrides the JavaScript formatting/linting instructions from the root `AGENTS.md` (using eslint/prettier instead of standardjs).
 
+## Skills (`.skills/`)
+
+Structured agent workflows live in **`.skills/<name>/SKILL.md`** (YAML frontmatter: `name`, `description`, trigger-oriented wording).
+
+When a task matches a skill’s description, **read that `SKILL.md` and follow it**. Host applications may use the same `.skills/` layout for their own workflows.
+
+| Skill | Triggers (examples) |
+|-------|---------------------|
+| **folio-view-component** | Build or change ViewComponents (generator, BEM, Slim/Sass, Stimulus data attrs, tests); frontend in `app/components` |
+| **folio-slim** | Slim template formatting: multi-line attributes, multiple `class` attrs, avoid inline Ruby, template length; `.slim` files |
+| **folio-scss** | SCSS/Sass styling: BEM nesting with `&`, colocated component stylesheets, scoping, don't style child components; `.sass`/`.scss` files |
+| **folio-javascript** | JavaScript conventions: ES6+, StandardJS, `Folio.Api`, flash events, debounce/throttle, DOM APIs; `.js` files |
+| **folio-stimulus** | Stimulus controllers: registration, StimulusHelper data attributes, values/targets/actions, `inline: true`; uses **folio-javascript** |
+| **folio-tiptap-node** | Create or edit custom Tiptap block-editor nodes; `rails g folio:tiptap:node`; node structure, icons, groups, paste config; uses **folio-view-component** |
+| **folio-view-component-migration-from-cells** | Replace Trailblazer `*Cell` with `*Component`; `cell(` → `render`; uses **folio-view-component** |
+| **folio-stimulus-migration-from-legacy-js** | Migrate jQuery / `$(document).on` / legacy bundles to Stimulus + vanilla DOM; uses **folio-stimulus** |
+
 ## Code Formatting and Linting
 
 After editing any code files, automatically format and lint them using the appropriate tools for that language.
@@ -64,7 +81,9 @@ Generators ensure:
   - Elements (E) and Modifiers (M) follow standard BEM: `__element` and `--modifier`
     - Example: `m-blog-post__button` (element), `m-blog-post__button--active` (modifier)
 - Stimulus: Use `stimulus_controller("controller-name", values: {...}, action: {...}, classes: [...])` helper for JavaScript behavior
-- Testing: Always test against rendered content, not instance methods
+- Testing:
+  - Always test against rendered content, not instance methods
+  - One render per test (`render_inline` once per example); use separate tests for other variants instead of multiple renders in one test
 - Ruby code:
   - Most ViewComponent instance methods can be private
   - Prefer ViewComponents over partials
