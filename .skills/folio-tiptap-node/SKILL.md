@@ -10,6 +10,10 @@ description: >-
 
 # Tiptap Node development (Folio)
 
+> **Path resolution:** This skill references Folio repo files (e.g. `docs/tiptap.md`).
+> In the Folio gem itself, use paths as-is. In a host app, resolve from the gem
+> root: `bundle show folio`.
+
 ## Prerequisites
 
 - **Read [`docs/tiptap.md`](docs/tiptap.md)** — full tiptap architecture, attribute types, data structure, rendering flow, icons, groups, paste config, and CSS. Do not rely on memory alone.

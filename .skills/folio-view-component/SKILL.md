@@ -10,6 +10,10 @@ description: >-
 
 # ViewComponent development (Folio)
 
+> **Path resolution:** This skill references Folio repo files (e.g. `docs/components.md`).
+> In the Folio gem itself, use paths as-is. In a host app, resolve from the gem
+> root: `bundle show folio`.
+
 ## When to use
 
 - New or refactored UI in **`app/components/**`**
