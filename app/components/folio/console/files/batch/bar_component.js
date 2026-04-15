@@ -296,11 +296,11 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
   }
 
   onReloadTriggerRaw () {
-    let url = window.Folio.addParamsToUrl(`${this.baseApiUrlValue}/batch_bar`, this.dataWithFormInputs())
+    const url = window.Folio.addParamsToUrl(`${this.baseApiUrlValue}/batch_bar`, this.dataWithFormInputs())
 
     this.ajax({
       url,
-      apiMethod: 'apiGet',
+      apiMethod: 'apiGet'
     })
   }
 

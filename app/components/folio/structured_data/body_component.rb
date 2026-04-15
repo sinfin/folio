@@ -147,7 +147,7 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
   def structured_data_hash_for_article
     tags_ary = @record.try(:cache_aware_published_tags) || @record.try(:published_tags)
 
-    cover_hash = structured_data_hash_for_cover(record_cover_thumb)
+    cover_hash = structured_data_hash_for_cover(record_cover_original)
 
     {
       "@type" => @record.try(:structured_data_type) || "Article",
@@ -169,7 +169,7 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
   end
 
   def structured_data_hash_for_author
-    cover_hash = structured_data_hash_for_cover(record_cover_thumb)
+    cover_hash = structured_data_hash_for_cover(record_cover_original)
     social_links = @record.try(:social_links) || {}
 
     if @record.try(:email).present?
@@ -190,12 +190,15 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
   def structured_data_hash_for_cover(cover)
     return unless cover.present?
 
+    thumb = cover.thumb(record_cover_thumb_size)
+    credit = [cover.try(:author).presence, cover.try(:attribution_source).presence].compact.join(" / ").presence
+
     {
       "@type" => "ImageObject",
-      "url" => cover.url,
-      "creditText" => cover.try(:author),
-      "width" => cover.width,
-      "height" => cover.height,
+      "url" => thumb.url,
+      "creditText" => credit,
+      "width" => thumb.width,
+      "height" => thumb.height,
     }.compact
   end
 
@@ -204,8 +207,8 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
       @record.try(:structured_data_cover_thumb_size) || Folio::OG_IMAGE_DIMENSIONS
     end
 
-    def record_cover_thumb
+    def record_cover_original
       cover = @record.try(:cache_aware_cover) || @record.cover
-      cover.present? ? cover.thumb(record_cover_thumb_size) : nil
+      cover.present? ? cover : nil
     end
 end

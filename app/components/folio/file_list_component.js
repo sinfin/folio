@@ -31,7 +31,7 @@ window.Folio.Stimulus.register('f-file-list', class extends window.Stimulus.Cont
     const bar = document.querySelector('.f-c-files-batch-bar')
 
     if (bar) {
-      bar.dispatchEvent(new CustomEvent("f-c-files-batch-bar:cancel"))
+      bar.dispatchEvent(new CustomEvent('f-c-files-batch-bar:cancel'))
     }
   }
 
