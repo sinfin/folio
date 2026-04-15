@@ -104,8 +104,8 @@
 //= require folio/console/file/processing_notifier/processing_notifier
 //= require folio/console/file_placements/multi_picker_fields/placement_component
 //= require folio/console/file_placements/multi_picker_fields_component
-//= require folio/console/files/batch/bar_component
 //= require folio/console/files/batch/form_component
+//= require folio/console/files/batch/bar_component
 //= require folio/console/files/display_toggle_component
 //= require folio/console/files/index_modal_component
 //= require folio/console/files/picker/document_component

@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 class Folio::Console::Files::Batch::FormComponent < Folio::Console::ApplicationComponent
-  def initialize(file_klass:, files: [])
+  def initialize(file_klass:, files: [], attribute_overrides: nil)
     @file_klass = file_klass
     @files = files
+    @attribute_overrides = attribute_overrides&.symbolize_keys || {}
   end
 
   def data
@@ -42,16 +43,21 @@ class Folio::Console::Files::Batch::FormComponent < Folio::Console::ApplicationC
     opts[:autocomplete] = true
 
     opts[:wrapper_html] = { class: "f-c-files-batch-form__form-group" }
+    opts[:input_html] ||= {}
 
-    values = @files.map { |file| file.public_send(attribute).presence }.uniq
+    values = if @attribute_overrides[attribute].present?
+      [@attribute_overrides[attribute]]
+    else
+      @files.map { |file| file.public_send(attribute).presence }.uniq
+    end
 
-    if values.present?
+    if values.blank?
+      opts.delete(:input_html)
+    else
       if values.size == 1
-        opts[:input_html] ||= {}
         opts[:input_html][:value] = values.first
       else
         opts[:wrapper_html][:class] += " f-c-files-batch-form__form-group--has-values form-group-invalid"
-        opts[:input_html] ||= {}
         opts[:input_html][:class] = "is-invalid"
         opts[:hint] = t(".has_values_hint")
         opts[:placeholder] = t(".has_values_placeholder")
@@ -59,5 +65,13 @@ class Folio::Console::Files::Batch::FormComponent < Folio::Console::ApplicationC
     end
 
     f.input(attribute, opts)
+  end
+
+  def files_in_processing_count
+    @files_in_processing_count ||= (@files.select { |f| f.processing? || f.unprocessed? }).size
+  end
+
+  def title
+    (1 < @files.size) ? t(".title.multiple") : t(".title.single")
   end
 end

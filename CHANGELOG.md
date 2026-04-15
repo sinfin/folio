@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## Changed
+- **Console files batch form is updated**:  When new file is de/selected or some of selected files gets update in background, bacth form get XHR update. Such update was erasing already written values in form.
+This is now changed. On XHR refresh, all non blank values are sent and overrides values comming from files.
+Also number of unprocessed files are displayed. And processing state for each file.
+
+
 ## [7.6.0] - 2026-04-09
 ### Added
 - **File search by CMS tags**: Top search bar now searches manually-added CMS keywords (tags) in addition to filename, headline, and description.

@@ -41,6 +41,7 @@ class Folio::FileListComponent < Folio::ApplicationComponent
                           "f-file-list/message" => "onMessage",
                           "f-uppy:upload-success": "uppyUploadSuccess",
                           "f-c-files-display-toggle:table-view-change": "tableViewChange",
+                          "f-uppy:upload": "folioUploadsStarted"
                         })
   end
 
