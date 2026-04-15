@@ -4,11 +4,13 @@ class Folio::Console::Files::Batch::BarComponent < Folio::Console::ApplicationCo
   def initialize(file_klass:,
                  change_to_propagate: nil,
                  multi_picker: false,
-                 updated_at: nil)
+                 updated_at: nil,
+                 attribute_overrides: nil)
     @file_klass = file_klass
     @change_to_propagate = change_to_propagate
     @multi_picker = multi_picker
     @updated_at = updated_at || Time.current
+    @attribute_overrides = attribute_overrides
   end
 
   def data
@@ -25,6 +27,7 @@ class Folio::Console::Files::Batch::BarComponent < Folio::Console::ApplicationCo
                           "f-c-files-batch-bar:action" => "batchActionFromFile",
                           "f-c-files-batch-bar:reload" => "onReloadTrigger",
                           "f-c-files-batch-bar:message" => "onMessage",
+                          "f-c-files-batch-bar:cancel" => "cancel",
                           "f-c-files-batch-form:submit" => "submitForm",
                           "f-c-files-batch-form:cancel" => "cancelForm",
                           "f-file-list-file:reloadForm" => "reloadForm",
