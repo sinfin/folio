@@ -9,6 +9,10 @@ description: >-
 
 # Trailblazer Cells → ViewComponent (Folio)
 
+> **Path resolution:** This skill references Folio repo files (e.g. `docs/components.md`).
+> In the Folio gem itself, use paths as-is. In a host app, resolve from the gem
+> root: `bundle show folio`.
+
 ## Prerequisites
 
 1. Follow **[`.skills/folio-view-component/SKILL.md`](../folio-view-component/SKILL.md)** for generators, base classes, BEM, Stimulus helpers, Slim/Sass/JS layout, and tests — this skill only covers the **cell-specific delta**.
