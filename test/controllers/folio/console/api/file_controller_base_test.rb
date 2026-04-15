@@ -108,6 +108,86 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       assert_response(:ok)
     end
 
+    test "#{klass} - open_batch_form merges file_attributes into form" do
+      files = create_list(klass.model_name.singular, 2, author: "author_from_db")
+      file_ids = files.map(&:id)
+
+      get url_for([:batch_bar, :console, :api, klass, format: :json])
+
+      assert_response(:ok)
+
+      post url_for([:handle_batch_queue, :console, :api, klass, format: :json]), params: {
+        queue: {
+          add: file_ids,
+
+        }
+      }
+
+      assert_response(:ok)
+
+      # empty input, same values in DB
+      post url_for([:open_batch_form, :console, :api, klass, format: :json]), params: {
+        file_attributes: {
+          author: "",
+        }
+      }
+
+      assert_response(:ok)
+      author_input = Nokogiri::HTML(response.parsed_body["data"]).at_css('input[name="file_attributes[author]"]')
+      assert_equal "author_from_db", author_input["value"]
+
+      # no input, different values in DB
+      files.first.update!(author: "new_autor")
+
+      post url_for([:open_batch_form, :console, :api, klass, format: :json]), params: {
+        file_attributes: {
+          author: "",
+        }
+      }
+
+      assert_response(:ok)
+      author_input = Nokogiri::HTML(response.parsed_body["data"]).at_css('input[name="file_attributes[author]"]')
+      assert_equal nil, author_input["value"]
+      assert_equal "Různé hodnoty", author_input["placeholder"]
+
+      # filled in input, different than stored values (input wins)
+      post url_for([:open_batch_form, :console, :api, klass, format: :json]), params: {
+        file_attributes: {
+          author: "author_from_request"
+        }
+      }
+
+      assert_response(:ok)
+      author_input = Nokogiri::HTML(response.parsed_body["data"]).at_css('input[name="file_attributes[author]"]')
+      assert_equal "author_from_request", author_input["value"]
+
+      # filled in input, same as stored value
+      files.each { |file| file.update!(author: "auhtor_from_db") }
+
+      post url_for([:open_batch_form, :console, :api, klass, format: :json]), params: {
+        file_attributes: {
+          author: "author_from_db",
+        }
+      }
+
+      assert_response(:ok)
+      author_input = Nokogiri::HTML(response.parsed_body["data"]).at_css('input[name="file_attributes[author]"]')
+      assert_equal "author_from_db", author_input["value"]
+
+      # filled in input, stored values are empty
+      files.each { |file| file.update!(author: "") }
+
+      post url_for([:open_batch_form, :console, :api, klass, format: :json]), params: {
+        file_attributes: {
+          author: "override_from_request",
+        }
+      }
+
+      assert_response(:ok)
+      author_input = Nokogiri::HTML(response.parsed_body["data"]).at_css('input[name="file_attributes[author]"]')
+      assert_equal "override_from_request", author_input["value"]
+    end
+
     test "#{klass} - handle_batch_queue" do
       # cannot test session[*] sadly
       file = create(klass.model_name.singular)
