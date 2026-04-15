@@ -1,0 +1,21 @@
+.f-special-characters-popup[
+  tabindex="-1"
+  data=stimulus_target("panel")
+]
+  .f-special-characters-popup__header[
+    data=stimulus_target("dragHandle")
+    data=stimulus_merge_data( \
+      stimulus_action(mousedown: "onDragHandleMousedown"), \
+      stimulus_action(touchstart: "onDragHandleTouchstart"), \
+    )
+  ]
+    span.f-special-characters-popup__title = title
+    button.f-special-characters-popup__close[
+      type="button"
+      data=stimulus_action(click: "close")
+      aria-label=t(".close")
+    ]
+      = folio_icon(:close, height: 16)
+
+  .f-special-characters-popup__body
+    = render(Folio::SpecialCharacters::ListComponent.new)

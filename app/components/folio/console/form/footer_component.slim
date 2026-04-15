@@ -45,6 +45,13 @@ div[
                         icon_options: { height: 16 })
 
       .f-c-form-footer__right
+        - unless read_only?
+          .f-c-form-footer__special-characters[
+            data=special_characters_wrapper_data
+          ]
+            = render(Folio::SpecialCharacters::TriggerComponent.new)
+            = render(Folio::SpecialCharacters::PopupComponent.new)
+
         - if preview_path_with_default
           = render(Folio::Console::Ui::ButtonComponent.new(href: preview_path_with_default,
                                                            class_name: 'f-c-form-footer__btn f-c-form-footer__btn--preview',

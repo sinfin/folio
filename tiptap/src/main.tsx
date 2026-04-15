@@ -35,6 +35,7 @@ window.Folio.Tiptap.init = (props) => {
   }
 
   const onCreate = ({ editor }: { editor: TiptapEditor }) => {
+    window.Folio.Tiptap.editor = editor;
     if (props.onCreate) {
       props.onCreate({ editor });
     }
@@ -102,6 +103,7 @@ window.Folio.Tiptap.destroy = () => {
 
   window.Folio.Tiptap.root.unmount();
   window.Folio.Tiptap.root = null;
+  window.Folio.Tiptap.editor = undefined;
 };
 
 window.addEventListener("message", (e) => {
@@ -144,6 +146,13 @@ window.addEventListener("message", (e) => {
         scrollTop: e.data.tiptapScrollTop || 0,
         autosaveIndicatorInfo: e.data.autosaveIndicatorInfo,
       });
+    }
+  } else if (e.data.type === "f-input-tiptap:insert-text") {
+    const ed = window.Folio.Tiptap.editor as
+      | import("@tiptap/core").Editor
+      | undefined;
+    if (ed && typeof e.data.text === "string") {
+      ed.chain().focus().insertContent(e.data.text).run();
     }
   } else if (e.data.type === "f-input-tiptap:window-resize") {
     const node = document.querySelector(

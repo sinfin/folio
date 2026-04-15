@@ -1,0 +1,24 @@
+.f-special-characters-list
+  display: grid
+  grid-template-columns: repeat(10, minmax(0, 1fr))
+  gap: 2px
+  padding: 8px
+
+  &__char
+    appearance: none
+    border: 1px solid var(--#{$prefix}border-color-translucent, rgba(0, 0, 0, 0.12))
+    background: var(--#{$prefix}body-bg, #fff)
+    border-radius: 2px
+    font-size: 1rem
+    line-height: 1.25
+    min-height: 2rem
+    padding: 0.125rem
+    cursor: pointer
+
+    &:hover,
+    &:focus-visible
+      background: var(--#{$prefix}secondary-bg, #f8f9fa)
+      border-color: var(--#{$prefix}primary, #0d6efd)
+
+    &:active
+      background: var(--#{$prefix}tertiary-bg, #e9ecef)

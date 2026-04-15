@@ -1,0 +1,58 @@
+.f-special-characters-popup
+  position: fixed
+  z-index: 1001
+  width: calc(100vw - 2rem)
+  max-width: 28rem
+  max-height: calc(70vh)
+  display: flex
+  flex-direction: column
+  background: var(--#{$prefix}body-bg, #fff)
+  border-radius: var(--#{$prefix}border-radius, 0.25rem)
+  box-shadow: $f-c-box-shadow-overlay
+  visibility: hidden
+  opacity: 0
+  pointer-events: none
+  transition: opacity 0.15s ease-out, visibility 0.15s ease-out
+
+  &--visible
+    visibility: visible
+    opacity: 1
+    pointer-events: auto
+
+  &__header
+    display: flex
+    align-items: center
+    justify-content: space-between
+    gap: $grid-gutter-base
+    padding: 0.5rem 0.75rem
+    border-bottom: 1px solid var(--#{$prefix}border-color, #dee2e6)
+    cursor: grab
+    user-select: none
+    touch-action: none
+
+  &--dragging .f-special-characters-popup__header
+    cursor: grabbing
+
+  &__title
+    font-size: 0.875rem
+    font-weight: 600
+
+  &__close
+    appearance: none
+    background: transparent
+    border: 0
+    padding: 0.25rem
+    line-height: 0
+    color: var(--#{$prefix}secondary-color, #6c757d)
+    cursor: pointer
+    border-radius: 2px
+
+    &:hover,
+    &:focus-visible
+      background: var(--#{$prefix}secondary-bg, #f8f9fa)
+      color: var(--#{$prefix}body-color, #212529)
+
+  &__body
+    flex: 1 1 auto
+    overflow: auto
+    min-height: 0
