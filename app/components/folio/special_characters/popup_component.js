@@ -1,27 +1,30 @@
 window.Folio.Stimulus.register('f-special-characters-popup', class extends window.Stimulus.Controller {
+  static values = { open: { type: Boolean, default: false } }
+
+  initialize () {
+    this.onDocumentMousemove = this.onDocumentMousemove.bind(this)
+    this.onDocumentMouseup = this.onDocumentMouseup.bind(this)
+    this.onDocumentTouchmove = this.onDocumentTouchmove.bind(this)
+    this.onDocumentTouchend = this.onDocumentTouchend.bind(this)
+    this.onWindowResize = window.Folio.debounce(() => this.applyPosition())
+  }
+
   connect () {
     this.isDragging = false
     this.wasMoved = false
     this.lastCoords = { x: 0, y: 0 }
     this.left = 0
     this.top = 0
-
-    this.onDocumentMousemove = this.onDocumentMousemove.bind(this)
-    this.onDocumentMouseup = this.onDocumentMouseup.bind(this)
-    this.onDocumentTouchmove = this.onDocumentTouchmove.bind(this)
-    this.onDocumentTouchend = this.onDocumentTouchend.bind(this)
   }
 
   disconnect () {
     this.stopDragging()
-  }
-
-  get isOpen () {
-    return !this.element.inert
+    window.removeEventListener('resize', this.onWindowResize)
+    window.removeEventListener('orientationchange', this.onWindowResize)
   }
 
   toggle (e) {
-    if (this.isOpen) {
+    if (this.openValue) {
       this.close()
     } else {
       this.open(e?.target)
@@ -37,7 +40,23 @@ window.Folio.Stimulus.register('f-special-characters-popup', class extends windo
       }
     }
     this.applyPosition()
-    this.element.inert = false
+    this.openValue = true
+  }
+
+  close () {
+    this.openValue = false
+    this.stopDragging()
+  }
+
+  openValueChanged (isOpen) {
+    this.element.inert = !isOpen
+    if (isOpen) {
+      window.addEventListener('resize', this.onWindowResize)
+      window.addEventListener('orientationchange', this.onWindowResize)
+    } else {
+      window.removeEventListener('resize', this.onWindowResize)
+      window.removeEventListener('orientationchange', this.onWindowResize)
+    }
   }
 
   positionAboveTrigger (triggerEl) {
@@ -46,11 +65,6 @@ window.Folio.Stimulus.register('f-special-characters-popup', class extends windo
     const gap = 8
     this.left = Math.round(triggerRect.left + triggerRect.width / 2 - rect.width / 2)
     this.top = Math.round(triggerRect.top - rect.height - gap)
-  }
-
-  close () {
-    this.element.inert = true
-    this.stopDragging()
   }
 
   centerPanel () {
