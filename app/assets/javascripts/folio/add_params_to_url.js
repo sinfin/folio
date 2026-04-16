@@ -49,7 +49,6 @@ window.Folio.objectToRailsStyleQueryString = (obj) => {
   return pairs.join('&')
 }
 
-
 const paramsToNestedObject = (searchParams) => {
   const flat = {}
 

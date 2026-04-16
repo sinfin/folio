@@ -1,8 +1,7 @@
 //= require folio/i18n
 //= require folio/remote_scripts
 
-
-//triggers `f-uppy:xxxx` events through stimulus_controller.dispatch() (eg. `f-uppy:upload-success`)
+// triggers `f-uppy:xxxx` events through stimulus_controller.dispatch() (eg. `f-uppy:upload-success`)
 window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controller {
   static values = {
     fileType: String,
