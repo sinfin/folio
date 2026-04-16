@@ -3,8 +3,8 @@
 
   const urlParamsForTheme = new URLSearchParams(window.location.search)
   const legacyBackgroundColor = urlParamsForTheme.get('backgroundColor')
-  const lightBackgroundColor = urlParamsForTheme.get('lightBackgroundColor')
-  const darkBackgroundColor = urlParamsForTheme.get('darkBackgroundColor')
+  const lightModeBackgroundColor = urlParamsForTheme.get('lightModeBackgroundColor')
+  const darkModeBackgroundColor = urlParamsForTheme.get('darkModeBackgroundColor')
 
   const validateHexColor = (value) => value && /^#[0-9A-Fa-f]{6}$/.test(value)
 
@@ -12,14 +12,14 @@
     let hex = null
     let useDarkClass = false
 
-    if (validateHexColor(lightBackgroundColor) && validateHexColor(darkBackgroundColor)) {
+    if (validateHexColor(lightModeBackgroundColor) && validateHexColor(darkModeBackgroundColor)) {
       let scheme
       if (explicitScheme === 'light' || explicitScheme === 'dark') {
         scheme = explicitScheme
       } else {
         scheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
       }
-      hex = scheme === 'dark' ? darkBackgroundColor : lightBackgroundColor
+      hex = scheme === 'dark' ? darkModeBackgroundColor : lightModeBackgroundColor
       useDarkClass = relativeLuminance(hex) < 0.5
     } else if (validateHexColor(legacyBackgroundColor)) {
       hex = legacyBackgroundColor

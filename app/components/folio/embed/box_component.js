@@ -25,8 +25,8 @@ window.Folio.Stimulus.register('f-embed-box', class extends window.Stimulus.Cont
     folioEmbedData: Object,
     centered: Boolean,
     backgroundColor: String,
-    lightBackgroundColor: String,
-    darkBackgroundColor: String
+    lightModeBackgroundColor: String,
+    darkModeBackgroundColor: String
   }
 
   static targets = ['iframe', 'loader']
@@ -44,8 +44,8 @@ window.Folio.Stimulus.register('f-embed-box', class extends window.Stimulus.Cont
   }
 
   get hasDualBackgroundColors () {
-    return this.constructor.isHexColor(this.lightBackgroundColorValue) &&
-      this.constructor.isHexColor(this.darkBackgroundColorValue)
+    return this.constructor.isHexColor(this.lightModeBackgroundColorValue) &&
+      this.constructor.isHexColor(this.darkModeBackgroundColorValue)
   }
 
   bindIntersectionObserver () {
@@ -78,8 +78,8 @@ window.Folio.Stimulus.register('f-embed-box', class extends window.Stimulus.Cont
     }
 
     if (this.hasDualBackgroundColors) {
-      params.set('lightBackgroundColor', this.lightBackgroundColorValue)
-      params.set('darkBackgroundColor', this.darkBackgroundColorValue)
+      params.set('lightModeBackgroundColor', this.lightModeBackgroundColorValue)
+      params.set('darkModeBackgroundColor', this.darkModeBackgroundColorValue)
     } else if (this.backgroundColorValue) {
       params.set('backgroundColor', this.backgroundColorValue)
     }
@@ -103,7 +103,7 @@ window.Folio.Stimulus.register('f-embed-box', class extends window.Stimulus.Cont
     if (scheme !== 'light' && scheme !== 'dark') return
     if (!this.hasDualBackgroundColors) return
 
-    const hex = scheme === 'dark' ? this.darkBackgroundColorValue : this.lightBackgroundColorValue
+    const hex = scheme === 'dark' ? this.darkModeBackgroundColorValue : this.lightModeBackgroundColorValue
     this.element.style.backgroundColor = hex
     if (this.hasLoaderTarget) {
       this.loaderTarget.style.backgroundColor = hex

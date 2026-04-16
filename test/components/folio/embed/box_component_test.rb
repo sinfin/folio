@@ -32,11 +32,11 @@ class Folio::Embed::BoxComponentTest < Folio::ComponentTest
 
     render_inline(Folio::Embed::BoxComponent.new(
       folio_embed_data:,
-      light_background_color: "#ffffff",
-      dark_background_color: "#111111"
+      light_mode_background_color: "#ffffff",
+      dark_mode_background_color: "#111111"
     ))
 
-    assert_selector(".f-embed-box[data-f-embed-box-light-background-color-value='#ffffff']")
-    assert_selector(".f-embed-box[data-f-embed-box-dark-background-color-value='#111111']")
+    assert_selector(".f-embed-box[data-f-embed-box-light-mode-background-color-value='#ffffff']")
+    assert_selector(".f-embed-box[data-f-embed-box-dark-mode-background-color-value='#111111']")
   end
 end
