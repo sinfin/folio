@@ -2,9 +2,10 @@
   --f-special-characters-popup__inner-padding: #{px-to-rem(8px)}
 
   $f-c-box-shadow-overlay: 0px 1px 4px rgba(0, 0, 0, 0.2), 2px 2px 40px rgba(0, 0, 0, 0.25) !default
+  $zindex-modal: 1055 !default
 
   position: fixed
-  z-index: 1001
+  z-index: $zindex-modal + 1
   width: calc(100vw - 2rem)
   max-width: px-to-rem(360px)
   max-height: px-to-rem(320px)
