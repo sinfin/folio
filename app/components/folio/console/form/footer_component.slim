@@ -46,9 +46,7 @@ div[
 
       .f-c-form-footer__right
         - unless read_only?
-          .f-c-form-footer__special-characters[
-            data=special_characters_wrapper_data
-          ]
+          .f-c-form-footer__special-characters
             = render(Folio::SpecialCharacters::TriggerComponent.new)
 
         - if preview_path_with_default

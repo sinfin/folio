@@ -16,7 +16,7 @@ class Folio::SpecialCharacters::ListComponent < Folio::ApplicationComponent
 
     def char_data(ch)
       if @stimulus_controller_name
-        stimulus_action(mousedown: "onCharMousedown",
+        stimulus_action(mousedown: "preventDefault",
                         click: "insertCharacter").merge(char: ch)
       end
     end

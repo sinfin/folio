@@ -5,8 +5,6 @@ window.Folio.Stimulus.register('f-special-characters-popup', class extends windo
     this.lastCoords = { x: 0, y: 0 }
     this.left = 0
     this.top = 0
-    this.lastInputEl = null
-    this.lastTiptapWrap = null
 
     this.onDocumentMousemove = this.onDocumentMousemove.bind(this)
     this.onDocumentMouseup = this.onDocumentMouseup.bind(this)
@@ -55,12 +53,6 @@ window.Folio.Stimulus.register('f-special-characters-popup', class extends windo
     this.stopDragging()
   }
 
-  onWindowKeydown (e) {
-    if (e.key === 'Escape' && this.isOpen) {
-      this.close()
-    }
-  }
-
   centerPanel () {
     const rect = this.element.getBoundingClientRect()
     const vw = window.innerWidth
@@ -101,67 +93,39 @@ window.Folio.Stimulus.register('f-special-characters-popup', class extends windo
     this.moveTo(this.left + dx, this.top + dy)
   }
 
-  onDocumentFocusin (e) {
-    const t = e.target
-    if (!t || t.nodeType !== 1) return
-    if (this.element.contains(t)) return
-
-    if (t.matches('input, textarea')) {
-      const type = (t.type || '').toLowerCase()
-      if (type === 'checkbox' || type === 'radio' || type === 'hidden' || type === 'file') {
-        return
-      }
-      this.lastInputEl = t
-      this.lastTiptapWrap = null
-      return
-    }
-
-    if (t.matches('iframe.f-input-tiptap__iframe')) {
-      const wrap = t.closest('.f-input-tiptap')
-      if (wrap) {
-        this.lastTiptapWrap = wrap
-        this.lastInputEl = null
-      }
-      return
-    }
-
-    const wrap = t.closest('.f-input-tiptap')
-    if (wrap) {
-      this.lastTiptapWrap = wrap
-      this.lastInputEl = null
-    }
-  }
-
   insertCharacter (e) {
     const char = e.currentTarget?.dataset?.char
     if (!char) return
 
-    if (this.lastInputEl && document.body.contains(this.lastInputEl)) {
-      const el = this.lastInputEl
-      const start = typeof el.selectionStart === 'number' ? el.selectionStart : 0
-      const end = typeof el.selectionEnd === 'number' ? el.selectionEnd : start
-      if (typeof el.setRangeText === 'function') {
-        el.setRangeText(char, start, end, 'end')
-      } else {
-        el.value = el.value.slice(0, start) + char + el.value.slice(end)
+    const target = document.activeElement
+    if (!target || this.element.contains(target)) return
+
+    if (target.matches('input, textarea')) {
+      const type = (target.type || '').toLowerCase()
+      if (type === 'checkbox' || type === 'radio' || type === 'hidden' || type === 'file') {
+        return
       }
-      el.dispatchEvent(new window.Event('input', { bubbles: true }))
-      el.dispatchEvent(new window.Event('change', { bubbles: true }))
+      const start = typeof target.selectionStart === 'number' ? target.selectionStart : 0
+      const end = typeof target.selectionEnd === 'number' ? target.selectionEnd : start
+      if (typeof target.setRangeText === 'function') {
+        target.setRangeText(char, start, end, 'end')
+      } else {
+        target.value = target.value.slice(0, start) + char + target.value.slice(end)
+      }
+      target.dispatchEvent(new window.Event('input', { bubbles: true }))
+      target.dispatchEvent(new window.Event('change', { bubbles: true }))
       return
     }
 
-    if (this.lastTiptapWrap && document.body.contains(this.lastTiptapWrap)) {
-      const iframe = this.lastTiptapWrap.querySelector('iframe.f-input-tiptap__iframe')
-      if (iframe && iframe.contentWindow) {
-        iframe.contentWindow.postMessage(
-          { type: 'f-input-tiptap:insert-text', text: char },
-          window.origin
-        )
-      }
+    if (target.matches('.f-input-tiptap__iframe')) {
+      target.dispatchEvent(new CustomEvent('f-special-characters-popup:insertText', {
+        bubbles: true,
+        detail: { text: char }
+      }))
     }
   }
 
-  onCharMousedown (e) {
+  preventDefault (e) {
     e.preventDefault()
   }
 

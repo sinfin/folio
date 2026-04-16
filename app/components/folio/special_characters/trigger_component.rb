@@ -9,6 +9,7 @@ class Folio::SpecialCharacters::TriggerComponent < Folio::ApplicationComponent
     end
 
     def button_data
-      stimulus_action(click: "toggle")
+      stimulus_action(mousedown: "preventDefault",
+                      click: "toggle")
     end
 end

@@ -102,13 +102,4 @@ class Folio::Console::Form::FooterComponent < Folio::Console::ApplicationCompone
       return nil if read_only?
       stimulus_action(hash)
     end
-
-    def special_characters_wrapper_data
-      stimulus_controller("f-special-characters-popup",
-                          inline: true,
-                          action: {
-                            "focusin@document" => "onDocumentFocusin",
-                            "keydown@window" => "onWindowKeydown",
-                          })
-    end
 end

@@ -2,4 +2,8 @@ window.Folio.Stimulus.register('f-special-characters-trigger', class extends win
   toggle () {
     this.element.dispatchEvent(new CustomEvent('f-special-characters-trigger:toggle', { bubbles: true }))
   }
+
+  preventDefault (e) {
+    e.preventDefault()
+  }
 })

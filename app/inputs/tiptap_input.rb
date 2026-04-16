@@ -31,6 +31,7 @@ class TiptapInput < SimpleForm::Inputs::StringInput
                         "beforeunload@window" => "onWindowBeforeUnload",
                         "orientationchange@window" => "onWindowResize",
                         "f-c-tiptap-simple-form-wrap:tiptapContinueUnsavedChanges" => "onContinueUnsavedChanges",
+                        "f-special-characters-popup:insertText" => "onSpecialCharactersInsertText",
                       })
 
     input_html_options[:hidden] = true
