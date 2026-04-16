@@ -26,4 +26,17 @@ class Folio::Embed::BoxComponentTest < Folio::ComponentTest
 
     assert_selector(".f-embed-box")
   end
+
+  def test_render_dual_theme_background_colors
+    folio_embed_data = { "active" => false }
+
+    render_inline(Folio::Embed::BoxComponent.new(
+      folio_embed_data:,
+      light_background_color: "#ffffff",
+      dark_background_color: "#111111"
+    ))
+
+    assert_selector(".f-embed-box[data-f-embed-box-light-background-color-value='#ffffff']")
+    assert_selector(".f-embed-box[data-f-embed-box-dark-background-color-value='#111111']")
+  end
 end

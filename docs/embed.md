@@ -277,7 +277,7 @@ The build process combines the source files into a single HTML file using `data/
 
 1. **Read template**: Loads `embed.html` template with CSS and JavaScript placeholders
 2. **Inject CSS**: Replaces `/*! folio-embed-css */` placeholder with contents of `embed.css`
-3. **Inject JavaScript**: Replaces `// folio-embed-javascript //` placeholder with contents of `embed.js`
+3. **Inject JavaScript**: Replaces `// folio-embed-javascript //` with `relative_luminance.js` (shared helper) concatenated with `embed.js`
 4. **Generate output**: Creates `data/embed/dist/folio-embed-dist.html` with all assets inlined
 
 ## Usage Examples

@@ -5,20 +5,32 @@ class Folio::Embed::BoxComponent < ApplicationComponent
                  data: nil,
                  centered: true,
                  background_color: nil,
+                 light_background_color: nil,
+                 dark_background_color: nil,
                  class_name: nil)
     @folio_embed_data = folio_embed_data.is_a?(Hash) ? folio_embed_data : {}
     @data = data
     @centered = centered
     @background_color = background_color
+    @light_background_color = light_background_color
+    @dark_background_color = dark_background_color
     @class_name = class_name
   end
 
   private
     def before_render
-      if @background_color.present?
+      if dual_theme_background?
+        color = @light_background_color
+        @style = "background-color: #{color};"
+        @low_luminance = get_luminance(color) < 0.5
+      elsif @background_color.present?
         @style = "background-color: #{@background_color};"
         @low_luminance = get_luminance(@background_color) < 0.5
       end
+    end
+
+    def dual_theme_background?
+      @light_background_color.present? && @dark_background_color.present?
     end
 
     def wrap_data
@@ -30,9 +42,12 @@ class Folio::Embed::BoxComponent < ApplicationComponent
                                 intersected: false,
                                 centered: @centered,
                                 background_color: @background_color,
+                                light_background_color: @light_background_color,
+                                dark_background_color: @dark_background_color,
                               },
                               action: {
                                 "message@window" => "onWindowMessage",
+                                "folioColorSchemeChange@window" => "onFolioColorSchemeChange",
                                 "f-embed-box:load" => "onLoadTrigger",
                                 "f-observer:intersect" => "onIntersect",
                                 "f-input-embed-inner:update" => "onInnerUpdate",

@@ -3,7 +3,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-## Changed
+### Added
+
+- **Embed: dual theme backgrounds**: `Folio::Embed::BoxComponent` accepts optional `light_background_color` and `dark_background_color` (both required to enable). The iframe URL passes `lightBackgroundColor` and `darkBackgroundColor` query params; the static embed page picks an initial color from `prefers-color-scheme` or from a host-driven update.
+- **`folioColorSchemeChange` window event**: `f-embed-box` listens with `folioColorSchemeChange@window` and sends `postMessage` to the iframe (`f-embed:set-color-scheme` with `colorScheme: 'light' | 'dark'`) so the embed background can follow a manual theme toggle without reloading the iframe.
+- **Shared luminance helper**: `app/assets/javascripts/folio/embed/relative_luminance.js` is prepended before `embed.js` when building `folio-embed-dist.html`; the same file is required for the Stimulus controller so loader contrast logic stays in one place.
+
+### Changed
+
 - **Console files batch form is updated**:  When new file is de/selected or some of selected files gets update in background, bacth form get XHR update. Such update was erasing already written values in form.
 This is now changed. On XHR refresh, all non blank values are sent and overrides values comming from files.
 Also number of unprocessed files are displayed. And processing state for each file.

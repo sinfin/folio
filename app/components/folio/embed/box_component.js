@@ -1,4 +1,5 @@
 //= require folio/intersection-observer
+//= require folio/embed/relative_luminance
 
 window.Folio = window.Folio || {}
 window.Folio.Embed = window.Folio.Embed || {}
@@ -23,10 +24,16 @@ window.Folio.Stimulus.register('f-embed-box', class extends window.Stimulus.Cont
     intersected: Boolean,
     folioEmbedData: Object,
     centered: Boolean,
-    backgroundColor: String
+    backgroundColor: String,
+    lightBackgroundColor: String,
+    darkBackgroundColor: String
   }
 
   static targets = ['iframe', 'loader']
+
+  static isHexColor (value) {
+    return typeof value === 'string' && /^#[0-9A-Fa-f]{6}$/.test(value)
+  }
 
   connect () {
     this.bindIntersectionObserver()
@@ -34,6 +41,11 @@ window.Folio.Stimulus.register('f-embed-box', class extends window.Stimulus.Cont
 
   disconnect () {
     this.unbindIntersectionObserver()
+  }
+
+  get hasDualBackgroundColors () {
+    return this.constructor.isHexColor(this.lightBackgroundColorValue) &&
+      this.constructor.isHexColor(this.darkBackgroundColorValue)
   }
 
   bindIntersectionObserver () {
@@ -65,7 +77,10 @@ window.Folio.Stimulus.register('f-embed-box', class extends window.Stimulus.Cont
       params.set('centered', '1')
     }
 
-    if (this.backgroundColorValue) {
+    if (this.hasDualBackgroundColors) {
+      params.set('lightBackgroundColor', this.lightBackgroundColorValue)
+      params.set('darkBackgroundColor', this.darkBackgroundColorValue)
+    } else if (this.backgroundColorValue) {
       params.set('backgroundColor', this.backgroundColorValue)
     }
 
@@ -81,6 +96,27 @@ window.Folio.Stimulus.register('f-embed-box', class extends window.Stimulus.Cont
 
   folioEmbedDataValueChanged (newValue, _oldValue) {
     this.load()
+  }
+
+  onFolioColorSchemeChange (e) {
+    const scheme = e.detail?.colorScheme
+    if (scheme !== 'light' && scheme !== 'dark') return
+    if (!this.hasDualBackgroundColors) return
+
+    const hex = scheme === 'dark' ? this.darkBackgroundColorValue : this.lightBackgroundColorValue
+    this.element.style.backgroundColor = hex
+    if (this.hasLoaderTarget) {
+      this.loaderTarget.style.backgroundColor = hex
+    }
+    const isLowLuminance = window.Folio.Embed.hexRelativeLuminance(hex) < 0.5
+    this.element.classList.toggle('folio-inversed-loader', isLowLuminance)
+
+    if (!this.hasIframeTarget) return
+    if (!this.intersectedValue) return
+    this.iframeTarget.contentWindow?.postMessage({
+      type: 'f-embed:set-color-scheme',
+      colorScheme: scheme
+    }, window.origin)
   }
 
   onWindowMessage (e) {
