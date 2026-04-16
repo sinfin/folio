@@ -88,7 +88,11 @@ class Folio::Current < ActiveSupport::CurrentAttributes
         begin
           Folio::Site.friendly.find(slug)
         rescue ActiveRecord::RecordNotFound
-          raise "Could not find site with '#{slug}' slug. Available are #{Folio::Site.pluck(:slug)}"
+          if ENV["FOLIO_DEV_FALLBACK_TO_MAIN_SITE"]
+            main_site
+          else
+            raise "Could not find site with '#{slug}' slug. Available are #{Folio::Site.pluck(:slug)}"
+          end
         end
       else
         Folio::Site.find_by(domain: host) || Folio::Current.main_site
