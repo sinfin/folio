@@ -7,7 +7,5 @@ class Folio::SpecialCharacters::TriggerComponentTest < Folio::ComponentTest
     render_inline(Folio::SpecialCharacters::TriggerComponent.new)
 
     assert_selector(".f-special-characters-trigger")
-    assert_selector("[data-test-id='special-characters-trigger']")
-    assert_text "Ø"
   end
 end

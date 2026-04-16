@@ -5,7 +5,7 @@ class Folio::SpecialCharacters::TriggerComponent < Folio::ApplicationComponent
 
   private
     def data
-      stimulus_controller("f-special-characters-trigger").merge(test_id: "special-characters-trigger")
+      stimulus_controller("f-special-characters-trigger")
     end
 
     def mobile_button_data
