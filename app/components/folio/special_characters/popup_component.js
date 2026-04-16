@@ -19,27 +19,39 @@ window.Folio.Stimulus.register('f-special-characters-popup', class extends windo
   }
 
   get isOpen () {
-    return this.element.classList.contains('f-special-characters-popup--visible')
+    return !this.element.inert
   }
 
-  toggle () {
+  toggle (e) {
     if (this.isOpen) {
       this.close()
     } else {
-      this.open()
+      this.open(e?.target)
     }
   }
 
-  open () {
+  open (triggerEl) {
     if (!this.wasMoved) {
-      this.centerPanel()
+      if (triggerEl instanceof window.Element) {
+        this.positionAboveTrigger(triggerEl)
+      } else {
+        this.centerPanel()
+      }
     }
     this.applyPosition()
-    this.element.classList.add('f-special-characters-popup--visible')
+    this.element.inert = false
+  }
+
+  positionAboveTrigger (triggerEl) {
+    const rect = this.element.getBoundingClientRect()
+    const triggerRect = triggerEl.getBoundingClientRect()
+    const gap = 8
+    this.left = Math.round(triggerRect.left + triggerRect.width / 2 - rect.width / 2)
+    this.top = Math.round(triggerRect.top - rect.height - gap)
   }
 
   close () {
-    this.element.classList.remove('f-special-characters-popup--visible')
+    this.element.inert = true
     this.stopDragging()
   }
 
@@ -64,12 +76,16 @@ window.Folio.Stimulus.register('f-special-characters-popup', class extends windo
   moveTo (left, top) {
     const rect = this.element.getBoundingClientRect()
     const vw = window.innerWidth
+    const vh = window.innerHeight
 
     if (left + rect.width > vw) {
       left = vw - rect.width
     }
     if (left < 0) {
       left = 0
+    }
+    if (top + rect.height > vh) {
+      top = vh - rect.height
     }
     if (top < 0) {
       top = 0

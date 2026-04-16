@@ -1,6 +1,6 @@
-.f-special-characters-popup tabindex="-1" data=data
+.f-special-characters-popup tabindex="-1" inert=true data=data
   .f-special-characters-popup__header data=header_data
-    span.f-special-characters-popup__title
+    h3.f-special-characters-popup__title.m-0
       = t(".title")
 
     button.f-special-characters-popup__close[
@@ -8,7 +8,7 @@
       data=stimulus_action(click: "close")
       aria-label=t(".close")
     ]
-      = folio_icon(:close, height: 16)
+      = folio_icon(:close, height: 24)
 
   .f-special-characters-popup__body
     = render(Folio::SpecialCharacters::ListComponent.new(stimulus_controller_name: @stimulus_controller_name))

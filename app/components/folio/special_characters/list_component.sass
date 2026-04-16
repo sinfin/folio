@@ -1,19 +1,18 @@
 .f-special-characters-list
   display: grid
   grid-template-columns: repeat(10, minmax(0, 1fr))
-  gap: 2px
-  padding: 8px
+  gap: var(--f-special-characters-popup__inner-padding)
+  padding: var(--f-special-characters-popup__inner-padding)
 
   &__char
     appearance: none
     border: 1px solid var(--#{$prefix}border-color-translucent, rgba(0, 0, 0, 0.12))
     background: var(--#{$prefix}body-bg, #fff)
     border-radius: 2px
-    font-size: 1rem
-    line-height: 1.25
-    min-height: 2rem
-    padding: 0.125rem
+    line-height: 1
+    padding: px-to-rem(2px)
     cursor: pointer
+    aspect-ratio: 1
 
     &:hover,
     &:focus-visible
