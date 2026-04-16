@@ -84,6 +84,7 @@ class Folio::Console::Form::FooterComponent < Folio::Console::ApplicationCompone
                             "f-modal:opened@document" => "onModalOpened",
                             "f-c-form-footer:resumeAutosave" => "onResumeAutosave",
                             "f-c-form-footer:pauseAutosave" => "onPauseAutosave",
+                            "f-c-form-footer:collapse" => "collapse",
                           })
     end
 

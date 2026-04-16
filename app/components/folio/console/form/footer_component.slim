@@ -45,10 +45,6 @@ div[
                         icon_options: { height: 16 })
 
       .f-c-form-footer__right
-        - unless read_only?
-          .f-c-form-footer__special-characters
-            = render(Folio::SpecialCharacters::TriggerComponent.new)
-
         - if preview_path_with_default
           = render(Folio::Console::Ui::ButtonComponent.new(href: preview_path_with_default,
                                                            class_name: 'f-c-form-footer__btn f-c-form-footer__btn--preview',
@@ -63,6 +59,10 @@ div[
             .f-c-form-footer__collapsible-backdrop data=stimulus_action_unless_readonly(click: "toggleCollapsed")
             .f-c-form-footer__collapsible-content
               - if @record
+                - unless read_only?
+                  .f-c-form-footer__special-characters
+                    = render(Folio::SpecialCharacters::TriggerComponent.new)
+
                 - unless @audit
                   = render(Folio::Console::Autosave::ToggleComponent.new(record: @record))
 
