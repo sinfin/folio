@@ -153,7 +153,6 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     const valueKeys = this.valueKeys()
 
     const isEmptyDocument = this.isSingleEmptyParagraphDoc(content)
-    console.log('isEmptyDocument', { isEmptyDocument, content })
 
     if (content && !isEmptyDocument) {
       const value = {

@@ -1,15 +1,8 @@
-.f-special-characters-popup[
-  tabindex="-1"
-  data=stimulus_target("panel")
-]
-  .f-special-characters-popup__header[
-    data=stimulus_target("dragHandle")
-    data=stimulus_merge_data( \
-      stimulus_action(mousedown: "onDragHandleMousedown"), \
-      stimulus_action(touchstart: "onDragHandleTouchstart"), \
-    )
-  ]
-    span.f-special-characters-popup__title = title
+.f-special-characters-popup tabindex="-1" data=data
+  .f-special-characters-popup__header data=header_data
+    span.f-special-characters-popup__title
+      = t(".title")
+
     button.f-special-characters-popup__close[
       type="button"
       data=stimulus_action(click: "close")
@@ -18,4 +11,4 @@
       = folio_icon(:close, height: 16)
 
   .f-special-characters-popup__body
-    = render(Folio::SpecialCharacters::ListComponent.new)
+    = render(Folio::SpecialCharacters::ListComponent.new(stimulus_controller_name: @stimulus_controller_name))

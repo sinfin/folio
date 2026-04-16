@@ -50,7 +50,6 @@ div[
             data=special_characters_wrapper_data
           ]
             = render(Folio::SpecialCharacters::TriggerComponent.new)
-            = render(Folio::SpecialCharacters::PopupComponent.new)
 
         - if preview_path_with_default
           = render(Folio::Console::Ui::ButtonComponent.new(href: preview_path_with_default,

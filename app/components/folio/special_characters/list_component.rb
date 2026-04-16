@@ -1,19 +1,23 @@
 # frozen_string_literal: true
 
-class Folio::SpecialCharacters::ListComponent < Folio::SpecialCharacters::ApplicationComponent
-  CHARACTER_STRING = (
-    "\u00A0–…„\u201C\u201D\u201A\u2018'~^°±×÷%‰µ€§" \
-    "ÃãĂăĀāĄąĆćĈĉĊċĐđ" \
-    "ĖėĒēĘęĞğĢģĜĝĠġĤĥĦħ" \
-    "ÎîÏïÌìİĪīĮįĨĩĲĳĴĵ" \
-    "ĹĺĽľĻļĿŀŁłŃńŉŅņÑñ" \
-    "ÓóÔôÖöÒòŐőŌōŒœØøÕõð" \
-    "ÞþŔŕŖŗŚśŞşŜŝŢţŦŧ" \
-    "ÛûÜüÙùŬŭŰűŪūŲųŨũ" \
-    "ŴŵŸÿŶŷŹźŻż©®™"
-  )
-
-  def characters
-    CHARACTER_STRING.grapheme_clusters
+class Folio::SpecialCharacters::ListComponent < Folio::ApplicationComponent
+  def initialize(stimulus_controller_name:)
+    @stimulus_controller_name = stimulus_controller_name
   end
+
+  def self.character_string
+    Rails.application.config.folio_special_characters_character_string
+  end
+
+  private
+    def characters
+      self.class.character_string.grapheme_clusters
+    end
+
+    def char_data(ch)
+      if @stimulus_controller_name
+        stimulus_action(mousedown: "onCharMousedown",
+                        click: "insertCharacter").merge(char: ch)
+      end
+    end
 end

@@ -1,6 +1,4 @@
 window.Folio.Stimulus.register('f-special-characters-popup', class extends window.Stimulus.Controller {
-  static targets = ['panel']
-
   connect () {
     this.isDragging = false
     this.wasMoved = false
@@ -21,7 +19,7 @@ window.Folio.Stimulus.register('f-special-characters-popup', class extends windo
   }
 
   get isOpen () {
-    return this.panelTarget.classList.contains('f-special-characters-popup--visible')
+    return this.element.classList.contains('f-special-characters-popup--visible')
   }
 
   toggle () {
@@ -37,11 +35,11 @@ window.Folio.Stimulus.register('f-special-characters-popup', class extends windo
       this.centerPanel()
     }
     this.applyPosition()
-    this.panelTarget.classList.add('f-special-characters-popup--visible')
+    this.element.classList.add('f-special-characters-popup--visible')
   }
 
   close () {
-    this.panelTarget.classList.remove('f-special-characters-popup--visible')
+    this.element.classList.remove('f-special-characters-popup--visible')
     this.stopDragging()
   }
 
@@ -52,7 +50,7 @@ window.Folio.Stimulus.register('f-special-characters-popup', class extends windo
   }
 
   centerPanel () {
-    const rect = this.panelTarget.getBoundingClientRect()
+    const rect = this.element.getBoundingClientRect()
     const vw = window.innerWidth
     const vh = window.innerHeight
     this.left = Math.round((vw - rect.width) / 2)
@@ -64,7 +62,7 @@ window.Folio.Stimulus.register('f-special-characters-popup', class extends windo
   }
 
   moveTo (left, top) {
-    const rect = this.panelTarget.getBoundingClientRect()
+    const rect = this.element.getBoundingClientRect()
     const vw = window.innerWidth
 
     if (left + rect.width > vw) {
@@ -79,8 +77,8 @@ window.Folio.Stimulus.register('f-special-characters-popup', class extends windo
 
     this.left = left
     this.top = top
-    this.panelTarget.style.left = `${this.left}px`
-    this.panelTarget.style.top = `${this.top}px`
+    this.element.style.left = `${this.left}px`
+    this.element.style.top = `${this.top}px`
   }
 
   moveBy (dx, dy) {
@@ -171,7 +169,7 @@ window.Folio.Stimulus.register('f-special-characters-popup', class extends windo
     this.isDragging = true
     this.wasMoved = true
     this.lastCoords = { x, y }
-    this.panelTarget.classList.add('f-special-characters-popup--dragging')
+    this.element.classList.add('f-special-characters-popup--dragging')
     document.addEventListener('mousemove', this.onDocumentMousemove)
     document.addEventListener('mouseup', this.onDocumentMouseup)
     document.addEventListener('touchmove', this.onDocumentTouchmove, { passive: false })
@@ -181,7 +179,7 @@ window.Folio.Stimulus.register('f-special-characters-popup', class extends windo
   stopDragging () {
     if (!this.isDragging) return
     this.isDragging = false
-    this.panelTarget.classList.remove('f-special-characters-popup--dragging')
+    this.element.classList.remove('f-special-characters-popup--dragging')
     document.removeEventListener('mousemove', this.onDocumentMousemove)
     document.removeEventListener('mouseup', this.onDocumentMouseup)
     document.removeEventListener('touchmove', this.onDocumentTouchmove)

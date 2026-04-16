@@ -162,6 +162,17 @@ module Folio
       end
     end
 
+    config.folio_special_characters_character_string = \
+      "\u00A0–…„\u201C\u201D\u201A\u2018'~^°±×÷%‰µ€§" \
+      "ÃãĂăĀāĄąĆćĈĉĊċĐđ" \
+      "ĖėĒēĘęĞğĢģĜĝĠġĤĥĦħ" \
+      "ÎîÏïÌìİĪīĮįĨĩĲĳĴĵ" \
+      "ĹĺĽľĻļĿŀŁłŃńŉŅņÑñ" \
+      "ÓóÔôÖöÒòŐőŌōŒœØøÕõð" \
+      "ÞþŔŕŖŗŚśŞşŜŝŢţŦŧ" \
+      "ÛûÜüÙùŬŭŰűŪūŲųŨũ" \
+      "ŴŵŸÿŶŷŹźŻż©®™"
+
     config.folio_cookie_consent_configuration = {
       enabled: true,
       keep_attached_after_accept: false,

@@ -2,6 +2,6 @@
   - characters.each do |ch|
     button.f-special-characters-list__char[
       type="button"
-      data-char=ch
-      data=stimulus_data(action: { mousedown: "onCharMousedown", click: "insertCharacter" })
-    ] = ch
+      data=char_data(ch)
+    ]
+      = ch
