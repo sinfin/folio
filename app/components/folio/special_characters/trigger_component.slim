@@ -5,10 +5,10 @@
           class: "f-special-characters-trigger__mobile small text-muted text-nowrap",
           icon: :special_character,
           icon_options: { height: 16 },
-          data: button_data)
+          data: mobile_button_data)
 
   = render(Folio::Console::Ui::ButtonComponent.new(type: :button,
                                                    class_name: "f-special-characters-trigger__desktop",
                                                    icon: :special_character,
                                                    variant: :gray,
-                                                   data: button_data))
+                                                   data: desktop_button_data))

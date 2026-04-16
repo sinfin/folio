@@ -8,8 +8,13 @@ class Folio::SpecialCharacters::TriggerComponent < Folio::ApplicationComponent
       stimulus_controller("f-special-characters-trigger").merge(test_id: "special-characters-trigger")
     end
 
-    def button_data
+    def mobile_button_data
       stimulus_action(mousedown: "preventDefault",
-                      click: "toggle")
+                      click: "toggleFromMobile")
+    end
+
+    def desktop_button_data
+      stimulus_action(mousedown: "preventDefault",
+                      click: "toggleFromDesktop")
     end
 end

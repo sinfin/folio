@@ -6,18 +6,18 @@
 
   &__char
     appearance: none
-    border: 1px solid var(--#{$prefix}border-color-translucent, rgba(0, 0, 0, 0.12))
+    aspect-ratio: 1
     background: var(--#{$prefix}body-bg, #fff)
     border-radius: 2px
+    border: 1px solid var(--#{$prefix}border-color-translucent, rgba(0, 0, 0, 0.12))
+    color: inherit
+    cursor: pointer
     line-height: 1
     padding: px-to-rem(2px)
-    cursor: pointer
-    aspect-ratio: 1
 
-    &:hover,
-    &:focus-visible
+    &:hover
       background: var(--#{$prefix}secondary-bg, #f8f9fa)
       border-color: var(--#{$prefix}primary, #0d6efd)
 
-    &:active
-      background: var(--#{$prefix}tertiary-bg, #e9ecef)
+    &, &:focus
+      outline: 0
