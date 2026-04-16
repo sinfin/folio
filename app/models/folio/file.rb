@@ -82,7 +82,7 @@ class Folio::File < Folio::ApplicationRecord
 
   # Relations
   has_many :file_placements, class_name: "Folio::FilePlacement::Base"
-  has_many :placements, through: :file_placements
+  has_many :placements, through: :file_placements # just for some type of file_placements!
   belongs_to :created_by_folio_user, class_name: "Folio::User",
                                      optional: true,
                                      inverse_of: :created_files
@@ -210,6 +210,11 @@ class Folio::File < Folio::ApplicationRecord
 
   def self.correct_site(site)
     Rails.application.config.folio_shared_files_between_sites ? Folio::Current.main_site : site
+  end
+
+
+  def self.clonable_ignored_associations
+    [:placements]
   end
 
   def title
