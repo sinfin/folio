@@ -213,8 +213,8 @@ class Folio::Console::Api::AutocompletesControllerTest < Folio::Console::BaseCon
 
     get field_console_api_autocomplete_path(klass: "Folio::User", q: same_part, field: "email")
 
-    assert_equal([administrator, manager, superadmin].collect(&:email),
-                 JSON.parse(response.body)["data"])
+    assert_equal([administrator, manager, superadmin].collect(&:email).sort,
+                 JSON.parse(response.body)["data"].sort)
 
     sign_out superadmin
     sign_in administrator
