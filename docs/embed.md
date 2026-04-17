@@ -250,10 +250,10 @@ For displaying embedded content on the frontend, use the `Folio::Embed::BoxCompo
 
 `Folio::Embed::BoxComponent` supports two background modes:
 
-- **Legacy single color**: pass `background_color` (hex `#RRGGBB`)
-- **Dual mode (light/dark)**: pass both `light_mode_background_color` and `dark_mode_background_color` (both hex `#RRGGBB`)
+- **Single color**: pass `background_color` (hex `#RRGGBB`)
+- **Dark mode support**: pass both `light_mode_background_color` and `dark_mode_background_color` (both hex `#RRGGBB`)
 
-When dual mode is valid, it takes precedence over `background_color`. If only one dual color is provided (or one is invalid), component falls back to `background_color`.
+When dark mode params are valid, it takes precedence over `background_color`. If only one dual color is provided (or one is invalid), component falls back to `background_color`.
 
 The component forwards the active background mode to `/folio/embed` as iframe params:
 
