@@ -8,6 +8,7 @@ class Folio::SpecialCharacters::PopupComponent < Folio::ApplicationComponent
       stimulus_controller("f-special-characters-popup",
                           action: {
                             "f-special-characters-trigger:toggle@document" => "toggle",
+                            mousedown: "preventDefault",
                           })
     end
 
