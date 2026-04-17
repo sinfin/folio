@@ -38,5 +38,43 @@ class Folio::Embed::BoxComponentTest < Folio::ComponentTest
 
     assert_selector(".f-embed-box[data-f-embed-box-light-mode-background-color-value='#ffffff']")
     assert_selector(".f-embed-box[data-f-embed-box-dark-mode-background-color-value='#111111']")
+    assert_selector(".f-embed-box[style='background-color: #ffffff;']")
+  end
+
+  def test_render_partial_dual_theme_background_falls_back_to_legacy_background_color
+    folio_embed_data = { "active" => false }
+
+    render_inline(Folio::Embed::BoxComponent.new(
+      folio_embed_data:,
+      background_color: "#111111",
+      light_mode_background_color: "#ffffff"
+    ))
+
+    assert_selector(".f-embed-box[style='background-color: #111111;']")
+    assert_selector(".f-embed-box.folio-inversed-loader")
+  end
+
+  def test_render_invalid_dual_theme_background_falls_back_to_legacy_background_color
+    folio_embed_data = { "active" => false }
+
+    render_inline(Folio::Embed::BoxComponent.new(
+      folio_embed_data:,
+      background_color: "#112233",
+      light_mode_background_color: "not-hex",
+      dark_mode_background_color: "#000000"
+    ))
+
+    assert_selector(".f-embed-box[style='background-color: #112233;']")
+  end
+
+  def test_render_invalid_background_color_is_ignored
+    folio_embed_data = { "active" => false }
+
+    render_inline(Folio::Embed::BoxComponent.new(
+      folio_embed_data:,
+      background_color: "not-hex"
+    ))
+
+    assert_selector(".f-embed-box:not([style])")
   end
 end

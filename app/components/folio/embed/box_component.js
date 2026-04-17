@@ -1,5 +1,4 @@
 //= require folio/intersection-observer
-//= require folio/embed/relative_luminance
 
 window.Folio = window.Folio || {}
 window.Folio.Embed = window.Folio.Embed || {}
@@ -16,6 +15,28 @@ window.Folio.Embed.Box.load = (element) => {
     if (element.dataset.fEmbedBoxIntersectedValue === 'false') {
       element.dispatchEvent(new CustomEvent('f-embed-box:load', { bubbles: true }))
     }
+  }
+}
+
+// NOTE: Intentionally duplicated in data/embed/source/embed.js.
+// We keep this self-contained in each runtime context (app vs. static embed build).
+const relativeLuminance = (hex) => {
+  try {
+    const r = parseInt(hex.slice(1, 3), 16) / 255
+    const g = parseInt(hex.slice(3, 5), 16) / 255
+    const b = parseInt(hex.slice(5, 7), 16) / 255
+
+    if (isNaN(r) || isNaN(g) || isNaN(b)) {
+      return 1
+    }
+
+    const rLinear = r <= 0.03928 ? r / 12.92 : Math.pow((r + 0.055) / 1.055, 2.4)
+    const gLinear = g <= 0.03928 ? g / 12.92 : Math.pow((g + 0.055) / 1.055, 2.4)
+    const bLinear = b <= 0.03928 ? b / 12.92 : Math.pow((b + 0.055) / 1.055, 2.4)
+
+    return 0.2126 * rLinear + 0.7152 * gLinear + 0.0722 * bLinear
+  } catch (error) {
+    return 1
   }
 }
 
@@ -108,7 +129,7 @@ window.Folio.Stimulus.register('f-embed-box', class extends window.Stimulus.Cont
     if (this.hasLoaderTarget) {
       this.loaderTarget.style.backgroundColor = hex
     }
-    const isLowLuminance = window.Folio.Embed.hexRelativeLuminance(hex) < 0.5
+    const isLowLuminance = relativeLuminance(hex) < 0.5
     this.element.classList.toggle('folio-inversed-loader', isLowLuminance)
 
     if (!this.hasIframeTarget) return

@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 
 - **Embed: dual theme backgrounds**: `Folio::Embed::BoxComponent` accepts optional `light_mode_background_color` and `dark_mode_background_color` (both required to enable). The iframe URL passes `lightModeBackgroundColor` and `darkModeBackgroundColor` query params; the static embed page picks an initial color from `prefers-color-scheme` or from a host-driven update.
 - **`folioColorSchemeChange` window event**: `f-embed-box` listens with `folioColorSchemeChange@window` and sends `postMessage` to the iframe (`f-embed:set-color-scheme` with `colorScheme: 'light' | 'dark'`) so the embed background can follow a manual theme toggle without reloading the iframe.
-- **Shared luminance helper**: `app/assets/javascripts/folio/embed/relative_luminance.js` is prepended before `embed.js` when building `folio-embed-dist.html`; the same file is required for the Stimulus controller so loader contrast logic stays in one place.
+- **Embed luminance computation**: The relative luminance function is intentionally duplicated in `f-embed-box` and static `data/embed/source/embed.js` to keep the static embed fully self-contained.
 
 ## [7.6.1] - 2026-04-16
 

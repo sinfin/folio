@@ -6,9 +6,8 @@ folio_root = File.expand_path("../../..", __dir__)
 html_content = File.read(File.join(folio_root, "data/embed/source/embed.html"))
 css_content = File.read(File.join(folio_root, "data/embed/source/embed.css"))
 
-luminance_js = File.read(File.join(folio_root, "app/assets/javascripts/folio/embed/relative_luminance.js"))
 embed_js = File.read(File.join(folio_root, "data/embed/source/embed.js"))
-js_content = "#{luminance_js}\n#{embed_js}"
+js_content = embed_js
 
 html_content.gsub!('<style type="text/css">/*! folio-embed-css */</style>', "<style type=\"text/css\">\n#{css_content}     </style>")
 html_content.gsub!('<script type="text/javascript">// folio-embed-javascript //</script>', "<script type=\"text/javascript\">\n#{js_content}    </script>")

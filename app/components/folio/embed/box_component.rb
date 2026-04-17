@@ -21,16 +21,22 @@ class Folio::Embed::BoxComponent < ApplicationComponent
     def before_render
       if dual_theme_background?
         color = @light_mode_background_color
-        @style = "background-color: #{color};"
-        @low_luminance = get_luminance(color) < 0.5
-      elsif @background_color.present?
-        @style = "background-color: #{@background_color};"
-        @low_luminance = get_luminance(@background_color) < 0.5
+      elsif valid_hex_color?(@background_color)
+        color = @background_color
       end
+
+      return unless color
+
+      @style = "background-color: #{color};"
+      @low_luminance = get_luminance(color) < 0.5
+    end
+
+    def valid_hex_color?(value)
+      value.is_a?(String) && value.match?(/^#[0-9A-Fa-f]{6}$/)
     end
 
     def dual_theme_background?
-      @light_mode_background_color.present? && @dark_mode_background_color.present?
+      valid_hex_color?(@light_mode_background_color) && valid_hex_color?(@dark_mode_background_color)
     end
 
     def wrap_data

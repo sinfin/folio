@@ -1,5 +1,25 @@
 (() => {
-  const relativeLuminance = (hex) => window.Folio.Embed.hexRelativeLuminance(hex)
+  // NOTE: Intentionally duplicated in app/components/folio/embed/box_component.js.
+  // Keep this file self-contained so static embed works with only data/embed/source assets.
+  const relativeLuminance = (hex) => {
+    try {
+      const r = parseInt(hex.slice(1, 3), 16) / 255
+      const g = parseInt(hex.slice(3, 5), 16) / 255
+      const b = parseInt(hex.slice(5, 7), 16) / 255
+
+      if (isNaN(r) || isNaN(g) || isNaN(b)) {
+        return 1
+      }
+
+      const rLinear = r <= 0.03928 ? r / 12.92 : Math.pow((r + 0.055) / 1.055, 2.4)
+      const gLinear = g <= 0.03928 ? g / 12.92 : Math.pow((g + 0.055) / 1.055, 2.4)
+      const bLinear = b <= 0.03928 ? b / 12.92 : Math.pow((b + 0.055) / 1.055, 2.4)
+
+      return 0.2126 * rLinear + 0.7152 * gLinear + 0.0722 * bLinear
+    } catch (error) {
+      return 1
+    }
+  }
 
   const urlParamsForTheme = new URLSearchParams(window.location.search)
   const legacyBackgroundColor = urlParamsForTheme.get('backgroundColor')

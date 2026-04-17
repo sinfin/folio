@@ -246,6 +246,37 @@ For displaying embedded content on the frontend, use the `Folio::Embed::BoxCompo
 - Stimulus controller `f-embed-box` for interaction handling
 - Configurable centering and custom data attributes
 
+#### Background options
+
+`Folio::Embed::BoxComponent` supports two background modes:
+
+- **Legacy single color**: pass `background_color` (hex `#RRGGBB`)
+- **Dual mode (light/dark)**: pass both `light_mode_background_color` and `dark_mode_background_color` (both hex `#RRGGBB`)
+
+When dual mode is valid, it takes precedence over `background_color`. If only one dual color is provided (or one is invalid), component falls back to `background_color`.
+
+The component forwards the active background mode to `/folio/embed` as iframe params:
+
+- `backgroundColor`
+- `lightModeBackgroundColor`
+- `darkModeBackgroundColor`
+
+#### Host theme sync (`folioColorSchemeChange@window`)
+
+`f-embed-box` listens for `folioColorSchemeChange@window` and updates:
+
+- outer box background + loader background
+- loader contrast class (`folio-inversed-loader`)
+- iframe theme via `postMessage` (`type: "f-embed:set-color-scheme"`)
+
+Expected event payload:
+
+```js
+window.dispatchEvent(new CustomEvent('folioColorSchemeChange', {
+  detail: { colorScheme: 'light' } // or 'dark'
+}))
+```
+
 ### Embed Middleware
 
 The `Rack::Folio::EmbedMiddleware` (`app/lib/rack/folio/embed_middleware.rb`) serves the embed widget at `/folio/embed`. This middleware:
@@ -277,7 +308,7 @@ The build process combines the source files into a single HTML file using `data/
 
 1. **Read template**: Loads `embed.html` template with CSS and JavaScript placeholders
 2. **Inject CSS**: Replaces `/*! folio-embed-css */` placeholder with contents of `embed.css`
-3. **Inject JavaScript**: Replaces `// folio-embed-javascript //` with `relative_luminance.js` (shared helper) concatenated with `embed.js`
+3. **Inject JavaScript**: Replaces `// folio-embed-javascript //` with `embed.js`
 4. **Generate output**: Creates `data/embed/dist/folio-embed-dist.html` with all assets inlined
 
 ## Usage Examples
