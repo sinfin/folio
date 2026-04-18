@@ -1,0 +1,10 @@
+#!/bin/bash
+# Remove containers and anonymous volumes. Named volumes (bundle_cache,
+# postgres_data, node_modules_*, etc.) stick around so the next `up` is fast.
+# To wipe those too, run `<runtime> volume rm <name>` manually.
+set -e
+cd "$(dirname "$(readlink -f "$0")")/../.."
+source .devcontainer/bin/_lib.sh
+RUNTIME=$(detect_runtime)
+PROJECT=$(compose_project "$RUNTIME")
+exec "$RUNTIME" compose -p "$PROJECT" -f .devcontainer/compose.yaml down

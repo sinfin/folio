@@ -1,0 +1,11 @@
+#!/bin/bash
+# Start the devcontainer stack in the background.
+# Note: if you normally drive via Cursor, use Reopen in Container — this
+# script brings services up without the Dev Containers extension's overlays
+# (no VS Code Server install, no postCreate hooks).
+set -e
+cd "$(dirname "$(readlink -f "$0")")/../.."
+source .devcontainer/bin/_lib.sh
+RUNTIME=$(detect_runtime)
+PROJECT=$(compose_project "$RUNTIME")
+exec "$RUNTIME" compose -p "$PROJECT" -f .devcontainer/compose.yaml up -d

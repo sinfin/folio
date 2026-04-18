@@ -1,0 +1,33 @@
+{
+  "name": "Folio",
+  "dockerComposeFile": "compose.yaml",
+  "service": "app",
+  "workspaceFolder": "/workspaces/folio",
+  "remoteUser": "vscode",
+  "initializeCommand": "bash .devcontainer/init.sh",
+  "postCreateCommand": "bash .devcontainer/bootstrap.sh",
+  "forwardPorts": [3000, 3001, 5432, 6379],
+  "portsAttributes": {
+    "3000": { "label": "Rails (dummy.localhost)", "onAutoForward": "notify" },
+    "3001": { "label": "React dev server", "onAutoForward": "silent" },
+    "5432": { "label": "Postgres", "onAutoForward": "silent" },
+    "6379": { "label": "Redis", "onAutoForward": "silent" }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "Shopify.ruby-lsp",
+        "sianglim.slim",
+        "EditorConfig.EditorConfig",
+        "standard.vscode-standard",
+        "aliariff.vscode-erb-beautify"
+      ],
+      "settings": {
+        "editor.formatOnSave": false,
+        "files.eol": "\n",
+        "files.trimTrailingWhitespace": true,
+        "files.insertFinalNewline": true
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+#!/bin/bash
+# Shell into the running devcontainer's app service as the vscode user.
+set -e
+cd "$(dirname "$(readlink -f "$0")")/../.."
+source .devcontainer/bin/_lib.sh
+RUNTIME=$(detect_runtime)
+PROJECT=$(compose_project "$RUNTIME")
+
+container=$("$RUNTIME" ps \
+	--filter "label=com.docker.compose.project=$PROJECT" \
+	--filter "label=com.docker.compose.service=app" \
+	--format '{{.Names}}' | head -n1)
+
+if [ -z "$container" ]; then
+	echo "devcontainer not running — try .devcontainer/bin/up" >&2
+	exit 1
+fi
+
+exec "$RUNTIME" exec -it -u vscode -w "/workspaces/$(basename "$PWD")" "$container" "${@:-bash}"

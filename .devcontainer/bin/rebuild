@@ -1,0 +1,11 @@
+#!/bin/bash
+# Recreate containers with a fresh image build (layer cache still honoured).
+# For a full clean build, pass --no-cache, or use Cursor's Rebuild Container
+# which also reruns the Dev Containers extension's overlay steps.
+set -e
+cd "$(dirname "$(readlink -f "$0")")/../.."
+source .devcontainer/bin/_lib.sh
+RUNTIME=$(detect_runtime)
+PROJECT=$(compose_project "$RUNTIME")
+"$RUNTIME" compose -p "$PROJECT" -f .devcontainer/compose.yaml down
+exec "$RUNTIME" compose -p "$PROJECT" -f .devcontainer/compose.yaml up -d --build

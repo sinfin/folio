@@ -1,0 +1,74 @@
+name: folio-devcontainer
+
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    # podman/SELinux host only (e.g. Atomic Fedora):
+    #   - keep-id maps host UID 1000 -> container UID 1000 so bind-mounted
+    #     files stay owner-writable.
+    #   - label=disable skips SELinux relabeling (avoids touching host
+    #     file contexts). Remove both lines on a Docker host.
+    userns_mode: keep-id
+    security_opt:
+      - label=disable
+    command: sleep infinity
+    volumes:
+      - ..:/workspaces/folio:cached
+      - bundle_cache:/usr/local/bundle
+      - node_modules_root:/workspaces/folio/node_modules
+      - node_modules_react:/workspaces/folio/react/node_modules
+    environment:
+      DB_HOST: postgres
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      REDIS_URL: redis://redis:6379/0
+      BUNDLE_PATH: /usr/local/bundle
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    extra_hosts:
+      - "dummy.localhost:127.0.0.1"
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+      - "3002:3002"
+      - "3003:3003"
+      - "3004:3004"
+      - "3005:3005"
+
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: folio_development
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  redis:
+    image: redis:7
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  bundle_cache: {}
+  node_modules_root: {}
+  node_modules_react: {}
+  postgres_data: {}
+  redis_data: {}

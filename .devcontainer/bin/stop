@@ -1,0 +1,8 @@
+#!/bin/bash
+# Stop the devcontainer services without removing them. Volumes persist.
+set -e
+cd "$(dirname "$(readlink -f "$0")")/../.."
+source .devcontainer/bin/_lib.sh
+RUNTIME=$(detect_runtime)
+PROJECT=$(compose_project "$RUNTIME")
+exec "$RUNTIME" compose -p "$PROJECT" -f .devcontainer/compose.yaml stop
