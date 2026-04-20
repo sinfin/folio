@@ -9,6 +9,8 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- **Console Sass**: `folio/console/_variables.sass` defines `$shade-black-contrast` and `$shade-light-contrast` with `!default` (from `$black` / `$white`) so `folio/input/_phone.sass` compiles in the console stylesheet chain without host-app token files.
+
 ## [7.6.2] - 2026-04-20
 
 ### Added
