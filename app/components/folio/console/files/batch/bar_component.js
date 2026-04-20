@@ -169,17 +169,17 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
     const form = this.element.querySelector('.f-c-files-batch-form')
     if (!form) return null
 
-    const inputs_data = {}
+    const inputsData = {}
 
     for (const formControl of form.querySelectorAll('input, .form-control')) {
       if (!formControl.name) continue
       if (formControl.disabled) continue
       if (formControl.type === 'file') continue
 
-      inputs_data[formControl.name] = formControl.value
+      inputsData[formControl.name] = formControl.value
     }
 
-    return window.Folio.formToHash(inputs_data)
+    return window.Folio.formToHash(inputsData)
   }
 
   ajax ({ url, data, apiMethod = 'apiPost', status = 'loading' }) {

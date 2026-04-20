@@ -12,9 +12,19 @@ This is now changed. On XHR refresh, all non blank values are sent and overrides
 Also number of unprocessed files are displayed. And processing state for each file.
 
 
-## [7.6.0] - 2026-04-09
+## [7.6.1] - 2026-04-16
+
 ### Added
 - **File search by CMS tags**: Top search bar now searches manually-added CMS keywords (tags) in addition to filename, headline, and description.
+
+### Changed
+- **Console files batch form**: On XHR refresh, all non-blank values are sent and override values from files. Number of unprocessed files is now displayed, along with processing state for each file.
+
+### Fixed
+- **File slug migration**: Guard `remove_index` against missing old slug index to prevent migration failure on databases restored from pg_dump.
+
+## [7.6.0] - 2026-04-09
+### Added
 - **Unique index on file slugs**: Added unique index on `folio_files.slug` with deduplication + null backfill migration.
 - remote scripts: optional `integrity` on script data (Subresource Integrity; sets `crossOrigin` when used)
 - console file placements multi picker: `placement_attributes` to choose which placement fields are shown; title field with prefilled title and hints/placeholders hidden when appropriate; updated alt label i18n
