@@ -3,6 +3,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+- **creditText in article JSON-LD image**: `structured_data_hash_for_cover` now accepts the original `Folio::File::Image` record instead of the thumb OpenStruct, enabling `author` and `attribution_source` to be propagated into the `ImageObject`. The `image` field in article structured data is now a proper `ImageObject` (with `@type`, `url`, `creditText`, `width`, `height`) instead of a plain URL string array.
+
+## Changed
+- **Console files batch form is updated**:  When new file is de/selected or some of selected files gets update in background, bacth form get XHR update. Such update was erasing already written values in form.
+This is now changed. On XHR refresh, all non blank values are sent and overrides values comming from files.
+Also number of unprocessed files are displayed. And processing state for each file.
+
+
 ## [7.6.1] - 2026-04-16
 
 ### Added
