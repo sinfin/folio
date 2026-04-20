@@ -5,8 +5,18 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+### Changed
+
+### Fixed
+
+## [7.6.2] - 2026-04-20
+
+### Added
+
 - **Embed: dual theme backgrounds**: `Folio::Embed::BoxComponent` accepts optional `light_mode_background_color` and `dark_mode_background_color` (both required to enable). The iframe URL passes `lightModeBackgroundColor` and `darkModeBackgroundColor` query params; the static embed page picks an initial color from `prefers-color-scheme` or from a host-driven update using a folioColorSchemeChange window event.
-  
+- **Form**: style intl-tel-input
+- **UI**: style togglable_fields
+
 ## [7.6.1] - 2026-04-16
 
 ### Added
