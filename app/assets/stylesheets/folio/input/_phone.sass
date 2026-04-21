@@ -6,6 +6,8 @@ $shade-100: #f5f5f5 !default
   --iti-path-flags-2x: url('https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/23.5.0/img/flags@2x.png')
   --iti-dropdown-bg: #{$shade-light-contrast}
   --iti-hover-color: #{$shade-100}
+  --iti-arrow-color: #{$shade-black-contrast}
+  --iti-arrow-padding: #{px-to-rem(12px)}
 
   &__search-input
     background: var(--iti-dropdown-bg)
@@ -15,10 +17,53 @@ $shade-100: #f5f5f5 !default
     display: block
     font-size: $input-font-size
 
+  .iti__arrow
+    display: none
+
   .iti__country-list
     background-color: $input-bg
+
+  .iti .iti__selected-dial-code
+    margin: 0
 
   .iti__selected-country,
   .iti__selected-country-primary
     border-top-left-radius: $input-border-radius
     border-bottom-left-radius: $input-border-radius
+
+  .iti .iti__selected-country-primary
+    padding-right: px-to-rem(6px)
+
+    &:hover
+      background: transparent !important
+
+  .iti__selected-country
+    padding-right: calc(var(--iti-arrow-padding) + var(--iti-arrow-width) + var(--iti-spacer-horizontal))
+
+    &:hover
+      background: var(--iti-hover-color)
+
+    &::after
+      content: ''
+      display: block
+      margin-left: var(--iti-arrow-padding)
+      width: 0
+      height: 0
+      border-left: var(--iti-triangle-border) solid transparent
+      border-right: var(--iti-triangle-border) solid transparent
+      border-top: var(--iti-arrow-height) solid var(--iti-arrow-color)
+      position: absolute
+      top: 50%
+      transform: translateY(-50%)
+      right: var(--iti-arrow-padding)
+
+    &::before
+      content: ''
+      display: block
+      width: 1px
+      height: px-to-rem(24px)
+      position: absolute
+      background: $shade-100
+      right: 0
+      top: 50%
+      transform: translateY(-50%)

@@ -7,4 +7,5 @@ ActiveRecord::Migrator.migrations_paths << File.expand_path("../../db/migrate", 
 require "test_helper_base"
 
 FactoryBot.definition_file_paths << File.join(File.dirname(__FILE__), "factories")
+FactoryBot.definition_file_paths << File.join(File.dirname(__FILE__), "factories_dummy")
 FactoryBot.find_definitions

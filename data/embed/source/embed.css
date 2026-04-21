@@ -140,3 +140,7 @@
   height: auto;
   aspect-ratio: 560 / 315;
 }
+
+.f-embed__youtube-iframe--shorts {
+  aspect-ratio: 360 / 640;
+}

@@ -7,6 +7,7 @@ en:
       folio/file:
         aasm_state/unprocessed: Unprocessed
         aasm_state/processing: Processing
+        aasm_state/processing_failed: Processing failed
         aasm_state/ready: Ready
 
       folio/lead:

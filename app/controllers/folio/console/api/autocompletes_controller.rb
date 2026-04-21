@@ -155,7 +155,14 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
 
       scope = filter_by_atom_setting_params(scope)
 
-      scope = scope.by_label_query(q) if q.present?
+      if q.present?
+        if q.length >= AUTOCOMPLETE_QUERY_MIN_LENGTH
+          scope = scope.by_label_query(q)
+        else
+          render_selectize_options([])
+          return
+        end
+      end
 
       scope, has_type_ordering = apply_ordered_for_folio_console_selects(scope, klass)
 
@@ -197,7 +204,14 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
 
       scope = filter_by_atom_setting_params(scope)
 
-      scope = scope.by_label_query(q) if q.present?
+      if q.present?
+        if q.length >= AUTOCOMPLETE_QUERY_MIN_LENGTH
+          scope = scope.by_label_query(q)
+        else
+          render_select2_options([])
+          return
+        end
+      end
 
       scope, has_type_ordering = apply_ordered_for_folio_console_selects(scope, klass)
 
@@ -236,6 +250,11 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
     p_order = params[:order_scope]
     p_without = params[:without]
     p_page = params[:page]&.to_i || 1
+
+    if q.present? && q.length < AUTOCOMPLETE_QUERY_MIN_LENGTH
+      render json: { data: [], meta: { page: 1, pages: 1, from: nil, to: nil, count: 0, next: nil } }
+      return
+    end
 
     if class_names
       # Show model names when there are multiple classes, or when a single class forces it

@@ -203,28 +203,16 @@ module Folio::Console::Api::FileControllerBase
       raise ActionController::BadRequest.new("Invalid file IDs - you are not allowed to update file #{forbidden_file.id}")
     end
 
-    update_params = params.require(:file_attributes)
-                          .permit(:author,
-                                  :attribution_source,
-                                  :attribution_source_url,
-                                  :attribution_copyright,
-                                  :attribution_licence,
-                                  :alt,
-                                  :tag_list,
-                                  :headline,
-                                  :description)
-                          .to_h
-                          .select { |_, value| value.present? }
-
     @klass.transaction do
-      files.each { |file| file.update!(update_params) }
+      files.each { |file| file.update!(update_params(required: true)) }
     end
 
     batch_service.set_form_open(false)
 
     dispatch_batch_bar_message
     render_batch_bar_component(change_to_propagate: { change: "update", file_ids: @safe_file_ids },
-                               flash: { success: t("folio.console.api.file_controller_base.batch_update_success") })
+                               flash: { success: t("folio.console.api.file_controller_base.batch_update_success") },
+                               attribute_overrides: {}) # form is saved to DB
   end
 
   def file_picker_file_hash
@@ -314,7 +302,8 @@ module Folio::Console::Api::FileControllerBase
       }
     end
 
-    @file.dont_run_after_save_jobs = true
+    @file.try(:dont_run_after_save_jobs=, true)
+
 
     @file.update!(thumbnail_configuration:,
                   thumbnail_sizes:,
@@ -522,12 +511,31 @@ module Folio::Console::Api::FileControllerBase
       end
     end
 
-    def render_batch_bar_component(flash: nil, change_to_propagate: nil)
+    def render_batch_bar_component(flash: nil, change_to_propagate: nil, attribute_overrides: update_params(required: false))
+      # attribute_overrides = {} unless batch_service.form_open?
+
       component = Folio::Console::Files::Batch::BarComponent.new(file_klass: @klass,
                                                                  updated_at: @batch_bar_updated_at || Time.current,
                                                                  multi_picker:  params[:multi_picker] == "1",
-                                                                 change_to_propagate:)
+                                                                 change_to_propagate:,
+                                                                 attribute_overrides:)
 
       render_component_json(component, flash:)
+    end
+
+    def update_params(required: true)
+      return { file_attributes: {} } if params[:file_attributes].blank? && !required
+      params.require(:file_attributes)
+            .permit(:author,
+                    :attribution_source,
+                    :attribution_source_url,
+                    :attribution_copyright,
+                    :attribution_licence,
+                    :alt,
+                    :tag_list,
+                    :headline,
+                    :description)
+            .to_h
+            .select { |_, value| value.present? }
     end
 end

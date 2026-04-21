@@ -22,6 +22,19 @@ cs:
           navigation_previous: Předchozí
 
         show:
+          encoding_info_component:
+            phase_waiting: "Čekání ve frontě"
+            phase_waiting_multi: "Čekání ve frontě (fáze %{phase}/%{total})"
+            phase_waiting_named: "Čekání ve frontě – %{name}"
+            phase_encoding: "Kódování videa"
+            phase_encoding_multi: "Kódování videa (%{phase}/%{total})"
+            phase_encoding_named: "Kódování %{name}"
+            phase_packaging: "Balení"
+            phase_packaging_multi: "Balení (%{phase}/%{total})"
+            phase_packaging_named: "Balení – %{name}"
+            phase_failed_retrying: "Zpracování selhalo, pokusíme se znovu"
+            phase_failed: "Zpracování selhalo. Zkuste video nahrát znovu, nebo kontaktujte podporu."
+
           metadata_component:
             no_metadata: Žádná metadata
             extract_metadata: Znovu extrahovat metadata
@@ -63,7 +76,10 @@ cs:
             add_to_picker/image: Vybrat do galerie
 
           form_component:
-            title: Hromadné úpravy souborů
+            title:
+              single: Úprava souboru
+              multiple: Hromadné úpravy souborů
+            unprocessed_files_count: "Zbývá zpracovat souborů: %{count}"
             selected_files: Vybrané soubory
             has_values_placeholder: Různé hodnoty
             has_values_hint: Různé hodnoty. Při změně se aktualizují všechny. Pro zachování hodnot ponechte prázdné.

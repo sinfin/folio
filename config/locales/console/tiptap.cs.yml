@@ -11,7 +11,7 @@ cs:
             words: Slov
             characters: Znaků
           autosave_info_component:
-            new_record_alert: Rozepsané změny v editoru se neukládají, dokud %{model} poprvé neuložíte.
+            new_record_alert: Rozepsané změny v editoru se neukládají, dokud záznam poprvé neuložíte.
             title: Editor obsahuje neuložené rozepsané změny.
             unsaved_newest_changes_from: "Uživatel %{name} mezitím také přidal neuložené změny."
             not_exists: není

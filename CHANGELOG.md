@@ -3,14 +3,96 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
 ### Changed
  - user ENV variable `DONT_PING_CONSOLE=1` to disable console_url_bar pinging to api. Usefull for uninterupted, debugging.
  - after console user ping, Console bar appear if you  are editing same  object as other user.
-
-## [7.4.0] - 2026-03-04
+ - refactored notifications on Folio::TipTap::Revisions conflicts
 
 ### Fixed
 
+- **Console Sass**: `folio/console/_variables.sass` defines `$shade-black-contrast` and `$shade-light-contrast` with `!default` (from `$black` / `$white`) so `folio/input/_phone.sass` compiles in the console stylesheet chain without host-app token files.
+
+## [7.6.2] - 2026-04-20
+
+### Added
+
+- **Embed: dual theme backgrounds**: `Folio::Embed::BoxComponent` accepts optional `light_mode_background_color` and `dark_mode_background_color` (both required to enable). The iframe URL passes `lightModeBackgroundColor` and `darkModeBackgroundColor` query params; the static embed page picks an initial color from `prefers-color-scheme` or from a host-driven update using a folioColorSchemeChange window event.
+- **Form**: style intl-tel-input
+- **UI**: style togglable_fields
+
+## [7.6.1] - 2026-04-16
+
+### Added
+- **File search by CMS tags**: Top search bar now searches manually-added CMS keywords (tags) in addition to filename, headline, and description.
+
+### Changed
+- **Console files batch form**: On XHR refresh, all non-blank values are sent and override values from files. Number of unprocessed files is now displayed, along with processing state for each file.
+
+### Fixed
+- **File slug migration**: Guard `remove_index` against missing old slug index to prevent migration failure on databases restored from pg_dump.
+
+## [7.6.0] - 2026-04-09
+### Added
+- **Unique index on file slugs**: Added unique index on `folio_files.slug` with deduplication + null backfill migration.
+- remote scripts: optional `integrity` on script data (Subresource Integrity; sets `crossOrigin` when used)
+- console file placements multi picker: `placement_attributes` to choose which placement fields are shown; title field with prefilled title and hints/placeholders hidden when appropriate; updated alt label i18n
+
+### Changed
+- **Folio::File slug generation**: Slugs now use a neutral `timestamp-hex` fallback (`Time.current`) instead of filename-derived candidates.
+- **test factories**: Dummy-app-specific factories moved from `test/factories.rb` to `test/factories_dummy.rb`. Loaded by folio's test helper but excluded from host apps that use `Folio::Engine.root.join("test/factories")` in `FactoryBot.definition_file_paths`.
+
+### Fixed
+
+- **hyperlinks in tiptap editor**: Added autolink to config file to allow override
+- **keep tags field editable**: after choosing a suggestion
+
+## [7.5.1] - 2026-03-19
+
+### Fixed
+
+- **CRA reference_id uniqueness**: Added video ID to reference_id format (`{env}-{slug}-{id}-{s3_etag}-{generation}`) to prevent cross-contamination between videos with identical slugs
+- **CRA encoding_generation race condition**: Added reload fallback in CreateMediaJob when encoding_generation is nil due to uncommitted transaction from S3::CreateFileJob
+- **CRA MonitorProcessingJob orphan detection**: Added 10-minute threshold to orphan detection for videos with reference_id but no remote_id, preventing false positives on just-uploaded videos
+- **Uniqueness validation on friendly_id slug**: Validate slug uniqueness only on new record or slug change to avoid issues with record saving
+## [7.5.0] - 2026-03-19
+
+### Added
+
+- **CRA presigned S3 URLs**: Encoder no longer downloads video to local disk or uploads via SFTP. CRA fetches video directly from S3 via presigned URL (7-day expiry). Only the XML manifest is uploaded via SFTP.
+- **Two-phase encoding**: When `encoder_processing_phases` > 1, CreateMediaJob submits two manifests with the same `refId` — SD first, then HD. Backward compatible: single-phase when `encoder_processing_phases` is nil/1.
+- **Encoding progress tracking**: CheckProgressJob parses CRA `messages` array for per-phase milestones, extracts video duration, and estimates completion time. New processing states: `sd_processing → sd_processed → hd_processing → full_media_processed`.
+- **Console encoding info component**: `EncodingInfoComponent` shows current encoding phase and progress percentage on video file detail page, with real-time updates via MessageBus.
+- **S3 client and jobs**: `Folio::S3::Client` for presigned URL generation, `Folio::S3::CreateFileJob` for S3-based file creation, `Folio::File::GetVideoMetadataJob` for video metadata extraction.
+- **Video thumbnail generation**: `GenerateThumbnailJob` reworked for reliable thumbnail generation from video files.
+
+### Changed
+
+- `ShowComponent` now exposes `aasmState` as a Stimulus value and reloads via Turbo on state transitions (encoding progress, file updates)
+- `ShowComponent` layout: state badge moved to right side (`ms-auto`), encoding info rendered inline after state
+
+- add `try` to `dont_run_after_save_jobs` to enable thumbnail generation for `private_attachments`
+
+## [7.4.1] - 2026-03-11
+
+### Fixed
+
+- audited dropdown css layout
+- tiptap link handling - close on confirm/delete, don't autofocus link popover input
+
+## [7.4.0] - 2026-03-04
+
+### Added
+
+- add support YouTube shorts embeds links
+
+### Fixed
+
+- **Autocomplete performance**: Extended minimum query length guard to `select2`, `selectize`, and `react_select` actions in `AutocompletesController`. All autocomplete endpoints now reject queries shorter than 3 characters without hitting the database, preventing cascade PostgreSQL connection pool exhaustion. Completes the fix from 7.4.0 which only covered the `show` action.
+- add change event handler for select inline edits
+- prevent long filenames from overflowing dropdown
+- S3 ping retry loop no longer runs infinitely after 10 failures — stops retrying, shows a non-blocking flash instead of a blocking `window.alert()`, and resets the loading state
 - **Autocomplete performance**: Added minimum query length guard (`AUTOCOMPLETE_QUERY_MIN_LENGTH = 3`) to `AutocompletesController#show` — queries shorter than 3 characters no longer trigger expensive fulltext DB scans. Increased debounce delay in `f-input-autocomplete` Stimulus controller from 150ms to 500ms to reduce concurrent parallel requests during typing. Added combined GIN index `index_folio_files_on_by_label_query` on `folio_files` covering `(file_name_for_search, headline, description)` — resolves cascade PostgreSQL overload from unindexed fulltext scans.
 - tiptap blank documents now get saved as nil - previously a doc with an empty paragraph was saved instead
 

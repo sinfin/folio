@@ -3,11 +3,12 @@
 class Folio::Console::FilePlacements::MultiPickerFields::PlacementComponent < Folio::Console::ApplicationComponent
   bem_class_name :non_unique_file_id
 
-  def initialize(g:, non_unique_file_id: false, placement_key:, embed_input_options: nil)
+  def initialize(g:, non_unique_file_id: false, placement_key:, embed_input_options: nil, placement_attributes: nil)
     @g = g
     @non_unique_file_id = non_unique_file_id
     @placement_key = placement_key
     @embed_input_options = embed_input_options
+    @placement_attributes = placement_attributes || Folio::Console::FilePlacements::MultiPickerFieldsComponent::DEFAULT_PLACEMENT_ATTRIBUTES
   end
 
   private
@@ -55,5 +56,31 @@ class Folio::Console::FilePlacements::MultiPickerFields::PlacementComponent < Fo
       end
 
       g.input :folio_embed_data, opts
+    end
+
+    def placement_attribute_input_options(attr)
+      case attr
+      when :description
+        { hint: false, autosize: true, input_html: { rows: 1, placeholder: "", data: stimulus_target("description") } }
+      when :alt
+        { hint: false, input_html: { placeholder: "", data: stimulus_target("alt") } }
+      when :title
+        { hint: false, as: :string, input_html: { placeholder: "", data: stimulus_target("title") } }
+      when :folio_embed_data
+        nil
+      else
+        { hint: false, input_html: { placeholder: "" } }
+      end
+    end
+
+    def placement_attribute_wrapper_data(attr)
+      case attr
+      when :alt
+        stimulus_target("altWrap")
+      when :folio_embed_data
+        stimulus_target("embedFieldsWrap")
+      else
+        nil
+      end
     end
 end

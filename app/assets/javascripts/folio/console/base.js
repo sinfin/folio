@@ -104,13 +104,14 @@
 //= require folio/console/file/processing_notifier/processing_notifier
 //= require folio/console/file_placements/multi_picker_fields/placement_component
 //= require folio/console/file_placements/multi_picker_fields_component
-//= require folio/console/files/batch/bar_component
 //= require folio/console/files/batch/form_component
+//= require folio/console/files/batch/bar_component
 //= require folio/console/files/display_toggle_component
 //= require folio/console/files/index_modal_component
 //= require folio/console/files/picker/document_component
 //= require folio/console/files/picker/image_component
 //= require folio/console/files/picker_component
+//= require folio/console/files/show/encoding_info_component
 //= require folio/console/files/show/thumbnails/crop_edit_component
 //= require folio/console/files/show_component
 //= require folio/console/files/show_modal_component

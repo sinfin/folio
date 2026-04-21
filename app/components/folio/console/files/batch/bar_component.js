@@ -1,5 +1,6 @@
 //= require folio/add_params_to_url
 //= require folio/confirm
+//= require folio/form_to_hash
 
 window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimulus.Controller {
   static values = {
@@ -58,19 +59,22 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
 
   openForm () {
     this.ajax({
-      url: `${this.baseApiUrlValue}/open_batch_form`
+      url: `${this.baseApiUrlValue}/open_batch_form`,
+      data: this.dataWithFormInputs({})
     })
   }
 
   cancelForm () {
     this.ajax({
-      url: `${this.baseApiUrlValue}/close_batch_form`
+      url: `${this.baseApiUrlValue}/close_batch_form`,
+      data: this.dataWithFormInputs({})
     })
   }
 
   cancelDownload () {
     this.ajax({
-      url: `${this.baseApiUrlValue}/cancel_batch_download`
+      url: `${this.baseApiUrlValue}/cancel_batch_download`,
+      data: this.dataWithFormInputs({})
     })
   }
 
@@ -80,14 +84,14 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
     this.ajax({
       url: `${this.baseApiUrlValue}/batch_update`,
       apiMethod: 'apiPatch',
-      data: { ...data, file_ids: JSON.parse(this.fileIdsJsonValue) }
+      data: { ...data, file_ids: JSON.parse(this.fileIdsJsonValue) } // form inputs already included
     })
   }
 
   download () {
     this.ajax({
       url: `${this.baseApiUrlValue}/batch_download`,
-      data: { file_ids: JSON.parse(this.fileIdsJsonValue) }
+      data: this.dataWithFormInputs({ file_ids: JSON.parse(this.fileIdsJsonValue) })
     })
   }
 
@@ -95,7 +99,7 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
     window.Folio.Confirm.confirm(() => {
       this.ajax({
         url: `${this.baseApiUrlValue}/batch_delete`,
-        data: { file_ids: JSON.parse(this.fileIdsJsonValue) },
+        data: this.dataWithFormInputs({ file_ids: JSON.parse(this.fileIdsJsonValue) }),
         apiMethod: 'apiDelete'
       })
     }, 'delete')
@@ -109,12 +113,13 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
     this.abortAjax()
 
     this.queue = this.queue || { add: [], remove: [] }
-
+    let withFormInputs = true
     const url = this.baseApiUrlValue
 
     switch (action) {
       case 'add':
         this.queue.add = [...this.queue.add, ...ids]
+        withFormInputs = false
         break
       case 'remove':
         this.queue.remove = [...this.queue.remove, ...ids]
@@ -129,6 +134,7 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
             }
           }
         }
+        withFormInputs = false
 
         break
       case 'remove-all':
@@ -141,13 +147,39 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
             }
           }
         }
+        withFormInputs = false
 
         break
     }
 
     if (this.queue.add.length === 0 && this.queue.remove.length === 0) return
 
-    this.ajax({ url: `${url}/handle_batch_queue`, data: { queue: this.queue }, status: 'reloading' })
+    this.ajax({
+      url: `${url}/handle_batch_queue`,
+      data: withFormInputs ? this.dataWithFormInputs({ queue: this.queue }) : { queue: this.queue },
+      status: 'reloading'
+    })
+  }
+
+  dataWithFormInputs (data) {
+    return ({ ...data, ...this.collectCurrentFormInputs() }) // merge
+  }
+
+  collectCurrentFormInputs () {
+    const form = this.element.querySelector('.f-c-files-batch-form')
+    if (!form) return null
+
+    const inputsData = {}
+
+    for (const formControl of form.querySelectorAll('input, .form-control')) {
+      if (!formControl.name) continue
+      if (formControl.disabled) continue
+      if (formControl.type === 'file') continue
+
+      inputsData[formControl.name] = formControl.value
+    }
+
+    return window.Folio.formToHash(inputsData)
   }
 
   ajax ({ url, data, apiMethod = 'apiPost', status = 'loading' }) {
@@ -229,12 +261,12 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
     } else if (message.type === 'Folio::File::BatchDownloadJob/success') {
       this.ajax({
         url: `${this.baseApiUrlValue}/batch_download_success`,
-        data: { file_ids: JSON.parse(this.fileIdsJsonValue), url: message.data.url }
+        data: this.dataWithFormInputs({ file_ids: JSON.parse(this.fileIdsJsonValue), url: message.data.url })
       })
     } else if (message.type === 'Folio::File::BatchDownloadJob/failure') {
       this.ajax({
         url: `${this.baseApiUrlValue}/batch_download_failure`,
-        data: { file_ids: JSON.parse(this.fileIdsJsonValue), message: message.data.message }
+        data: this.dataWithFormInputs({ file_ids: JSON.parse(this.fileIdsJsonValue), message: message.data.message })
       })
     }
   }
@@ -264,8 +296,10 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
   }
 
   onReloadTriggerRaw () {
+    const url = window.Folio.addParamsToUrl(`${this.baseApiUrlValue}/batch_bar`, this.dataWithFormInputs())
+
     this.ajax({
-      url: `${this.baseApiUrlValue}/batch_bar`,
+      url,
       apiMethod: 'apiGet'
     })
   }

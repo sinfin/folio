@@ -1,7 +1,10 @@
 .f-c-files-batch-form.p-g data=data
   .d-flex.align-items-center.gap-g.mb-h
     .h3.m-0.flex-shrink-1.flex-grow-1
-      = t('.title')
+      = title
+    - if files_in_processing_count > 0
+      .f-c-files-batch-form__processing-count
+        = t('.unprocessed_files_count', count: files_in_processing_count)
 
     = render(Folio::Console::Ui::ButtonComponent.new(icon: :close,
                                                      data: stimulus_action(click: "cancel"),

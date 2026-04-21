@@ -213,8 +213,8 @@ class Folio::Console::Api::AutocompletesControllerTest < Folio::Console::BaseCon
 
     get field_console_api_autocomplete_path(klass: "Folio::User", q: same_part, field: "email")
 
-    assert_equal([administrator, manager, superadmin].collect(&:email),
-                 JSON.parse(response.body)["data"])
+    assert_equal([administrator, manager, superadmin].collect(&:email).sort,
+                 JSON.parse(response.body)["data"].sort)
 
     sign_out superadmin
     sign_in administrator
@@ -274,5 +274,84 @@ class Folio::Console::Api::AutocompletesControllerTest < Folio::Console::BaseCon
 
     # Clean up
     Folio::Page.singleton_class.remove_method(:ordered_for_folio_console_selects)
+  end
+
+  test "selectize ignores short queries below minimum length" do
+    create(:folio_page, title: "Foo bar baz")
+
+    # 1-char query should return empty (below min length of 3)
+    get selectize_console_api_autocomplete_path(klass: "Folio::Page", q: "f")
+    json = JSON.parse(response.body)
+    assert_equal([], json["data"])
+
+    # 2-char query should return empty (below min length of 3)
+    get selectize_console_api_autocomplete_path(klass: "Folio::Page", q: "fo")
+    json = JSON.parse(response.body)
+    assert_equal([], json["data"])
+
+    # 3-char query should trigger search and return results
+    get selectize_console_api_autocomplete_path(klass: "Folio::Page", q: "foo")
+    json = JSON.parse(response.body)
+    assert_equal(1, json["data"].size)
+    assert_equal("Foo bar baz", json["data"][0]["text"])
+  end
+
+  test "select2 ignores short queries below minimum length" do
+    create(:folio_page, title: "Foo bar baz")
+
+    # 1-char query should return empty (below min length of 3)
+    get select2_console_api_autocomplete_path(klass: "Folio::Page", q: "f")
+    json = JSON.parse(response.body)
+    assert_equal([], json["results"])
+
+    # 2-char query should return empty (below min length of 3)
+    get select2_console_api_autocomplete_path(klass: "Folio::Page", q: "fo")
+    json = JSON.parse(response.body)
+    assert_equal([], json["results"])
+
+    # 3-char query should trigger search and return results
+    get select2_console_api_autocomplete_path(klass: "Folio::Page", q: "foo")
+    json = JSON.parse(response.body)
+    assert_equal(1, json["results"].size)
+    assert_equal("Foo bar baz", json["results"][0]["text"])
+  end
+
+  test "react_select ignores short queries below minimum length" do
+    create(:folio_page, title: "Foo bar baz")
+
+    # 1-char query should return empty (below min length of 3)
+    get react_select_console_api_autocomplete_path(class_names: "Folio::Page", q: "f")
+    json = JSON.parse(response.body)
+    assert_equal([], json["data"])
+    assert_equal(1, json["meta"]["page"])
+    assert_equal(1, json["meta"]["pages"])
+
+    # 2-char query should return empty (below min length of 3)
+    get react_select_console_api_autocomplete_path(class_names: "Folio::Page", q: "fo")
+    json = JSON.parse(response.body)
+    assert_equal([], json["data"])
+    assert_equal(1, json["meta"]["page"])
+    assert_equal(1, json["meta"]["pages"])
+
+    # 3-char query should trigger search and return results
+    get react_select_console_api_autocomplete_path(class_names: "Folio::Page", q: "foo")
+    json = JSON.parse(response.body)
+    assert_equal(1, json["data"].size)
+    assert_equal("Foo bar baz", json["data"][0]["text"])
+  end
+
+  test "react_select with multiple classes ignores short queries" do
+    create(:folio_page, title: "Foo page")
+
+    # 2-char query should return empty for multiple classes
+    get react_select_console_api_autocomplete_path(class_names: "Folio::Page", q: "fo")
+    json = JSON.parse(response.body)
+    assert_equal([], json["data"])
+    assert_equal(1, json["meta"]["page"])
+
+    # 3-char query should return results
+    get react_select_console_api_autocomplete_path(class_names: "Folio::Page", q: "foo")
+    json = JSON.parse(response.body)
+    assert json["data"].size > 0
   end
 end

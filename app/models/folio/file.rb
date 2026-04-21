@@ -9,6 +9,7 @@ class Folio::File < Folio::ApplicationRecord
   include Folio::Taggable
   include Folio::HasAasmStates
   include Folio::BelongsToSite
+  include Folio::S3::Client
   include Folio::FilesSharedAccrossSites if Rails.application.config.folio_shared_files_between_sites
 
   READY_STATE = :ready
@@ -42,6 +43,7 @@ class Folio::File < Folio::ApplicationRecord
       update_thumbnails_crop
     ],
     read: %i[
+      additional_html
       batch_bar
       batch_download
       batch_download_failure
@@ -131,7 +133,12 @@ class Folio::File < Folio::ApplicationRecord
                   }
 
   scope :by_query, -> (query) do
-    by_query_raw(sanitize_filename_for_search(query))
+    return none if query.blank?
+
+    sanitized = sanitize_filename_for_search(query)
+    where(id: by_query_raw(sanitized).reselect("folio_files.id"))
+      .or(where("folio_files.slug ILIKE ?", "%#{sanitize_sql_like(query.to_s)}%"))
+      .or(where(id: tagged_with(query, wild: true, any: true).reselect("folio_files.id")))
   end
 
   pg_search_scope :by_file_name_for_search,
@@ -195,6 +202,10 @@ class Folio::File < Folio::ApplicationRecord
     event :reprocess do
       transitions from: READY_STATE, to: :processing
     end
+
+    event :retry_processing do
+      transitions from: :processing_failed, to: :processing
+    end
   end
 
   def self.correct_site(site)
@@ -237,7 +248,10 @@ class Folio::File < Folio::ApplicationRecord
     # updating placements
     return if ENV["SKIP_FOLIO_FILE_AFTER_SAVE_JOB"]
     return if Rails.env.test? && !Rails.application.config.try(:folio_testing_after_save_job)
-    Folio::Files::AfterSaveJob.perform_later(self)
+
+    changed_attrs = saved_changes.slice("description", "alt", "headline")
+
+    Folio::Files::AfterSaveJob.perform_later(self, changed_attrs)
   end
 
   def process_attached_file
@@ -260,6 +274,17 @@ class Folio::File < Folio::ApplicationRecord
     try(:admin_thumb, immediate: true)
     if try(:thumbnail_sizes).is_a?(Hash)
       thumbnail_sizes.keys.each { |t_key| file.thumb(t_key) }
+    end
+  end
+
+  # Returns a path or URL suitable for ffprobe/ffmpeg.
+  # For S3 storage with stored file: presigned URL (streams headers only, no full download).
+  # For pending uploads (file= assigned but not yet saved) or local storage: file system path.
+  def file_url_or_path
+    if file_uid.present? && !Dragonfly.app.datastore.is_a?(Dragonfly::FileDataStore)
+      file_presigned_url
+    else
+      file&.path.to_s
     end
   end
 
@@ -413,34 +438,27 @@ class Folio::File < Folio::ApplicationRecord
   end
 
   private
-    def slug_candidates
-      %i[slug headline hash_id_for_slug to_label]
+    def file_presigned_url(expires_in: 1.hour.to_i)
+      s3_object_key = [dragonfly_s3_root_path, file_uid].compact_blank.join("/")
+      s3_presigner.presigned_url(:get_object,
+        bucket: s3_bucket,
+        key: s3_object_key,
+        expires_in: expires_in
+      )
     end
 
+    def slug_candidates
+      # Prefer explicit slug or headline; fall back to a neutral identifier
+      %i[slug headline neutral_slug]
+    end
+
+    def neutral_slug
+      "#{Time.current.to_i}-#{SecureRandom.hex(5)}"
+    end
+
+    # Kept for backward compatibility if referenced elsewhere; not used in slug_candidates
     def hash_id_for_slug
-      new_slug = nil
-      hash = nil
-
-      loop do
-        # Parameterize filename base to match strip_and_downcase_slug behavior
-        new_slug_base = if file_name.present?
-          file_name.split(".", 2)[0].parameterize
-        else
-          "file"
-        end
-        new_slug = hash ? "#{new_slug_base}-#{hash}" : new_slug_base
-
-        exists = self.class.base_class.exists?(slug: new_slug)
-
-        break unless exists
-
-        # Generate lowercase hash to match strip_and_downcase_slug formatting
-        hash = SecureRandom.urlsafe_base64(8)
-                           .downcase
-                           .gsub(/-|_/, ("a".."z").to_a[rand(26)])
-      end
-
-      new_slug
+      neutral_slug
     end
 
     def set_file_name_for_search
@@ -453,16 +471,24 @@ class Folio::File < Folio::ApplicationRecord
     end
 
     def set_file_track_duration
-      if %w[audio video].include?(self.class.human_type)
-        self.file_track_duration = Folio::File::GetFileTrackDurationJob.perform_now(file.path.to_s, self.class.human_type) # in seconds
+      if self.class.human_type == "video"
+        # For video: handled together with dimensions in set_video_file_dimensions
+        nil
+      elsif self.class.human_type == "audio"
+        self.file_track_duration = Folio::File::GetFileTrackDurationJob.perform_now(file_url_or_path, "audio")
         self.preview_track_duration_in_seconds = self.respond_to?(:preview_duration_in_seconds) ? preview_duration_in_seconds : 0
       end
     end
 
     def set_video_file_dimensions
-      if %w[video].include?(self.class.human_type)
-        self.file_width, self.file_height = Folio::File::GetVideoDimensionsJob.perform_now(file.path.to_s, self.class.human_type)
-      end
+      return unless self.class.human_type == "video"
+
+      metadata = Folio::File::GetVideoMetadataJob.perform_now(file_url_or_path)
+
+      self.file_width = metadata[:width]
+      self.file_height = metadata[:height]
+      self.file_track_duration = metadata[:duration]
+      self.preview_track_duration_in_seconds = self.respond_to?(:preview_duration_in_seconds) ? preview_duration_in_seconds : 0
     end
 
     def validate_attribution_and_texts_if_needed
@@ -566,7 +592,7 @@ end
 #  index_folio_files_on_media_source_id           (media_source_id)
 #  index_folio_files_on_published_usage_count     (published_usage_count)
 #  index_folio_files_on_site_id                   (site_id)
-#  index_folio_files_on_slug                      (slug)
+#  index_folio_files_on_slug_unique               (slug) UNIQUE
 #  index_folio_files_on_type                      (type)
 #  index_folio_files_on_updated_at                (updated_at)
 #
