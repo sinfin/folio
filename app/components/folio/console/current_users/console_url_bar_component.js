@@ -31,17 +31,19 @@ window.Folio.Stimulus.register('f-c-current-users-console-url-bar', class extend
 
   pingUrl () {
     const currentUrl = window.location.href.split('?')[0]
-
-    window.Folio.Api.apiPost(this.apiUrlValue, { url: currentUrl })
+    if (this.apiUrlValue != "dont_ping") {
+      window.Folio.Api.apiPost(this.apiUrlValue, { url: currentUrl })
+    }
   }
 
   onTakeoverButtonClick () {
     const data = {
       from_user_id: this.fromUserIdValue,
-      record_id: this.recordIdValue,
-      record_type: this.recordTypeValue
+      placement: {
+        type: this.recordTypeValue,
+        id: this.recordIdValue
+      }
     }
-
     window.Folio.Api.apiPost(this.takeoverApiUrlValue, data).then(() => {
       window.location.reload()
     }).catch((err) => {
