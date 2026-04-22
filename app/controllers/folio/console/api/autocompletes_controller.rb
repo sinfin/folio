@@ -45,24 +45,20 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
 
       if p_order.present? && scope.respond_to?(p_order)
         if has_type_ordering
-          # Type ordering is primary, add p_order as secondary
           scope = scope.send(p_order)
         else
-          # No type ordering, unscope and apply p_order as primary
           scope = scope.unscope(:order).send(p_order)
         end
       elsif q.blank? && p_order.blank? && scope.respond_to?(:ordered)
-        # No query and no order scope, use default ordered scope
         if has_type_ordering
-          # Type ordering is primary, add ordered as secondary
           scope = scope.ordered
         else
-          # No type ordering, unscope and apply ordered as primary
           scope = scope.unscope(:order).ordered
         end
       end
 
       pagination, records = pagy(scope, page: p_page, items: AUTOCOMPLETE_PAGY_ITEMS)
+      records = sort_exact_match_first(records, q) if q.present?
       scope = records.filter_map(&:to_autocomplete_label).uniq
 
       render json: { data: scope, meta: meta_from_pagy(pagination) }
@@ -180,7 +176,9 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
         end
       end
 
-      render_selectize_options(scope.limit(AUTOCOMPLETE_PAGY_ITEMS), label_method: params[:label_method])
+      records = scope.limit(AUTOCOMPLETE_PAGY_ITEMS).to_a
+      records = sort_exact_match_first(records, q) if q.present?
+      render_selectize_options(records, label_method: params[:label_method])
     else
       render_selectize_options([])
     end
@@ -234,6 +232,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
       end
 
       pagination, records = pagy(scope, items: AUTOCOMPLETE_PAGY_ITEMS)
+      records = sort_exact_match_first(records, q) if q.present?
 
       render_select2_options(records,
                              label_method: params[:label_method],
@@ -306,6 +305,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
           scope = filter_by_atom_setting_params(scope)
 
           pagination, records = pagy(scope, page: p_page, items: AUTOCOMPLETE_PAGY_ITEMS)
+          records = sort_exact_match_first(records, q) if q.present?
 
           response = records.map do |record|
             text = record.to_console_label
@@ -368,13 +368,12 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
 
             scope = filter_by_atom_setting_params(scope)
 
-            # Get enough records to cover pagination (estimate pages needed)
-            # For simplicity, get AUTOCOMPLETE_PAGY_ITEMS * 2 from each class
             all_records += scope.limit(AUTOCOMPLETE_PAGY_ITEMS * 2).to_a
           end
         end
 
-        # Paginate the combined array manually
+        all_records = sort_exact_match_first(all_records, q) if q.present?
+
         total_count = all_records.size
         total_pages = (total_count.to_f / AUTOCOMPLETE_PAGY_ITEMS).ceil
         offset = (p_page - 1) * AUTOCOMPLETE_PAGY_ITEMS
@@ -448,6 +447,11 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
       end
 
       scope
+    end
+
+    def sort_exact_match_first(records, q)
+      q_downcase = q.downcase
+      records.sort_by { |r| (r.try(:title) || r.try(:name))&.downcase == q_downcase ? 0 : 1 }
     end
 
     def apply_param_scope(scope)
