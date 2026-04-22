@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+### Changed
+
+### Fixed
+
+## [7.6.3] - 2026-04-22
+
 ### Fixed
 
 - **creditText in article JSON-LD image**: `structured_data_hash_for_cover` now accepts the original `Folio::File::Image` record instead of the thumb OpenStruct, enabling `author` and `attribution_source` to be propagated into the `ImageObject`. The `image` field in article structured data is now a proper `ImageObject` (with `@type`, `url`, `creditText`, `width`, `height`) instead of a plain URL string array.
