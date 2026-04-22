@@ -48,6 +48,7 @@ All notable changes to this project will be documented in this file.
 
 - **hyperlinks in tiptap editor**: Added autolink to config file to allow override
 - **keep tags field editable**: after choosing a suggestion
+- **autocomplete exact-match ordering**: all autocomplete endpoints now sort exact-title matches first so pressing Enter selects the expected option
 
 ## [7.5.1] - 2026-03-19
 
