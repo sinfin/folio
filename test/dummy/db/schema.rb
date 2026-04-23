@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_31_165642) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_23_214909) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -189,6 +189,19 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_31_165642) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["type"], name: "index_folio_addresses_on_type"
+  end
+
+  create_table "folio_ai_user_instructions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "site_id", null: false
+    t.string "integration_key", null: false
+    t.string "field_key", null: false
+    t.text "instruction", default: "", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["site_id"], name: "index_folio_ai_user_instructions_on_site_id"
+    t.index ["user_id", "site_id", "integration_key", "field_key"], name: "index_folio_ai_user_instructions_uniqueness", unique: true
+    t.index ["user_id"], name: "index_folio_ai_user_instructions_on_user_id"
   end
 
   create_table "folio_atoms", force: :cascade do |t|
@@ -580,6 +593,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_31_165642) do
     t.text "address_secondary"
     t.jsonb "subtitle_languages", default: ["cs"]
     t.boolean "subtitle_auto_generation_enabled", default: false
+    t.jsonb "ai_settings", default: {}, null: false
+    t.index ["ai_settings"], name: "index_folio_sites_on_ai_settings", using: :gin
     t.index ["domain"], name: "index_folio_sites_on_domain"
     t.index ["position"], name: "index_folio_sites_on_position"
     t.index ["slug"], name: "index_folio_sites_on_slug"
@@ -735,6 +750,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_31_165642) do
     t.index ["name"], name: "index_tags_on_name", unique: true
   end
 
+  add_foreign_key "folio_ai_user_instructions", "folio_sites", column: "site_id"
+  add_foreign_key "folio_ai_user_instructions", "folio_users", column: "user_id"
   add_foreign_key "folio_console_notes", "folio_sites", column: "site_id"
   add_foreign_key "folio_content_templates", "folio_sites", column: "site_id"
   add_foreign_key "folio_file_site_links", "folio_files", column: "file_id"

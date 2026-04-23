@@ -30,6 +30,7 @@ FactoryBot.define do
     phone { "+420 123456789" }
     locale { I18n.default_locale }
     locales { [I18n.default_locale] }
+    ai_settings { {} }
   end
 
   factory :folio_page, class: "Folio::Page" do
@@ -214,6 +215,14 @@ FactoryBot.define do
         Folio::Current.user = nil
       end
     end
+  end
+
+  factory :folio_ai_user_instruction, class: "Folio::Ai::UserInstruction" do
+    user { create(:folio_user) }
+    site { user.auth_site }
+    integration_key { "articles" }
+    field_key { "title" }
+    instruction { "Use a concise tone." }
   end
 
   factory :folio_newsletter_subscription, class: "Folio::NewsletterSubscription" do

@@ -92,6 +92,13 @@ module Folio
 
     config.folio_content_templates_editable = false
 
+    config.folio_ai_enabled = false
+    config.folio_ai_default_provider = :openai
+    config.folio_ai_provider_models = {
+      openai: "gpt-5.5",
+      anthropic: "claude-opus-4-7",
+    }
+
     config.folio_leads_from_component_class_name = nil
     config.folio_newsletter_subscriptions = false
 

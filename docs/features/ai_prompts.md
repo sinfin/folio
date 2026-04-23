@@ -95,7 +95,7 @@ At the application level, Folio should default to AI being off. Runtime gates
 must be layered, not collapsed into a single prompt check.
 
 ```ruby
-Rails.application.config.folio_ai.enabled = false
+Rails.application.config.folio_ai_enabled = false
 ```
 
 If an environment variable is introduced for an operational AI kill switch, it
@@ -131,17 +131,21 @@ Suggested shape:
 {
   "enabled": true,
   "default_provider": "openai",
-  "default_model": "gpt-5.4-2026-03-05",
-  "fields": {
-    "content.title": {
-      "enabled": true,
-      "prompt": "Generate a concise headline...",
-      "provider": "openai",
-      "model": "gpt-5.4-2026-03-05"
-    },
-    "content.summary": {
-      "enabled": true,
-      "prompt": "Summarize the content in up to 400 characters..."
+  "default_model": "gpt-5.5",
+  "integrations": {
+    "content_editor": {
+      "fields": {
+        "title": {
+          "enabled": true,
+          "prompt": "Generate a concise headline...",
+          "provider": "openai",
+          "model": "gpt-5.5"
+        },
+        "summary": {
+          "enabled": true,
+          "prompt": "Summarize the content in up to 400 characters..."
+        }
+      }
     }
   }
 }
@@ -155,7 +159,7 @@ Suggested migrations:
 
 - `folio_sites.ai_settings` as `jsonb`, default `{}`, `null: false`.
 - `folio_ai_user_instructions` with `user_id`, `site_id`, `integration_key`,
-  `field_key`, `instructions`, timestamps, and a unique index across
+  `field_key`, `instruction`, timestamps, and a unique index across
   `user_id/site_id/integration_key/field_key`.
 
 Validation requirements:
@@ -270,7 +274,7 @@ Suggested columns:
 - `site_id`
 - `integration_key`
 - `field_key`
-- `instructions`
+- `instruction`
 - timestamps
 
 The last saved value should be reused as the default editor-side instruction
@@ -301,13 +305,14 @@ Initial built-in adapters:
 - OpenAI
 - Anthropic
 
-Docs-confirmed production model IDs:
+Default model IDs in Folio core:
 
-- OpenAI: `gpt-5.4-2026-03-05` as the stable dated snapshot for GPT-5.4;
-  `gpt-5.4` is the moving alias. The product target GPT-5.5 is not listed in
-  the official OpenAI model docs yet, so it must stay configuration-only until
-  OpenAI exposes an exact API model ID.
-- Anthropic: `claude-opus-4-7` for Claude Opus 4.7.
+- OpenAI: `gpt-5.5`.
+- Anthropic: `claude-opus-4-7`.
+
+Both defaults are configuration values, not hardcoded service assumptions. Host
+applications should override them when the account requires a stable dated
+snapshot, a cheaper model, or a provider-specific production identifier.
 
 The effective provider/model should resolve in this order:
 
@@ -616,6 +621,6 @@ Minimum hardening coverage:
 
 ## Remaining Open Questions
 
-- Should production keep the docs-confirmed OpenAI stable snapshot
-  `gpt-5.4-2026-03-05`, or switch to GPT-5.5 only after OpenAI publishes an
-  exact API model ID and the account has access?
+- None in Folio core for the first implementation slice. Host applications still
+  need to document their concrete context builders, rollout sites, prompt copy,
+  custom fields, and aggregate workflows.

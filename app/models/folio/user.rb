@@ -69,6 +69,12 @@ class Folio::User < Folio::ApplicationRecord
                                   foreign_key: :closed_by_id,
                                   dependent: :nullify
 
+  has_many :ai_user_instructions,
+           class_name: "Folio::Ai::UserInstruction",
+           foreign_key: :user_id,
+           inverse_of: :user,
+           dependent: :destroy
+
   has_many :tiptap_revisions, class_name: "Folio::Tiptap::Revision", dependent: :destroy, inverse_of: :user
   has_many :superseeded_tiptap_revisions, class_name: "Folio::Tiptap::Revision", dependent: :nullify, inverse_of: :superseded_by_user
 

@@ -7,6 +7,8 @@ class Folio::Site < Folio::ApplicationRecord
   include Folio::Positionable
   include Folio::StiPreload
 
+  attribute :ai_settings, default: -> { {} }
+
   # use specific STI types if site is not a singleton
   validates :type,
             presence: true
@@ -39,6 +41,11 @@ class Folio::Site < Folio::ApplicationRecord
   has_many :users, through: :site_user_links,
                           source: :user
 
+  has_many :ai_user_instructions,
+           class_name: "Folio::Ai::UserInstruction",
+           foreign_key: :site_id,
+           inverse_of: :site,
+           dependent: :destroy
 
   # Validations
   validates :title, :email, :locale, :locales,
@@ -53,6 +60,8 @@ class Folio::Site < Folio::ApplicationRecord
                       allow_nil: true
 
   validate :system_emails_should_be_valid
+
+  before_validation :set_default_ai_settings
 
   after_commit :nillify_folio_current_site_records
 
@@ -230,6 +239,39 @@ class Folio::Site < Folio::ApplicationRecord
     {}
   end
 
+  def ai_settings_data
+    (self[:ai_settings].presence || {}).deep_stringify_keys
+  end
+
+  def ai_enabled?
+    ActiveModel::Type::Boolean.new.cast(ai_settings_data["enabled"])
+  end
+
+  def ai_field_settings(integration_key:, field_key:)
+    ai_settings_data.dig("integrations",
+                         integration_key.to_s,
+                         "fields",
+                         field_key.to_s) || {}
+  end
+
+  def ai_prompt_for(integration_key:, field_key:)
+    ai_field_settings(integration_key:, field_key:)["prompt"].to_s.strip.presence
+  end
+
+  def ai_prompt_enabled_for?(integration_key:, field_key:)
+    ai_enabled? && ai_prompt_for(integration_key:, field_key:).present?
+  end
+
+  def set_ai_prompt(integration_key:, field_key:, prompt:)
+    data = ai_settings_data.deep_dup
+    data["integrations"] ||= {}
+    data["integrations"][integration_key.to_s] ||= {}
+    data["integrations"][integration_key.to_s]["fields"] ||= {}
+    data["integrations"][integration_key.to_s]["fields"][field_key.to_s] ||= {}
+    data["integrations"][integration_key.to_s]["fields"][field_key.to_s]["prompt"] = prompt.to_s
+    self.ai_settings = data
+  end
+
   def folio_html_sanitization_config
     {
       enabled: true,
@@ -279,6 +321,10 @@ class Folio::Site < Folio::ApplicationRecord
     def nillify_folio_current_site_records
       Folio::Current.nillify_site_records
     end
+
+    def set_default_ai_settings
+      self.ai_settings = {} if self[:ai_settings].nil?
+    end
 end
 
 # == Schema Information
@@ -316,6 +362,7 @@ end
 #  address_secondary                 :text
 #  subtitle_languages                :jsonb
 #  subtitle_auto_generation_enabled  :boolean          default(FALSE)
+#  ai_settings                       :jsonb            not null
 #
 # Indexes
 #
@@ -324,4 +371,5 @@ end
 #  index_folio_sites_on_slug                (slug)
 #  index_folio_sites_on_subtitle_languages  (subtitle_languages) USING gin
 #  index_folio_sites_on_type                (type)
+#  index_folio_sites_on_ai_settings         (ai_settings) USING gin
 #
