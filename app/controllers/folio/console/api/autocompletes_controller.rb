@@ -311,13 +311,15 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
             text = record.to_console_label
             text = "#{text} – #{record.class.model_name.human}" if show_model_names
 
-            {
+            hash = {
               id: record.id,
               text:,
               label: text,
               value: Folio::Console::StiHelper.sti_record_to_select_value(record),
               type: klass.to_s
             }
+            hash[:usage_labels] = record.usage_labels_for_warning if record.respond_to?(:usage_labels_for_warning)
+            hash
           end
 
           render json: { data: response, meta: meta_from_pagy(pagination) }
@@ -409,6 +411,89 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
       render json: { data: [] }
     else
       render json: { data: [] }
+    end
+  end
+
+  def react_select_create
+    klass = params.require(:class_name).safe_constantize
+
+    if klass && klass < ActiveRecord::Base
+      record = klass.new
+      record.title = params.require(:label)
+      record.site = Folio::Current.site if record.respond_to?(:site=)
+      authorize! :create, record
+
+      if record.save
+        render json: {
+          data: {
+            id: record.id,
+            text: record.to_console_label,
+            label: record.to_console_label,
+            value: record.id.to_s,
+            type: record.class.to_s
+          }
+        }
+      else
+        render json: { error: record.errors.full_messages.join(", ") }, status: :unprocessable_entity
+      end
+    else
+      render json: { error: "Invalid class" }, status: :unprocessable_entity
+    end
+  end
+
+  def react_select_update
+    klass = params.require(:class_name).safe_constantize
+    id = params.require(:id)
+    label = params.require(:label)
+
+    if klass && klass < ActiveRecord::Base
+      record = klass.find(id)
+      authorize! :update, record
+      record.title = label
+
+      if record.save
+        render json: {
+          data: {
+            id: record.id,
+            text: record.to_console_label,
+            label: record.to_console_label,
+            value: record.id.to_s,
+            type: record.class.to_s
+          }
+        }
+      else
+        render json: { error: record.errors.full_messages.join(", ") }, status: :unprocessable_entity
+      end
+    else
+      render json: { error: "Invalid class" }, status: :unprocessable_entity
+    end
+  end
+
+  def react_select_destroy
+    klass = params.require(:class_name).safe_constantize
+    id = params.require(:id)
+
+    if klass && klass < ActiveRecord::Base
+      record = klass.find(id)
+      authorize! :destroy, record
+
+      usage_count = record.respond_to?(:usage_count_for_warning) ? record.usage_count_for_warning : 0
+      usage_labels = record.respond_to?(:usage_labels_for_warning) ? record.usage_labels_for_warning : []
+
+      if params[:confirmed] == "true"
+        record.destroy!
+        render json: { data: { id: record.id, destroyed: true } }
+      else
+        render json: {
+          data: {
+            id: record.id,
+            usage_count: usage_count,
+            usage_labels: usage_labels,
+          }
+        }
+      end
+    else
+      render json: { error: "Invalid class" }, status: :unprocessable_entity
     end
   end
 
