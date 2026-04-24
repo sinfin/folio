@@ -10,6 +10,8 @@ class Folio::Console::Ai::TextSuggestionsComponentTest < Folio::Console::Compone
     assert_selector(".f-c-ai-text-suggestions__button")
     assert_selector("[data-f-c-ai-text-suggestions-endpoint-value='/ai']")
     assert_selector("[data-f-c-ai-text-suggestions-target-selector-value='#article_title']")
+    assert_selector("[data-f-c-ai-text-suggestions-copy-button-label-value]")
+    assert_selector("[data-f-c-ai-text-suggestions-accept-button-label-value]")
     assert_selector("textarea", text: "Use shorter sentences.", visible: :all)
   end
 

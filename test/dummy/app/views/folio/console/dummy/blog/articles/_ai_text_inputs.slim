@@ -1,0 +1,17 @@
+= f.input :title, atom_setting: :title
+= f.input :slug
+= f.input :perex, character_counter: true,
+                  autosize: true,
+                  atom_setting: :perex
+
+= f.input :locale, collection: Dummy::Blog.available_locales,
+                   include_blank: false,
+                   atom_setting: :locale
+
+= react_ordered_multiselect(f, :authors, atom_setting: :authors)
+
+= react_ordered_multiselect(f, :topics, atom_setting: :topics)
+
+= f.input :meta_title, character_counter: true
+= f.input :meta_description, autosize: true,
+                             character_counter: true

@@ -50,7 +50,9 @@ class Folio::Console::Ai::TextSuggestionsComponent < Folio::Console::Application
         generic_error_text: t(".generic_error_text"),
         missing_context_text: t(".missing_context_text"),
         copy_label: t(".copy_label"),
+        copy_button_label: t(".copy_button_label"),
         accept_label: t(".accept_label"),
+        accept_button_label: t(".accept_button_label"),
         chars_label: t(".chars_label"),
       }.compact
     end

@@ -76,6 +76,28 @@ class Folio::SimpleFormOverridesTest < ActionView::TestCase
     assert_not page.has_css?(".f-c-ai-text-suggestions")
   end
 
+  test "does not auto-attach AI suggestions to a new record" do
+    site = create_site(force: true)
+    record = build(:folio_page, site:)
+    register_ai_field
+    site.update!(ai_settings: enabled_ai_settings)
+    Folio::Current.site = site
+
+    html = with_config(folio_ai_enabled: true) do
+      simple_form_for(record, url: "/") do |f|
+        concat(folio_ai_form_context(integration_key: :articles,
+                                     endpoint: "/ai",
+                                     record:) do
+          f.input(:title)
+        end)
+      end
+    end
+
+    page = Capybara.string(html)
+
+    assert_not page.has_css?(".f-c-ai-text-suggestions")
+  end
+
   private
     def register_ai_field
       Folio::Ai.reset_registry!

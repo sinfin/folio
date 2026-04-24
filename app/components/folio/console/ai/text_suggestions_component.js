@@ -20,7 +20,9 @@ window.Folio.Stimulus.register('f-c-ai-text-suggestions', class extends window.S
     genericErrorText: String,
     missingContextText: String,
     copyLabel: String,
+    copyButtonLabel: String,
     acceptLabel: String,
+    acceptButtonLabel: String,
     charsLabel: String
   }
 
@@ -212,6 +214,11 @@ window.Folio.Stimulus.register('f-c-ai-text-suggestions', class extends window.S
   }
 
   handleSuccess (response, { persistInstructions }) {
+    if (response.error_code || response.error || response.code) {
+      this.handleError({ responseData: response })
+      return
+    }
+
     const data = response.data || response
     const suggestions = data.suggestions || []
 
@@ -278,8 +285,14 @@ window.Folio.Stimulus.register('f-c-ai-text-suggestions', class extends window.S
 
     const actions = document.createElement('span')
     actions.className = 'f-c-ai-text-suggestions__suggestion-actions'
-    actions.appendChild(this.actionButton('copy', this.copyLabelValue, suggestion.text || ''))
-    actions.appendChild(this.actionButton('accept', this.acceptLabelValue, suggestion.text || ''))
+    actions.appendChild(this.actionButton('copy',
+      this.copyButtonLabelValue,
+      this.copyLabelValue,
+      suggestion.text || ''))
+    actions.appendChild(this.actionButton('accept',
+      this.acceptButtonLabelValue,
+      this.acceptLabelValue,
+      suggestion.text || ''))
 
     button.appendChild(body)
     button.appendChild(actions)
@@ -316,11 +329,11 @@ window.Folio.Stimulus.register('f-c-ai-text-suggestions', class extends window.S
     return span
   }
 
-  actionButton (action, label, text) {
+  actionButton (action, buttonLabel, label, text) {
     const button = document.createElement('button')
     button.type = 'button'
     button.className = `f-c-ai-text-suggestions__suggestion-${action}`
-    button.textContent = action === 'copy' ? 'Copy' : 'OK'
+    button.textContent = buttonLabel
     button.setAttribute('aria-label', label)
     button.setAttribute('title', label)
     button.setAttribute('data-action', `click->f-c-ai-text-suggestions#${action}`)
@@ -366,7 +379,9 @@ window.Folio.Stimulus.register('f-c-ai-text-suggestions', class extends window.S
 
   markSelected (selectedElement) {
     this.clearSelection()
-    selectedElement.classList.add('f-c-ai-text-suggestions__suggestion--selected')
+
+    const suggestion = selectedElement.closest('.f-c-ai-text-suggestions__suggestion') || selectedElement
+    suggestion.classList.add('f-c-ai-text-suggestions__suggestion--selected')
   }
 
   clearSelection () {

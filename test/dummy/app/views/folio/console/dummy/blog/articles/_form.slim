@@ -13,20 +13,12 @@
       .col-md-auto
         = file_picker_for_cover(f)
       .col-md
-        = f.input :title, atom_setting: :title
-        = f.input :slug
-        = f.input :perex, character_counter: true,
-                          autosize: true,
-                          atom_setting: :perex
-
-        = f.input :locale, collection: Dummy::Blog.available_locales,
-                           include_blank: false,
-                           atom_setting: :locale
-
-        = react_ordered_multiselect(f, :authors, atom_setting: :authors)
-
-        = react_ordered_multiselect(f, :topics, atom_setting: :topics)
-
-        = f.input :meta_title, character_counter: true
-        = f.input :meta_description, autosize: true,
-                                     character_counter: true
+        - if f.object.persisted?
+          = folio_ai_form_context(integration_key: :dummy_blog_articles,
+                                  endpoint: console_dummy_blog_article_ai_suggestions_path(f.object),
+                                  record: f.object) do
+            = render partial: "folio/console/dummy/blog/articles/ai_text_inputs",
+                     locals: { f: f }
+        - else
+          = render partial: "folio/console/dummy/blog/articles/ai_text_inputs",
+                   locals: { f: f }

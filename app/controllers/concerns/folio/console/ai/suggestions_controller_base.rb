@@ -4,6 +4,10 @@ module Folio::Console::Ai::SuggestionsControllerBase
   extend ActiveSupport::Concern
 
   included do
+    skip_before_action :add_root_breadcrumb, raise: false
+    skip_before_action :update_current_user_console_url, raise: false
+    skip_before_action :set_show_current_user_console_url_bar, raise: false
+
     before_action :folio_ai_ensure_feature_enabled!
   end
 

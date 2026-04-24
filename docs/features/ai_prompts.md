@@ -2,7 +2,8 @@
 
 ## Status
 
-Folio core implementation slice is in progress on branch `feat/ai-prompts`.
+Folio core implementation slice is implemented on branch `feat/ai-prompts` and
+is pending review against this draft before publication.
 The document is both the implementation plan and the reusable contract for host
 applications.
 
@@ -221,6 +222,35 @@ safe ProseMirror text walk for common text nodes.
 under `folio.ai.*`. The default payload allow-list includes site, user,
 integration, field, provider, model, suggestion count, latency, error code, and
 record class only.
+
+### Dummy App Verification
+
+The dummy app wires a no-credentials demo integration for local validation:
+
+- `test/dummy/config/initializers/folio_ai.rb` enables Folio AI in development
+  and registers `dummy_blog_articles`.
+- `test/dummy/app/controllers/folio/console/dummy/blog/article_ai_suggestions_controller.rb`
+  includes the reusable endpoint concern and uses an in-process demo adapter
+  instead of OpenAI or Anthropic credentials.
+- The persisted dummy blog article form wraps standard text fields in
+  `folio_ai_form_context`, so `title`, `perex`, `meta_title`, and
+  `meta_description` auto-attach AI controls once the current site has prompts
+  configured.
+
+Manual demosite check:
+
+1. Start the dummy app in development.
+2. Open Console site settings and enable AI prompts for the current site.
+3. Fill non-blank default prompts for the dummy blog article fields.
+4. Open an existing dummy blog article; new unsaved records intentionally do not
+   show AI actions.
+5. Click an AI action and verify loading, three variants, copy, accept, undo,
+   close, persisted instructions, and regenerate without requiring provider
+   credentials.
+
+The dummy adapter is for UI/contract verification only. Host applications must
+provide their own context builder, authorization, route, and provider
+configuration.
 
 ## Proposed Architecture
 
