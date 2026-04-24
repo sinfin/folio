@@ -215,6 +215,13 @@ cs:
           attributes:
             roles:
               not_available_for_site: "Role %{roles} nejsou všechny dostupné pro web '%{site}'."
+        folio/site:
+          attributes:
+            ai_settings:
+              invalid_ai_settings_structure: mají neplatnou strukturu
+              unknown_ai_field: "odkazují na neznámé AI pole '%{key}' v integraci '%{integration}'"
+              unknown_ai_integration: "odkazují na neznámou AI integraci '%{key}'"
+              unknown_ai_provider: "odkazují na neznámého AI providera '%{provider}'"
 
       clonable:
         association_not_found: "Asociace '%{association}' neexistuje pro %{model}"

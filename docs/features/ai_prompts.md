@@ -17,6 +17,8 @@ Implemented in Folio core:
   normalization, and user-instruction persistence.
 - Global feature flag, ENV kill switch, per-site settings, per-field prompt and
   enabled gates.
+- Site settings validation against registered integrations, registered fields,
+  and configured providers while Folio AI is globally enabled.
 - Console site settings tab for registered promptable fields.
 - Auto-attachment for supported standard SimpleForm `string` and `text` inputs
   inside an explicit AI form context.
@@ -126,6 +128,11 @@ Field availability remains conservative:
 4. Field-level `enabled` flag.
 5. Non-blank field default prompt.
 6. Host-app eligibility check.
+
+When Folio AI is globally enabled, site settings are also validated before save:
+unknown integrations, unknown fields, invalid nested structures, and unknown
+provider keys are rejected. Blank prompts remain valid configuration, but keep
+the field unavailable until an admin fills a default prompt.
 
 ### Auto-Attachment For Standard Fields
 

@@ -60,6 +60,7 @@ class Folio::Site < Folio::ApplicationRecord
                       allow_nil: true
 
   validate :system_emails_should_be_valid
+  validate :ai_settings_should_be_valid, if: -> { Folio::Ai.enabled? }
 
   before_validation :set_default_ai_settings
 
@@ -330,6 +331,66 @@ class Folio::Site < Folio::ApplicationRecord
           end
         end
       end
+    end
+
+    def ai_settings_should_be_valid
+      return if self[:ai_settings].blank?
+
+      unless self[:ai_settings].is_a?(Hash)
+        errors.add(:ai_settings, :invalid_ai_settings_structure)
+        return
+      end
+
+      validate_ai_provider(ai_settings_data["default_provider"])
+      validate_ai_integrations(ai_settings_data["integrations"])
+    end
+
+    def validate_ai_integrations(integrations)
+      return if integrations.blank?
+      return add_invalid_ai_settings_structure unless integrations.is_a?(Hash)
+
+      integrations.each do |key, settings|
+        validate_ai_integration(key, settings || {})
+      end
+    end
+
+    def validate_ai_integration(key, settings)
+      integration = Folio::Ai.registry.integration(key)
+      return errors.add(:ai_settings, :unknown_ai_integration, key:) if integration.blank?
+      return if settings.blank?
+      return add_invalid_ai_settings_structure unless settings.is_a?(Hash)
+
+      validate_ai_provider(settings["default_provider"])
+      validate_ai_fields(integration, settings["fields"])
+    end
+
+    def validate_ai_fields(integration, fields)
+      return if fields.blank?
+      return add_invalid_ai_settings_structure unless fields.is_a?(Hash)
+
+      fields.each do |key, settings|
+        validate_ai_field(integration, key, settings || {})
+      end
+    end
+
+    def validate_ai_field(integration, key, settings)
+      field = Folio::Ai.registry.field(integration.key, key)
+      return errors.add(:ai_settings, :unknown_ai_field, key:, integration: integration.key) if field.blank?
+      return if settings.blank?
+      return add_invalid_ai_settings_structure unless settings.is_a?(Hash)
+
+      validate_ai_provider(settings["provider"])
+    end
+
+    def validate_ai_provider(provider)
+      return if provider.blank?
+      return if Folio::Ai.known_provider?(provider)
+
+      errors.add(:ai_settings, :unknown_ai_provider, provider:)
+    end
+
+    def add_invalid_ai_settings_structure
+      errors.add(:ai_settings, :invalid_ai_settings_structure)
     end
 
     def nillify_folio_current_site_records

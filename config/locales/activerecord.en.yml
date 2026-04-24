@@ -182,6 +182,13 @@ en:
           attributes:
             roles:
               not_available_for_site: "Roles %{roles} are not completelly available for site '%{site}'."
+        folio/site:
+          attributes:
+            ai_settings:
+              invalid_ai_settings_structure: have invalid structure
+              unknown_ai_field: "reference unknown AI field '%{key}' in integration '%{integration}'"
+              unknown_ai_integration: "reference unknown AI integration '%{key}'"
+              unknown_ai_provider: "reference unknown AI provider '%{provider}'"
       clonable:
         association_not_found: "Association '%{association}' does not exist for %{model}"
         attribute_not_found: "Attribute '%{attribute}' does not exist for %{model}"
