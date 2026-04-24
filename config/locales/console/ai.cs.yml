@@ -1,0 +1,53 @@
+---
+cs:
+  folio:
+    console:
+      ai:
+        text_suggestions_component:
+          button_label: AI návrhy
+          undo_label: Zpět
+          close_label: Zavřít
+          panel_title: AI návrhy
+          panel_title_with_field: "AI návrhy: %{field}"
+          loading_text: Připravuji ...
+          generic_error_text: AI návrhy se nepodařilo vygenerovat. Zkuste to prosím znovu.
+          missing_context_text: Napište nejdříve tělo článku, aby mohl AI asistent generovat relevantní obsah.
+          copy_label: Kopírovat návrh
+          accept_label: Přijmout návrh
+          chars_label: znaků
+          instructions_placeholder: Vlastní instrukce pro AI (volitelné) ...
+          regenerate_label: Uložit vlastní instrukce
+        site_settings_component:
+          intro: Nastavte AI návrhy pro tento web a registrovaná pole. Pole je v editaci dostupné pouze tehdy, když je web zapnutý, pole je zapnuté a výchozí prompt není prázdný.
+          enabled_label: Povolit AI návrhy pro tento web
+          default_provider: Výchozí provider
+          default_model: Výchozí model
+          model_placeholder: Dědit výchozí model providera
+          integration_provider: Provider pro integraci
+          integration_model: Model pro integraci
+          field_provider: Provider pro pole
+          field_model: Model pro pole
+          inherit_provider: Dědit provider
+          inherit_model: Dědit model
+          prompt_label: Výchozí prompt
+          character_limit:
+            one: "Limit: %{count} znak"
+            few: "Limit: %{count} znaky"
+            other: "Limit: %{count} znaků"
+        errors:
+          feature_disabled: AI návrhy jsou vypnuté.
+          global_disabled: AI návrhy jsou vypnuté.
+          site_disabled: AI návrhy jsou pro tento web vypnuté.
+          field_not_registered: AI návrhy nejsou pro toto pole nakonfigurované.
+          field_disabled: AI návrhy jsou pro toto pole vypnuté.
+          prompt_missing: AI návrhy nejsou pro toto pole nakonfigurované.
+          host_ineligible: Napište nejdříve tělo článku, aby mohl AI asistent generovat relevantní obsah.
+          record_not_ready: Před použitím AI návrhů záznam uložte.
+          missing_context: Napište nejdříve tělo článku, aby mohl AI asistent generovat relevantní obsah.
+          invalid_context: AI návrhy nemohou použít aktuální obsah.
+          provider_timeout: AI provider neodpověděl včas. Zkuste to prosím znovu.
+          provider_rate_limited: AI provider hlásí rate limit. Zkuste to prosím později.
+          provider_error: AI provider selhal. Zkuste to prosím znovu.
+          response_invalid: AI provider vrátil neplatnou odpověď.
+          cost_limit_exceeded: AI kontext je příliš velký. Zkraťte obsah nebo upravte context builder.
+          rate_limited: Příliš mnoho AI requestů. Zkuste to prosím později.

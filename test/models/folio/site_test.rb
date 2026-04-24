@@ -21,7 +21,40 @@ module Folio
 
       assert site.ai_enabled?
       assert site.ai_prompt_enabled_for?(integration_key: :articles, field_key: :title)
+      assert site.ai_field_enabled_for?(integration_key: :articles, field_key: :title)
       assert_equal "Write a title.", site.ai_prompt_for(integration_key: :articles, field_key: :title)
+    end
+
+    test "AI prompt is disabled when field is explicitly disabled" do
+      site = build(:folio_site)
+      site.ai_settings = {
+        enabled: true,
+        integrations: {
+          articles: {
+            fields: {
+              title: {
+                enabled: false,
+                prompt: "Write a title.",
+              },
+            },
+          },
+        },
+      }
+
+      assert_not site.ai_field_enabled_for?(integration_key: :articles, field_key: :title)
+      assert_not site.ai_prompt_enabled_for?(integration_key: :articles, field_key: :title)
+    end
+
+    test "adds AI prompts tab only when feature is enabled and registry has integrations" do
+      Folio::Ai.reset_registry!
+      Folio::Ai.register_integration(:articles, fields: %i[title])
+      site = build(:folio_site)
+
+      with_config(folio_ai_enabled: true) do
+        assert_includes site.console_form_tabs, :ai_prompts
+      end
+    ensure
+      Folio::Ai.reset_registry!
     end
 
     test "sets AI prompt without losing existing settings" do

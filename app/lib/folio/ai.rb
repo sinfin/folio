@@ -10,6 +10,21 @@ module Folio::Ai
   ProviderTimeoutError = Class.new(ProviderError)
   ProviderRateLimitError = Class.new(ProviderError)
   ResponseInvalidError = Class.new(Error)
+  CostLimitExceededError = Class.new(Error)
+  RateLimitExceededError = Class.new(Error)
+
+  TRACKING_PAYLOAD_KEYS = %i[
+    site_id
+    user_id
+    integration_key
+    field_key
+    provider
+    model
+    suggestion_count
+    latency_ms
+    error_code
+    record_class
+  ].freeze
 
   class << self
     def registry
@@ -70,5 +85,17 @@ module Folio::Ai
         raise Folio::Ai::UnknownProviderError, "Unknown AI provider: #{provider}"
       end
     end
+
+    def track(event, payload = {})
+      ActiveSupport::Notifications.instrument("folio.ai.#{event}",
+                                              sanitized_tracking_payload(payload))
+    rescue StandardError
+      nil
+    end
+
+    private
+      def sanitized_tracking_payload(payload)
+        payload.symbolize_keys.slice(*TRACKING_PAYLOAD_KEYS)
+      end
   end
 end

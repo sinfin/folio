@@ -175,7 +175,11 @@ class Folio::Site < Folio::ApplicationRecord
   end
 
   def console_form_tabs
-    console_form_tabs_base
+    if Folio::Ai.enabled? && Folio::Ai.registry.integrations_for_select.present?
+      console_form_tabs_base + %i[ai_prompts]
+    else
+      console_form_tabs_base
+    end
   end
 
   def console_locale
@@ -258,8 +262,18 @@ class Folio::Site < Folio::ApplicationRecord
     ai_field_settings(integration_key:, field_key:)["prompt"].to_s.strip.presence
   end
 
+  def ai_field_enabled_for?(integration_key:, field_key:)
+    settings = ai_field_settings(integration_key:, field_key:)
+
+    return true unless settings.key?("enabled")
+
+    ActiveModel::Type::Boolean.new.cast(settings["enabled"])
+  end
+
   def ai_prompt_enabled_for?(integration_key:, field_key:)
-    ai_enabled? && ai_prompt_for(integration_key:, field_key:).present?
+    ai_enabled? &&
+      ai_field_enabled_for?(integration_key:, field_key:) &&
+      ai_prompt_for(integration_key:, field_key:).present?
   end
 
   def set_ai_prompt(integration_key:, field_key:, prompt:)

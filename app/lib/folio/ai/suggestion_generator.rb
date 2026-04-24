@@ -37,29 +37,49 @@ class Folio::Ai::SuggestionGenerator
   end
 
   def call
+    started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    provider_config = nil
+    instruction = nil
+
     availability = availability_result
-    return failure(availability.reason, field: availability.field) unless availability.available?
+    unless availability.available?
+      return failure_with_tracking(availability.reason,
+                                   started_at:,
+                                   field: availability.field)
+    end
 
     instruction = effective_instruction
     provider_config = Folio::Ai::ProviderConfig.new(site:, integration_key:, field_key:).call
     prompt = compose_prompt(instruction)
+    check_request!(prompt.prompt)
     adapter = provider_adapter || Folio::Ai.provider_adapter(provider: provider_config.provider,
                                                              model: provider_config.model)
 
-    success(adapter.generate_suggestions(prompt: prompt.prompt,
-                                         field: availability.field,
-                                         suggestion_count:),
-            field: availability.field,
-            provider_config:,
-            user_instruction: instruction)
+    Folio::Ai.track(:suggestion_generation_requested, tracking_payload(provider_config:,
+                                                                       suggestion_count:))
+
+    result = success(adapter.generate_suggestions(prompt: prompt.prompt,
+                                                  field: availability.field,
+                                                  suggestion_count:),
+                     field: availability.field,
+                     provider_config:,
+                     user_instruction: instruction)
+
+    track_generation_succeeded(result, started_at:)
+
+    result
   rescue Folio::Ai::ProviderTimeoutError
-    failure(:provider_timeout)
+    failure_with_tracking(:provider_timeout, started_at:, provider_config:, user_instruction: instruction)
   rescue Folio::Ai::ProviderRateLimitError
-    failure(:provider_rate_limited)
+    failure_with_tracking(:provider_rate_limited, started_at:, provider_config:, user_instruction: instruction)
   rescue Folio::Ai::ResponseInvalidError
-    failure(:response_invalid)
+    failure_with_tracking(:response_invalid, started_at:, provider_config:, user_instruction: instruction)
+  rescue Folio::Ai::CostLimitExceededError
+    failure_with_tracking(:cost_limit_exceeded, started_at:, provider_config:, user_instruction: instruction)
+  rescue Folio::Ai::RateLimitExceededError
+    failure_with_tracking(:rate_limited, started_at:, provider_config:, user_instruction: instruction)
   rescue Folio::Ai::ProviderError, Folio::Ai::UnknownProviderError, ArgumentError
-    failure(:provider_error)
+    failure_with_tracking(:provider_error, started_at:, provider_config:, user_instruction: instruction)
   end
 
   private
@@ -96,7 +116,11 @@ class Folio::Ai::SuggestionGenerator
                                                      site:,
                                                      integration_key:,
                                                      field_key:,
-                                                     instruction: instructions.to_s).instruction
+                                                     instruction: instructions.to_s)
+                                 .instruction
+                                 .tap do
+        Folio::Ai.track(:user_instruction_saved, tracking_payload)
+      end
     end
 
     def stored_instruction
@@ -112,6 +136,14 @@ class Folio::Ai::SuggestionGenerator
                                     context:).call
     end
 
+    def check_request!(prompt)
+      Folio::Ai::RequestGuard.new(site:,
+                                  user:,
+                                  integration_key:,
+                                  field_key:,
+                                  prompt:).check!
+    end
+
     def success(suggestions, field:, provider_config:, user_instruction:)
       Result.new(success: true,
                  suggestions:,
@@ -121,10 +153,55 @@ class Folio::Ai::SuggestionGenerator
                  user_instruction:)
     end
 
-    def failure(error_code, field: nil)
+    def failure(error_code, field: nil, user_instruction: nil)
       Result.new(success: false,
                  suggestions: [],
                  error_code:,
-                 field:)
+                 field:,
+                 user_instruction:)
+    end
+
+    def failure_with_tracking(error_code, started_at:, field: nil, provider_config: nil, user_instruction: nil)
+      failure(error_code, field:, user_instruction:).tap do
+        track_generation_failed(error_code, started_at:, provider_config:)
+      end
+    end
+
+    def track_generation_succeeded(result, started_at:)
+      Folio::Ai.track(:suggestion_generation_succeeded,
+                      tracking_payload(provider: result.provider,
+                                       model: result.model,
+                                       suggestion_count: result.suggestions.length,
+                                       latency_ms: latency_ms(started_at)))
+    end
+
+    def track_generation_failed(error_code, started_at:, provider_config: nil)
+      Folio::Ai.track(:suggestion_generation_failed,
+                      tracking_payload(provider_config:,
+                                       error_code:,
+                                       latency_ms: latency_ms(started_at)))
+    end
+
+    def tracking_payload(provider_config: nil,
+                         provider: nil,
+                         model: nil,
+                         suggestion_count: nil,
+                         latency_ms: nil,
+                         error_code: nil)
+      {
+        site_id: site&.id,
+        user_id: user&.id,
+        integration_key: integration_key.to_s,
+        field_key: field_key.to_s,
+        provider: provider || provider_config&.provider,
+        model: model || provider_config&.model,
+        suggestion_count:,
+        latency_ms:,
+        error_code:,
+      }.compact
+    end
+
+    def latency_ms(started_at)
+      ((Process.clock_gettime(Process::CLOCK_MONOTONIC) - started_at) * 1_000).round
     end
 end

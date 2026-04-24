@@ -98,6 +98,8 @@ module Folio
       openai: "gpt-5.5",
       anthropic: "claude-opus-4-7",
     }
+    config.folio_ai_max_prompt_chars = 80_000
+    config.folio_ai_rate_limit = nil
 
     config.folio_leads_from_component_class_name = nil
     config.folio_newsletter_subscriptions = false

@@ -1,0 +1,115 @@
+.f-c-ai-site-settings
+  .f-c-ai-site-settings__intro.alert.alert-info
+    = t(".intro")
+
+  .form-check.form-switch.mb-g
+    = hidden_field_tag field_name(:enabled), "0"
+    = check_box_tag field_name(:enabled),
+                    "1",
+                    site_enabled?,
+                    id: field_id(:enabled),
+                    class: "form-check-input"
+    = label_tag field_id(:enabled),
+                t(".enabled_label"),
+                class: "form-check-label"
+
+  .row
+    .col-md-6
+      .form-group
+        = label_tag field_id(:default_provider),
+                    t(".default_provider"),
+                    class: "form-label"
+        = select_tag field_name(:default_provider),
+                     provider_options(default_provider),
+                     id: field_id(:default_provider),
+                     class: "form-select"
+
+    .col-md-6
+      .form-group
+        = label_tag field_id(:default_model),
+                    t(".default_model"),
+                    class: "form-label"
+        = text_field_tag field_name(:default_model),
+                         default_model,
+                         id: field_id(:default_model),
+                         placeholder: t(".model_placeholder"),
+                         class: "form-control"
+
+  - integrations.each do |integration|
+    .f-c-ai-site-settings__integration.card.mb-g
+      .card-header
+        .f-c-ai-site-settings__integration-title = integration.label
+
+      .card-body
+        .row
+          .col-md-6
+            .form-group
+              = label_tag field_id(:integrations, integration.key, :default_provider),
+                          t(".integration_provider"),
+                          class: "form-label"
+              = select_tag field_name(:integrations, integration.key, :default_provider),
+                           provider_options(integration_provider(integration)),
+                           include_blank: t(".inherit_provider"),
+                           id: field_id(:integrations, integration.key, :default_provider),
+                           class: "form-select"
+
+          .col-md-6
+            .form-group
+              = label_tag field_id(:integrations, integration.key, :default_model),
+                          t(".integration_model"),
+                          class: "form-label"
+              = text_field_tag field_name(:integrations, integration.key, :default_model),
+                               integration_model(integration),
+                               id: field_id(:integrations, integration.key, :default_model),
+                               placeholder: t(".inherit_model"),
+                               class: "form-control"
+
+        - integration.fields.values.each do |field|
+          .f-c-ai-site-settings__field
+            .f-c-ai-site-settings__field-header
+              .form-check.form-switch
+                = hidden_field_tag field_name(:integrations, integration.key, :fields, field.key, :enabled), "0"
+                = check_box_tag field_name(:integrations, integration.key, :fields, field.key, :enabled),
+                                "1",
+                                field_enabled?(integration, field),
+                                id: field_id(:integrations, integration.key, :fields, field.key, :enabled),
+                                class: "form-check-input"
+                = label_tag field_id(:integrations, integration.key, :fields, field.key, :enabled),
+                            field.label,
+                            class: "form-check-label"
+
+              - if field_hint(field)
+                small.f-c-ai-site-settings__field-hint = field_hint(field)
+
+            .form-group
+              = label_tag field_id(:integrations, integration.key, :fields, field.key, :prompt),
+                          t(".prompt_label"),
+                          class: "form-label"
+              = text_area_tag field_name(:integrations, integration.key, :fields, field.key, :prompt),
+                              field_prompt(integration, field),
+                              id: field_id(:integrations, integration.key, :fields, field.key, :prompt),
+                              class: "form-control",
+                              rows: 5
+
+            .row
+              .col-md-6
+                .form-group
+                  = label_tag field_id(:integrations, integration.key, :fields, field.key, :provider),
+                              t(".field_provider"),
+                              class: "form-label"
+                  = select_tag field_name(:integrations, integration.key, :fields, field.key, :provider),
+                               provider_options(field_provider(integration, field)),
+                               include_blank: t(".inherit_provider"),
+                               id: field_id(:integrations, integration.key, :fields, field.key, :provider),
+                               class: "form-select"
+
+              .col-md-6
+                .form-group
+                  = label_tag field_id(:integrations, integration.key, :fields, field.key, :model),
+                              t(".field_model"),
+                              class: "form-label"
+                  = text_field_tag field_name(:integrations, integration.key, :fields, field.key, :model),
+                                   field_model(integration, field),
+                                   id: field_id(:integrations, integration.key, :fields, field.key, :model),
+                                   placeholder: t(".inherit_model"),
+                                   class: "form-control"

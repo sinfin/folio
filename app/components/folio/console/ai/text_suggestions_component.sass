@@ -1,0 +1,168 @@
+.f-c-ai-text-suggestions
+  position: relative
+  display: inline-flex
+  align-items: center
+  font-size: $font-size-sm
+
+  &__actions
+    display: inline-flex
+    align-items: center
+    gap: px-to-rem(8px)
+
+  &__button,
+  &__undo,
+  &__close,
+  &__regenerate,
+  &__suggestion-copy,
+  &__suggestion-accept
+    border: 0
+    background: none
+    padding: 0
+    font: inherit
+    color: inherit
+    cursor: pointer
+
+  &__button
+    display: inline-flex
+    align-items: center
+    gap: px-to-rem(4px)
+    color: $violet
+    white-space: nowrap
+
+  &__spark
+    font-weight: $font-weight-bold
+
+  &__undo
+    color: $danger
+    white-space: nowrap
+
+    &::before
+      content: '<'
+      margin-right: px-to-rem(4px)
+
+  &__panel
+    position: absolute
+    z-index: 100000
+    top: calc(100% + #{px-to-rem(8px)})
+    right: 0
+    width: min(#{px-to-rem(640px)}, calc(100vw - #{px-to-rem(32px)}))
+    padding: px-to-rem(18px)
+    border: 1px solid rgba($violet, 0.35)
+    border-radius: $border-radius
+    background: mix($violet, $white, 8%)
+    box-shadow: 0 px-to-rem(16px) px-to-rem(42px) rgba($black, 0.18)
+
+  &__header
+    display: flex
+    align-items: center
+    justify-content: space-between
+    gap: px-to-rem(16px)
+    margin-bottom: px-to-rem(12px)
+
+  &__title
+    font-weight: $font-weight-bold
+
+  &__close
+    font-size: px-to-rem(18px)
+    line-height: 1
+
+  &__status
+    padding: px-to-rem(12px)
+    margin-bottom: px-to-rem(12px)
+    border: 1px solid rgba($danger, 0.35)
+    border-radius: $border-radius
+    background: rgba($danger, 0.08)
+    color: $danger
+
+  &__suggestions
+    display: grid
+    gap: px-to-rem(10px)
+
+  &__suggestion
+    display: grid
+    grid-template-columns: 1fr auto
+    gap: px-to-rem(10px)
+    align-items: center
+    width: 100%
+    padding: px-to-rem(12px)
+    border: 1px solid rgba($violet, 0.35)
+    border-radius: $border-radius
+    background: rgba($white, 0.42)
+    color: inherit
+    text-align: left
+    transition: $transition-base
+
+    &:hover,
+    &:focus
+      border-color: rgba($violet, 0.65)
+      background: rgba($white, 0.72)
+
+  &__suggestion--selected
+    border-color: $green
+    background: rgba($green, 0.18)
+
+  &__suggestion--loading
+    color: $gray-600
+    cursor: wait
+
+  &__suggestion-body
+    min-width: 0
+
+  &__suggestion-meta
+    display: flex
+    flex-wrap: wrap
+    gap: px-to-rem(8px)
+    margin-bottom: px-to-rem(4px)
+    color: $gray-600
+    font-size: px-to-rem(12px)
+
+  &__suggestion-text
+    white-space: pre-wrap
+    overflow-wrap: anywhere
+
+  &__suggestion-actions
+    display: inline-flex
+    gap: px-to-rem(10px)
+    align-items: center
+
+  &__suggestion-copy,
+  &__suggestion-accept
+    min-width: px-to-rem(24px)
+    min-height: px-to-rem(24px)
+    border-radius: $border-radius
+    text-align: center
+
+    &:hover,
+    &:focus
+      background: rgba($black, 0.08)
+
+  &__instructions
+    margin-top: px-to-rem(14px)
+
+  &__instructions-input
+    display: block
+    width: 100%
+    min-height: px-to-rem(58px)
+    padding: px-to-rem(10px)
+    border: 1px solid $input-border-color
+    border-radius: $border-radius
+    background: $white
+    color: $input-color
+    resize: vertical
+
+  &__regenerate
+    margin-top: px-to-rem(8px)
+    padding: px-to-rem(6px) px-to-rem(10px)
+    border-radius: $border-radius
+    background: $gray-700
+    color: $white
+
+  &--loading &__button
+    cursor: wait
+    opacity: 0.65
+
+  @container (max-width: 560px)
+    &__panel
+      right: auto
+      left: 0
+      width: calc(100vw - #{px-to-rem(32px)})

@@ -248,6 +248,7 @@ en:
         content: Content
         documents: Documents
         gallery: Gallery
+        ai_prompts: AI prompts
         settings: Settings
         site_social_links: Links
       really_delete: Are you sure you want to remove "%{title}"?

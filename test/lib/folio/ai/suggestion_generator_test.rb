@@ -94,7 +94,47 @@ class Folio::Ai::SuggestionGeneratorTest < ActiveSupport::TestCase
 
     assert_not result.success?
     assert_equal :provider_error, result.error_code
+    assert_equal "Use a calmer tone.", result.user_instruction
     assert_equal "Use a calmer tone.", instruction.instruction
+  end
+
+  test "does not call provider when cost guard rejects prompt" do
+    adapter = FakeProviderAdapter.new
+
+    result = with_ai_enabled do
+      with_config(folio_ai_max_prompt_chars: 5) do
+        generator(provider_adapter: adapter,
+                  context: { body: "Long context" }).call
+      end
+    end
+
+    assert_not result.success?
+    assert_equal :cost_limit_exceeded, result.error_code
+    assert_empty adapter.calls
+  end
+
+  test "tracks generation without prompt or content payload" do
+    adapter = FakeProviderAdapter.new
+    events = []
+    subscriber = ActiveSupport::Notifications.subscribe(/folio\.ai\./) do |*args|
+      events << ActiveSupport::Notifications::Event.new(*args)
+    end
+
+    with_ai_enabled do
+      generator(provider_adapter: adapter,
+                context: { body: "Sensitive content" }).call
+    end
+
+    names = events.map(&:name)
+    payloads = events.map(&:payload)
+
+    assert_includes names, "folio.ai.suggestion_generation_requested"
+    assert_includes names, "folio.ai.suggestion_generation_succeeded"
+    assert payloads.all? { |payload| payload.key?(:site_id) }
+    assert payloads.none? { |payload| payload.value?("Sensitive content") }
+    assert payloads.none? { |payload| payload.value?("Write a title") }
+  ensure
+    ActiveSupport::Notifications.unsubscribe(subscriber) if subscriber
   end
 
   private

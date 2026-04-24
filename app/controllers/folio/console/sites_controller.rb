@@ -44,12 +44,17 @@ class Folio::Console::SitesController < Folio::Console::BaseController
 
       ary << :domain if @site != Folio::Current.main_site
 
-      params.require(:site)
-            .permit(*ary,
-                    *@site.class.additional_params,
-                    *file_placements_strong_params,
-                    :subtitle_languages_string,
-                    social_links: Folio::Site.social_link_sites)
+      permitted = [
+        *ary,
+        *@site.class.additional_params,
+        *file_placements_strong_params,
+        :subtitle_languages_string,
+        { social_links: Folio::Site.social_link_sites },
+      ]
+
+      permitted << { ai_settings: {} } if Folio::Ai.enabled?
+
+      params.require(:site).permit(*permitted)
     end
 
     def find_site

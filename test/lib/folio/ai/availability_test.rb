@@ -55,6 +55,15 @@ class Folio::Ai::AvailabilityTest < ActiveSupport::TestCase
     assert_equal :prompt_missing, result.reason
   end
 
+  test "is unavailable when field is disabled" do
+    @site.ai_settings = enabled_settings(field_enabled: false)
+
+    result = availability.call
+
+    assert_not result.available?
+    assert_equal :field_disabled, result.reason
+  end
+
   test "is unavailable when host rejects field" do
     @site.ai_settings = enabled_settings
 
@@ -85,13 +94,14 @@ class Folio::Ai::AvailabilityTest < ActiveSupport::TestCase
                                   global_enabled: true)
     end
 
-    def enabled_settings(enabled: true, prompt: "Write a title")
+    def enabled_settings(enabled: true, field_enabled: true, prompt: "Write a title")
       {
         enabled:,
         integrations: {
           articles: {
             fields: {
               title: {
+                enabled: field_enabled,
                 prompt:,
               },
             },

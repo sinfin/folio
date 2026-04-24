@@ -1,0 +1,52 @@
+---
+en:
+  folio:
+    console:
+      ai:
+        text_suggestions_component:
+          button_label: AI suggestions
+          undo_label: Undo
+          close_label: Close
+          panel_title: AI suggestions
+          panel_title_with_field: "AI suggestions: %{field}"
+          loading_text: Preparing ...
+          generic_error_text: AI suggestions could not be generated. Please try again.
+          missing_context_text: Please add article content first so the AI assistant can generate relevant suggestions.
+          copy_label: Copy suggestion
+          accept_label: Accept suggestion
+          chars_label: chars
+          instructions_placeholder: Custom AI instructions (optional) ...
+          regenerate_label: Save custom instructions
+        site_settings_component:
+          intro: Configure AI suggestions per site and registered field. A field is available in editor forms only when the site is enabled, the field is enabled, and its default prompt is not blank.
+          enabled_label: Enable AI suggestions for this site
+          default_provider: Default provider
+          default_model: Default model
+          model_placeholder: Inherit provider default
+          integration_provider: Integration provider override
+          integration_model: Integration model override
+          field_provider: Field provider override
+          field_model: Field model override
+          inherit_provider: Inherit provider
+          inherit_model: Inherit model
+          prompt_label: Default prompt
+          character_limit:
+            one: "Limit: %{count} character"
+            other: "Limit: %{count} characters"
+        errors:
+          feature_disabled: AI suggestions are disabled.
+          global_disabled: AI suggestions are disabled.
+          site_disabled: AI suggestions are disabled for this site.
+          field_not_registered: AI suggestions are not configured for this field.
+          field_disabled: AI suggestions are disabled for this field.
+          prompt_missing: AI suggestions are not configured for this field.
+          host_ineligible: Please add article content first so the AI assistant can generate relevant suggestions.
+          record_not_ready: Save the record before using AI suggestions.
+          missing_context: Please add article content first so the AI assistant can generate relevant suggestions.
+          invalid_context: AI suggestions cannot use the current content.
+          provider_timeout: AI provider timed out. Please try again.
+          provider_rate_limited: AI provider rate limit was reached. Please try again later.
+          provider_error: AI provider failed. Please try again.
+          response_invalid: AI provider returned an invalid response.
+          cost_limit_exceeded: The AI context is too large. Shorten the content or adjust the context builder.
+          rate_limited: Too many AI requests. Please try again later.

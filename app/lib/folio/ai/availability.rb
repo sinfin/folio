@@ -23,6 +23,7 @@ class Folio::Ai::Availability
     return unavailable(:global_disabled) unless global_enabled
     return unavailable(:site_disabled) unless site&.ai_enabled?
     return unavailable(:field_not_registered) unless field
+    return unavailable(:field_disabled, field:) unless site.ai_field_enabled_for?(integration_key:, field_key:)
     return unavailable(:prompt_missing, field:) if default_prompt.blank?
     return unavailable(:host_ineligible, field:) unless host_eligible
 

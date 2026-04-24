@@ -252,6 +252,7 @@ cs:
         documents: Dokumenty
         gallery: Galerie
         merge: Sloučení duplikátů
+        ai_prompts: AI prompty
         settings: Nastavení
         site_social_links: Odkazy
       really_delete: Jste si jist, že chcete smazat "%{title}"?

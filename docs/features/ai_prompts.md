@@ -2,11 +2,31 @@
 
 ## Status
 
-Draft implementation plan for reusable AI prompt management in Folio.
+Folio core implementation slice is in progress on branch `feat/ai-prompts`.
+The document is both the implementation plan and the reusable contract for host
+applications.
 
 This document intentionally stays product-agnostic. Client-specific prompt copy,
 site names, and custom editorial workflows belong in host applications and in
 runtime site settings, not in Folio core.
+
+Implemented in Folio core:
+
+- AI registry, field metadata, provider adapters, prompt composition, response
+  normalization, and user-instruction persistence.
+- Global feature flag, ENV kill switch, per-site settings, per-field prompt and
+  enabled gates.
+- Console site settings tab for registered promptable fields.
+- Auto-attachment for supported standard SimpleForm `string` and `text` inputs
+  inside an explicit AI form context.
+- Public `Folio::Console::Ai::TextSuggestionsComponent` for manual custom-field
+  wiring.
+- Shared Stimulus state machine for loading, error, suggestions, accept, copy,
+  ghost undo, close, and regenerate/save-instructions.
+- Reusable controller concern for host-app endpoint contracts.
+- TipTap/plain-text helper for context builders.
+- Cost/rate-limit guards and safe instrumentation events without prompts or
+  generated content.
 
 ## Goals
 
@@ -86,6 +106,121 @@ These decisions are part of the implementation plan unless explicitly reopened.
   same action also regenerates suggestions for the current panel context.
 - Usage tracking is required in v1, but tracked events must not include full
   prompt text, record body, or generated suggestion content by default.
+
+## Current Folio API
+
+### Site Settings Tab
+
+When `Rails.application.config.folio_ai_enabled` is true and at least one AI
+integration is registered, `Folio::Site#console_form_tabs` adds the
+`ai_prompts` tab. The tab renders
+`Folio::Console::Ai::SiteSettingsComponent` and stores values in
+`folio_sites.ai_settings`.
+
+Field availability remains conservative:
+
+1. Global Folio AI flag and `FOLIO_AI_DISABLED` kill switch.
+2. Site-level `ai_settings.enabled`.
+3. Registered integration and field.
+4. Field-level `enabled` flag.
+5. Non-blank field default prompt.
+6. Host-app eligibility check.
+
+### Auto-Attachment For Standard Fields
+
+Host applications opt a form into AI attachment with
+`folio_ai_form_context`. Folio then enriches eligible standard SimpleForm
+`string` and `text` inputs if the registered field has `auto_attach: true`.
+
+```slim
+= folio_ai_form_context(integration_key: :content_editor,
+                        endpoint: console_article_ai_suggestions_path(@article),
+                        record: @article,
+                        current_state_policy: :persisted_record) do
+  = f.input :title
+  = f.input :perex, as: :text, character_counter: 400
+```
+
+The form context is deliberately explicit. A configured site prompt alone does
+not attach AI controls to arbitrary forms.
+
+### Manual Custom-Field Wiring
+
+Custom ViewComponents, custom SimpleForm inputs, rich-text editors, and unusual
+placements should render the same component manually:
+
+```ruby
+render Folio::Console::Ai::TextSuggestionsComponent.new(
+  integration_key: :content_editor,
+  field_key: :social_text,
+  endpoint: console_article_ai_suggestions_path(@article),
+  target_selector: "#article_social_text",
+  user_instructions: Folio::Ai::UserInstruction
+    .find_or_initialize_for(user: current_user,
+                            site: Folio::Current.site,
+                            integration_key: :content_editor,
+                            field_key: :social_text)
+    .instruction,
+  character_limit: 250,
+)
+```
+
+Manual wiring must still use `Folio::Ai::Availability` or equivalent host-app
+gates before rendering the component.
+
+### Host-App Endpoint
+
+Folio provides `Folio::Console::Ai::SuggestionsControllerBase`. A host app
+should include it in a thin authenticated controller and override only the
+resource-specific methods:
+
+```ruby
+class Console::Articles::AiSuggestionsController < Folio::Console::Api::BaseController
+  include Folio::Console::Ai::SuggestionsControllerBase
+
+  private
+    def folio_ai_context
+      Articles::AiContextBuilder.new(article: @article).call
+    end
+
+    def folio_ai_host_eligible?
+      @article.persisted? && folio_ai_context[:body_text].present?
+    end
+end
+```
+
+The response contract is:
+
+```json
+{
+  "data": {
+    "suggestions": [
+      { "key": "1", "text": "Suggested text", "char_count": 182, "meta": {} }
+    ],
+    "user_instructions": "Last saved instructions",
+    "provider": "openai",
+    "model": "gpt-5.5"
+  }
+}
+```
+
+### Context Serialization Helpers
+
+For TipTap content, host apps can use:
+
+```ruby
+Folio::Tiptap::PlainText.from_value(record.tiptap_content)
+```
+
+The helper prefers the stored plain-text field when present and falls back to a
+safe ProseMirror text walk for common text nodes.
+
+### Observability
+
+`Folio::Ai.track` instruments `ActiveSupport::Notifications` with event names
+under `folio.ai.*`. The default payload allow-list includes site, user,
+integration, field, provider, model, suggestion count, latency, error code, and
+record class only.
 
 ## Proposed Architecture
 

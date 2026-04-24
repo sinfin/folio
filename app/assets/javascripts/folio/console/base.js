@@ -90,6 +90,7 @@
 //= require folio/console/ui/turbo_frame_with_loader_component
 //= require folio/console/ui/validation_box_component
 
+//= require folio/console/ai/text_suggestions_component
 //= require folio/console/addresses/fields/fields
 //= require folio/console/atoms/layout_switch/layout_switch
 //= require folio/console/atoms/locale_switch/locale_switch

@@ -1,0 +1,59 @@
+div[
+  class=bem_class_name
+  class=@class_name
+  data=data
+]
+  .f-c-ai-text-suggestions__actions
+    button.f-c-ai-text-suggestions__button[
+      type="button"
+      data=stimulus_action(click: "toggle")
+      aria-expanded="false"
+      data-f-c-ai-text-suggestions-target="button"
+    ]
+      span.f-c-ai-text-suggestions__spark aria-hidden="true" *
+      span.f-c-ai-text-suggestions__button-label = button_label
+
+    button.f-c-ai-text-suggestions__undo[
+      type="button"
+      hidden=true
+      data=stimulus_target("undoButton")
+      data-action="click->f-c-ai-text-suggestions#undo"
+    ]
+      = t(".undo_label")
+
+  .f-c-ai-text-suggestions__panel[
+    hidden=true
+    role="dialog"
+    aria-label=panel_title
+    data=stimulus_target("panel")
+    data-action="click->f-c-ai-text-suggestions#stopPropagation"
+  ]
+    .f-c-ai-text-suggestions__header
+      .f-c-ai-text-suggestions__title = panel_title
+      button.f-c-ai-text-suggestions__close[
+        type="button"
+        aria-label=t(".close_label")
+        data-action="click->f-c-ai-text-suggestions#close"
+      ] x
+
+    .f-c-ai-text-suggestions__status[
+      hidden=true
+      data=stimulus_target("status")
+    ]
+
+    .f-c-ai-text-suggestions__suggestions[
+      data=stimulus_target("suggestions")
+    ]
+
+    .f-c-ai-text-suggestions__instructions
+      textarea.f-c-ai-text-suggestions__instructions-input[
+        rows="2"
+        placeholder=t(".instructions_placeholder")
+        data=stimulus_target("instructions")
+      ] = @user_instructions
+
+      button.f-c-ai-text-suggestions__regenerate[
+        type="button"
+        data-action="click->f-c-ai-text-suggestions#regenerate"
+      ]
+        = t(".regenerate_label")
