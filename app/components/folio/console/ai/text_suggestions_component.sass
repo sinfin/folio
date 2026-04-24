@@ -27,6 +27,7 @@
     align-items: center
     gap: px-to-rem(4px)
     color: $violet
+    font-weight: $font-weight-bold
     white-space: nowrap
 
   &__spark
@@ -37,7 +38,7 @@
     white-space: nowrap
 
     &::before
-      content: '<'
+      content: '↶'
       margin-right: px-to-rem(4px)
 
   &__panel
@@ -60,19 +61,36 @@
     margin-bottom: px-to-rem(12px)
 
   &__title
-    font-weight: $font-weight-bold
+    position: absolute
+    overflow: hidden
+    width: 1px
+    height: 1px
+    margin: -1px
+    padding: 0
+    border: 0
+    clip: rect(0, 0, 0, 0)
+    white-space: nowrap
 
   &__close
+    margin-left: auto
     font-size: px-to-rem(18px)
     line-height: 1
 
   &__status
+    display: flex
+    align-items: center
+    gap: px-to-rem(6px)
     padding: px-to-rem(12px)
     margin-bottom: px-to-rem(12px)
-    border: 1px solid rgba($danger, 0.35)
+    border: 1px solid rgba($violet, 0.35)
     border-radius: $border-radius
-    background: rgba($danger, 0.08)
-    color: $danger
+    background: rgba($violet, 0.06)
+    color: $body-color
+
+    &::before
+      content: '▲'
+      color: $danger
+      font-size: px-to-rem(12px)
 
   &__suggestions
     display: grid
@@ -84,26 +102,39 @@
     gap: px-to-rem(10px)
     align-items: center
     width: 100%
+    min-height: px-to-rem(54px)
     padding: px-to-rem(12px)
     border: 1px solid rgba($violet, 0.35)
     border-radius: $border-radius
     background: rgba($white, 0.42)
     color: inherit
+    cursor: pointer
     text-align: left
     transition: $transition-base
 
     &:hover,
-    &:focus
+    &:focus-visible
       border-color: rgba($violet, 0.65)
       background: rgba($white, 0.72)
+      outline: 0
 
   &__suggestion--selected
-    border-color: $green
-    background: rgba($green, 0.18)
+    border-color: #00a88f
+    background: mix(#00a88f, $white, 22%)
 
   &__suggestion--loading
+    position: relative
     color: $gray-600
     cursor: wait
+
+    &::after
+      content: ''
+      width: px-to-rem(14px)
+      height: px-to-rem(14px)
+      border: 2px solid rgba($black, 0.18)
+      border-top-color: $body-color
+      border-radius: 50%
+      animation: f-c-ai-text-suggestions-spin 0.8s linear infinite
 
   &__suggestion-body
     min-width: 0
@@ -166,3 +197,7 @@
       right: auto
       left: 0
       width: calc(100vw - #{px-to-rem(32px)})
+
+@keyframes f-c-ai-text-suggestions-spin
+  to
+    transform: rotate(360deg)

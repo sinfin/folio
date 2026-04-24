@@ -13,9 +13,9 @@ cs:
           generic_error_text: AI návrhy se nepodařilo vygenerovat. Zkuste to prosím znovu.
           missing_context_text: Napište nejdříve tělo článku, aby mohl AI asistent generovat relevantní obsah.
           copy_label: Kopírovat návrh
-          copy_button_label: Kopírovat
+          copy_button_label: ⧉
           accept_label: Přijmout návrh
-          accept_button_label: Přijmout
+          accept_button_label: ✓
           chars_label: znaků
           instructions_placeholder: Vlastní instrukce pro AI (volitelné) ...
           regenerate_label: Uložit vlastní instrukce

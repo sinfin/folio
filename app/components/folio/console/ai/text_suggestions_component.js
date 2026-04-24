@@ -135,6 +135,12 @@ window.Folio.Stimulus.register('f-c-ai-text-suggestions', class extends window.S
     this.dispatch('accepted', { detail: this.trackingDetail() })
   }
 
+  acceptFromKeyboard (event) {
+    if (!['Enter', ' '].includes(event.key)) return
+
+    this.accept(event)
+  }
+
   copy (event) {
     event.preventDefault()
     event.stopPropagation()
@@ -271,12 +277,13 @@ window.Folio.Stimulus.register('f-c-ai-text-suggestions', class extends window.S
   }
 
   suggestionElement (suggestion) {
-    const button = document.createElement('button')
-    button.type = 'button'
-    button.className = 'f-c-ai-text-suggestions__suggestion'
-    button.setAttribute('data-action', 'click->f-c-ai-text-suggestions#accept')
-    button.setAttribute('data-f-c-ai-text-suggestions-text-param', suggestion.text || '')
-    button.setAttribute('data-f-c-ai-text-suggestions-key-param', suggestion.key || '')
+    const element = document.createElement('div')
+    element.className = 'f-c-ai-text-suggestions__suggestion'
+    element.setAttribute('role', 'button')
+    element.setAttribute('tabindex', '0')
+    element.setAttribute('data-action', 'click->f-c-ai-text-suggestions#accept keydown->f-c-ai-text-suggestions#acceptFromKeyboard')
+    element.setAttribute('data-f-c-ai-text-suggestions-text-param', suggestion.text || '')
+    element.setAttribute('data-f-c-ai-text-suggestions-key-param', suggestion.key || '')
 
     const body = document.createElement('span')
     body.className = 'f-c-ai-text-suggestions__suggestion-body'
@@ -294,10 +301,10 @@ window.Folio.Stimulus.register('f-c-ai-text-suggestions', class extends window.S
       this.acceptLabelValue,
       suggestion.text || ''))
 
-    button.appendChild(body)
-    button.appendChild(actions)
+    element.appendChild(body)
+    element.appendChild(actions)
 
-    return button
+    return element
   }
 
   suggestionMetaElement (suggestion) {

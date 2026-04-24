@@ -738,6 +738,32 @@ If Folio later ships a generator such as `rails g folio:ai:install`, it should
 only scaffold the initializer and optional host-app stubs. The installation
 guide must still document the manual steps above.
 
+### 10. UI Verification Against Design
+
+Shared Folio UI owns the reusable local panel pattern shown in the supplied
+design exports for "AI Textarea or Input" and the local title suggestion states.
+Host apps own any layout around the component, including title accordions and
+bulk workflows.
+
+The reusable component must preserve these design-level behaviours:
+
+- The field action is a compact "AI suggestions" trigger with a sparkle mark.
+- Opening the panel captures a temporary undo snapshot and starts generation.
+- Loading shows three placeholder suggestion cards inside the panel.
+- Missing content and provider failures render an inline panel error without
+  mutating the target field.
+- Loaded suggestions render as cards with copy and accept actions.
+- Accepting a suggestion writes to the target field and highlights the accepted
+  card with the green/teal selected state.
+- Copying a suggestion never writes to the target field.
+- Manual edits detach the selected-card state while keeping the panel open.
+- Closing the panel clears the temporary undo snapshot and hides the undo action.
+- Regeneration reuses the original snapshot and replaces cards in place.
+
+Design verification for a host app should be done on the concrete form, because
+placement depends on the app-owned SimpleForm wrapper or manual custom-field
+wiring.
+
 ## Testing Scope
 
 Folio core should cover:

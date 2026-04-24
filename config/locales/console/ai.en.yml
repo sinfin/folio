@@ -13,9 +13,9 @@ en:
           generic_error_text: AI suggestions could not be generated. Please try again.
           missing_context_text: Please add article content first so the AI assistant can generate relevant suggestions.
           copy_label: Copy suggestion
-          copy_button_label: Copy
+          copy_button_label: ⧉
           accept_label: Accept suggestion
-          accept_button_label: Accept
+          accept_button_label: ✓
           chars_label: chars
           instructions_placeholder: Custom AI instructions (optional) ...
           regenerate_label: Save custom instructions
