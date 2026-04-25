@@ -1,0 +1,157 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.openai.com/v1/responses
+    body:
+      encoding: UTF-8
+      string: '{"model":"gpt-5.5","input":[{"role":"system","content":"Return only
+        valid JSON with a top-level \"suggestions\" array. Generate 1 suggestions.
+        Each suggestion must contain \"text\" and may contain \"key\" and \"meta\"."},{"role":"user","content":"Create
+        one concise Czech news headline for an article about safe AI prompt management
+        in a CMS. Return the text in Czech."}],"metadata":{"folio_ai_field_key":"title"}}'
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Authorization:
+      - Bearer <OPENAI_API_KEY>
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Sat, 25 Apr 2026 19:34:33 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Server:
+      - cloudflare
+      X-Ratelimit-Limit-Requests:
+      - '5000'
+      X-Ratelimit-Limit-Tokens:
+      - '1000000'
+      X-Ratelimit-Remaining-Requests:
+      - '4999'
+      X-Ratelimit-Remaining-Tokens:
+      - '1000000'
+      X-Ratelimit-Reset-Requests:
+      - 12ms
+      X-Ratelimit-Reset-Tokens:
+      - 0s
+      Openai-Version:
+      - '2020-10-01'
+      Openai-Organization:
+      - "<FILTERED>"
+      Openai-Project:
+      - "<FILTERED>"
+      X-Request-Id:
+      - "<FILTERED>"
+      Openai-Processing-Ms:
+      - '4001'
+      Cf-Cache-Status:
+      - DYNAMIC
+      Set-Cookie:
+      - "<FILTERED>"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains; preload
+      X-Content-Type-Options:
+      - nosniff
+      Cf-Ray:
+      - 9f1fc90b7dab6e75-PRG
+      Alt-Svc:
+      - h3=":443"; ma=86400
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+          "id": "resp_02aaa9fc6716034d0069ed17457f288192918aa58380ca01ff",
+          "object": "response",
+          "created_at": 1777145669,
+          "status": "completed",
+          "background": false,
+          "billing": {
+            "payer": "developer"
+          },
+          "completed_at": 1777145673,
+          "error": null,
+          "frequency_penalty": 0.0,
+          "incomplete_details": null,
+          "instructions": null,
+          "max_output_tokens": null,
+          "max_tool_calls": null,
+          "model": "gpt-5.5-2026-04-23",
+          "moderation": null,
+          "output": [
+            {
+              "id": "rs_02aaa9fc6716034d0069ed1746e5ac8192b044b207bb453895",
+              "type": "reasoning",
+              "summary": []
+            },
+            {
+              "id": "msg_02aaa9fc6716034d0069ed1747435c8192b3c07ae82c816190",
+              "type": "message",
+              "status": "completed",
+              "content": [
+                {
+                  "type": "output_text",
+                  "annotations": [],
+                  "logprobs": [],
+                  "text": "{\"suggestions\":[{\"text\":\"Bezpe\u010dn\u00e1 spr\u00e1va AI prompt\u016f v CMS chr\u00e1n\u00ed obsah i data\"}]}"
+                }
+              ],
+              "phase": "final_answer",
+              "role": "assistant"
+            }
+          ],
+          "parallel_tool_calls": true,
+          "presence_penalty": 0.0,
+          "previous_response_id": null,
+          "prompt_cache_key": null,
+          "prompt_cache_retention": "24h",
+          "reasoning": {
+            "effort": "medium",
+            "summary": null
+          },
+          "safety_identifier": null,
+          "service_tier": "default",
+          "store": true,
+          "temperature": 1.0,
+          "text": {
+            "format": {
+              "type": "text"
+            },
+            "verbosity": "medium"
+          },
+          "tool_choice": "auto",
+          "tools": [],
+          "top_logprobs": 0,
+          "top_p": 0.98,
+          "truncation": "disabled",
+          "usage": {
+            "input_tokens": 70,
+            "input_tokens_details": {
+              "cached_tokens": 0
+            },
+            "output_tokens": 50,
+            "output_tokens_details": {
+              "reasoning_tokens": 19
+            },
+            "total_tokens": 120
+          },
+          "user": null,
+          "metadata": {
+            "folio_ai_field_key": "title"
+          }
+        }
+  recorded_at: Sat, 25 Apr 2026 19:34:33 GMT
+recorded_with: VCR 6.3.1

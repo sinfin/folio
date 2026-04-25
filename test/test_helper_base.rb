@@ -21,6 +21,38 @@ Minitest.backtrace_filter = Minitest::BacktraceFilter.new
 VCR.configure do |config|
   config.cassette_library_dir = "test/fixtures/vcr_cassettes"
   config.hook_into :webmock
+  config.default_cassette_options = {
+    match_requests_on: %i[method uri body],
+    record: :once,
+  }
+
+  %w[
+    OPENAI_API_KEY
+    ANTHROPIC_API_KEY
+  ].each do |env_key|
+    config.filter_sensitive_data("<#{env_key}>") { ENV[env_key] }
+  end
+
+  config.before_record do |interaction|
+    uri = URI(interaction.request.uri)
+    ai_provider_request = %w[
+      api.openai.com
+      api.anthropic.com
+    ].include?(uri.host)
+
+    if ai_provider_request
+      %w[
+        Openai-Organization
+        Openai-Project
+        X-Request-Id
+        Set-Cookie
+      ].each do |header|
+        interaction.response.headers[header] = ["<FILTERED>"] if interaction.response.headers.key?(header)
+      end
+    end
+
+    interaction.ignore! if ai_provider_request && interaction.response.status.code.to_i >= 400
+  end
 end
 
 FactoryBot.definition_file_paths << Folio::Engine.root.join("test/factories")

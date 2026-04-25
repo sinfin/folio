@@ -98,6 +98,8 @@ Replace `your_app_test` with your actual test database name (e.g., `folio_test`)
 - Use **factories** instead of fixtures for clearer intent.
 - Use the provided base classes so `Folio::Current` is managed for you.
 - Record external API calls with **VCR** to keep tests deterministic.
+- VCR filters `OPENAI_API_KEY` and `ANTHROPIC_API_KEY` automatically and does
+  not persist failed OpenAI/Anthropic HTTP responses.
 - Prefer **Component tests** for ViewComponent logic and rendering.
 
 ---

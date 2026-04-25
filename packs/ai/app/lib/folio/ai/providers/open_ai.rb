@@ -36,10 +36,24 @@ class Folio::Ai::Providers::OpenAi < Folio::Ai::Providers::Base
       parsed = JSON.parse(response_body)
 
       parsed["output_text"].presence ||
-        parsed.dig("output", 0, "content", 0, "text").presence ||
+        output_text(parsed).presence ||
         parsed.dig("choices", 0, "message", "content").presence ||
         response_body
     rescue JSON::ParserError
       response_body
+    end
+
+    def output_text(parsed)
+      Array(parsed["output"]).filter_map do |item|
+        output_item_text(item)
+      end.join("\n")
+    end
+
+    def output_item_text(item)
+      return item["text"] if item["type"] == "output_text" && item["text"].present?
+
+      Array(item["content"]).filter_map do |content|
+        content["text"].presence
+      end.join("\n").presence
     end
 end
