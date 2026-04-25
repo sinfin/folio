@@ -1,7 +1,20 @@
 # frozen_string_literal: true
 
 module Folio::GeneratorBase
+  extend ActiveSupport::Concern
+
+  included do
+    class_option :pack,
+                 type: :string,
+                 default: nil,
+                 desc: "Generate files into a pack directory, for example --pack=ai"
+  end
+
   private
+    def pack_path_prefix
+      options[:pack].present? ? "packs/#{options[:pack]}/" : ""
+    end
+
     def atom_name
       @atom_name || name
     end

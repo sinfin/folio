@@ -68,7 +68,7 @@ SimpleForm::Inputs::StringInput.class_eval do
     end
 
     register_atom_settings
-    add_ai_text_suggestions(input_type: :string)
+    add_text_suggestions(input_type: :string)
 
     merged_input_options = merge_wrapper_options(input_html_options, wrapper_options)
 

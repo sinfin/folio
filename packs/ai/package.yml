@@ -1,0 +1,11 @@
+# Folio AI suggestions pack.
+#
+# Provides site prompt settings, prompt/user-instruction storage, provider
+# adapters, reusable console UI and controller helpers. Host applications own
+# field registration, endpoint routing and domain-specific context builders.
+
+enforce_dependencies: true
+
+dependencies:
+  - "../.."
+  - "."

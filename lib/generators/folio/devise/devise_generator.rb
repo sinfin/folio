@@ -19,7 +19,8 @@ class Folio::DeviseGenerator < Rails::Generators::Base
                                  .gsub("application_namespace_path",
                                        application_namespace_path)
 
-      template template_path, target_path
+      final_path = target_path.start_with?("app/") ? "#{pack_path_prefix}#{target_path}" : target_path
+      template template_path, final_path
     end
   end
 

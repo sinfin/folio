@@ -52,8 +52,6 @@ class Folio::Console::SitesController < Folio::Console::BaseController
         { social_links: Folio::Site.social_link_sites },
       ]
 
-      permitted << { ai_settings: {} } if Folio::Ai.enabled?
-
       params.require(:site).permit(*permitted)
     end
 

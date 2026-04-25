@@ -1,0 +1,11 @@
+# Core Folio engine package.
+#
+# Root code may depend on the host application because Folio is an engine and
+# references app-level controller/component base classes in several extension
+# points. Optional Folio features must live in packs and must not be referenced
+# directly from the root package.
+
+enforce_dependencies: true
+
+dependencies:
+  - "."

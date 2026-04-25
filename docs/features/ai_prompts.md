@@ -2,16 +2,16 @@
 
 ## Status
 
-Folio core implementation slice is implemented on branch `feat/ai-prompts` and
-is pending review against this draft before publication.
+Folio AI pack implementation slice is implemented on branch `feat/ai-prompts`
+and is pending review against this draft before publication.
 The document is both the implementation plan and the reusable contract for host
 applications.
 
 This document intentionally stays product-agnostic. Client-specific prompt copy,
 site names, and custom editorial workflows belong in host applications and in
-runtime site settings, not in Folio core.
+runtime site settings, not in the reusable Folio AI pack.
 
-Implemented in Folio core:
+Implemented in the Folio `:ai` pack:
 
 - AI registry, field metadata, provider adapters, prompt composition, response
   normalization, and user-instruction persistence.
@@ -31,6 +31,10 @@ Implemented in Folio core:
 - Cost/rate-limit guards and safe instrumentation events without prompts or
   generated content.
 
+The root Folio package only provides generic extension points and pack loading.
+AI-specific model concerns, controller concerns, SimpleForm decoration, locales,
+migrations, components and tests live under `packs/ai`.
+
 ## Goals
 
 - Reusable AI prompt management for Folio-based applications.
@@ -47,7 +51,7 @@ Implemented in Folio core:
 
 - Shipping default prompt copy for specific customers or sites.
 - Encoding application-specific business rules such as multi-field or
-  channel-specific bulk generation into Folio core.
+  channel-specific bulk generation into the Folio AI pack.
 - Forcing every host app to use the same controller or authorization layer.
 - Hardcoding rich-text output semantics for every possible editor target.
 
@@ -65,7 +69,7 @@ Implemented in Folio core:
 
 ## Ownership Boundary
 
-| Folio core owns | Host app owns |
+| Folio AI pack owns | Host app owns |
 | --- | --- |
 | Feature flagging and site-level availability rules | Which models and forms opt in |
 | Prompt registry and validation for registered fields | Resource loading and authorization |
@@ -81,9 +85,9 @@ Implemented in Folio core:
 
 Use this rule when a ticket, design note, or host-app requirement is ambiguous:
 
-- Put it in Folio when the behavior can be reused by another Folio application
-  without knowing the concrete model class, form layout, editorial field names,
-  distribution channels, or authorization rules.
+- Put it in the Folio AI pack when the behavior can be reused by another Folio
+  application without knowing the concrete model class, form layout, editorial
+  field names, distribution channels, or authorization rules.
 - Keep it in the host app when it depends on a concrete resource, route shape,
   permission model, field taxonomy, aggregate workflow, rollout decision, prompt
   copy, or rich-text editor contract.
@@ -95,12 +99,12 @@ Use this rule when a ticket, design note, or host-app requirement is ambiguous:
 
 These decisions are part of the implementation plan unless explicitly reopened.
 
-- Folio ships the reusable service layer, provider adapters, persistence,
+- The Folio AI pack ships the reusable service layer, provider adapters, persistence,
   response contract, and editor-side suggestion panel. Host applications keep
   thin resource-specific controllers for lookup, authorization, and route shape.
-- Folio core v1 supports plain-text suggestions. Structured rich-text output is
-  an extension point, not a v1 requirement. Host apps must not fake editor JSON
-  until the target editor contract is known.
+- Folio AI v1 supports plain-text suggestions. Structured rich-text output is an
+  extension point, not a v1 requirement. Host apps must not fake editor JSON until
+  the target editor contract is known.
 - The base installation is documented manual setup. A generator is optional
   later, but is not required for v1.
 - AI never overwrites a field automatically. A suggestion affects a form field
@@ -115,8 +119,8 @@ These decisions are part of the implementation plan unless explicitly reopened.
 ### Site Settings Tab
 
 When `Rails.application.config.folio_ai_enabled` is true and at least one AI
-integration is registered, `Folio::Site#console_form_tabs` adds the
-`ai_prompts` tab. The tab renders
+integration is registered, the AI pack prepends `Folio::Site#console_form_tabs`
+and adds the `ai_prompts` tab. The tab renders
 `Folio::Console::Ai::SiteSettingsComponent` and stores values in
 `folio_sites.ai_settings`.
 
@@ -477,7 +481,7 @@ Initial built-in adapters:
 - OpenAI
 - Anthropic
 
-Default model IDs in Folio core:
+Default model IDs in the Folio AI pack:
 
 - OpenAI: `gpt-5.5`.
 - Anthropic: `claude-opus-4-7`.
@@ -722,15 +726,16 @@ generator.
 
 Recommended installation steps:
 
-1. Upgrade Folio and run the AI-related migrations.
-2. Configure provider credentials in the host app environment.
-3. Register integrations and field metadata in a host-app initializer.
-4. Add an AI form context wrapper to host-app forms that should support
+1. Upgrade Folio and keep `:ai` in `Folio.enabled_packs` (enabled by default).
+2. Run the AI pack migrations from `packs/ai/db/migrate`.
+3. Configure provider credentials in the host app environment.
+4. Register integrations and field metadata in a host-app initializer.
+5. Add an AI form context wrapper to host-app forms that should support
    auto-attached standard fields.
-5. Explicitly wire custom inputs, rich-text fields, and aggregate workflows via
+6. Explicitly wire custom inputs, rich-text fields, and aggregate workflows via
    the public manual AI component API.
-6. Add a thin host-app controller/route if the app wants a resource-specific API.
-7. Enable the feature per site in the site settings tab.
+7. Add a thin host-app controller/route if the app wants a resource-specific API.
+8. Enable the feature per site in the site settings tab.
 
 No generator is required for the base architecture.
 
@@ -766,7 +771,7 @@ wiring.
 
 ## Testing Scope
 
-Folio core should cover:
+The Folio AI pack should cover:
 
 - site-level config validation and visibility rules
 - registry validation for unknown fields
@@ -819,6 +824,6 @@ Minimum hardening coverage:
 
 ## Remaining Open Questions
 
-- None in Folio core for the first implementation slice. Host applications still
-  need to document their concrete context builders, rollout sites, prompt copy,
-  custom fields, and aggregate workflows.
+- None in the Folio AI pack for the first implementation slice. Host
+  applications still need to document their concrete context builders, rollout
+  sites, prompt copy, custom fields, and aggregate workflows.

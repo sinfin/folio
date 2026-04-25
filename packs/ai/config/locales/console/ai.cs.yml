@@ -2,6 +2,8 @@
 cs:
   folio:
     console:
+      tabs:
+        ai_prompts: AI prompty
       ai:
         text_suggestions_component:
           button_label: AI návrhy
@@ -53,3 +55,13 @@ cs:
           response_invalid: AI provider vrátil neplatnou odpověď.
           cost_limit_exceeded: AI kontext je příliš velký. Zkraťte obsah nebo upravte context builder.
           rate_limited: Příliš mnoho AI requestů. Zkuste to prosím později.
+  activerecord:
+    errors:
+      models:
+        folio/site:
+          attributes:
+            ai_settings:
+              invalid_ai_settings_structure: mají neplatnou strukturu
+              unknown_ai_field: "odkazují na neznámé AI pole '%{key}' v integraci '%{integration}'"
+              unknown_ai_integration: "odkazují na neznámou AI integraci '%{key}'"
+              unknown_ai_provider: "odkazují na neznámého AI providera '%{provider}'"

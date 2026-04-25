@@ -17,7 +17,7 @@ SimpleForm::Inputs::TextInput.class_eval do
     end
 
     register_atom_settings
-    add_ai_text_suggestions(input_type: :text)
+    add_text_suggestions(input_type: :text)
 
     if options[:content_templates]
       ct_klass = options[:content_templates].constantize

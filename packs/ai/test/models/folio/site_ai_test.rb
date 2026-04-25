@@ -3,7 +3,7 @@
 require "test_helper"
 
 module Folio
-  class SiteTest < ActiveSupport::TestCase
+  class Ai::SiteConcernTest < ActiveSupport::TestCase
     test "reads AI prompt settings" do
       site = build(:folio_site)
       site.ai_settings = {

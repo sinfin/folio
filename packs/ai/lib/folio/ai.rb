@@ -99,3 +99,5 @@ module Folio::Ai
       end
   end
 end
+
+require_relative "ai/railtie"

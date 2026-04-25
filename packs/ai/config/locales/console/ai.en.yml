@@ -2,6 +2,8 @@
 en:
   folio:
     console:
+      tabs:
+        ai_prompts: AI prompts
       ai:
         text_suggestions_component:
           button_label: AI suggestions
@@ -52,3 +54,13 @@ en:
           response_invalid: AI provider returned an invalid response.
           cost_limit_exceeded: The AI context is too large. Shorten the content or adjust the context builder.
           rate_limited: Too many AI requests. Please try again later.
+  activerecord:
+    errors:
+      models:
+        folio/site:
+          attributes:
+            ai_settings:
+              invalid_ai_settings_structure: have invalid structure
+              unknown_ai_field: "reference unknown AI field '%{key}' in integration '%{integration}'"
+              unknown_ai_integration: "reference unknown AI integration '%{key}'"
+              unknown_ai_provider: "reference unknown AI provider '%{provider}'"

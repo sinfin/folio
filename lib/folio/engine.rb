@@ -190,6 +190,54 @@ module Folio
       }
     }
 
+    initializer "folio.load_packs", before: :set_autoload_paths do |app|
+      folio_pack_roots.each do |pack_root|
+        folio_pack_autoload_subdirs.each do |subdir|
+          path = pack_root.join(subdir)
+          next unless path.exist?
+
+          app.config.autoload_paths << path
+          app.config.eager_load_paths << path
+        end
+
+        views_path = pack_root.join("app/views")
+        app.config.paths["app/views"] << views_path if views_path.exist?
+
+        migrate_path = pack_root.join("db/migrate")
+        app.config.paths["db/migrate"] << migrate_path if migrate_path.exist?
+
+        locales_path = pack_root.join("config/locales")
+        app.config.i18n.load_path += Dir[locales_path.join("**", "*.yml")] if locales_path.exist?
+
+        railtie_path = pack_root.join("lib/folio/#{pack_root.basename}.rb")
+        require railtie_path.to_s if railtie_path.exist?
+      end
+
+      pack_override_paths = folio_pack_roots.filter_map do |pack_root|
+        override_path = pack_root.join("app/overrides")
+        override_path.to_s if override_path.exist?
+      end
+
+      unless pack_override_paths.empty?
+        app.config.to_prepare do
+          pack_override_paths.each do |override_path|
+            Dir.glob("#{override_path}/**/*_override.rb").each do |file|
+              load file
+            end
+          end
+        end
+      end
+    end
+
+    initializer :append_folio_pack_assets_paths do |app|
+      folio_all_pack_roots.each do |pack_root|
+        %w[app/components app/assets/javascripts app/assets/stylesheets].each do |subdir|
+          path = pack_root.join(subdir)
+          app.config.assets.paths << path if path.exist?
+        end
+      end
+    end
+
     initializer :append_folio_autoload_paths do |app|
       # Add component concerns to autoload paths so they can be included properly
       app.config.autoload_paths += [self.root.join("app/components/concerns")]
@@ -309,6 +357,34 @@ module Folio
       end
 
       deprecations
+    end
+
+    def folio_pack_roots
+      Folio.enabled_packs.filter_map do |pack_name|
+        pack_root = root.join("packs", pack_name.to_s)
+        pack_root if pack_root.exist?
+      end
+    end
+
+    def folio_all_pack_roots
+      Dir[root.join("packs", "*")].map { |path| Pathname.new(path) }
+    end
+
+    def folio_pack_autoload_subdirs
+      %w[
+        app/cells
+        app/components
+        app/components/concerns
+        app/controllers
+        app/controllers/concerns
+        app/helpers
+        app/jobs
+        app/lib
+        app/mailers
+        app/models
+        app/models/concerns
+        app/services
+      ]
     end
 
     def is_direct_child_of(known_parent_classes, file_content)
