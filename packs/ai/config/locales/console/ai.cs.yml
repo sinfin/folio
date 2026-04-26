@@ -13,6 +13,7 @@ cs:
           panel_title_with_field: "AI návrhy: %{field}"
           loading_text: Připravuji ...
           generic_error_text: AI návrhy se nepodařilo vygenerovat. Zkuste to prosím znovu.
+          request_timeout_text: AI návrhy trvají příliš dlouho. Zkuste to prosím znovu.
           missing_context_text: Napište nejdříve tělo článku, aby mohl AI asistent generovat relevantní obsah.
           copy_label: Kopírovat návrh
           copy_button_label: ⧉

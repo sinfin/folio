@@ -98,6 +98,8 @@ module Folio
       openai: "gpt-5.5",
       anthropic: "claude-opus-4-7",
     }
+    config.folio_ai_provider_request_timeout = 30
+    config.folio_ai_client_request_timeout_ms = 45_000
     config.folio_ai_max_prompt_chars = 80_000
     config.folio_ai_rate_limit = nil
 

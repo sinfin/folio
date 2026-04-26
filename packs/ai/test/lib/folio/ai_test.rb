@@ -26,9 +26,12 @@ class Folio::AiTest < ActiveSupport::TestCase
   end
 
   test "builds provider adapter with explicit API key" do
-    adapter = Folio::Ai.provider_adapter(provider: :openai, api_key: "secret")
+    adapter = with_config(folio_ai_provider_request_timeout: 12) do
+      Folio::Ai.provider_adapter(provider: :openai, api_key: "secret")
+    end
 
     assert_instance_of Folio::Ai::Providers::OpenAi, adapter
+    assert_equal 12, adapter.send(:timeout)
   end
 
   test "rejects unknown provider adapter" do

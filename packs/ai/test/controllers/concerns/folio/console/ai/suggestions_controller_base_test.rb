@@ -13,6 +13,16 @@ class Folio::Console::Ai::SuggestionsControllerBaseTest < ActionController::Test
     end
   end
 
+  class RaisingProviderAdapter
+    def initialize(error)
+      @error = error
+    end
+
+    def generate_suggestions(prompt:, field:, suggestion_count:)
+      raise @error
+    end
+  end
+
   class TestController < ActionController::Base
     include Folio::Console::Ai::SuggestionsControllerBase
 
@@ -107,6 +117,19 @@ class Folio::Console::Ai::SuggestionsControllerBaseTest < ActionController::Test
 
     assert_response :unprocessable_entity
     assert_equal "prompt_missing", json["error_code"]
+  end
+
+  test "returns gateway timeout when provider times out" do
+    @controller.provider_adapter = RaisingProviderAdapter.new(Folio::Ai::ProviderTimeoutError.new("timeout"))
+
+    with_config(folio_ai_enabled: true) do
+      post :create, params: request_params
+    end
+
+    json = JSON.parse(response.body)
+
+    assert_response :gateway_timeout
+    assert_equal "provider_timeout", json["error_code"]
   end
 
   private

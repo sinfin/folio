@@ -283,7 +283,15 @@ must be layered, not collapsed into a single prompt check.
 
 ```ruby
 Rails.application.config.folio_ai_enabled = false
+Rails.application.config.folio_ai_provider_request_timeout = 30
+Rails.application.config.folio_ai_client_request_timeout_ms = 45_000
 ```
+
+Provider timeout is enforced in the server adapter boundary and maps to
+`provider_timeout`. The client timeout is intentionally longer than the provider
+timeout so the editor can usually show the server's normalized error response,
+but still aborts a request that gets stuck in the browser, proxy, or application
+server path.
 
 If an environment variable is introduced for an operational AI kill switch, it
 must be registered in [`Folio::EnvFlags`](../../lib/folio/env_flags.rb) with a
@@ -671,6 +679,8 @@ Provider adapters must be deterministic at the boundary even when the provider
 is not:
 
 - Set explicit timeouts for connect/read/overall request duration.
+- Abort editor requests on a bounded client timeout and show a retryable error
+  instead of leaving the panel in loading indefinitely.
 - Do not call providers from tests; use fake adapters, WebMock, or recorded
   cassettes outside unit tests.
 - Retry at most idempotent transport failures, never schema-invalid content.

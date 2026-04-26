@@ -61,7 +61,16 @@ module Folio::Ai
 
     def provider_adapter(provider:, model: default_model(provider), api_key: nil)
       provider_adapter_class(provider).new(api_key: api_key || provider_api_key(provider),
-                                           model:)
+                                           model:,
+                                           timeout: provider_request_timeout)
+    end
+
+    def provider_request_timeout
+      positive_config_value(:folio_ai_provider_request_timeout, 30)
+    end
+
+    def client_request_timeout_ms
+      positive_config_value(:folio_ai_client_request_timeout_ms, 45_000)
     end
 
     def provider_adapter_class(provider)
@@ -96,6 +105,11 @@ module Folio::Ai
     private
       def sanitized_tracking_payload(payload)
         payload.symbolize_keys.slice(*TRACKING_PAYLOAD_KEYS)
+      end
+
+      def positive_config_value(key, fallback)
+        value = Rails.application.config.public_send(key).to_i
+        value.positive? ? value : fallback
       end
   end
 end

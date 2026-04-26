@@ -16,7 +16,8 @@ class Folio::Console::Ai::TextSuggestionsComponent < Folio::Console::Application
                  external_controls: false,
                  external_button_selector: nil,
                  external_undo_selector: nil,
-                 show_meta: false)
+                 show_meta: false,
+                 request_timeout_ms: Folio::Ai.client_request_timeout_ms)
     @integration_key = integration_key.to_s
     @field_key = field_key.to_s
     @endpoint = endpoint
@@ -33,6 +34,7 @@ class Folio::Console::Ai::TextSuggestionsComponent < Folio::Console::Application
     @external_button_selector = external_button_selector
     @external_undo_selector = external_undo_selector
     @show_meta = show_meta
+    @request_timeout_ms = request_timeout_ms
   end
 
   def render?
@@ -58,6 +60,7 @@ class Folio::Console::Ai::TextSuggestionsComponent < Folio::Console::Application
         initial_instructions: @user_instructions,
         loading_text: t(".loading_text"),
         generic_error_text: t(".generic_error_text"),
+        request_timeout_text: t(".request_timeout_text"),
         missing_context_text: t(".missing_context_text"),
         copy_label: t(".copy_label"),
         copy_button_label: t(".copy_button_label"),
@@ -67,6 +70,7 @@ class Folio::Console::Ai::TextSuggestionsComponent < Folio::Console::Application
         external_button_selector: @external_button_selector,
         external_undo_selector: @external_undo_selector,
         show_meta: @show_meta,
+        request_timeout_ms: @request_timeout_ms,
       }.compact
     end
 

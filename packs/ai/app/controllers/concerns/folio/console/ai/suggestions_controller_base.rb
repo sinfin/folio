@@ -77,7 +77,9 @@ module Folio::Console::Ai::SuggestionsControllerBase
         :forbidden
       when :record_not_ready, :missing_context, :invalid_context, :host_ineligible
         :unprocessable_entity
-      when :provider_timeout, :provider_rate_limited, :rate_limited
+      when :provider_timeout
+        :gateway_timeout
+      when :provider_rate_limited, :rate_limited
         :too_many_requests
       else
         :unprocessable_entity

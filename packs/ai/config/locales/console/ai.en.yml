@@ -13,6 +13,7 @@ en:
           panel_title_with_field: "AI suggestions: %{field}"
           loading_text: Preparing ...
           generic_error_text: AI suggestions could not be generated. Please try again.
+          request_timeout_text: AI suggestions are taking too long. Please try again.
           missing_context_text: Please add article content first so the AI assistant can generate relevant suggestions.
           copy_label: Copy suggestion
           copy_button_label: ⧉

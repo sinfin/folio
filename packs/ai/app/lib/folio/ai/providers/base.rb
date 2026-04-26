@@ -1,12 +1,30 @@
 # frozen_string_literal: true
 
 require "net/http"
+require "openssl"
 
 module Folio::Ai::Providers
 end
 
 class Folio::Ai::Providers::Base
   DEFAULT_TIMEOUT = 30
+  TIMEOUT_ERRORS = [
+    Net::OpenTimeout,
+    Net::ReadTimeout,
+    (Net::WriteTimeout if defined?(Net::WriteTimeout)),
+  ].compact.freeze
+  NETWORK_ERRORS = [
+    EOFError,
+    SocketError,
+    Errno::ECONNREFUSED,
+    Errno::ECONNRESET,
+    Errno::EHOSTUNREACH,
+    Errno::ENETUNREACH,
+    Net::HTTPBadResponse,
+    Net::HTTPHeaderSyntaxError,
+    Net::ProtocolError,
+    (OpenSSL::SSL::SSLError if defined?(OpenSSL::SSL::SSLError)),
+  ].compact.freeze
 
   Request = Struct.new(:uri, :headers, :body, keyword_init: true)
 
@@ -50,11 +68,15 @@ class Folio::Ai::Providers::Base
       http.use_ssl = request.uri.scheme == "https"
       http.open_timeout = timeout
       http.read_timeout = timeout
+      http.write_timeout = timeout if http.respond_to?(:write_timeout=)
+      http.max_retries = 0 if http.respond_to?(:max_retries=)
 
       response = http.request(build_http_request(request))
       handle_response(response)
-    rescue Net::OpenTimeout, Net::ReadTimeout
+    rescue *TIMEOUT_ERRORS
       raise Folio::Ai::ProviderTimeoutError, "AI provider request timed out"
+    rescue *NETWORK_ERRORS => e
+      raise Folio::Ai::ProviderError, "AI provider request failed: #{e.class.name}"
     end
 
     def build_http_request(request)

@@ -18,6 +18,8 @@ window.Folio.Stimulus.register('f-c-ai-text-suggestions', class extends window.S
     initialInstructions: { type: String, default: '' },
     loadingText: String,
     genericErrorText: String,
+    requestTimeoutText: String,
+    requestTimeoutMs: { type: Number, default: 45000 },
     missingContextText: String,
     copyLabel: String,
     copyButtonLabel: String,
@@ -35,6 +37,8 @@ window.Folio.Stimulus.register('f-c-ai-text-suggestions', class extends window.S
     this.snapshot = null
     this.selectedText = null
     this.requestSequence = 0
+    this.requestTimeoutId = null
+    this.requestTimedOut = false
     this.savedInstructions = this.initialInstructionsValue
     this.targetInputListener = () => this.onTargetInput()
     this.targetInput?.addEventListener('input', this.targetInputListener)
@@ -198,6 +202,8 @@ window.Folio.Stimulus.register('f-c-ai-text-suggestions', class extends window.S
     const requestId = this.nextRequestId()
     this.abortRequest()
     this.abortController = new AbortController()
+    this.requestTimedOut = false
+    this.setRequestTimeout(requestId)
     this.setLoading()
 
     window.Folio.Api.apiPost(this.endpointValue, this.requestPayload(persistInstructions), this.abortController.signal)
@@ -207,13 +213,21 @@ window.Folio.Stimulus.register('f-c-ai-text-suggestions', class extends window.S
         this.handleSuccess(response, { persistInstructions })
       })
       .catch((error) => {
-        if (this.staleRequest(requestId) || error.name === 'AbortError') return
+        if (this.staleRequest(requestId)) return
+
+        if (error.name === 'AbortError') {
+          if (this.requestTimedOut) this.handleTimeout()
+          return
+        }
 
         this.handleError(error)
       })
       .finally(() => {
         if (this.staleRequest(requestId)) return
 
+        this.clearRequestTimeout()
+        this.abortController = null
+        this.requestTimedOut = false
         this.element.classList.remove(this.loadingClass)
       })
   }
@@ -257,6 +271,15 @@ window.Folio.Stimulus.register('f-c-ai-text-suggestions', class extends window.S
   handleError (error) {
     this.suggestionsTarget.innerHTML = ''
     this.showError(this.errorMessage(error))
+  }
+
+  handleTimeout () {
+    this.handleError({
+      responseData: {
+        error_code: 'client_timeout',
+        message: this.timeoutErrorText()
+      }
+    })
   }
 
   errorMessage (error) {
@@ -436,10 +459,39 @@ window.Folio.Stimulus.register('f-c-ai-text-suggestions', class extends window.S
   }
 
   abortRequest () {
+    this.clearRequestTimeout()
+    this.requestTimedOut = false
+
     if (!this.abortController) return
 
     this.abortController.abort()
     this.abortController = null
+  }
+
+  setRequestTimeout (requestId) {
+    if (this.requestTimeoutMsValue <= 0) return
+
+    this.requestTimeoutId = window.setTimeout(() => {
+      if (this.staleRequest(requestId) || !this.abortController) return
+
+      this.requestTimedOut = true
+      this.abortController.abort()
+    }, this.requestTimeoutMsValue)
+  }
+
+  clearRequestTimeout () {
+    if (!this.requestTimeoutId) return
+
+    window.clearTimeout(this.requestTimeoutId)
+    this.requestTimeoutId = null
+  }
+
+  timeoutErrorText () {
+    if (this.hasRequestTimeoutTextValue && this.requestTimeoutTextValue) {
+      return this.requestTimeoutTextValue
+    }
+
+    return this.genericErrorTextValue
   }
 
   trackingDetail () {
