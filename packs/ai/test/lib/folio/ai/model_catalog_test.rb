@@ -3,14 +3,13 @@
 require "test_helper"
 
 class Folio::Ai::ModelCatalogTest < ActiveSupport::TestCase
-  CACHE_KEY = "folio/ai/model_catalog/v1/openai"
-
   setup do
-    Rails.cache.delete(CACHE_KEY)
+    @original_rails_cache = Rails.cache
+    Rails.cache = ActiveSupport::Cache::MemoryStore.new
   end
 
   teardown do
-    Rails.cache.delete(CACHE_KEY)
+    Rails.cache = @original_rails_cache
   end
 
   test "fetches provider models and caches them" do

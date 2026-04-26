@@ -4,7 +4,9 @@ require "test_helper"
 
 class Folio::Console::Ai::SiteSettingsComponentTest < Folio::Console::ComponentTest
   setup do
-    Rails.cache.delete("folio/ai/model_catalog/v1/openai")
+    @original_rails_cache = Rails.cache
+    Rails.cache = ActiveSupport::Cache::MemoryStore.new
+
     stub_request(:get, "https://api.openai.com/v1/models")
       .to_return(body: {
         data: [
@@ -23,7 +25,7 @@ class Folio::Console::Ai::SiteSettingsComponentTest < Folio::Console::ComponentT
   end
 
   teardown do
-    Rails.cache.delete("folio/ai/model_catalog/v1/openai")
+    Rails.cache = @original_rails_cache
     Folio::Ai.reset_registry!
   end
 

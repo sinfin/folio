@@ -70,7 +70,11 @@ the application root unless a generator explicitly supports packing them.
 
 ## AI Pack
 
-`packs/ai` owns the reusable AI prompt/suggestion functionality:
+`packs/ai` owns the reusable AI prompt/suggestion functionality. The canonical
+integration guide is [`docs/features/ai_prompts.md`](features/ai_prompts.md);
+agent workflows should use
+[`folio-ai-inputs`](../.skills/folio-ai-inputs/SKILL.md) when wiring concrete
+Console inputs.
 
 - prompt registry, provider adapters, prompt composition and response handling
 - site prompt settings and validation

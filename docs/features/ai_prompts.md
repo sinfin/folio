@@ -116,6 +116,96 @@ These decisions are part of the implementation plan unless explicitly reopened.
 
 ## Current Folio API
 
+### Host-App Usage Guide
+
+Use this sequence when a Folio-based application wants to enable AI suggestions
+for one or more editor inputs.
+
+1. Keep the `:ai` pack enabled. The pack is enabled by default through
+   `Folio.enabled_packs`; disabling the pack must remove the feature entirely.
+2. Run the AI pack migrations from `packs/ai/db/migrate`.
+3. Configure the feature and providers in the host app:
+
+   ```ruby
+   Rails.application.config.folio_ai_enabled = ENV["FOLIO_AI_ENABLED"].present?
+   Rails.application.config.folio_ai_default_provider = :openai
+   Rails.application.config.folio_ai_provider_models = {
+     openai: "gpt-5.5",
+     anthropic: "claude-opus-4-7",
+   }
+   Rails.application.config.folio_ai_model_fallback_enabled = true
+   Rails.application.config.folio_ai_model_catalog_cache_ttl = 1.hour
+   ```
+
+4. Configure provider credentials with `OPENAI_API_KEY` and/or
+   `ANTHROPIC_API_KEY`. The environment kill switch `FOLIO_AI_DISABLED`
+   suppresses all runtime AI behavior even when the app config enables it.
+5. Optionally expose curated model labels and cost tiers in site settings:
+
+   ```ruby
+   Rails.application.config.folio_ai_provider_model_options = {
+     openai: {
+       "gpt-5.5" => { label: "GPT-5.5", cost_tier: "premium", default: true },
+     },
+     anthropic: {
+       "claude-opus-4-7" => { label: "Claude Opus 4.7", cost_tier: "premium" },
+     },
+   }
+   ```
+
+   If API credentials are available, Folio lists live provider models and caches
+   them in `Rails.cache` for `folio_ai_model_catalog_cache_ttl`. Configured
+   metadata only enriches those options with labels/cost tiers. If the live
+   catalog cannot be fetched, Folio falls back to configured options. If a saved
+   site model later disappears, Folio keeps it visible as unavailable and, when
+   `folio_ai_model_fallback_enabled` is true, generation falls back to the
+   provider default model and returns a warning for the editor UI.
+6. Register promptable fields after Rails initialization:
+
+   ```ruby
+   Rails.application.config.after_initialize do
+     Folio::Ai.register_integration(:content_editor,
+                                    label: "Content editor",
+                                    fields: [
+                                      Folio::Ai::Field.new(key: :title,
+                                                           label: "Title",
+                                                           auto_attach: true,
+                                                           input_types: %i[string],
+                                                           character_limit: 120),
+                                      Folio::Ai::Field.new(key: :summary,
+                                                           label: "Summary",
+                                                           auto_attach: true,
+                                                           input_types: %i[text],
+                                                           character_limit: 400),
+                                    ])
+   rescue ArgumentError => e
+     raise unless e.message.include?("already registered")
+   end
+   ```
+
+   Use `auto_attach: true` only for standard SimpleForm `string` or `text`
+   inputs that should receive AI controls automatically inside an explicit form
+   context. Custom inputs and aggregate workflows should use manual wiring.
+7. Add a host-app endpoint that includes
+   `Folio::Console::Ai::SuggestionsControllerBase`. The controller stays thin:
+   load and authorize the record, return context, and provide record-specific
+   eligibility.
+8. Build context with reusable plain-text helpers where possible. For TipTap
+   fields prefer `Folio::Tiptap::PlainText.from_value(...)`; do not serialize
+   raw editor JSON into prompts unless the host app has a reviewed mapper.
+9. Wrap the concrete form section in `folio_ai_form_context` to enable
+   auto-attachment for registered standard fields.
+10. Render `Folio::Console::Ai::TextSuggestionsComponent` manually for custom
+    inputs, rich-text wrappers, unusual placement, or app-owned aggregate
+    workflows.
+11. Enable AI and fill default prompts per site and field in Console site
+    settings. A field remains hidden from editors until its site prompt is
+    non-blank.
+12. Verify the full UI lifecycle on a persisted record: hidden when disabled,
+    loading, missing context, provider error/timeout, variants, copy, accept,
+    manual edit detach, ghost undo, close, instruction persistence, regenerate,
+    model fallback warning, and rate-limit behavior.
+
 ### Site Settings Tab
 
 When `Rails.application.config.folio_ai_enabled` is true and at least one AI
@@ -211,7 +301,8 @@ The response contract is:
     ],
     "user_instructions": "Last saved instructions",
     "provider": "openai",
-    "model": "gpt-5.5"
+    "model": "gpt-5.5",
+    "warnings": []
   }
 }
 ```
