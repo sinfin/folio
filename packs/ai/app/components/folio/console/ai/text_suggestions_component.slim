@@ -12,7 +12,7 @@ div[
       aria-expanded="false"
       data-f-c-ai-text-suggestions-target="button"
     ]
-      span.f-c-ai-text-suggestions__spark aria-hidden="true" ✦
+      = sparkles_icon
       span.f-c-ai-text-suggestions__button-label = button_label
 
     button.f-c-ai-text-suggestions__undo[
@@ -21,7 +21,8 @@ div[
       data=stimulus_target("undoButton")
       data-action="click->f-c-ai-text-suggestions#undo"
     ]
-      = t(".undo_label")
+      = undo_icon
+      span.f-c-ai-text-suggestions__undo-label = t(".undo_label")
 
   .f-c-ai-text-suggestions__panel[
     hidden=true

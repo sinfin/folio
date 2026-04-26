@@ -98,6 +98,14 @@ class Folio::Console::Ai::TextSuggestionsComponent < Folio::Console::Application
       @button_label.presence || t(".button_label")
     end
 
+    def sparkles_icon
+      Folio::Ai::Icons.sparkles(self)
+    end
+
+    def undo_icon
+      Folio::Ai::Icons.undo(self)
+    end
+
     def external_controls?
       @external_controls
     end

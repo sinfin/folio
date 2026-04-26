@@ -8,6 +8,8 @@ class Folio::Console::Ai::TextSuggestionsComponentTest < Folio::Console::Compone
 
     assert_selector(".f-c-ai-text-suggestions")
     assert_selector(".f-c-ai-text-suggestions__button")
+    assert_selector(".f-c-ai-text-suggestions__spark svg")
+    assert_selector(".f-c-ai-text-suggestions__undo-icon svg", visible: :all)
     assert_selector("[data-f-c-ai-text-suggestions-endpoint-value='/ai']")
     assert_selector("[data-f-c-ai-text-suggestions-target-selector-value='#article_title']")
     assert_selector("[data-f-c-ai-text-suggestions-request-timeout-ms-value='45000']")

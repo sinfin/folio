@@ -32,24 +32,40 @@ $f-c-ai-text-suggestions-background: #F3EBFC !default
     display: inline-flex
     gap: px-to-rem(4px)
     font-weight: $font-weight-normal
+    line-height: 1.4
+    min-height: px-to-rem(20px)
     white-space: nowrap
 
-  &__spark
+  &__spark,
+  &__undo-icon
     color: $f-c-ai-text-suggestions-accent
-    font-size: px-to-rem(16px)
-    font-weight: $font-weight-bold
+    display: inline-flex
+    flex: 0 0 px-to-rem(16px)
+    height: px-to-rem(16px)
+    justify-content: center
     line-height: 1
+    width: px-to-rem(16px)
+
+    svg
+      display: block
+      height: px-to-rem(16px)
+      width: px-to-rem(16px)
+
+  &__spark-svg
+    height: px-to-rem(16px)
+    width: px-to-rem(16px)
 
   &__undo
     align-items: center
     color: $gray-600
     display: inline-flex
     gap: px-to-rem(4px)
+    line-height: 1.4
+    min-height: px-to-rem(20px)
     white-space: nowrap
 
-    &::before
-      content: '↶'
-      color: $danger
+  &__undo-icon
+    color: $danger
 
   &__panel
     background: $f-c-ai-text-suggestions-background

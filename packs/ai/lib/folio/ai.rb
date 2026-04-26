@@ -114,4 +114,5 @@ module Folio::Ai
   end
 end
 
+require_relative "ai/icons"
 require_relative "ai/railtie"

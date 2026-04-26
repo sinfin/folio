@@ -34,6 +34,8 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
     assert page.has_css?(".form-group--with-ai-text-suggestions")
     assert page.has_css?(".form-group__input-controls .f-c-ai-text-suggestions--external-actions")
     assert page.has_css?(".form-group__custom-html .f-c-ai-text-suggestions--external-controls")
+    assert page.has_css?(".form-group__input-controls .f-c-ai-text-suggestions__spark svg")
+    assert page.has_css?(".form-group__input-controls .f-c-ai-text-suggestions__undo-icon svg", visible: :all)
     assert page.has_css?("[data-f-c-ai-text-suggestions-target-selector-value='#page_title']")
     assert page.has_css?("[data-controller='f-click-trigger']")
   end

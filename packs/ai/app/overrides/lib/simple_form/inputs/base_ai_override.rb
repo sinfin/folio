@@ -84,7 +84,7 @@ module Folio::Ai::SimpleFormInputExtension
                           aria: { expanded: "false", controls: component_id },
                           data: ai_click_trigger_data("##{component_id} .f-c-ai-text-suggestions__button")) do
         template.safe_join([
-          template.tag.span("✦", class: "f-c-ai-text-suggestions__spark", aria: { hidden: true }),
+          ai_text_suggestions_sparkles_icon(template),
           template.tag.span(I18n.t("folio.console.ai.text_suggestions_component.button_label"),
                             class: "f-c-ai-text-suggestions__button-label"),
         ])
@@ -94,12 +94,25 @@ module Folio::Ai::SimpleFormInputExtension
     def ai_text_suggestions_undo(component_id:)
       template = @builder.template
 
-      template.tag.button(I18n.t("folio.console.ai.text_suggestions_component.undo_label"),
-                          type: "button",
+      template.tag.button(type: "button",
                           id: "#{component_id}_undo",
                           class: "f-c-ai-text-suggestions__undo",
                           hidden: true,
-                          data: ai_click_trigger_data("##{component_id} .f-c-ai-text-suggestions__undo"))
+                          data: ai_click_trigger_data("##{component_id} .f-c-ai-text-suggestions__undo")) do
+        template.safe_join([
+          ai_text_suggestions_undo_icon(template),
+          template.tag.span(I18n.t("folio.console.ai.text_suggestions_component.undo_label"),
+                            class: "f-c-ai-text-suggestions__undo-label"),
+        ])
+      end
+    end
+
+    def ai_text_suggestions_sparkles_icon(template)
+      Folio::Ai::Icons.sparkles(template)
+    end
+
+    def ai_text_suggestions_undo_icon(template)
+      Folio::Ai::Icons.undo(template)
     end
 
     def ai_click_trigger_data(target)
