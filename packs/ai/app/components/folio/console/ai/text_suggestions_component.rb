@@ -11,7 +11,12 @@ class Folio::Console::Ai::TextSuggestionsComponent < Folio::Console::Application
                  field_label: nil,
                  button_label: nil,
                  class_name: nil,
-                 available: true)
+                 available: true,
+                 id: nil,
+                 external_controls: false,
+                 external_button_selector: nil,
+                 external_undo_selector: nil,
+                 show_meta: false)
     @integration_key = integration_key.to_s
     @field_key = field_key.to_s
     @endpoint = endpoint
@@ -23,6 +28,11 @@ class Folio::Console::Ai::TextSuggestionsComponent < Folio::Console::Application
     @button_label = button_label
     @class_name = class_name
     @available = available
+    @id = id
+    @external_controls = external_controls
+    @external_button_selector = external_button_selector
+    @external_undo_selector = external_undo_selector
+    @show_meta = show_meta
   end
 
   def render?
@@ -54,7 +64,14 @@ class Folio::Console::Ai::TextSuggestionsComponent < Folio::Console::Application
         accept_label: t(".accept_label"),
         accept_button_label: t(".accept_button_label"),
         chars_label: t(".chars_label"),
+        external_button_selector: @external_button_selector,
+        external_undo_selector: @external_undo_selector,
+        show_meta: @show_meta,
       }.compact
+    end
+
+    def html_id
+      @id
     end
 
     def stimulus_actions
@@ -75,5 +92,9 @@ class Folio::Console::Ai::TextSuggestionsComponent < Folio::Console::Application
 
     def button_label
       @button_label.presence || t(".button_label")
+    end
+
+    def external_controls?
+      @external_controls
     end
 end

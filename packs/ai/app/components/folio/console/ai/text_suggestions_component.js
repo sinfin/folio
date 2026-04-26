@@ -23,7 +23,10 @@ window.Folio.Stimulus.register('f-c-ai-text-suggestions', class extends window.S
     copyButtonLabel: String,
     acceptLabel: String,
     acceptButtonLabel: String,
-    charsLabel: String
+    charsLabel: String,
+    externalButtonSelector: String,
+    externalUndoSelector: String,
+    showMeta: { type: Boolean, default: false }
   }
 
   static classes = ['open', 'loading']
@@ -89,7 +92,8 @@ window.Folio.Stimulus.register('f-c-ai-text-suggestions', class extends window.S
     this.hideStatus()
     this.element.classList.remove(this.openClass)
     this.element.classList.remove(this.loadingClass)
-    this.buttonTarget.setAttribute('aria-expanded', 'false')
+    this.setButtonsExpanded(false)
+    this.setExternalUndoVisible(false)
     this.instructionsTarget.value = this.savedInstructions
   }
 
@@ -115,6 +119,7 @@ window.Folio.Stimulus.register('f-c-ai-text-suggestions', class extends window.S
     this.selectedText = null
     this.clearSelection()
     this.undoButtonTarget.hidden = true
+    this.setExternalUndoVisible(false)
 
     this.dispatch('undo', { detail: this.trackingDetail() })
   }
@@ -131,6 +136,7 @@ window.Folio.Stimulus.register('f-c-ai-text-suggestions', class extends window.S
     this.writeValue(input, text)
     this.markSelected(event.currentTarget)
     this.undoButtonTarget.hidden = false
+    this.setExternalUndoVisible(true)
 
     this.dispatch('accepted', { detail: this.trackingDetail() })
   }
@@ -163,6 +169,9 @@ window.Folio.Stimulus.register('f-c-ai-text-suggestions', class extends window.S
   onWindowClick (event) {
     if (!this.isOpen) return
     if (this.element.contains(event.target)) return
+    if (this.panelTarget.contains(event.target)) return
+    if (this.externalButtonElement?.contains(event.target)) return
+    if (this.externalUndoElement?.contains(event.target)) return
 
     this.close()
   }
@@ -287,7 +296,7 @@ window.Folio.Stimulus.register('f-c-ai-text-suggestions', class extends window.S
 
     const body = document.createElement('span')
     body.className = 'f-c-ai-text-suggestions__suggestion-body'
-    body.appendChild(this.suggestionMetaElement(suggestion))
+    if (this.showMetaValue) body.appendChild(this.suggestionMetaElement(suggestion))
     body.appendChild(this.suggestionTextElement(suggestion.text || ''))
 
     const actions = document.createElement('span')
@@ -364,15 +373,17 @@ window.Folio.Stimulus.register('f-c-ai-text-suggestions', class extends window.S
   showPanel () {
     this.panelTarget.hidden = false
     this.element.classList.add(this.openClass)
-    this.buttonTarget.setAttribute('aria-expanded', 'true')
+    this.setButtonsExpanded(true)
   }
 
   showError (message) {
+    this.panelTarget.classList.add('f-c-ai-text-suggestions__panel--error')
     this.statusTarget.hidden = false
     this.statusTarget.textContent = message
   }
 
   hideStatus () {
+    this.panelTarget.classList.remove('f-c-ai-text-suggestions__panel--error')
     this.statusTarget.hidden = true
     this.statusTarget.textContent = ''
   }
@@ -438,11 +449,36 @@ window.Folio.Stimulus.register('f-c-ai-text-suggestions', class extends window.S
     }
   }
 
+  setButtonsExpanded (expanded) {
+    const value = expanded ? 'true' : 'false'
+
+    this.buttonTarget.setAttribute('aria-expanded', value)
+    this.externalButtonElement?.setAttribute('aria-expanded', value)
+  }
+
+  setExternalUndoVisible (visible) {
+    if (!this.externalUndoElement) return
+
+    this.externalUndoElement.hidden = !visible
+  }
+
   get targetInput () {
     return document.querySelector(this.targetSelectorValue)
   }
 
   get isOpen () {
     return !this.panelTarget.hidden
+  }
+
+  get externalButtonElement () {
+    if (!this.hasExternalButtonSelectorValue) return null
+
+    return document.querySelector(this.externalButtonSelectorValue)
+  }
+
+  get externalUndoElement () {
+    if (!this.hasExternalUndoSelectorValue) return null
+
+    return document.querySelector(this.externalUndoSelectorValue)
   }
 })

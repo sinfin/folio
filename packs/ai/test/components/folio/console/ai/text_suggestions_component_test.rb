@@ -21,6 +21,17 @@ class Folio::Console::Ai::TextSuggestionsComponentTest < Folio::Console::Compone
     assert_no_selector(".f-c-ai-text-suggestions")
   end
 
+  def test_render_with_external_controls
+    render_inline(component(id: "ai_title",
+                            external_controls: true,
+                            external_button_selector: "#ai_title_button",
+                            external_undo_selector: "#ai_title_undo"))
+
+    assert_selector("#ai_title.f-c-ai-text-suggestions--external-controls")
+    assert_selector("[data-f-c-ai-text-suggestions-external-button-selector-value='#ai_title_button']")
+    assert_selector("[data-f-c-ai-text-suggestions-external-undo-selector-value='#ai_title_undo']")
+  end
+
   private
     def component(**options)
       Folio::Console::Ai::TextSuggestionsComponent.new(integration_key: :articles,

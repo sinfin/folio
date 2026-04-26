@@ -1,12 +1,17 @@
+$f-c-ai-text-suggestions-accent: #9637D3 !default
+$f-c-ai-text-suggestions-accent-light: #D3B3E8 !default
+$f-c-ai-text-suggestions-background: #F3EBFC !default
+
 .f-c-ai-text-suggestions
-  position: relative
-  display: inline-flex
   align-items: center
-  font-size: $font-size-sm
+  color: $gray-600
+  display: inline-flex
+  font-size: px-to-rem(12px)
+  line-height: 1.4
 
   &__actions
-    display: inline-flex
     align-items: center
+    display: inline-flex
     gap: px-to-rem(8px)
 
   &__button,
@@ -15,152 +20,185 @@
   &__regenerate,
   &__suggestion-copy,
   &__suggestion-accept
-    border: 0
     background: none
-    padding: 0
-    font: inherit
-    color: inherit
+    border: 0
     cursor: pointer
+    font: inherit
+    padding: 0
 
   &__button
-    display: inline-flex
     align-items: center
+    color: $f-c-ai-text-suggestions-accent
+    display: inline-flex
     gap: px-to-rem(4px)
-    color: $violet
-    font-weight: $font-weight-bold
+    font-weight: $font-weight-normal
     white-space: nowrap
 
   &__spark
+    color: $f-c-ai-text-suggestions-accent
+    font-size: px-to-rem(16px)
     font-weight: $font-weight-bold
+    line-height: 1
 
   &__undo
-    color: $danger
+    align-items: center
+    color: $gray-600
+    display: inline-flex
+    gap: px-to-rem(4px)
     white-space: nowrap
 
     &::before
       content: '↶'
-      margin-right: px-to-rem(4px)
+      color: $danger
 
   &__panel
-    position: absolute
-    z-index: 100000
-    top: calc(100% + #{px-to-rem(8px)})
-    right: 0
-    width: Min(#{px-to-rem(640px)}, calc(100vw - #{px-to-rem(32px)}))
-    padding: px-to-rem(18px)
-    border: 1px solid rgba($violet, 0.35)
+    background: $f-c-ai-text-suggestions-background
+    border: 1px solid $f-c-ai-text-suggestions-accent-light
     border-radius: $border-radius
-    background: mix($violet, $white, 8%)
-    box-shadow: 0 px-to-rem(16px) px-to-rem(42px) rgba($black, 0.18)
+    color: $gray-600
+    margin-top: px-to-rem(8px)
+    padding: px-to-rem(4px) px-to-rem(20px) px-to-rem(20px)
+    width: 100%
+
+    &[hidden]
+      display: none !important
+
+    &--error
+      padding: px-to-rem(12px) px-to-rem(20px)
+
+      .f-c-ai-text-suggestions__header,
+      .f-c-ai-text-suggestions__suggestions,
+      .f-c-ai-text-suggestions__instructions
+        display: none
+
+      .f-c-ai-text-suggestions__status
+        background: transparent
+        border: 0
+        margin: 0
+        padding: 0
 
   &__header
-    display: flex
     align-items: center
+    display: flex
     justify-content: space-between
-    gap: px-to-rem(16px)
-    margin-bottom: px-to-rem(12px)
+    padding-bottom: px-to-rem(8px)
 
   &__title
-    position: absolute
-    overflow: hidden
-    width: 1px
-    height: 1px
-    margin: -1px
-    padding: 0
     border: 0
     clip: rect(0, 0, 0, 0)
+    height: 1px
+    margin: -1px
+    overflow: hidden
+    padding: 0
+    position: absolute
     white-space: nowrap
+    width: 1px
 
   &__close
-    margin-left: auto
-    font-size: px-to-rem(18px)
+    color: $black
+    font-size: px-to-rem(20px)
     line-height: 1
+    margin-left: auto
+    min-height: px-to-rem(24px)
+    min-width: px-to-rem(24px)
+    opacity: 0.85
 
   &__status
-    display: flex
     align-items: center
-    gap: px-to-rem(6px)
-    padding: px-to-rem(12px)
-    margin-bottom: px-to-rem(12px)
-    border: 1px solid rgba($violet, 0.35)
+    background: $f-c-ai-text-suggestions-background
+    border: 1px solid $f-c-ai-text-suggestions-accent-light
     border-radius: $border-radius
-    background: rgba($violet, 0.06)
-    color: $body-color
+    color: $gray-600
+    display: flex
+    gap: px-to-rem(6px)
+    margin-bottom: px-to-rem(12px)
+    min-height: px-to-rem(28px)
+    padding: px-to-rem(6px) px-to-rem(12px)
+
+    &[hidden]
+      display: none !important
 
     &::before
-      content: '▲'
+      content: '⚠'
       color: $danger
       font-size: px-to-rem(12px)
 
   &__suggestions
-    display: grid
-    gap: px-to-rem(10px)
+    display: flex
+    flex-direction: column
+    gap: px-to-rem(12px)
 
   &__suggestion
-    display: grid
-    grid-template-columns: 1fr auto
-    gap: px-to-rem(10px)
     align-items: center
-    width: 100%
+    background: $f-c-ai-text-suggestions-background
+    border: 1px solid $f-c-ai-text-suggestions-accent-light
+    border-radius: $border-radius
+    color: $gray-600
     min-height: px-to-rem(54px)
     padding: px-to-rem(12px)
-    border: 1px solid rgba($violet, 0.35)
-    border-radius: $border-radius
-    background: rgba($white, 0.42)
-    color: inherit
     cursor: pointer
+    display: grid
+    gap: px-to-rem(16px)
+    grid-template-columns: minmax(0, 1fr) auto
     text-align: left
     transition: $transition-base
+    width: 100%
 
     &:hover,
     &:focus-visible
-      border-color: rgba($violet, 0.65)
-      background: rgba($white, 0.72)
+      background: mix($f-c-ai-text-suggestions-accent-light, $white, 20%)
+      border-color: $f-c-ai-text-suggestions-accent
       outline: 0
 
-  &__suggestion--selected
-    border-color: #00a88f
-    background: mix(#00a88f, $white, 22%)
+  &__suggestion--selected,
+  &__suggestion--selected:hover,
+  &__suggestion--selected:focus-visible
+    background: $green-background
+    border-color: $green
 
   &__suggestion--loading
-    position: relative
     color: $gray-600
     cursor: wait
+    position: relative
 
     &::after
       content: ''
-      width: px-to-rem(14px)
-      height: px-to-rem(14px)
       border: 2px solid rgba($black, 0.18)
       border-top-color: $body-color
       border-radius: 50%
+      height: px-to-rem(14px)
+      width: px-to-rem(14px)
       animation: f-c-ai-text-suggestions-spin 0.8s linear infinite
 
   &__suggestion-body
     min-width: 0
 
   &__suggestion-meta
+    color: $gray-medium-dark
     display: flex
-    flex-wrap: wrap
     gap: px-to-rem(8px)
     margin-bottom: px-to-rem(4px)
-    color: $gray-600
+    flex-wrap: wrap
     font-size: px-to-rem(12px)
 
   &__suggestion-text
-    white-space: pre-wrap
     overflow-wrap: anywhere
+    white-space: pre-wrap
 
   &__suggestion-actions
+    align-items: center
     display: inline-flex
     gap: px-to-rem(10px)
-    align-items: center
 
   &__suggestion-copy,
   &__suggestion-accept
-    min-width: px-to-rem(24px)
-    min-height: px-to-rem(24px)
+    align-items: center
     border-radius: $border-radius
+    color: $gray-600
+    display: inline-flex
+    justify-content: center
+    min-height: px-to-rem(24px)
+    min-width: px-to-rem(24px)
     text-align: center
 
     &:hover,
@@ -168,35 +206,61 @@
       background: rgba($black, 0.08)
 
   &__instructions
-    margin-top: px-to-rem(14px)
+    display: flex
+    flex-direction: column
+    gap: px-to-rem(8px)
+    margin-top: px-to-rem(12px)
 
   &__instructions-input
-    display: block
-    width: 100%
-    min-height: px-to-rem(58px)
-    padding: px-to-rem(10px)
+    background: $white
     border: 1px solid $input-border-color
     border-radius: $border-radius
-    background: $white
     color: $input-color
+    display: block
+    min-height: px-to-rem(44px)
+    padding: px-to-rem(8px)
     resize: vertical
+    width: 100%
 
   &__regenerate
-    margin-top: px-to-rem(8px)
-    padding: px-to-rem(6px) px-to-rem(10px)
+    align-items: center
+    background: $gray-medium-dark
     border-radius: $border-radius
-    background: $gray-700
     color: $white
+    display: inline-flex
+    min-height: px-to-rem(24px)
+    padding: px-to-rem(4px) px-to-rem(8px)
+    width: fit-content
+
+    &:hover,
+    &:focus
+      background: darken($gray-medium-dark, 8%)
 
   &--loading &__button
     cursor: wait
     opacity: 0.65
 
-  @container (max-width: 560px)
-    &__panel
-      right: auto
-      left: 0
-      width: calc(100vw - #{px-to-rem(32px)})
+  &--open
+    display: block
+
+  &--auto-attached
+    display: block
+    margin-top: px-to-rem(8px)
+
+  &--external-controls
+    &:not(.f-c-ai-text-suggestions--open)
+      display: none
+
+  &--external-controls &__actions
+    display: none
+
+  &--external-actions
+    display: inline-flex
+    margin-top: 0
+
+  &--external-actions &__actions
+    align-items: center
+    display: inline-flex
 
 @keyframes f-c-ai-text-suggestions-spin
   to

@@ -15,7 +15,7 @@
       .col-md
         - if f.object.persisted?
           = folio_ai_form_context(integration_key: :dummy_blog_articles,
-                                  endpoint: console_dummy_blog_article_ai_suggestions_path(f.object),
+                                  endpoint: main_app.console_dummy_blog_article_ai_suggestions_path(f.object),
                                   record: f.object) do
             = render partial: "folio/console/dummy/blog/articles/ai_text_inputs",
                      locals: { f: f }

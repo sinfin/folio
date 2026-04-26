@@ -31,8 +31,11 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
 
     page = Capybara.string(html)
 
-    assert page.has_css?(".form-group__input-controls .f-c-ai-text-suggestions")
+    assert page.has_css?(".form-group--with-ai-text-suggestions")
+    assert page.has_css?(".form-group__input-controls .f-c-ai-text-suggestions--external-actions")
+    assert page.has_css?(".form-group__custom-html .f-c-ai-text-suggestions--external-controls")
     assert page.has_css?("[data-f-c-ai-text-suggestions-target-selector-value='#page_title']")
+    assert page.has_css?("[data-controller='f-click-trigger']")
   end
 
   test "does not auto-attach AI suggestions without prompt" do

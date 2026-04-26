@@ -1,6 +1,8 @@
 div[
+  id=html_id
   class=bem_class_name
   class=@class_name
+  class=("f-c-ai-text-suggestions--external-controls" if external_controls?)
   data=data
 ]
   .f-c-ai-text-suggestions__actions
@@ -23,7 +25,7 @@ div[
 
   .f-c-ai-text-suggestions__panel[
     hidden=true
-    role="dialog"
+    role="region"
     aria-label=panel_title
     data=stimulus_target("panel")
     data-action="click->f-c-ai-text-suggestions#stopPropagation"

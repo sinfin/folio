@@ -259,6 +259,17 @@ Manual demosite check:
    close, persisted instructions, and regenerate without requiring provider
    credentials.
 
+Repeatable visual capture:
+
+```bash
+RAILS_ENV=test TEST_WITH_ASSETS=1 bundle exec ruby scripts/development/capture_ai_screenshots.rb
+```
+
+The script stores PNG files under `tmp/ai-screenshots-*/folio-dummy/` and stubs
+the browser API call, so provider credentials are not needed. Use it before
+marking UI changes as design-ready and compare the generated states against the
+approved design export or live Figma source.
+
 The dummy adapter is for UI/contract verification only. Host applications must
 provide their own context builder, authorization, route, and provider
 configuration.
