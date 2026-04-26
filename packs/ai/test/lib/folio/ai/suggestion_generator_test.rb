@@ -101,6 +101,10 @@ class Folio::Ai::SuggestionGeneratorTest < ActiveSupport::TestCase
   test "falls back to provider default when configured model is unavailable" do
     @site.update!(ai_settings: enabled_settings(default_model: "retired-model"))
     requested_models = []
+    events = []
+    subscriber = ActiveSupport::Notifications.subscribe(/folio\.ai\./) do |*args|
+      events << ActiveSupport::Notifications::Event.new(*args)
+    end
 
     provider_factory = lambda do |provider:, model:, api_key: nil|
       assert_equal :openai, provider
@@ -128,6 +132,28 @@ class Folio::Ai::SuggestionGeneratorTest < ActiveSupport::TestCase
     assert_equal :model_fallback, result.warnings.first[:code]
     assert_equal "retired-model", result.warnings.first[:requested_model]
     assert_equal "gpt-5.5", result.warnings.first[:fallback_model]
+
+    fallback_event = events.find { |event| event.name == "folio.ai.provider_model_fallback" }
+    success_event = events.find { |event| event.name == "folio.ai.suggestion_generation_succeeded" }
+
+    assert_equal "retired-model", fallback_event.payload[:requested_model]
+    assert_equal "gpt-5.5", fallback_event.payload[:fallback_model]
+    assert_equal "retired-model", success_event.payload[:requested_model]
+  ensure
+    ActiveSupport::Notifications.unsubscribe(subscriber) if subscriber
+  end
+
+  test "returns provider error when provider API key is missing" do
+    original_value = ENV.delete("OPENAI_API_KEY")
+
+    result = with_ai_enabled do
+      generator.call
+    end
+
+    assert_not result.success?
+    assert_equal :provider_error, result.error_code
+  ensure
+    ENV["OPENAI_API_KEY"] = original_value if original_value
   end
 
   test "does not call provider when cost guard rejects prompt" do

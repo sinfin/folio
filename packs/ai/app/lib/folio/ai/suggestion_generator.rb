@@ -169,7 +169,7 @@ class Folio::Ai::SuggestionGenerator
                        provider_config:,
                        user_instruction:)
 
-      track_generation_succeeded(result, started_at:)
+      track_generation_succeeded(result, started_at:, provider_config:)
 
       result
     end
@@ -218,10 +218,9 @@ class Folio::Ai::SuggestionGenerator
       end
     end
 
-    def track_generation_succeeded(result, started_at:)
+    def track_generation_succeeded(result, started_at:, provider_config:)
       Folio::Ai.track(:suggestion_generation_succeeded,
-                      tracking_payload(provider: result.provider,
-                                       model: result.model,
+                      tracking_payload(provider_config:,
                                        suggestion_count: result.suggestions.length,
                                        latency_ms: latency_ms(started_at)))
     end

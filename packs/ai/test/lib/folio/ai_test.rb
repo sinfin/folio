@@ -8,6 +8,15 @@ class Folio::AiTest < ActiveSupport::TestCase
     assert_equal "claude-opus-4-7", Folio::Ai.default_model(:anthropic)
   end
 
+  test "normalizes provider model config keys" do
+    with_config(folio_ai_provider_models: {
+      "openai" => "string-key-model",
+    }) do
+      assert Folio::Ai.known_provider?(:openai)
+      assert_equal "string-key-model", Folio::Ai.default_model(:openai)
+    end
+  end
+
   test "is disabled by default" do
     with_config(folio_ai_enabled: false) do
       assert_not Folio::Ai.enabled?
@@ -32,6 +41,16 @@ class Folio::AiTest < ActiveSupport::TestCase
 
     assert_instance_of Folio::Ai::Providers::OpenAi, adapter
     assert_equal 12, adapter.send(:timeout)
+  end
+
+  test "raises safe error when provider API key is missing" do
+    original_value = ENV.delete("OPENAI_API_KEY")
+
+    assert_raises(ArgumentError) do
+      Folio::Ai.provider_adapter(provider: :openai)
+    end
+  ensure
+    ENV["OPENAI_API_KEY"] = original_value if original_value
   end
 
   test "rejects unknown provider adapter" do

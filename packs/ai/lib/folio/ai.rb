@@ -52,11 +52,11 @@ module Folio::Ai
     end
 
     def default_model(provider)
-      Rails.application.config.folio_ai_provider_models.fetch(provider.to_sym)
+      provider_models.fetch(provider.to_sym)
     end
 
     def provider_models
-      Rails.application.config.folio_ai_provider_models
+      (Rails.application.config.folio_ai_provider_models || {}).to_h.transform_keys(&:to_sym)
     end
 
     def provider_model_options
@@ -105,9 +105,9 @@ module Folio::Ai
     def provider_api_key(provider)
       case provider.to_sym
       when :openai
-        ENV.fetch("OPENAI_API_KEY")
+        ENV.fetch("OPENAI_API_KEY") { raise ArgumentError, "OPENAI_API_KEY is not configured" }
       when :anthropic
-        ENV.fetch("ANTHROPIC_API_KEY")
+        ENV.fetch("ANTHROPIC_API_KEY") { raise ArgumentError, "ANTHROPIC_API_KEY is not configured" }
       else
         raise Folio::Ai::UnknownProviderError, "Unknown AI provider: #{provider}"
       end
