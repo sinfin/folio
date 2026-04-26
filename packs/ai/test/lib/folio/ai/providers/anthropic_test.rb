@@ -18,6 +18,29 @@ class Folio::Ai::Providers::AnthropicTest < ActiveSupport::TestCase
     assert_includes request.body[:system], "suggestions"
   end
 
+  test "lists claude models" do
+    stub_request(:get, "https://api.anthropic.com/v1/models")
+      .with(headers: {
+        "anthropic-version" => "2023-06-01",
+        "x-api-key" => "secret",
+      })
+      .to_return(body: {
+        data: [
+          {
+            id: "claude-opus-4-7",
+            display_name: "Claude Opus 4.7",
+            created_at: "2026-01-01T00:00:00Z",
+            type: "model",
+          },
+        ],
+      }.to_json)
+
+    models = Folio::Ai::Providers::Anthropic.list_models(api_key: "secret")
+
+    assert_equal ["claude-opus-4-7"], models.map(&:id)
+    assert_equal "Claude Opus 4.7", models.first.label
+  end
+
   test "normalizes messages API text content" do
     provider = Folio::Ai::Providers::Anthropic.new(api_key: "secret", model: "claude-opus-4-7")
     field = Folio::Ai::Field.new(key: :perex)

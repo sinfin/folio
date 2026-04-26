@@ -250,6 +250,7 @@ window.Folio.Stimulus.register('f-c-ai-text-suggestions', class extends window.S
 
     const data = response.data || response
     const suggestions = data.suggestions || []
+    const warnings = data.warnings || []
 
     if (typeof data.user_instructions !== 'undefined') {
       this.instructionsTarget.value = data.user_instructions || ''
@@ -264,8 +265,8 @@ window.Folio.Stimulus.register('f-c-ai-text-suggestions', class extends window.S
       return
     }
 
-    this.hideStatus()
     this.renderSuggestions(suggestions)
+    this.showWarnings(warnings)
   }
 
   handleError (error) {
@@ -403,6 +404,19 @@ window.Folio.Stimulus.register('f-c-ai-text-suggestions', class extends window.S
     this.panelTarget.classList.add('f-c-ai-text-suggestions__panel--error')
     this.statusTarget.hidden = false
     this.statusTarget.textContent = message
+  }
+
+  showWarnings (warnings) {
+    const messages = warnings.map((warning) => warning.message).filter((message) => message)
+
+    if (messages.length === 0) {
+      this.hideStatus()
+      return
+    }
+
+    this.panelTarget.classList.remove('f-c-ai-text-suggestions__panel--error')
+    this.statusTarget.hidden = false
+    this.statusTarget.textContent = messages.join(' ')
   }
 
   hideStatus () {

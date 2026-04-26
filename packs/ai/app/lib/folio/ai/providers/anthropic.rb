@@ -2,6 +2,39 @@
 
 class Folio::Ai::Providers::Anthropic < Folio::Ai::Providers::Base
   ANTHROPIC_VERSION = "2023-06-01"
+  MODELS_ENDPOINT = "https://api.anthropic.com/v1/models"
+
+  class << self
+    def list_models(api_key:, timeout: Folio::Ai::Providers::Base::DEFAULT_TIMEOUT)
+      parsed = JSON.parse(perform_get(uri: URI(MODELS_ENDPOINT),
+                                      headers: model_list_headers(api_key),
+                                      timeout:))
+
+      Array(parsed["data"]).filter_map { |item| model_from_item(item) }
+    rescue JSON::ParserError
+      raise Folio::Ai::ProviderError, "Anthropic model list response is not valid JSON"
+    end
+
+    private
+      def model_list_headers(api_key)
+        {
+          "anthropic-version" => ANTHROPIC_VERSION,
+          "x-api-key" => api_key,
+          "Content-Type" => "application/json",
+        }
+      end
+
+      def model_from_item(item)
+        id = item["id"].to_s
+        return if id.blank?
+        return unless id.start_with?("claude-")
+
+        Folio::Ai::Providers::Base::Model.new(id:,
+                                              label: item["display_name"].presence || id,
+                                              created_at: item["created_at"],
+                                              metadata: item.except("id", "display_name", "created_at"))
+      end
+  end
 
   def build_request(prompt:, field:, suggestion_count:)
     Request.new(uri: URI(endpoint),

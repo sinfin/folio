@@ -34,6 +34,11 @@ en:
           field_model: Field model override
           inherit_provider: Inherit provider
           inherit_model: Inherit model
+          inherited_model: "Inherit model (%{model})"
+          provider_default_model: "Provider default model (%{model})"
+          unavailable_model_option: "%{model} (unavailable)"
+          model_catalog_unverified_notice: "The %{provider} model list cannot be verified right now; configured fallback options are shown."
+          model_unavailable_notice: "Model %{model} is no longer available from %{provider}. Choose a new model."
           prompt_label: Default prompt
           character_limit:
             one: "Limit: %{count} character"
@@ -51,10 +56,13 @@ en:
           invalid_context: AI suggestions cannot use the current content.
           provider_timeout: AI provider timed out. Please try again.
           provider_rate_limited: AI provider rate limit was reached. Please try again later.
+          provider_model_unavailable: The selected AI model is no longer available. Update this site's AI model settings.
           provider_error: AI provider failed. Please try again.
           response_invalid: AI provider returned an invalid response.
           cost_limit_exceeded: The AI context is too large. Shorten the content or adjust the context builder.
           rate_limited: Too many AI requests. Please try again later.
+        warnings:
+          model_fallback: "The selected model %{requested_model} is unavailable. The suggestion was generated with fallback model %{fallback_model}; update the site settings."
   activerecord:
     errors:
       models:

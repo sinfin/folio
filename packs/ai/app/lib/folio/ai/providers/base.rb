@@ -27,6 +27,66 @@ class Folio::Ai::Providers::Base
   ].compact.freeze
 
   Request = Struct.new(:uri, :headers, :body, keyword_init: true)
+  Model = Struct.new(:id, :label, :created_at, :metadata, keyword_init: true)
+
+  class << self
+    def list_models(api_key:, timeout: Folio::Ai::Providers::Base::DEFAULT_TIMEOUT)
+      raise NotImplementedError, "#{name} must implement .list_models"
+    end
+
+    def perform_get(uri:, headers:, timeout:)
+      http = build_http(uri:, timeout:)
+      request = Net::HTTP::Get.new(uri)
+      headers.each { |key, value| request[key] = value }
+
+      handle_response(http.request(request))
+    rescue *TIMEOUT_ERRORS
+      raise Folio::Ai::ProviderTimeoutError, "AI provider request timed out"
+    rescue *NETWORK_ERRORS => e
+      raise Folio::Ai::ProviderError, "AI provider request failed: #{e.class.name}"
+    end
+
+    def handle_response(response)
+      return response.body if response.is_a?(Net::HTTPSuccess)
+      raise Folio::Ai::ProviderRateLimitError, "AI provider rate limit reached" if response.code.to_i == 429
+      raise Folio::Ai::ProviderModelUnavailableError, "AI provider model is unavailable" if model_unavailable_response?(response)
+
+      raise Folio::Ai::ProviderError, "AI provider request failed with HTTP #{response.code}"
+    end
+
+    private
+      def build_http(uri:, timeout:)
+        Net::HTTP.new(uri.host, uri.port).tap do |http|
+          http.use_ssl = uri.scheme == "https"
+          http.open_timeout = timeout
+          http.read_timeout = timeout
+          http.write_timeout = timeout if http.respond_to?(:write_timeout=)
+          http.max_retries = 0 if http.respond_to?(:max_retries=)
+        end
+      end
+
+      def model_unavailable_response?(response)
+        return false unless [400, 404].include?(response.code.to_i)
+
+        error_text = parsed_error_text(response.body)
+        error_text.match?(/model.*(not found|unavailable|does not exist|invalid|not supported)/) ||
+          error_text.match?(/(model_not_found|not_found_error|invalid_model)/)
+      end
+
+      def parsed_error_text(body)
+        parsed = JSON.parse(body.to_s)
+        error = parsed["error"]
+
+        [
+          error.is_a?(Hash) ? error["code"] : nil,
+          error.is_a?(Hash) ? error["type"] : nil,
+          error.is_a?(Hash) ? error["message"] : nil,
+          parsed["message"],
+        ].compact.join(" ").downcase
+      rescue JSON::ParserError
+        body.to_s.downcase
+      end
+  end
 
   def initialize(api_key:, model:, timeout: DEFAULT_TIMEOUT)
     raise ArgumentError, "AI provider API key is blank" if api_key.blank?
@@ -64,12 +124,7 @@ class Folio::Ai::Providers::Base
     end
 
     def perform_request(request)
-      http = Net::HTTP.new(request.uri.host, request.uri.port)
-      http.use_ssl = request.uri.scheme == "https"
-      http.open_timeout = timeout
-      http.read_timeout = timeout
-      http.write_timeout = timeout if http.respond_to?(:write_timeout=)
-      http.max_retries = 0 if http.respond_to?(:max_retries=)
+      http = self.class.send(:build_http, uri: request.uri, timeout:)
 
       response = http.request(build_http_request(request))
       handle_response(response)
@@ -87,10 +142,7 @@ class Folio::Ai::Providers::Base
     end
 
     def handle_response(response)
-      return response.body if response.is_a?(Net::HTTPSuccess)
-      raise Folio::Ai::ProviderRateLimitError, "AI provider rate limit reached" if response.code.to_i == 429
-
-      raise Folio::Ai::ProviderError, "AI provider request failed with HTTP #{response.code}"
+      self.class.handle_response(response)
     end
 
     def extract_response_text(response_body)

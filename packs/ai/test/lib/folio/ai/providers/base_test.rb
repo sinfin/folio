@@ -37,4 +37,20 @@ class Folio::Ai::Providers::BaseTest < ActiveSupport::TestCase
                                      suggestion_count: 1)
     end
   end
+
+  test "maps missing model response to typed error" do
+    stub_request(:post, ENDPOINT).to_return(status: 404,
+                                           body: {
+                                             error: {
+                                               code: "model_not_found",
+                                               message: "The model does not exist.",
+                                             },
+                                           }.to_json)
+
+    assert_raises(Folio::Ai::ProviderModelUnavailableError) do
+      @provider.generate_suggestions(prompt: "Write a title.",
+                                     field: @field,
+                                     suggestion_count: 1)
+    end
+  end
 end

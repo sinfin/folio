@@ -9,6 +9,7 @@ module Folio::Ai
   ProviderError = Class.new(Error)
   ProviderTimeoutError = Class.new(ProviderError)
   ProviderRateLimitError = Class.new(ProviderError)
+  ProviderModelUnavailableError = Class.new(ProviderError)
   ResponseInvalidError = Class.new(Error)
   CostLimitExceededError = Class.new(Error)
   RateLimitExceededError = Class.new(Error)
@@ -20,9 +21,12 @@ module Folio::Ai
     field_key
     provider
     model
+    requested_model
+    fallback_model
     suggestion_count
     latency_ms
     error_code
+    warning_code
     record_class
   ].freeze
 
@@ -55,6 +59,10 @@ module Folio::Ai
       Rails.application.config.folio_ai_provider_models
     end
 
+    def provider_model_options
+      Rails.application.config.folio_ai_provider_model_options || {}
+    end
+
     def known_provider?(provider)
       provider_models.key?(provider.to_sym)
     end
@@ -71,6 +79,16 @@ module Folio::Ai
 
     def client_request_timeout_ms
       positive_config_value(:folio_ai_client_request_timeout_ms, 45_000)
+    end
+
+    def model_catalog_cache_ttl
+      value = Rails.application.config.folio_ai_model_catalog_cache_ttl
+
+      value.respond_to?(:to_i) && value.to_i.positive? ? value : 1.hour
+    end
+
+    def model_fallback_enabled?
+      ActiveModel::Type::Boolean.new.cast(Rails.application.config.folio_ai_model_fallback_enabled)
     end
 
     def provider_adapter_class(provider)

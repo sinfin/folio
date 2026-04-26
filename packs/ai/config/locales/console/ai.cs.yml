@@ -34,6 +34,11 @@ cs:
           field_model: Model pro pole
           inherit_provider: Dědit provider
           inherit_model: Dědit model
+          inherited_model: "Dědit model (%{model})"
+          provider_default_model: "Výchozí model providera (%{model})"
+          unavailable_model_option: "%{model} (nedostupný)"
+          model_catalog_unverified_notice: "Seznam modelů providera %{provider} teď nejde ověřit; zobrazuje se nakonfigurovaný fallback."
+          model_unavailable_notice: "Model %{model} už není u providera %{provider} dostupný. Vyberte nový model."
           prompt_label: Výchozí prompt
           character_limit:
             one: "Limit: %{count} znak"
@@ -52,10 +57,13 @@ cs:
           invalid_context: AI návrhy nemohou použít aktuální obsah.
           provider_timeout: AI provider neodpověděl včas. Zkuste to prosím znovu.
           provider_rate_limited: AI provider hlásí rate limit. Zkuste to prosím později.
+          provider_model_unavailable: Vybraný AI model už není dostupný. Opravte nastavení AI modelu pro tento web.
           provider_error: AI provider selhal. Zkuste to prosím znovu.
           response_invalid: AI provider vrátil neplatnou odpověď.
           cost_limit_exceeded: AI kontext je příliš velký. Zkraťte obsah nebo upravte context builder.
           rate_limited: Příliš mnoho AI requestů. Zkuste to prosím později.
+        warnings:
+          model_fallback: "Vybraný model %{requested_model} není dostupný. Návrh byl vygenerován fallback modelem %{fallback_model}; opravte nastavení webu."
   activerecord:
     errors:
       models:

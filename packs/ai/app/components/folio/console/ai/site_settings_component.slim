@@ -29,11 +29,14 @@
         = label_tag field_id(:default_model),
                     t(".default_model"),
                     class: "form-label"
-        = text_field_tag field_name(:default_model),
-                         default_model,
-                         id: field_id(:default_model),
-                         placeholder: t(".model_placeholder"),
-                         class: "form-control"
+        = select_tag field_name(:default_model),
+                     model_options(provider: default_provider,
+                                   selected: default_model,
+                                   blank_label: provider_default_model_label(default_provider)),
+                     id: field_id(:default_model),
+                     class: "form-select"
+        - if default_model_notice
+          small.f-c-ai-site-settings__model-notice = default_model_notice
 
   - integrations.each do |integration|
     .f-c-ai-site-settings__integration.card.mb-g
@@ -58,11 +61,14 @@
               = label_tag field_id(:integrations, integration.key, :default_model),
                           t(".integration_model"),
                           class: "form-label"
-              = text_field_tag field_name(:integrations, integration.key, :default_model),
-                               integration_model(integration),
-                               id: field_id(:integrations, integration.key, :default_model),
-                               placeholder: t(".inherit_model"),
-                               class: "form-control"
+              = select_tag field_name(:integrations, integration.key, :default_model),
+                           model_options(provider: integration_effective_provider(integration),
+                                         selected: integration_model(integration),
+                                         blank_label: integration_blank_model_label(integration)),
+                           id: field_id(:integrations, integration.key, :default_model),
+                           class: "form-select"
+              - if integration_model_notice(integration)
+                small.f-c-ai-site-settings__model-notice = integration_model_notice(integration)
 
         - integration.fields.values.each do |field|
           .f-c-ai-site-settings__field
@@ -108,8 +114,11 @@
                   = label_tag field_id(:integrations, integration.key, :fields, field.key, :model),
                               t(".field_model"),
                               class: "form-label"
-                  = text_field_tag field_name(:integrations, integration.key, :fields, field.key, :model),
-                                   field_model(integration, field),
-                                   id: field_id(:integrations, integration.key, :fields, field.key, :model),
-                                   placeholder: t(".inherit_model"),
-                                   class: "form-control"
+                  = select_tag field_name(:integrations, integration.key, :fields, field.key, :model),
+                               model_options(provider: field_effective_provider(integration, field),
+                                             selected: field_model(integration, field),
+                                             blank_label: field_blank_model_label(integration, field)),
+                               id: field_id(:integrations, integration.key, :fields, field.key, :model),
+                               class: "form-select"
+                  - if field_model_notice(integration, field)
+                    small.f-c-ai-site-settings__model-notice = field_model_notice(integration, field)

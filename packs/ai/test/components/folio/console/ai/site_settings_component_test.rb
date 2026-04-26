@@ -4,6 +4,14 @@ require "test_helper"
 
 class Folio::Console::Ai::SiteSettingsComponentTest < Folio::Console::ComponentTest
   setup do
+    Rails.cache.delete("folio/ai/model_catalog/v1/openai")
+    stub_request(:get, "https://api.openai.com/v1/models")
+      .to_return(body: {
+        data: [
+          { id: "gpt-5.5", created: 1 },
+        ],
+      }.to_json)
+
     Folio::Ai.reset_registry!
     Folio::Ai.register_integration(:articles,
                                    label: "Articles",
@@ -15,6 +23,7 @@ class Folio::Console::Ai::SiteSettingsComponentTest < Folio::Console::ComponentT
   end
 
   teardown do
+    Rails.cache.delete("folio/ai/model_catalog/v1/openai")
     Folio::Ai.reset_registry!
   end
 
@@ -40,6 +49,7 @@ class Folio::Console::Ai::SiteSettingsComponentTest < Folio::Console::ComponentT
 
     assert_selector(".f-c-ai-site-settings")
     assert_selector("input[name$='[ai_settings][enabled]'][value='1']", visible: :all)
+    assert_selector("select[name$='[ai_settings][default_model]']")
     assert_selector("textarea[name$='[fields][title][prompt]']", text: "Write a title.")
     assert_text("Limit: 120")
   end

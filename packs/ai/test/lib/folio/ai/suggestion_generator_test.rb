@@ -98,6 +98,38 @@ class Folio::Ai::SuggestionGeneratorTest < ActiveSupport::TestCase
     assert_equal "Use a calmer tone.", instruction.instruction
   end
 
+  test "falls back to provider default when configured model is unavailable" do
+    @site.update!(ai_settings: enabled_settings(default_model: "retired-model"))
+    requested_models = []
+
+    provider_factory = lambda do |provider:, model:, api_key: nil|
+      assert_equal :openai, provider
+      assert_nil api_key
+      requested_models << model
+
+      if model == "retired-model"
+        FakeProviderAdapter.new(error: Folio::Ai::ProviderModelUnavailableError.new("missing"))
+      else
+        FakeProviderAdapter.new
+      end
+    end
+
+    result = with_ai_enabled do
+      with_config(folio_ai_model_fallback_enabled: true) do
+        Folio::Ai.stub(:provider_adapter, provider_factory) do
+          generator.call
+        end
+      end
+    end
+
+    assert result.success?
+    assert_equal ["retired-model", "gpt-5.5"], requested_models
+    assert_equal "gpt-5.5", result.model
+    assert_equal :model_fallback, result.warnings.first[:code]
+    assert_equal "retired-model", result.warnings.first[:requested_model]
+    assert_equal "gpt-5.5", result.warnings.first[:fallback_model]
+  end
+
   test "does not call provider when cost guard rejects prompt" do
     adapter = FakeProviderAdapter.new
 
@@ -150,9 +182,10 @@ class Folio::Ai::SuggestionGeneratorTest < ActiveSupport::TestCase
                                          **options)
     end
 
-    def enabled_settings(prompt: "Write a title")
+    def enabled_settings(prompt: "Write a title", default_model: nil)
       {
         enabled: true,
+        default_model:,
         integrations: {
           articles: {
             fields: {

@@ -45,6 +45,31 @@ class Folio::Ai::ProviderConfigTest < ActiveSupport::TestCase
     assert_equal "site-model", result.model
   end
 
+  test "uses provider default when provider override has no paired model override" do
+    site = build(:folio_site)
+    site.ai_settings = {
+      enabled: true,
+      default_provider: "openai",
+      default_model: "site-openai-model",
+      integrations: {
+        articles: {
+          fields: {
+            title: {
+              provider: "anthropic",
+            },
+          },
+        },
+      },
+    }
+
+    result = Folio::Ai::ProviderConfig.new(site:,
+                                           integration_key: :articles,
+                                           field_key: :title).call
+
+    assert_equal :anthropic, result.provider
+    assert_equal "claude-opus-4-7", result.model
+  end
+
   test "falls back to configured provider model" do
     site = build(:folio_site)
     site.ai_settings = { enabled: true }

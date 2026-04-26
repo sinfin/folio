@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
 class Folio::Ai::ProviderConfig
-  Result = Struct.new(:provider, :model, keyword_init: true)
+  Result = Struct.new(:provider,
+                      :model,
+                      :requested_model,
+                      :warnings,
+                      keyword_init: true)
 
   def initialize(site:, integration_key:, field_key:)
     @site = site
@@ -10,13 +14,14 @@ class Folio::Ai::ProviderConfig
   end
 
   def call
-    provider = resolve_provider
+    provider, model = resolve_provider_model
     raise Folio::Ai::UnknownProviderError, "Unknown AI provider: #{provider}" unless Folio::Ai.known_provider?(provider)
-
-    model = resolve_model(provider)
     raise ArgumentError, "AI model is blank for provider: #{provider}" if model.blank?
 
-    Result.new(provider: provider.to_sym, model:)
+    Result.new(provider: provider.to_sym,
+               model:,
+               requested_model: model,
+               warnings: [])
   end
 
   private
@@ -24,18 +29,39 @@ class Folio::Ai::ProviderConfig
                 :integration_key,
                 :field_key
 
-    def resolve_provider
-      normalize_provider(field_settings["provider"].presence ||
-                         integration_settings["default_provider"].presence ||
-                         ai_settings["default_provider"].presence ||
-                         Rails.application.config.folio_ai_default_provider)
+    def resolve_provider_model
+      site_provider = normalize_provider(ai_settings["default_provider"].presence ||
+                                         Rails.application.config.folio_ai_default_provider)
+      site_model = ai_settings["default_model"].presence || default_model_for(site_provider)
+
+      integration_provider_override = integration_settings["default_provider"].presence
+      integration_provider = normalize_provider(integration_provider_override || site_provider)
+      integration_model = scoped_model(integration_settings["default_model"],
+                                       provider_override: integration_provider_override,
+                                       provider: integration_provider,
+                                       inherited_model: site_model)
+
+      field_provider_override = field_settings["provider"].presence
+      field_provider = normalize_provider(field_provider_override || integration_provider)
+      field_model = scoped_model(field_settings["model"],
+                                 provider_override: field_provider_override,
+                                 provider: field_provider,
+                                 inherited_model: integration_model)
+
+      [field_provider, field_model]
     end
 
-    def resolve_model(provider)
-      field_settings["model"].presence ||
-        integration_settings["default_model"].presence ||
-        ai_settings["default_model"].presence ||
-        Folio::Ai.default_model(provider)
+    def scoped_model(model_override, provider_override:, provider:, inherited_model:)
+      return model_override if model_override.present?
+      return default_model_for(provider) if provider_override.present?
+
+      inherited_model
+    end
+
+    def default_model_for(provider)
+      return unless Folio::Ai.known_provider?(provider)
+
+      Folio::Ai.default_model(provider)
     end
 
     def normalize_provider(provider)

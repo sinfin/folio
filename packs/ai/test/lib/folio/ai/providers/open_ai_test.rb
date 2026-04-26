@@ -18,6 +18,23 @@ class Folio::Ai::Providers::OpenAiTest < ActiveSupport::TestCase
     assert_includes request.body[:input].first[:content], "suggestions"
   end
 
+  test "lists relevant text models" do
+    stub_request(:get, "https://api.openai.com/v1/models")
+      .with(headers: { "Authorization" => "Bearer secret" })
+      .to_return(body: {
+        data: [
+          { id: "gpt-5.5", created: 1, owned_by: "openai" },
+          { id: "gpt-image-1", created: 2, owned_by: "openai" },
+          { id: "text-embedding-3-large", created: 3, owned_by: "openai" },
+        ],
+      }.to_json)
+
+    models = Folio::Ai::Providers::OpenAi.list_models(api_key: "secret")
+
+    assert_equal ["gpt-5.5"], models.map(&:id)
+    assert_equal "gpt-5.5", models.first.label
+  end
+
   test "normalizes responses API output text" do
     provider = Folio::Ai::Providers::OpenAi.new(api_key: "secret", model: "gpt-5.5")
     field = Folio::Ai::Field.new(key: :title)

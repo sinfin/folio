@@ -43,6 +43,7 @@ module Folio::Console::Ai::SuggestionsControllerBase
           user_instructions: result.user_instruction.to_s,
           provider: result.provider,
           model: result.model,
+          warnings: folio_ai_warnings(result),
         }
       }
     end
@@ -116,6 +117,25 @@ module Folio::Console::Ai::SuggestionsControllerBase
       else
         Folio::Ai::ResponseNormalizer::DEFAULT_SUGGESTION_COUNT
       end
+    end
+
+    def folio_ai_warnings(result)
+      Array(result.warnings).map do |warning|
+        warning = warning.symbolize_keys
+        {
+          code: warning[:code],
+          message: folio_ai_warning_message(warning),
+          requested_model: warning[:requested_model],
+          fallback_model: warning[:fallback_model],
+        }.compact
+      end
+    end
+
+    def folio_ai_warning_message(warning)
+      I18n.t("folio.console.ai.warnings.#{warning[:code]}",
+             requested_model: warning[:requested_model],
+             fallback_model: warning[:fallback_model],
+             default: nil)
     end
 
     def folio_ai_site

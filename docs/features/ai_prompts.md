@@ -509,12 +509,54 @@ Both defaults are configuration values, not hardcoded service assumptions. Host
 applications should override them when the account requires a stable dated
 snapshot, a cheaper model, or a provider-specific production identifier.
 
-The effective provider/model should resolve in this order:
+Folio keeps model selection as a cost-aware site setting, but provider APIs do
+not expose a complete pricing contract in their model-list endpoints. Host apps
+should therefore provide curated model metadata through
+`config.folio_ai_provider_model_options` when labels such as "premium",
+"standard", or "economy" are needed. Folio merges that metadata with the live
+provider model list.
 
-1. Field override on the site
-2. Site default
-3. App default
-4. Engine default
+The live model catalog should:
+
+1. Fetch available models from the provider model-list endpoint.
+2. Filter the list to text-generation models relevant for AI prompts.
+3. Cache the verified list through `Rails.cache` for
+   `config.folio_ai_model_catalog_cache_ttl` (default: one hour).
+4. Fall back to configured model options when the provider list cannot be
+   verified, without blocking the settings form.
+5. Keep an already selected model visible and flagged when the live list proves
+   it is no longer available.
+
+Use `Rails.cache` rather than a direct Redis dependency. Host apps that run
+Folio with Redis-backed caching get Redis behavior without coupling the AI pack
+to one cache store.
+
+Provider/model overrides must resolve as a pair:
+
+1. Field provider + field model override.
+2. Field provider override + that provider's app default model.
+3. Field model override + inherited provider.
+4. Integration provider + integration model override.
+5. Integration provider override + that provider's app default model.
+6. Integration model override + inherited provider.
+7. Site provider + site model override.
+8. Site provider override + that provider's app default model.
+9. App default provider + app default model.
+
+This prevents invalid combinations such as an Anthropic provider override
+accidentally inheriting an OpenAI model from the site default.
+
+Runtime fallback rules:
+
+1. If the provider rejects the selected model as missing or unavailable, Folio
+   retries once with the provider's configured default model when
+   `config.folio_ai_model_fallback_enabled` is true.
+2. Successful fallback responses include a warning payload so the editor sees
+   that generation used a fallback and the site settings must be fixed.
+3. If the fallback model is also unavailable, the endpoint returns
+   `provider_model_unavailable`.
+4. Folio must never silently switch models without tracking the requested model,
+   fallback model, provider, field, site, and warning code.
 
 Production code should use explicit configured model identifiers or aliases from
 environment/configuration rather than hardcoding them deep in the service layer.
@@ -626,7 +668,17 @@ Folio should also define a reusable response schema:
       }
     }
   ],
-  "user_instructions": "Persisted value"
+  "user_instructions": "Persisted value",
+  "provider": "openai",
+  "model": "gpt-5.5",
+  "warnings": [
+    {
+      "code": "model_fallback",
+      "message": "Selected model is unavailable; fallback model was used.",
+      "requested_model": "retired-model",
+      "fallback_model": "gpt-5.5"
+    }
+  ]
 }
 ```
 
@@ -669,6 +721,7 @@ Suggested error codes:
 - `invalid_context`
 - `provider_timeout`
 - `provider_rate_limited`
+- `provider_model_unavailable`
 - `provider_error`
 - `response_invalid`
 - `cost_limit_exceeded`
@@ -685,7 +738,8 @@ is not:
   cassettes outside unit tests.
 - Retry at most idempotent transport failures, never schema-invalid content.
 - Normalize rate limits separately from generic provider errors.
-- Track latency, provider, model, error code, and suggestion count.
+- Track latency, provider, model, requested/fallback model, warning code, error
+  code, and suggestion count.
 - Apply per-request and per-user cost guards before provider calls.
 - Never include provider API keys, full prompts, record bodies, or suggestions
   in logs, exceptions, analytics, or background job arguments.
@@ -731,9 +785,12 @@ Recommended event properties:
 - `field_key`
 - `provider`
 - `model`
+- `requested_model`
+- `fallback_model`
 - `suggestion_count`
 - `latency_ms`
 - `error_code`
+- `warning_code`
 - `record_class`
 
 Do not track or log full default prompts, user instructions, record body, or
@@ -751,12 +808,16 @@ Recommended installation steps:
 2. Run the AI pack migrations from `packs/ai/db/migrate`.
 3. Configure provider credentials in the host app environment.
 4. Register integrations and field metadata in a host-app initializer.
-5. Add an AI form context wrapper to host-app forms that should support
+5. Optionally configure `folio_ai_provider_model_options` with curated labels
+   and cost tiers for models the team is willing to expose in site settings.
+6. Ensure the host app has a production cache store, ideally Redis-backed, so
+   provider model catalogs can be cached for the configured TTL.
+7. Add an AI form context wrapper to host-app forms that should support
    auto-attached standard fields.
-6. Explicitly wire custom inputs, rich-text fields, and aggregate workflows via
+8. Explicitly wire custom inputs, rich-text fields, and aggregate workflows via
    the public manual AI component API.
-7. Add a thin host-app controller/route if the app wants a resource-specific API.
-8. Enable the feature per site in the site settings tab.
+9. Add a thin host-app controller/route if the app wants a resource-specific API.
+10. Enable the feature per site in the site settings tab.
 
 No generator is required for the base architecture.
 
