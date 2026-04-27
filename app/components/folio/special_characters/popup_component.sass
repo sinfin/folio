@@ -3,6 +3,7 @@
 
   $f-c-box-shadow-overlay: 0px 1px 4px rgba(0, 0, 0, 0.2), 2px 2px 40px rgba(0, 0, 0, 0.25) !default
   $zindex-modal: 1055 !default
+  $black: #000 !default
 
   position: fixed
   z-index: $zindex-modal + 1
@@ -31,6 +32,7 @@
     cursor: grab
     user-select: none
     touch-action: none
+    color: $black
 
   &--dragging .f-special-characters-popup__header
     cursor: grabbing
