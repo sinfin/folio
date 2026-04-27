@@ -35,7 +35,7 @@ description: >-
 
   `rails generate folio:component /folio/console/ui/example`
 
-- **Host app** components: app namespace without the slash, per that app’s docs (e.g. `rails generate folio:component blog/post`).
+- **Host app** components: omit the app namespace when using a relative path; the generator auto-prefixes it (e.g. in MyProject, use `rails generate folio:component footer/menu` for `MyProject::Web::Footer::MenuComponent`). Use a leading slash only when specifying the full namespace explicitly.
 
 See **`AGENTS.md`** (Generators + View Components) for the slash rule and examples.
 
