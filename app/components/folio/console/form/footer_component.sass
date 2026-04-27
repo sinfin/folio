@@ -170,7 +170,7 @@
     &__collapsible-content
       display: flex
       align-items: center
-      gap: 2 * $grid-gutter-base
+      gap: px-to-rem(20px)
 
     &__btn--preview
       order: 2
@@ -198,8 +198,8 @@
       display: none
       flex-direction: column
       align-items: stretch
-      padding: 2 * $grid-gutter-base $dropdown-item-padding-x
-      gap: 2 * $grid-gutter-base
+      padding: px-to-rem(16px)
+      gap: px-to-rem(20px)
 
     &[data-f-c-form-footer-collapsed-value="false"] &__collapsible-content
       display: flex

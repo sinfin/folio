@@ -3,10 +3,12 @@
   align-items: center
   justify-content: center
 
-  +mq-mobile-menu
-    &__desktop
-      display: none
+  &__desktop
+    display: none
 
-  +mq-desktop-menu
+  @media screen and (min-width: 1180px)
     &__mobile
       display: none
+
+    &__desktop
+      display: revert
