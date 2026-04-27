@@ -163,7 +163,7 @@ module Folio
     end
 
     config.folio_special_characters_character_string = \
-      "\u00A0–…„\u201C\u201D\u201A\u2018'~^°±×÷%‰µ€§" \
+      "\u00A0–…„\u201C\u201A\u2018~^°±×÷%‰µ€§" \
       "ÃãĂăĀāĄąĆćĈĉĊċĐđ" \
       "ĖėĒēĘęĞğĢģĜĝĠġĤĥĦħ" \
       "ÎîÏïÌìİĪīĮįĨĩĲĳĴĵ" \
