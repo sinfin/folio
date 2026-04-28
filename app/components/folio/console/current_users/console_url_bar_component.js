@@ -31,7 +31,7 @@ window.Folio.Stimulus.register('f-c-current-users-console-url-bar', class extend
 
   pingUrl () {
     const currentUrl = window.location.href.split('?')[0]
-    if (this.apiUrlValue != "dont_ping") {
+    if (this.apiUrlValue !== 'dont_ping') {
       window.Folio.Api.apiPost(this.apiUrlValue, { url: currentUrl })
     }
   }
