@@ -33,10 +33,16 @@ class Folio::Clonable::Cloner
       cloned = original.deep_dup
       copy_references(original, cloned)
       original.class.reflect_on_all_associations.each do |association|
+        log("#{original.class}#try to clone association: #{association.name}")
+
         next if @record.class.clonable_ignored_associations.include?(association.name)
+        next if (original.class.try(:clonable_ignored_associations) || []).include?(association.name)
         next if @record.class.clonable_referenced_associations.include?(association.name)
+        next if (original.class.try(:clonable_referenced_associations) || []).include?(association.name)
+
         if original.public_send(association.name).present?
           duplicated << association.name
+
           if association.macro == :has_many
             associated_record = original.public_send(association.name).map { |a| clone_nested_records_recursively(a).first }
           else

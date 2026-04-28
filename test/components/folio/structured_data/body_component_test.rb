@@ -37,4 +37,94 @@ class Folio::StructuredData::BodyComponentTest < Folio::ComponentTest
     breadcrumb_data = json["@graph"].find { |item| item["@type"] == "BreadcrumbList" }
     assert_nil breadcrumb_data
   end
+
+  test "render article structured data with image as ImageObject" do
+    create_and_host_site
+    article = create(:dummy_blog_article, published_at: Time.current)
+    image = create(:folio_file_image)
+    create(:folio_file_placement_cover, file: image, placement: article)
+    article.reload
+
+    render_inline(Folio::StructuredData::BodyComponent.new(record: article, breadcrumbs: []))
+
+    json = JSON.parse(page.find('script[type="application/ld+json"]', visible: false).text(:all))
+    article_data = json["@graph"].find { |item| item["@type"] == "Article" }
+
+    assert_not_nil article_data
+    assert_equal "ImageObject", article_data["image"]["@type"]
+    assert article_data["image"]["url"].present?
+  end
+
+  test "render article image creditText combines author and attribution_source" do
+    create_and_host_site
+    article = create(:dummy_blog_article, published_at: Time.current)
+    image = create(:folio_file_image, author: "Jan Novák", attribution_source: "ČTK")
+    create(:folio_file_placement_cover, file: image, placement: article)
+    article.reload
+
+    render_inline(Folio::StructuredData::BodyComponent.new(record: article, breadcrumbs: []))
+
+    json = JSON.parse(page.find('script[type="application/ld+json"]', visible: false).text(:all))
+    article_data = json["@graph"].find { |item| item["@type"] == "Article" }
+
+    assert_equal "Jan Novák / ČTK", article_data["image"]["creditText"]
+  end
+
+  test "render article image creditText contains only attribution_source when author is blank" do
+    create_and_host_site
+    article = create(:dummy_blog_article, published_at: Time.current)
+    image = create(:folio_file_image, author: nil, attribution_source: "Reuters")
+    create(:folio_file_placement_cover, file: image, placement: article)
+    article.reload
+
+    render_inline(Folio::StructuredData::BodyComponent.new(record: article, breadcrumbs: []))
+
+    json = JSON.parse(page.find('script[type="application/ld+json"]', visible: false).text(:all))
+    article_data = json["@graph"].find { |item| item["@type"] == "Article" }
+
+    assert_equal "Reuters", article_data["image"]["creditText"]
+  end
+
+  test "render article image creditText contains only author when attribution_source is blank" do
+    create_and_host_site
+    article = create(:dummy_blog_article, published_at: Time.current)
+    image = create(:folio_file_image, author: "Petr Novák", attribution_source: nil)
+    create(:folio_file_placement_cover, file: image, placement: article)
+    article.reload
+
+    render_inline(Folio::StructuredData::BodyComponent.new(record: article, breadcrumbs: []))
+
+    json = JSON.parse(page.find('script[type="application/ld+json"]', visible: false).text(:all))
+    article_data = json["@graph"].find { |item| item["@type"] == "Article" }
+
+    assert_equal "Petr Novák", article_data["image"]["creditText"]
+  end
+
+  test "render article image has no creditText when cover has neither author nor attribution_source" do
+    create_and_host_site
+    article = create(:dummy_blog_article, published_at: Time.current)
+    image = create(:folio_file_image, author: nil, attribution_source: nil)
+    create(:folio_file_placement_cover, file: image, placement: article)
+    article.reload
+
+    render_inline(Folio::StructuredData::BodyComponent.new(record: article, breadcrumbs: []))
+
+    json = JSON.parse(page.find('script[type="application/ld+json"]', visible: false).text(:all))
+    article_data = json["@graph"].find { |item| item["@type"] == "Article" }
+
+    assert_not article_data["image"].key?("creditText")
+  end
+
+  test "render article structured data has no image when article has no cover" do
+    create_and_host_site
+    article = create(:dummy_blog_article, published_at: Time.current)
+
+    render_inline(Folio::StructuredData::BodyComponent.new(record: article, breadcrumbs: []))
+
+    json = JSON.parse(page.find('script[type="application/ld+json"]', visible: false).text(:all))
+    article_data = json["@graph"].find { |item| item["@type"] == "Article" }
+
+    assert_not_nil article_data
+    assert_nil article_data["image"]
+  end
 end
