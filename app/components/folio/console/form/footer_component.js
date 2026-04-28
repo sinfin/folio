@@ -253,6 +253,12 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     this.collapsedValue = !this.collapsedValue
   }
 
+  collapse () {
+    if (this.collapsedValue) return
+
+    this.collapsedValue = true
+  }
+
   clearAutosaveTimeout () {
     if (this.autosaveTimeout) {
       window.clearTimeout(this.autosaveTimeout)

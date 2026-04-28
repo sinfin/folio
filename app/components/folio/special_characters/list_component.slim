@@ -1,0 +1,7 @@
+.f-special-characters-list
+  - characters.each do |ch|
+    button.f-special-characters-list__char[
+      type="button"
+      data=char_data(ch)
+    ]
+      = ch

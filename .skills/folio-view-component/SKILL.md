@@ -49,6 +49,12 @@ See **`AGENTS.md`** (Generators + View Components) for the slash rule and exampl
 
 Generator parent is configurable via **`folio_component_generator_parent_component_class_name_proc`**.
 
+## Initialize
+
+- Components **should define `initialize`** most of the time — even an empty `def initialize; end` is preferable to omitting it.
+- **Required** when the component inherits directly from `Folio::ApplicationComponent` / `Folio::Console::ApplicationComponent` (or the host app's `ApplicationComponent`).
+- **Skippable** only in rare cases where a shared ancestor or concern already defines `initialize` for this component family.
+
 ## Markup & styling
 
 - **Templates:** Slim; keep templates thin; logic in the component class (mostly **`private`** methods). Follow [`.skills/folio-slim/SKILL.md`](../folio-slim/SKILL.md) for formatting conventions (multi-line attributes, multiple `class` attrs, avoiding inline Ruby and `==`).
