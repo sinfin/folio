@@ -1,5 +1,5 @@
 .f-tiptap-content class=@class_name
-  .container-fluid
+  div class=(!@without_container ? "container-fluid" : nil)
     = render(node_component)
 
   / .container-fluid.my-4
