@@ -5,11 +5,19 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- special characters popup used in console
-
 ### Changed
 
 ### Fixed
+
+## [7.6.4] - 2026-04-28
+
+### Added
+
+- special characters popup used in console
+
+### Fixed
+
+- **autosave**: handle nils in `autosave_info_component`
 
 ## [7.6.3] - 2026-04-22
 
