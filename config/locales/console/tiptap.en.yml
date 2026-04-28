@@ -13,9 +13,19 @@ en:
           autosave_info_component:
             new_record_alert: Draft changes in the editor are not saved until you first save the record.
             title: The editor contains unsaved draft changes.
-            continue: Continue editing draft
-            discard: Discard draft changes
+            unsaved_newest_changes_from: "%{name} also added unsaved draft changes in the meantime."
+            unsaved_newest_changes_from_unknown_name: An unknown user also added unsaved draft changes in the meantime.
+            not_exists: does not exist
+            your_revision: "%{time} (You)"
+            other_user_revision: "%{time} (%{name})"
+            other_user_revision_unknown_name: "%{time} (unknown user)"
+            latest_revisions: "Latest unsaved draft changes: %{current_user_rev} < %{other_user_rev}"
+            continue: Use my version
+            discard: Use another user's version
             failed_to_save: Connection error. Please check your internet connection.
+            object_is_meantime_updated_by: "%{name} saved a new version of the content in the meantime."
+            object_is_meantime_updated_by_unknown_name: An unknown user saved a new version of the content in the meantime.
+            outdated_continue: Discard changes and continue with the current version
 
         overlay:
           form_component:
