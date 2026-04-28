@@ -1,0 +1,57 @@
+.f-special-characters-popup
+  --f-special-characters-popup__inner-padding: #{px-to-rem(8px)}
+
+  $f-c-box-shadow-overlay: 0px 1px 4px rgba(0, 0, 0, 0.2), 2px 2px 40px rgba(0, 0, 0, 0.25) !default
+  $zindex-modal: 1055 !default
+  $black: #000 !default
+
+  position: fixed
+  z-index: $zindex-modal + 1
+  width: calc(100vw - 2rem)
+  height: 50vh
+  max-width: px-to-rem(360px)
+  max-height: px-to-rem(320px)
+  display: flex
+  flex-direction: column
+  background: var(--#{$prefix}body-bg, #fff)
+  border-radius: var(--#{$prefix}border-radius, 0.25rem)
+  box-shadow: $f-c-box-shadow-overlay
+  opacity: 0
+  transition: opacity 0.15s ease-out
+
+  &:not([inert])
+    opacity: 1
+
+  &__header
+    display: flex
+    align-items: center
+    justify-content: space-between
+    gap: $grid-gutter-base
+    padding: var(--f-special-characters-popup__inner-padding) var(--f-special-characters-popup__inner-padding) var(--f-special-characters-popup__inner-padding) px-to-rem(12px)
+    border-bottom: 1px solid var(--#{$prefix}border-color, #dee2e6)
+    cursor: grab
+    user-select: none
+    touch-action: none
+    color: $black
+
+  &--dragging .f-special-characters-popup__header
+    cursor: grabbing
+
+  &__close
+    appearance: none
+    background: transparent
+    border: 0
+    color: inherit
+    cursor: pointer
+    padding: px-to-rem(2px)
+    margin: px-to-rem(-2px)
+
+    &:hover,
+    &:focus-visible
+      background: var(--#{$prefix}secondary-bg, #f8f9fa)
+      color: var(--#{$prefix}body-color, #212529)
+
+  &__body
+    flex: 1 1 auto
+    overflow: auto
+    min-height: 0

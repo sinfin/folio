@@ -1,0 +1,14 @@
+.f-special-characters-trigger data=data
+  == cell('folio/console/ui/with_icon',
+          t('.label'),
+          hover: :underline,
+          class: "f-special-characters-trigger__mobile small text-muted text-nowrap",
+          icon: :special_character,
+          icon_options: { height: 16 },
+          data: mobile_button_data)
+
+  = render(Folio::Console::Ui::ButtonComponent.new(type: :button,
+                                                   class_name: "f-special-characters-trigger__desktop",
+                                                   icon: :special_character,
+                                                   variant: :gray,
+                                                   data: desktop_button_data))

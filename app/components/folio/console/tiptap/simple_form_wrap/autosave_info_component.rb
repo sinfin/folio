@@ -58,10 +58,36 @@ class Folio::Console::Tiptap::SimpleFormWrap::AutosaveInfoComponent < Folio::Con
       conflicted_revisions? ? object_latest_revision.user : nil
     end
 
+    def object_is_meantime_updated_by_message
+      if updated_by_user.present?
+        t(".object_is_meantime_updated_by", name: updated_by_user.to_label)
+      else
+        t(".object_is_meantime_updated_by_unknown_name")
+      end
+    end
+
+    def unsaved_newest_changes_from_message
+      if other_user.present?
+        t(".unsaved_newest_changes_from", name: other_user.to_label)
+      else
+        t(".unsaved_newest_changes_from_unknown_name")
+      end
+    end
+
     def latest_revisions_info
       current_user_time_str = current_user_latest_revision.blank? ? t(".not_exists") : l(current_user_latest_revision.updated_at, format: :short)
       current_user_rev = t(".your_revision", time: current_user_time_str)
-      other_user_rev = t(".other_user_revision", time: l(object_latest_revision.updated_at, format: :short), name: other_user.to_label)
+      other_user_rev = other_user_revision_info
       t(".latest_revisions", current_user_rev:, other_user_rev:)
+    end
+
+    def other_user_revision_info
+      time = l(object_latest_revision.updated_at, format: :short)
+
+      if other_user.present?
+        t(".other_user_revision", time:, name: other_user.to_label)
+      else
+        t(".other_user_revision_unknown_name", time:)
+      end
     end
 end

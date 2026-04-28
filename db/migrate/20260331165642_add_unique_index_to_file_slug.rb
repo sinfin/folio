@@ -30,7 +30,7 @@ class AddUniqueIndexToFileSlug < ActiveRecord::Migration[8.0]
       is_unique_error = (cause && cause.class.name.end_with?("UniqueViolation")) || e.message.to_s =~ /duplicate key|not unique/i
       raise unless is_unique_error
 
-      say "Unique index creation failed due to duplicates. Re-deduplicating and retrying once..."
+      say_unless_test "Unique index creation failed due to duplicates. Re-deduplicating and retrying once..."
       transaction { deduplicate_slugs }
       add_index :folio_files, :slug, unique: true, name: NEW_INDEX_NAME, algorithm: :concurrently
     end
@@ -39,7 +39,7 @@ class AddUniqueIndexToFileSlug < ActiveRecord::Migration[8.0]
       files = Folio::File.where(slug: [nil, ""])
       return if files.empty?
 
-      say "Backfilling #{files.count} null/blank slug(s)..."
+      say_unless_test "Backfilling #{files.count} null/blank slug(s)..."
 
       files.find_each do |file|
         file.slug = generate_neutral_unique_slug
@@ -54,7 +54,7 @@ class AddUniqueIndexToFileSlug < ActiveRecord::Migration[8.0]
 
       return if duplicate_slugs.empty?
 
-      say "Found #{duplicate_slugs.size} duplicate slug group(s), deduplicating..."
+      say_unless_test "Found #{duplicate_slugs.size} duplicate slug group(s), deduplicating..."
 
       duplicate_slugs.each do |slug|
         files = Folio::File.where(slug:).order(created_at: :asc, id: :asc)
@@ -64,9 +64,13 @@ class AddUniqueIndexToFileSlug < ActiveRecord::Migration[8.0]
           old_slug = file.slug
           file.slug = new_slug
           file.save(validate: false)
-          say " Fixed Folio::File##{file.id}: #{old_slug} → #{new_slug}"
+          say_unless_test " Fixed Folio::File##{file.id}: #{old_slug} → #{new_slug}"
         end
       end
+    end
+
+    def say_unless_test(message)
+      say(message) unless Rails.env.test?
     end
 
     def generate_unique_slug(base, suffix)

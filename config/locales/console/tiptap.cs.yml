@@ -14,14 +14,17 @@ cs:
             new_record_alert: Rozepsané změny v editoru se neukládají, dokud záznam poprvé neuložíte.
             title: Editor obsahuje neuložené rozepsané změny.
             unsaved_newest_changes_from: "Uživatel %{name} mezitím také přidal neuložené změny."
+            unsaved_newest_changes_from_unknown_name: Někdo jiný mezitím také přidal neuložené změny.
             not_exists: není
             your_revision: "%{time} (Vy)"
             other_user_revision: "%{time} (%{name})"
+            other_user_revision_unknown_name: "%{time} (Někdo jiný)"
             latest_revisions: "Poslední neuložené změny: %{current_user_rev} < %{other_user_rev}"
             continue: Použít moji verzi
             discard: Použít verzi jiného uživatele
             failed_to_save: Chyba připojení k serveru. Prosíme zkontrolujte připojení k internetu.
-            object_is_meantime_updated_by: "Uživatel %{name} uložil mezitím novou verzi obsahu!"
+            object_is_meantime_updated_by: "Uživatel %{name} mezitím uložil novou verzi obsahu."
+            object_is_meantime_updated_by_unknown_name: Někdo jiný mezitím uložil novou verzi obsahu.
             outdated_continue: Zahodit změny a pokračovat v aktuální verzi
 
         overlay:

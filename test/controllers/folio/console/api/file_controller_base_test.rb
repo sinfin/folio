@@ -147,7 +147,7 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
 
       assert_response(:ok)
       author_input = Nokogiri::HTML(response.parsed_body["data"]).at_css('input[name="file_attributes[author]"]')
-      assert_equal nil, author_input["value"]
+      assert_nil author_input["value"]
       assert_equal "Různé hodnoty", author_input["placeholder"]
 
       # filled in input, different than stored values (input wins)
