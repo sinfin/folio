@@ -9,8 +9,7 @@ class Folio::Tiptap::ContentComponent < ApplicationComponent
                  lambda_before_root_node: nil,
                  lambda_after_root_node: nil,
                  node_type_blacklist: nil,
-                 lambda_for_blacklisted: nil,
-                 without_container: false)
+                 lambda_for_blacklisted: nil)
     @record = record
     @attribute = attribute
     @class_name = class_name
@@ -18,7 +17,6 @@ class Folio::Tiptap::ContentComponent < ApplicationComponent
     @lambda_after_root_node = lambda_after_root_node
     @node_type_blacklist = node_type_blacklist
     @lambda_for_blacklisted = lambda_for_blacklisted
-    @without_container = without_container
 
     @tiptap_content_information = {
       record: @record,
