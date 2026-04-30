@@ -1,13 +1,9 @@
 window.Folio = window.Folio || {}
 window.Folio.Api = {}
 
-const meta = document.querySelector('meta[name="csrf-token"]')
+window.Folio.Api.CSRF_HEADER_NAME = 'X-CSRF-Token'
 
-window.Folio.Api.CSRF_TOKEN = meta
-  ? {
-      'X-CSRF-Token': meta.getAttribute('content')
-    }
-  : {}
+window.Folio.Api.CSRF_TOKEN = {}
 
 window.Folio.Api.JSON_HEADERS = {
   ...window.Folio.Api.CSRF_TOKEN,
@@ -20,6 +16,37 @@ window.Folio.Api.HTML_HEADERS = {
   Accept: 'text/html',
   'Content-Type': 'application/json'
 }
+
+window.Folio.Api.setCsrfToken = (token) => {
+  if (!token) return
+
+  window.Folio.Api.CSRF_TOKEN[window.Folio.Api.CSRF_HEADER_NAME] = token
+  window.Folio.Api.JSON_HEADERS[window.Folio.Api.CSRF_HEADER_NAME] = token
+  window.Folio.Api.HTML_HEADERS[window.Folio.Api.CSRF_HEADER_NAME] = token
+
+  const meta = document.querySelector('meta[name="csrf-token"]')
+
+  if (meta && meta.getAttribute('content') !== token) {
+    meta.setAttribute('content', token)
+  }
+}
+
+window.Folio.Api.refreshCsrfTokenFromMeta = () => {
+  const meta = document.querySelector('meta[name="csrf-token"]')
+  const token = meta && meta.getAttribute('content')
+
+  window.Folio.Api.setCsrfToken(token)
+}
+
+window.Folio.Api.refreshCsrfTokenFromResponse = (response) => {
+  if (!response || !response.headers || !response.headers.get) return response
+
+  window.Folio.Api.setCsrfToken(response.headers.get(window.Folio.Api.CSRF_HEADER_NAME))
+
+  return response
+}
+
+window.Folio.Api.refreshCsrfTokenFromMeta()
 
 const fallbackMessage = (response) => `${response.status}: ${response.statusText}`
 
@@ -142,6 +169,8 @@ window.Folio.Api.flashMessageFromMeta = (response) => {
 }
 
 window.Folio.Api.api = (method, url, body, signal) => {
+  window.Folio.Api.refreshCsrfTokenFromMeta()
+
   const data = {
     method,
     headers: window.Folio.Api.JSON_HEADERS,
@@ -154,7 +183,11 @@ window.Folio.Api.api = (method, url, body, signal) => {
   // need to have this extra for MS Edge
   if (body) data.body = JSON.stringify(body)
 
-  return fetch(url, data).then(makeCheckResponse(false)).then(responseToJson).then(window.Folio.Api.flashMessageFromMeta)
+  return fetch(url, data)
+    .then(window.Folio.Api.refreshCsrfTokenFromResponse)
+    .then(makeCheckResponse(false))
+    .then(responseToJson)
+    .then(window.Folio.Api.flashMessageFromMeta)
 }
 
 window.Folio.Api.apiPost = (url, body, signal) => {
@@ -178,6 +211,8 @@ window.Folio.Api.apiDelete = (url, body = null, signal) => {
 }
 
 window.Folio.Api.htmlApi = (method, url, body, signal) => {
+  window.Folio.Api.refreshCsrfTokenFromMeta()
+
   const data = {
     method,
     headers: window.Folio.Api.HTML_HEADERS,
@@ -190,7 +225,11 @@ window.Folio.Api.htmlApi = (method, url, body, signal) => {
   // need to have this extra for MS Edge
   if (body) data.body = JSON.stringify(body)
 
-  return fetch(url, data).then(makeCheckResponse(true)).then(responseToHtml).then(window.Folio.Api.flashMessageFromMeta)
+  return fetch(url, data)
+    .then(window.Folio.Api.refreshCsrfTokenFromResponse)
+    .then(makeCheckResponse(true))
+    .then(responseToHtml)
+    .then(window.Folio.Api.flashMessageFromMeta)
 }
 
 window.Folio.Api.apiHtmlGet = (url, body = null, signal) => {
