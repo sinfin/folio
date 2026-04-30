@@ -412,10 +412,16 @@ module Folio::Console::Api::FileControllerBase
     end
 
     def index_json
-      pagination, records = pagy(folio_console_records.ordered, items: 60)
+      pagination, records = pagy(index_json_records, items: 60)
       meta = meta_from_pagy(pagination).merge(human_type: @klass.human_type)
 
       json_from_records(records, Folio::Console::FileSerializer, meta:)
+    end
+
+    def index_json_records
+      return folio_console_records if @sorted_by_param
+
+      folio_console_records.default_file_order
     end
 
     def index_cache_key

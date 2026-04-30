@@ -98,7 +98,8 @@ class Folio::File < Folio::ApplicationRecord
   validate :validate_attribution_and_texts_if_needed
 
   # Scopes
-  scope :ordered, -> { order(created_at: :desc) }
+  scope :ordered, -> { order(created_at: :desc, id: :desc) }
+  scope :default_file_order, -> { reorder(arel_table[:created_at].desc, arel_table[:id].desc) }
 
   scope :by_placement, -> (placement_title) { order(created_at: :desc) }
 

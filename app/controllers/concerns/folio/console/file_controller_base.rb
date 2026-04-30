@@ -17,6 +17,8 @@ module Folio::Console::FileControllerBase
     @turbo_frame_id = @klass.console_turbo_frame_id(modal: action_name == "index_for_modal",
                                                     picker: action_name == "index_for_picker")
 
+    apply_default_file_order
+
     super
   end
 
@@ -143,6 +145,17 @@ module Folio::Console::FileControllerBase
 
     def index_pagy_items_per_page
       PAGY_ITEMS
+    end
+
+    def apply_default_file_order
+      return if @sorted_by_param
+
+      records = folio_console_records
+      return unless records
+
+      name = folio_console_record_variable_name(plural: true)
+      instance_variable_set(name, records.default_file_order)
+      @sorted_by_param = :default_file_order
     end
 
     def message_bus_broadcast_update
