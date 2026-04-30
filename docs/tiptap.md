@@ -180,6 +180,7 @@ The `Node` models are defined by calling `tiptap_node` method which uses the `Fo
 - `:integer`: Integer attributes with automatic type conversion and validation
 - `:rich_text`: JSON-stored rich text content (nested Tiptap structure)
 - `:url_json`: URL with metadata (href, title, target, etc.)
+- `:color`: Color picker attribute stored as normalized hex (`#rrggbb`)
 - `:embed`: Embed data with support for various platforms (YouTube, Instagram, etc.)
 - `[]`: Collection to pick from.
 - `:image`, `:document`, `:audio_cover`, `:video_cover`: Single Folio file attachments
@@ -193,6 +194,7 @@ All compact definitions are internally converted to hash format:
 - `{ type: :integer }`: Integer attributes with automatic type conversion and validation
 - `{ type: :rich_text }`: JSON-stored rich text content
 - `{ type: :url_json }`: URL with metadata
+- `{ type: :color }`: Color picker attribute stored as normalized hex (`#rrggbb`)
 - `{ type: :embed }`: Embed data with automatic normalization and validation
 - `{ type: :collection, collection: [...] }`: Collection to pick from
 - `{ type: :folio_attachment, file_type: "Folio::File::Image", has_many: false, ... }`: File attachments
@@ -212,6 +214,7 @@ class MyApp::ExampleNode < Folio::Tiptap::Node
     priority: :integer,
     content: :rich_text,
     button_url: :url_json,
+    accent_color: :color,
     folio_embed_data: :embed,
     background: %w[gray blue red],
     cover: :image,
@@ -227,15 +230,16 @@ class MyApp::ExampleNode < Folio::Tiptap::Node
     title: { type: :string },
     content: { type: :rich_text },
     button_url: { type: :url_json },
+    accent_color: { type: :color },
     folio_embed_data: { type: :embed },
     background: { type: :collection, collection: %w[gray blue red] },
-    cover: { 
+    cover: {
       type: :folio_attachment,
       file_type: "Folio::File::Image",
       placement_class_name: "Folio::FilePlacement::Cover",
       has_many: false
     },
-    documents: { 
+    documents: {
       type: :folio_attachment,
       file_type: "Folio::File::Document",
       placement_class_name: "Folio::FilePlacement::Document",
@@ -245,6 +249,23 @@ class MyApp::ExampleNode < Folio::Tiptap::Node
     related_pages: { type: :relation, class_name: "Folio::Page", has_many: true }
   }
 end
+```
+
+#### Color Attribute Behavior
+
+Color attributes (`:color` or `{ type: :color }`) render as a browser color picker in the console overlay and persist as lowercase `#rrggbb`.
+
+- **Accepted input formats**: `#rgb`, `#rrggbb`, `rgb()`, `rgba()`, `hsl()`, and `hsla()`
+- **Normalization**: Supported formats are converted to lowercase `#rrggbb`
+- **Alpha handling**: `rgba()` and `hsla()` are accepted only when alpha is omitted or fully opaque (`1` or `100%`)
+- **Validation**: Named colors, transparent colors, unsupported color functions, malformed values, out-of-range channels, and translucent alpha values keep the node invalid
+
+```rb
+node = MyApp::ExampleNode.new
+node.accent_color = "#F0A"                  # => "#ff00aa"
+node.accent_color = "rgb(255, 0, 170)"      # => "#ff00aa"
+node.accent_color = "hsl(320 100% 50%)"     # => "#ff00aa"
+node.accent_color = "rgba(255 0 170 / .5)"  # invalid
 ```
 
 #### Embed Attribute Behavior

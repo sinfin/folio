@@ -11,6 +11,7 @@ class Folio::Tiptap::NodeBuilderTest < ActiveSupport::TestCase
       button_url_json: :url_json,
       position: :integer,
       folio_embed_data: :embed,
+      accent_color: :color,
       background: %w[gray blue],
       boolean_from_collection: [true, false],
       number_from_collection: [1, 2, 3],
@@ -76,6 +77,8 @@ class Folio::Tiptap::NodeBuilderTest < ActiveSupport::TestCase
     }, Node.structure[:related_pages])
 
     assert_equal({ type: :embed }, Node.structure[:folio_embed_data])
+
+    assert_equal({ type: :color }, Node.structure[:accent_color])
   end
 
   test "boolean_from_collection uses boolean type and stores true/false not strings" do
@@ -242,6 +245,41 @@ class Folio::Tiptap::NodeBuilderTest < ActiveSupport::TestCase
 
     assert config[:enabled]
     assert_equal :unsafe_html, config[:attributes][:folio_embed_data]
+  end
+
+  test "color attribute normalizes supported values" do
+    {
+      "#F0A" => "#ff00aa",
+      "rgb(255, 0, 170)" => "#ff00aa",
+      "rgba(255 0 170 / 1)" => "#ff00aa",
+      "hsl(320 100% 50%)" => "#ff00aa",
+      "hsla(320, 100%, 50%, 100%)" => "#ff00aa",
+    }.each do |input, output|
+      node = Node.new(title: "test", accent_color: input)
+
+      assert_equal output, node.accent_color
+      assert_predicate node, :valid?
+    end
+  end
+
+  test "color attribute leaves unsupported values invalid" do
+    node = Node.new(title: "test", accent_color: "red")
+
+    assert_equal "red", node.accent_color
+    assert_not node.valid?
+    assert_not_empty node.errors[:accent_color]
+  end
+
+  test "color attribute serializes only normalized valid hex" do
+    node = Node.new(title: "test", accent_color: "rgb(255 0 170)")
+
+    hash = node.to_tiptap_node_hash
+    assert_equal "#ff00aa", hash["attrs"]["data"]["accent_color"]
+
+    node.accent_color = "rgba(255 0 170 / .5)"
+    hash = node.to_tiptap_node_hash
+
+    assert_not hash["attrs"]["data"].key?("accent_color")
   end
 
   test "tiptap_config validates toolbar hash structure successfully" do
