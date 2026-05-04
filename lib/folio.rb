@@ -50,8 +50,10 @@ require "dragonfly/s3_data_store"
 require "dragonfly_libvips"
 
 module Folio
+  DEFAULT_ENABLED_PACKS = [].freeze
+
   mattr_accessor :enabled_packs
-  self.enabled_packs = [:ai]
+  self.enabled_packs = DEFAULT_ENABLED_PACKS.dup
 
   LANGUAGES = {
     cs: "CZ",
