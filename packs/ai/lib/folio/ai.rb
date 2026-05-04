@@ -3,6 +3,10 @@
 module Folio::Ai
   DEFAULT_OPENAI_MODEL = "gpt-5.5"
   DEFAULT_ANTHROPIC_MODEL = "claude-opus-4-7"
+  DEFAULT_PROVIDER_MODELS = {
+    openai: DEFAULT_OPENAI_MODEL,
+    anthropic: DEFAULT_ANTHROPIC_MODEL,
+  }.freeze
 
   Error = Class.new(StandardError)
   UnknownProviderError = Class.new(Error)
@@ -31,6 +35,38 @@ module Folio::Ai
   ].freeze
 
   class << self
+    attr_accessor :enabled,
+                  :default_provider,
+                  :model_fallback_enabled,
+                  :max_prompt_chars,
+                  :rate_limit
+
+    attr_writer :provider_model_options,
+                :model_catalog_cache_ttl,
+                :provider_request_timeout,
+                :client_request_timeout_ms
+
+    def configure
+      yield self
+    end
+
+    def reset_configuration!
+      self.enabled = false
+      self.default_provider = :openai
+      self.provider_models = DEFAULT_PROVIDER_MODELS
+      self.provider_model_options = {}
+      self.model_catalog_cache_ttl = 1.hour
+      self.model_fallback_enabled = true
+      self.provider_request_timeout = 30
+      self.client_request_timeout_ms = 45_000
+      self.max_prompt_chars = 80_000
+      self.rate_limit = nil
+    end
+
+    def provider_models=(value)
+      @provider_models = (value || {}).to_h
+    end
+
     def registry
       @registry ||= Folio::Ai::Registry.new
     end
@@ -44,7 +80,7 @@ module Folio::Ai
     end
 
     def enabled?
-      Rails.application.config.folio_ai_enabled && !env_disabled?
+      ActiveModel::Type::Boolean.new.cast(enabled) && !env_disabled?
     end
 
     def env_disabled?
@@ -56,11 +92,11 @@ module Folio::Ai
     end
 
     def provider_models
-      (Rails.application.config.folio_ai_provider_models || {}).to_h.transform_keys(&:to_sym)
+      (@provider_models || {}).to_h.transform_keys(&:to_sym)
     end
 
     def provider_model_options
-      Rails.application.config.folio_ai_provider_model_options || {}
+      @provider_model_options || {}
     end
 
     def known_provider?(provider)
@@ -74,21 +110,21 @@ module Folio::Ai
     end
 
     def provider_request_timeout
-      positive_config_value(:folio_ai_provider_request_timeout, 30)
+      positive_config_value(@provider_request_timeout, 30)
     end
 
     def client_request_timeout_ms
-      positive_config_value(:folio_ai_client_request_timeout_ms, 45_000)
+      positive_config_value(@client_request_timeout_ms, 45_000)
     end
 
     def model_catalog_cache_ttl
-      value = Rails.application.config.folio_ai_model_catalog_cache_ttl
+      value = @model_catalog_cache_ttl
 
       value.respond_to?(:to_i) && value.to_i.positive? ? value : 1.hour
     end
 
     def model_fallback_enabled?
-      ActiveModel::Type::Boolean.new.cast(Rails.application.config.folio_ai_model_fallback_enabled)
+      ActiveModel::Type::Boolean.new.cast(model_fallback_enabled)
     end
 
     def provider_adapter_class(provider)
@@ -125,12 +161,14 @@ module Folio::Ai
         payload.symbolize_keys.slice(*TRACKING_PAYLOAD_KEYS)
       end
 
-      def positive_config_value(key, fallback)
-        value = Rails.application.config.public_send(key).to_i
+      def positive_config_value(value, fallback)
+        value = value.to_i
         value.positive? ? value : fallback
       end
   end
 end
+
+Folio::Ai.reset_configuration!
 
 require_relative "ai/icons"
 require_relative "ai/railtie"

@@ -43,7 +43,7 @@ class Folio::Console::Ai::SiteSettingsComponentTest < Folio::Console::ComponentT
                    },
                  })
 
-    with_config(folio_ai_enabled: true) do
+    with_ai_config(enabled: true) do
       vc_test_controller.view_context.simple_form_for(site, url: "/") do |form|
         render_inline(Folio::Console::Ai::SiteSettingsComponent.new(form:))
       end
@@ -59,7 +59,7 @@ class Folio::Console::Ai::SiteSettingsComponentTest < Folio::Console::ComponentT
   def test_does_not_render_when_ai_is_disabled
     site = build(:folio_site)
 
-    with_config(folio_ai_enabled: false) do
+    with_ai_config(enabled: false) do
       vc_test_controller.view_context.simple_form_for(site, url: "/") do |form|
         render_inline(Folio::Console::Ai::SiteSettingsComponent.new(form:))
       end

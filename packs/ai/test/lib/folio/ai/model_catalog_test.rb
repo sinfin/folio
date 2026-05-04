@@ -22,7 +22,7 @@ class Folio::Ai::ModelCatalogTest < ActiveSupport::TestCase
 
     catalog = Folio::Ai::ModelCatalog.new(provider: :openai, api_key: "secret")
 
-    with_config(folio_ai_provider_model_options: {
+    with_ai_config(provider_model_options: {
       openai: {
         "gpt-5.5" => { label: "GPT 5.5", cost_tier: "premium" },
       },
@@ -45,7 +45,7 @@ class Folio::Ai::ModelCatalogTest < ActiveSupport::TestCase
 
     catalog = Folio::Ai::ModelCatalog.new(provider: :openai, api_key: "secret")
 
-    with_config(folio_ai_provider_model_options: {
+    with_ai_config(provider_model_options: {
       openai: {
         "gpt-5.5" => { label: "GPT 5.5", cost_tier: "premium" },
       },

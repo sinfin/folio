@@ -31,7 +31,7 @@ class Folio::Ai::ProviderConfig
 
     def resolve_provider_model
       site_provider = normalize_provider(ai_settings["default_provider"].presence ||
-                                         Rails.application.config.folio_ai_default_provider)
+                                         Folio::Ai.default_provider)
       site_model = ai_settings["default_model"].presence || default_model_for(site_provider)
 
       integration_provider_override = integration_settings["default_provider"].presence

@@ -19,7 +19,7 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
     Folio::Current.site = site
     Folio::Current.user = user
 
-    html = with_config(folio_ai_enabled: true) do
+    html = with_ai_config(enabled: true) do
       simple_form_for(record, url: "/") do |f|
         concat(folio_ai_form_context(integration_key: :articles,
                                      endpoint: "/ai",
@@ -47,7 +47,7 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
     site.update!(ai_settings: enabled_ai_settings(prompt: ""))
     Folio::Current.site = site
 
-    html = with_config(folio_ai_enabled: true) do
+    html = with_ai_config(enabled: true) do
       simple_form_for(record, url: "/") do |f|
         concat(folio_ai_form_context(integration_key: :articles,
                                      endpoint: "/ai",
@@ -69,7 +69,7 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
     site.update!(ai_settings: enabled_ai_settings)
     Folio::Current.site = site
 
-    html = with_config(folio_ai_enabled: true) do
+    html = with_ai_config(enabled: true) do
       simple_form_for(record, url: "/") do |f|
         concat(folio_ai_form_context(integration_key: :articles,
                                      endpoint: "/ai",

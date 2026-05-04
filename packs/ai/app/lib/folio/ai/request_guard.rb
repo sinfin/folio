@@ -40,6 +40,6 @@ class Folio::Ai::RequestGuard
     end
 
     def max_prompt_chars
-      Rails.application.config.folio_ai_max_prompt_chars
+      Folio::Ai.max_prompt_chars
     end
 end

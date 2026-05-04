@@ -83,7 +83,7 @@ class Folio::Console::Ai::SuggestionsControllerBaseTest < ActionController::Test
   end
 
   test "returns normalized suggestions" do
-    with_config(folio_ai_enabled: true) do
+    with_ai_config(enabled: true) do
       post :create, params: request_params
     end
 
@@ -96,7 +96,7 @@ class Folio::Console::Ai::SuggestionsControllerBaseTest < ActionController::Test
   end
 
   test "rejects globally disabled feature" do
-    with_config(folio_ai_enabled: false) do
+    with_ai_config(enabled: false) do
       post :create, params: request_params
     end
 
@@ -109,7 +109,7 @@ class Folio::Console::Ai::SuggestionsControllerBaseTest < ActionController::Test
   test "returns prompt_missing when field has no prompt" do
     @site.update!(ai_settings: enabled_ai_settings(prompt: ""))
 
-    with_config(folio_ai_enabled: true) do
+    with_ai_config(enabled: true) do
       post :create, params: request_params
     end
 
@@ -122,7 +122,7 @@ class Folio::Console::Ai::SuggestionsControllerBaseTest < ActionController::Test
   test "returns gateway timeout when provider times out" do
     @controller.provider_adapter = RaisingProviderAdapter.new(Folio::Ai::ProviderTimeoutError.new("timeout"))
 
-    with_config(folio_ai_enabled: true) do
+    with_ai_config(enabled: true) do
       post :create, params: request_params
     end
 

@@ -4,7 +4,7 @@ require "test_helper"
 
 class Folio::Ai::RequestGuardTest < ActiveSupport::TestCase
   test "allows prompt under configured cost limit" do
-    with_config(folio_ai_max_prompt_chars: 10) do
+    with_ai_config(max_prompt_chars: 10) do
       assert_nothing_raised do
         guard(prompt: "short").check!
       end
@@ -12,7 +12,7 @@ class Folio::Ai::RequestGuardTest < ActiveSupport::TestCase
   end
 
   test "rejects prompt over configured cost limit" do
-    with_config(folio_ai_max_prompt_chars: 3) do
+    with_ai_config(max_prompt_chars: 3) do
       assert_raises(Folio::Ai::CostLimitExceededError) do
         guard(prompt: "too long").check!
       end

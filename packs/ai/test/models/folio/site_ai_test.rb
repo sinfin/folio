@@ -50,7 +50,7 @@ module Folio
       Folio::Ai.register_integration(:articles, fields: %i[title])
       site = build(:folio_site)
 
-      with_config(folio_ai_enabled: true) do
+      with_ai_config(enabled: true) do
         assert_includes site.console_form_tabs, :ai_prompts
       end
     ensure
@@ -97,7 +97,7 @@ module Folio
                      },
                    })
 
-      with_config(folio_ai_enabled: true) do
+      with_ai_config(enabled: true) do
         assert_not site.valid?
       end
 
@@ -113,7 +113,7 @@ module Folio
     test "rejects AI settings with invalid structure" do
       site = build(:folio_site, ai_settings: "invalid")
 
-      with_config(folio_ai_enabled: true) do
+      with_ai_config(enabled: true) do
         assert_not site.valid?
       end
       assert_includes site.errors.details[:ai_settings].map { |error| error[:error] },

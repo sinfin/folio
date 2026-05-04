@@ -92,7 +92,7 @@ class Folio::Console::Ai::SiteSettingsComponent < Folio::Console::ApplicationCom
 
     def default_provider
       (site_setting("default_provider").presence ||
-        Rails.application.config.folio_ai_default_provider).to_s
+        Folio::Ai.default_provider).to_s
     end
 
     def default_model

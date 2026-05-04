@@ -20,7 +20,7 @@ class Folio::Console::Dummy::Blog::ArticleAiSuggestionsControllerTest < Folio::C
   end
 
   test "returns demo suggestions through the reusable endpoint contract" do
-    with_config(folio_ai_enabled: true) do
+    with_ai_config(enabled: true) do
       post console_dummy_blog_article_ai_suggestions_path(@article),
            params: request_params(field_key: :title),
            as: :json
@@ -37,7 +37,7 @@ class Folio::Console::Dummy::Blog::ArticleAiSuggestionsControllerTest < Folio::C
   end
 
   test "persists editor instructions when regenerate asks for persistence" do
-    with_config(folio_ai_enabled: true) do
+    with_ai_config(enabled: true) do
       post console_dummy_blog_article_ai_suggestions_path(@article),
            params: request_params(field_key: :perex,
                                   instructions: "Use a calmer voice.",
@@ -57,7 +57,7 @@ class Folio::Console::Dummy::Blog::ArticleAiSuggestionsControllerTest < Folio::C
   test "returns prompt_missing when the site prompt is blank" do
     @site.update!(ai_settings: enabled_ai_settings(prompt: ""))
 
-    with_config(folio_ai_enabled: true) do
+    with_ai_config(enabled: true) do
       post console_dummy_blog_article_ai_suggestions_path(@article),
            params: request_params(field_key: :title),
            as: :json
@@ -72,7 +72,7 @@ class Folio::Console::Dummy::Blog::ArticleAiSuggestionsControllerTest < Folio::C
   test "returns host_ineligible when the dummy article has no source text" do
     @article.update_columns(title: "", perex: "")
 
-    with_config(folio_ai_enabled: true) do
+    with_ai_config(enabled: true) do
       post console_dummy_blog_article_ai_suggestions_path(@article),
            params: request_params(field_key: :title),
            as: :json

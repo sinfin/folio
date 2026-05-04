@@ -119,7 +119,7 @@ class Folio::Ai::SuggestionGeneratorTest < ActiveSupport::TestCase
     end
 
     result = with_ai_enabled do
-      with_config(folio_ai_model_fallback_enabled: true) do
+      with_ai_config(model_fallback_enabled: true) do
         Folio::Ai.stub(:provider_adapter, provider_factory) do
           generator.call
         end
@@ -160,7 +160,7 @@ class Folio::Ai::SuggestionGeneratorTest < ActiveSupport::TestCase
     adapter = FakeProviderAdapter.new
 
     result = with_ai_enabled do
-      with_config(folio_ai_max_prompt_chars: 5) do
+      with_ai_config(max_prompt_chars: 5) do
         generator(provider_adapter: adapter,
                   context: { body: "Long context" }).call
       end
@@ -197,7 +197,7 @@ class Folio::Ai::SuggestionGeneratorTest < ActiveSupport::TestCase
 
   private
     def with_ai_enabled(&)
-      with_config(folio_ai_enabled: true, &)
+      with_ai_config(enabled: true, &)
     end
 
     def generator(**options)

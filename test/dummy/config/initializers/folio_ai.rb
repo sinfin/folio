@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 if Rails.env.development?
-  Rails.application.config.folio_ai_enabled = true
+  Folio::Ai.configure do |config|
+    config.enabled = true
+  end
 
   Rails.application.config.after_initialize do
     Folio::Ai.register_integration(:dummy_blog_articles,

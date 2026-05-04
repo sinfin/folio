@@ -65,6 +65,6 @@ class Folio::Ai::RateLimiter
     end
 
     def rate_limit
-      Rails.application.config.folio_ai_rate_limit
+      Folio::Ai.rate_limit
     end
 end

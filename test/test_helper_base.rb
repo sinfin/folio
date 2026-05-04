@@ -101,6 +101,21 @@ class ActiveSupport::TestCase
     end
   end
 
+  def with_ai_config(**config_overrides)
+    original_values = {}
+
+    config_overrides.each do |key, value|
+      original_values[key] = Folio::Ai.public_send(key)
+      Folio::Ai.public_send("#{key}=", value)
+    end
+
+    yield
+  ensure
+    original_values.each do |key, value|
+      Folio::Ai.public_send("#{key}=", value)
+    end
+  end
+
   def reset_folio_current(site_user_link)
     ::Folio::Current.reset
     ::Folio::Current.nillify_site_records

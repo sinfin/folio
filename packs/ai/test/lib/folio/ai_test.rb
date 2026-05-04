@@ -9,7 +9,7 @@ class Folio::AiTest < ActiveSupport::TestCase
   end
 
   test "normalizes provider model config keys" do
-    with_config(folio_ai_provider_models: {
+    with_ai_config(provider_models: {
       "openai" => "string-key-model",
     }) do
       assert Folio::Ai.known_provider?(:openai)
@@ -17,8 +17,18 @@ class Folio::AiTest < ActiveSupport::TestCase
     end
   end
 
+  test "configures pack-owned options" do
+    with_ai_config(enabled: false) do
+      Folio::Ai.configure do |config|
+        config.enabled = true
+      end
+
+      assert_predicate Folio::Ai, :enabled?
+    end
+  end
+
   test "is disabled by default" do
-    with_config(folio_ai_enabled: false) do
+    with_ai_config(enabled: false) do
       assert_not Folio::Ai.enabled?
     end
   end
@@ -27,7 +37,7 @@ class Folio::AiTest < ActiveSupport::TestCase
     original_value = ENV["FOLIO_AI_DISABLED"]
     ENV["FOLIO_AI_DISABLED"] = "1"
 
-    with_config(folio_ai_enabled: true) do
+    with_ai_config(enabled: true) do
       assert_not Folio::Ai.enabled?
     end
   ensure
@@ -35,7 +45,7 @@ class Folio::AiTest < ActiveSupport::TestCase
   end
 
   test "builds provider adapter with explicit API key" do
-    adapter = with_config(folio_ai_provider_request_timeout: 12) do
+    adapter = with_ai_config(provider_request_timeout: 12) do
       Folio::Ai.provider_adapter(provider: :openai, api_key: "secret")
     end
 
