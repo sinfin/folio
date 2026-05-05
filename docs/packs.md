@@ -7,13 +7,24 @@ tests and optional railtie.
 Packwerk is used as the static boundary check. Run it from the Folio root:
 
 ```bash
-rake app:packwerk:validate
-rake app:packwerk:check
+bundle exec rake app:packwerk:validate
+bundle exec rake app:packwerk:check
 ```
 
 The commands execute Packwerk from `test/dummy`, because Packwerk needs a Rails
 application context. `test/dummy/packwerk.yml` includes the Folio engine root and
 `packs/*`.
+
+## Packwerk Commands
+
+Use `app:packwerk:validate` to verify Packwerk configuration and package
+manifests. This checks that `packwerk.yml`, `package.yml` files, package paths
+and the application structure are valid enough for Packwerk to run. It does not
+check source code for dependency violations.
+
+Use `app:packwerk:check` to enforce package boundaries in source code. This runs
+the dependency check against included Ruby files and fails on unlisted
+violations, stale todo entries or strict-mode violations.
 
 ## Runtime Loading
 

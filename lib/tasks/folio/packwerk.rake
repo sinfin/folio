@@ -26,9 +26,4 @@ namespace :packwerk do
   task :validate do
     run_packwerk_command("validate")
   end
-
-  desc "Run packwerk update-todo (updates violation list)"
-  task :update_todo do
-    run_packwerk_command("update-todo")
-  end
 end
