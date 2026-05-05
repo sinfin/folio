@@ -9,6 +9,8 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- **friendly_id**: `strip_and_downcase_slug` now only normalizes the slug on new records or when the slug column was explicitly changed. Legacy records with mixed-case slugs are no longer silently downcased on every save, which previously broke `friendly_id` lookups (case-sensitive) on cached client-side URLs after the first save.
+
 ## [7.6.4] - 2026-04-28
 
 ### Added
