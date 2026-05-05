@@ -9,6 +9,8 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- refresh CSRF headers before JS API requests
+
 ## [7.6.4] - 2026-04-28
 
 ### Added
