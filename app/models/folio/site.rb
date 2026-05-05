@@ -316,6 +316,7 @@ end
 #  address_secondary                 :text
 #  subtitle_languages                :jsonb
 #  subtitle_auto_generation_enabled  :boolean          default(FALSE)
+#  ai_settings                       :jsonb            not null
 #
 # Indexes
 #

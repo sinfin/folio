@@ -594,7 +594,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_23_214909) do
     t.jsonb "subtitle_languages", default: ["cs"]
     t.boolean "subtitle_auto_generation_enabled", default: false
     t.jsonb "ai_settings", default: {}, null: false
-    t.index ["ai_settings"], name: "index_folio_sites_on_ai_settings", using: :gin
     t.index ["domain"], name: "index_folio_sites_on_domain"
     t.index ["position"], name: "index_folio_sites_on_position"
     t.index ["slug"], name: "index_folio_sites_on_slug"
