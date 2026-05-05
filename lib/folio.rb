@@ -81,6 +81,21 @@ module Folio
     enabled_packs.include?(name.to_sym)
   end
 
+  def self.enabled_pack_assets(type)
+    enabled_packs.flat_map { |pack_name| pack_assets(pack_name, type) }
+  end
+
+  def self.pack_assets(pack_name, type)
+    pack_module = pack_module(pack_name)
+    return [] unless pack_module&.respond_to?(:pack_assets)
+
+    Array(pack_module.pack_assets[type.to_sym]).map(&:to_s)
+  end
+
+  def self.pack_module(pack_name)
+    "Folio::#{pack_name.to_s.camelize}".safe_constantize
+  end
+
   def self.load_enabled_packs!
     enabled_packs.each do |pack_name|
       pack_path = File.expand_path("../packs/#{pack_name}/lib/folio/#{pack_name}", __dir__)

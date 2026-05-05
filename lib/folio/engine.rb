@@ -247,7 +247,8 @@ module Folio
         folio/console/base.js
         folio/console/react/main.js
         folio/console/react/main.css
-      ]
+      ] + Folio.enabled_pack_assets(:javascripts) +
+        Folio.enabled_pack_assets(:stylesheets)
     end
 
     initializer :append_migrations do |app|

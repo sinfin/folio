@@ -7,6 +7,10 @@ module Folio::Ai
     openai: DEFAULT_OPENAI_MODEL,
     anthropic: DEFAULT_ANTHROPIC_MODEL,
   }.freeze
+  PACK_ASSETS = {
+    javascripts: %w[folio_pack_ai],
+    stylesheets: %w[folio_pack_ai],
+  }.freeze
 
   Error = Class.new(StandardError)
   UnknownProviderError = Class.new(Error)
@@ -77,6 +81,10 @@ module Folio::Ai
 
     def register_integration(...)
       registry.register_integration(...)
+    end
+
+    def pack_assets
+      PACK_ASSETS
     end
 
     def enabled?
