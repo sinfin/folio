@@ -22,6 +22,13 @@ class Folio::Test < ActiveSupport::TestCase
     end
   end
 
+  test "enabled pack assets are precompiled with asset type extensions" do
+    precompiled_assets = Rails.application.precompiled_assets(true)
+
+    assert_includes precompiled_assets, "folio_pack_ai.js"
+    assert_includes precompiled_assets, "folio_pack_ai.css"
+  end
+
   test "disabled pack assets return no logical asset names" do
     with_enabled_packs do
       assert_empty Folio.enabled_pack_assets(:javascripts)

@@ -247,6 +247,9 @@ module Folio
     end
 
     initializer :append_folio_assets_paths do |app|
+      pack_assets = folio_pack_precompile_assets(:javascripts) +
+                    folio_pack_precompile_assets(:stylesheets)
+
       app.config.assets.paths << self.root.join("app/cells")
       app.config.assets.paths << self.root.join("app/components")
       app.config.assets.paths << self.root.join("node_modules")
@@ -258,8 +261,7 @@ module Folio
         folio/console/base.js
         folio/console/react/main.js
         folio/console/react/main.css
-      ] + Folio.enabled_pack_assets(:javascripts) +
-        Folio.enabled_pack_assets(:stylesheets)
+      ] + pack_assets
     end
 
     initializer :append_migrations do |app|
@@ -371,6 +373,18 @@ module Folio
 
     def folio_all_pack_roots
       Dir[root.join("packs", "*")].map { |path| Pathname.new(path) }
+    end
+
+    def folio_pack_precompile_assets(type)
+      extension = {
+        javascripts: "js",
+        stylesheets: "css",
+      }.fetch(type)
+
+      Folio.enabled_pack_assets(type).map do |asset|
+        asset = asset.to_s
+        asset.end_with?(".#{extension}") ? asset : "#{asset}.#{extension}"
+      end
     end
 
     def folio_pack_autoload_subdirs
