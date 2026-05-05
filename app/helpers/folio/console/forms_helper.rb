@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 module Folio::Console::FormsHelper
+  def folio_ai_form_context(**_options, &block)
+    capture(&block) if block
+  end
+
   def publishable_inputs(f, additional_fields = nil, atom_setting: true)
     cell("folio/console/publishable_inputs",
          f,

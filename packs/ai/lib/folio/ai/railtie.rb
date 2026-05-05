@@ -14,8 +14,8 @@ module Folio
           Folio::Console::SitesController.prepend(Folio::Ai::SitesControllerConcern)
         end
 
-        unless Folio::Console::FormsHelper < Folio::Ai::FormsHelper
-          Folio::Console::FormsHelper.include(Folio::Ai::FormsHelper)
+        unless Folio::Console::FormsHelper < Folio::Ai::FormsHelperExtension
+          Folio::Console::FormsHelper.prepend(Folio::Ai::FormsHelperExtension)
         end
       end
     end

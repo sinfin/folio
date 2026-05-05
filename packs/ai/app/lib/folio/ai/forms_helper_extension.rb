@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Folio::Ai::FormsHelper
+module Folio::Ai::FormsHelperExtension
   def folio_ai_form_context(integration_key:,
                             endpoint:,
                             record: nil,
