@@ -98,7 +98,7 @@ Folio generators support `--pack=<name>` for files that belong to `app/` or
 `test/`:
 
 ```bash
-rails generate folio:component /folio/console/ai/panel --pack=ai
+rails generate folio:component /folio/ai/console/panel --pack=ai
 rails generate folio:console:scaffold folio/ai/report --pack=ai
 ```
 

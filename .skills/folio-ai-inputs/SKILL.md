@@ -75,11 +75,11 @@ file before changing code.
    include the current successful form control values; host context builders can
    read the sanitized flat hash with `folio_ai_current_form_snapshot`.
 6. For custom inputs, composite components, rich-text wrappers, or unusual
-   placement, render `Folio::Console::Ai::TextSuggestionsComponent` manually and
+   placement, render `Folio::Ai::Console::TextSuggestionsComponent` manually and
    pass `target_selector`, `integration_key`, `field_key`, `endpoint`,
    instructions, character limit, and `current_state_policy`.
 7. Implement a thin authenticated endpoint that includes
-   `Folio::Console::Ai::SuggestionsControllerBase`. Override only record lookup,
+   `Folio::Ai::Console::SuggestionsControllerBase`. Override only record lookup,
    authorization, `folio_ai_context`, and `folio_ai_host_eligible?`.
    `folio_ai_host_eligible?` runs before the context builder, so keep expensive
    serialization in `folio_ai_context`.

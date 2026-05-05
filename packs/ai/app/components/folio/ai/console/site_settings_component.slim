@@ -1,5 +1,5 @@
-.f-c-ai-site-settings
-  .f-c-ai-site-settings__intro.alert.alert-info
+.f-ai-c-site-settings
+  .f-ai-c-site-settings__intro.alert.alert-info
     = t(".intro")
 
   .form-check.form-switch.mb-g
@@ -36,12 +36,12 @@
                      id: field_id(:default_model),
                      class: "form-select"
         - if default_model_notice
-          small.f-c-ai-site-settings__model-notice = default_model_notice
+          small.f-ai-c-site-settings__model-notice = default_model_notice
 
   - integrations.each do |integration|
-    .f-c-ai-site-settings__integration.card.mb-g
+    .f-ai-c-site-settings__integration.card.mb-g
       .card-header
-        .f-c-ai-site-settings__integration-title = integration.label
+        .f-ai-c-site-settings__integration-title = integration.label
 
       .card-body
         .row
@@ -68,11 +68,11 @@
                            id: field_id(:integrations, integration.key, :default_model),
                            class: "form-select"
               - if integration_model_notice(integration)
-                small.f-c-ai-site-settings__model-notice = integration_model_notice(integration)
+                small.f-ai-c-site-settings__model-notice = integration_model_notice(integration)
 
         - integration.fields.values.each do |field|
-          .f-c-ai-site-settings__field
-            .f-c-ai-site-settings__field-header
+          .f-ai-c-site-settings__field
+            .f-ai-c-site-settings__field-header
               .form-check.form-switch
                 = hidden_field_tag field_name(:integrations, integration.key, :fields, field.key, :enabled), "0"
                 = check_box_tag field_name(:integrations, integration.key, :fields, field.key, :enabled),
@@ -85,7 +85,7 @@
                             class: "form-check-label"
 
               - if field_hint(field)
-                small.f-c-ai-site-settings__field-hint = field_hint(field)
+                small.f-ai-c-site-settings__field-hint = field_hint(field)
 
             .form-group
               = label_tag field_id(:integrations, integration.key, :fields, field.key, :prompt),
@@ -121,4 +121,4 @@
                                id: field_id(:integrations, integration.key, :fields, field.key, :model),
                                class: "form-select"
                   - if field_model_notice(integration, field)
-                    small.f-c-ai-site-settings__model-notice = field_model_notice(integration, field)
+                    small.f-ai-c-site-settings__model-notice = field_model_notice(integration, field)

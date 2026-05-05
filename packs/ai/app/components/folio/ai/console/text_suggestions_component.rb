@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-class Folio::Console::Ai::TextSuggestionsComponent < Folio::Console::ApplicationComponent
+class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::ApplicationComponent
+  BEM_CLASS_NAME = "f-ai-c-text-suggestions"
+
   def initialize(integration_key:,
                  field_key:,
                  endpoint:,
@@ -44,8 +46,12 @@ class Folio::Console::Ai::TextSuggestionsComponent < Folio::Console::Application
   end
 
   private
+    def original_bem_class_name
+      BEM_CLASS_NAME
+    end
+
     def data
-      stimulus_controller("f-c-ai-text-suggestions",
+      stimulus_controller("f-ai-c-text-suggestions",
                           values: stimulus_values,
                           action: stimulus_actions,
                           classes: %w[open loading])

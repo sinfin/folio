@@ -4,7 +4,8 @@ en:
     console:
       tabs:
         ai_prompts: AI prompts
-      ai:
+    ai:
+      console:
         text_suggestions_component:
           button_label: AI suggestions
           undo_label: Undo

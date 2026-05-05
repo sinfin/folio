@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class Folio::Console::Ai::SiteSettingsComponentTest < Folio::Console::ComponentTest
+class Folio::Ai::Console::SiteSettingsComponentTest < Folio::Console::ComponentTest
   setup do
     @original_rails_cache = Rails.cache
     Rails.cache = ActiveSupport::Cache::MemoryStore.new
@@ -45,11 +45,11 @@ class Folio::Console::Ai::SiteSettingsComponentTest < Folio::Console::ComponentT
 
     with_ai_config(enabled: true) do
       vc_test_controller.view_context.simple_form_for(site, url: "/") do |form|
-        render_inline(Folio::Console::Ai::SiteSettingsComponent.new(form:))
+        render_inline(Folio::Ai::Console::SiteSettingsComponent.new(form:))
       end
     end
 
-    assert_selector(".f-c-ai-site-settings")
+    assert_selector(".f-ai-c-site-settings")
     assert_selector("input[name$='[ai_settings][enabled]'][value='1']", visible: :all)
     assert_selector("select[name$='[ai_settings][default_model]']")
     assert_selector("textarea[name$='[fields][title][prompt]']", text: "Write a title.")
@@ -61,10 +61,10 @@ class Folio::Console::Ai::SiteSettingsComponentTest < Folio::Console::ComponentT
 
     with_ai_config(enabled: false) do
       vc_test_controller.view_context.simple_form_for(site, url: "/") do |form|
-        render_inline(Folio::Console::Ai::SiteSettingsComponent.new(form:))
+        render_inline(Folio::Ai::Console::SiteSettingsComponent.new(form:))
       end
     end
 
-    assert_no_selector(".f-c-ai-site-settings")
+    assert_no_selector(".f-ai-c-site-settings")
   end
 end

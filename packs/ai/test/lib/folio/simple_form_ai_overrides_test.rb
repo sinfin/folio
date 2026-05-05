@@ -32,11 +32,11 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
     page = Capybara.string(html)
 
     assert page.has_css?(".form-group--with-ai-text-suggestions")
-    assert page.has_css?(".form-group__input-controls .f-c-ai-text-suggestions--external-actions")
-    assert page.has_css?(".form-group__custom-html .f-c-ai-text-suggestions--external-controls")
-    assert page.has_css?(".form-group__input-controls .f-c-ai-text-suggestions__spark svg")
-    assert page.has_css?(".form-group__input-controls .f-c-ai-text-suggestions__undo-icon svg", visible: :all)
-    assert page.has_css?("[data-f-c-ai-text-suggestions-target-selector-value='#page_title']")
+    assert page.has_css?(".form-group__input-controls .f-ai-c-text-suggestions--external-actions")
+    assert page.has_css?(".form-group__custom-html .f-ai-c-text-suggestions--external-controls")
+    assert page.has_css?(".form-group__input-controls .f-ai-c-text-suggestions__spark svg")
+    assert page.has_css?(".form-group__input-controls .f-ai-c-text-suggestions__undo-icon svg", visible: :all)
+    assert page.has_css?("[data-f-ai-c-text-suggestions-target-selector-value='#page_title']")
     assert page.has_css?("[data-controller='f-click-trigger']")
   end
 
@@ -59,7 +59,7 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
 
     page = Capybara.string(html)
 
-    assert_not page.has_css?(".f-c-ai-text-suggestions")
+    assert_not page.has_css?(".f-ai-c-text-suggestions")
   end
 
   test "does not auto-attach AI suggestions to a new record" do
@@ -81,7 +81,7 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
 
     page = Capybara.string(html)
 
-    assert_not page.has_css?(".f-c-ai-text-suggestions")
+    assert_not page.has_css?(".f-ai-c-text-suggestions")
   end
 
   test "auto-attaches AI suggestions to a new record with current form snapshot policy" do
@@ -104,8 +104,8 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
 
     page = Capybara.string(html)
 
-    assert page.has_css?(".f-c-ai-text-suggestions")
-    assert page.has_css?("[data-f-c-ai-text-suggestions-current-state-policy-value='current_form_snapshot']")
+    assert page.has_css?(".f-ai-c-text-suggestions")
+    assert page.has_css?("[data-f-ai-c-text-suggestions-current-state-policy-value='current_form_snapshot']")
   end
 
   private

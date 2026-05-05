@@ -22,7 +22,7 @@ Implemented in the Folio `:ai` pack:
 - Console site settings tab for registered promptable fields.
 - Auto-attachment for supported standard SimpleForm `string` and `text` inputs
   inside an explicit AI form context.
-- Public `Folio::Console::Ai::TextSuggestionsComponent` for manual custom-field
+- Public `Folio::Ai::Console::TextSuggestionsComponent` for manual custom-field
   wiring.
 - Shared Stimulus state machine for loading, error, suggestions, accept, copy,
   ghost undo, close, and regenerate/save-instructions.
@@ -201,7 +201,7 @@ for one or more editor inputs.
    inputs that should receive AI controls automatically inside an explicit form
    context. Custom inputs and aggregate workflows should use manual wiring.
 7. Add a host-app endpoint that includes
-   `Folio::Console::Ai::SuggestionsControllerBase`. The controller stays thin:
+   `Folio::Ai::Console::SuggestionsControllerBase`. The controller stays thin:
    load and authorize the record, return context, and provide record-specific
    eligibility.
 8. Build context with reusable plain-text helpers where possible. For TipTap
@@ -209,7 +209,7 @@ for one or more editor inputs.
    raw editor JSON into prompts unless the host app has a reviewed mapper.
 9. Wrap the concrete form section in `folio_ai_form_context` to enable
    auto-attachment for registered standard fields.
-10. Render `Folio::Console::Ai::TextSuggestionsComponent` manually for custom
+10. Render `Folio::Ai::Console::TextSuggestionsComponent` manually for custom
     inputs, rich-text wrappers, unusual placement, or app-owned aggregate
     workflows.
 11. Enable AI and fill default prompts per site and field in Console site
@@ -243,7 +243,7 @@ register immediately when `window.Folio.Stimulus.register` and
 When the `:ai` pack is enabled, `Folio::Ai.enabled?` is true, and at least one
 AI integration is registered, the AI pack prepends
 `Folio::Site#console_form_tabs` and adds the `ai_prompts` tab. The tab renders
-`Folio::Console::Ai::SiteSettingsComponent` and stores values in
+`Folio::Ai::Console::SiteSettingsComponent` and stores values in
 `folio_sites.ai_settings`.
 
 Field availability remains conservative:
@@ -296,7 +296,7 @@ Custom ViewComponents, custom SimpleForm inputs, rich-text editors, and unusual
 placements should render the same component manually:
 
 ```ruby
-render Folio::Console::Ai::TextSuggestionsComponent.new(
+render Folio::Ai::Console::TextSuggestionsComponent.new(
   integration_key: :content_editor,
   field_key: :social_text,
   endpoint: console_article_ai_suggestions_path(@article),
@@ -316,13 +316,13 @@ gates before rendering the component.
 
 ### Host-App Endpoint
 
-Folio provides `Folio::Console::Ai::SuggestionsControllerBase`. A host app
+Folio provides `Folio::Ai::Console::SuggestionsControllerBase`. A host app
 should include it in a thin authenticated controller and override only the
 resource-specific methods:
 
 ```ruby
 class Console::Articles::AiSuggestionsController < Folio::Console::Api::BaseController
-  include Folio::Console::Ai::SuggestionsControllerBase
+  include Folio::Ai::Console::SuggestionsControllerBase
 
   private
     def folio_ai_host_eligible?

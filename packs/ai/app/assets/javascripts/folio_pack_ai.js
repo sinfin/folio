@@ -1,1 +1,1 @@
-//= require folio/console/ai/text_suggestions_component
+//= require folio/ai/console/text_suggestions_component

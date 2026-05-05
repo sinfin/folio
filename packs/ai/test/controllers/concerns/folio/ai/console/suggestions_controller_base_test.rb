@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class Folio::Console::Ai::SuggestionsControllerBaseTest < ActionController::TestCase
+class Folio::Ai::Console::SuggestionsControllerBaseTest < ActionController::TestCase
   class FakeProviderAdapter
     attr_reader :calls
 
@@ -36,7 +36,7 @@ class Folio::Console::Ai::SuggestionsControllerBaseTest < ActionController::Test
   end
 
   class TestController < ActionController::Base
-    include Folio::Console::Ai::SuggestionsControllerBase
+    include Folio::Ai::Console::SuggestionsControllerBase
 
     attr_accessor :site,
                   :user,

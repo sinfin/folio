@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-class Folio::Console::Ai::SiteSettingsComponent < Folio::Console::ApplicationComponent
+class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationComponent
+  BEM_CLASS_NAME = "f-ai-c-site-settings"
+
   def initialize(form:)
     @form = form
     @site = form.object
@@ -11,6 +13,10 @@ class Folio::Console::Ai::SiteSettingsComponent < Folio::Console::ApplicationCom
   end
 
   private
+    def original_bem_class_name
+      BEM_CLASS_NAME
+    end
+
     def integrations
       Folio::Ai.registry.integrations_for_select
     end

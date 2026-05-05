@@ -4,7 +4,8 @@ cs:
     console:
       tabs:
         ai_prompts: AI prompty
-      ai:
+    ai:
+      console:
         text_suggestions_component:
           button_label: AI návrhy
           undo_label: Zpět

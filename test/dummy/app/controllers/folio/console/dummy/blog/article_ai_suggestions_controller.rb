@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Console::Dummy::Blog::ArticleAiSuggestionsController < Folio::Console::Api::BaseController
-  include Folio::Console::Ai::SuggestionsControllerBase
+  include Folio::Ai::Console::SuggestionsControllerBase
 
   before_action :set_article
 

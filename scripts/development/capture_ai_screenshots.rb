@@ -227,41 +227,41 @@ class FolioAiScreenshotCapture
 
     def capture_article_states
       visit "/console/dummy/blog/articles/#{@article.id}/edit"
-      assert_selector(".f-c-ai-text-suggestions__button", minimum: 1)
+      assert_selector(".f-ai-c-text-suggestions__button", minimum: 1)
 
       save("01-article-default")
 
       install_pending_ai_api
-      first(".f-c-ai-text-suggestions__button").click
-      assert_selector(".f-c-ai-text-suggestions__suggestion--loading", count: 3, visible: :all)
+      first(".f-ai-c-text-suggestions__button").click
+      assert_selector(".f-ai-c-text-suggestions__suggestion--loading", count: 3, visible: :all)
       save("02-panel-loading")
 
       resolve_ai_success
-      assert_selector(".f-c-ai-text-suggestions__suggestion", count: 3, visible: :all)
+      assert_selector(".f-ai-c-text-suggestions__suggestion", count: 3, visible: :all)
       save("03-panel-variants")
 
-      first(".f-c-ai-text-suggestions__suggestion").click
-      assert_selector(".f-c-ai-text-suggestions__suggestion--selected", count: 1)
-      assert_selector(".f-c-ai-text-suggestions__undo", visible: true)
+      first(".f-ai-c-text-suggestions__suggestion").click
+      assert_selector(".f-ai-c-text-suggestions__suggestion--selected", count: 1)
+      assert_selector(".f-ai-c-text-suggestions__undo", visible: true)
       save("04-variant-accepted")
 
-      first(".f-c-ai-text-suggestions__undo").click
-      assert_no_selector(".f-c-ai-text-suggestions__suggestion--selected")
+      first(".f-ai-c-text-suggestions__undo").click
+      assert_no_selector(".f-ai-c-text-suggestions__suggestion--selected")
       save("05-ghost-undo")
 
-      first(".f-c-ai-text-suggestions__close").click
-      assert_no_selector(".f-c-ai-text-suggestions__panel", visible: true)
+      first(".f-ai-c-text-suggestions__close").click
+      assert_no_selector(".f-ai-c-text-suggestions__panel", visible: true)
 
       install_pending_ai_api
-      first(".f-c-ai-text-suggestions__button").click
+      first(".f-ai-c-text-suggestions__button").click
       resolve_ai_error
-      assert_selector(".f-c-ai-text-suggestions__status", text: /tělo článku|obsah/)
+      assert_selector(".f-ai-c-text-suggestions__status", text: /tělo článku|obsah/)
       save("06-panel-error-missing-context")
     end
 
     def capture_site_settings
       visit "/console/site/edit?tab=ai_prompts"
-      assert_selector(".f-c-ai-site-settings")
+      assert_selector(".f-ai-c-site-settings")
       save("07-site-settings-ai-prompts")
     end
 

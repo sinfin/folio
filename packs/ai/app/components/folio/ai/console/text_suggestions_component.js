@@ -1,6 +1,6 @@
 (() => {
   const registerTextSuggestionsController = () => {
-    window.Folio.Stimulus.register('f-c-ai-text-suggestions', class extends window.Stimulus.Controller {
+    window.Folio.Stimulus.register('f-ai-c-text-suggestions', class extends window.Stimulus.Controller {
       static targets = [
         'button',
         'undoButton',
@@ -320,20 +320,20 @@
 
       suggestionElement (suggestion) {
         const element = document.createElement('div')
-        element.className = 'f-c-ai-text-suggestions__suggestion'
+        element.className = 'f-ai-c-text-suggestions__suggestion'
         element.setAttribute('role', 'button')
         element.setAttribute('tabindex', '0')
-        element.setAttribute('data-action', 'click->f-c-ai-text-suggestions#accept keydown->f-c-ai-text-suggestions#acceptFromKeyboard')
-        element.setAttribute('data-f-c-ai-text-suggestions-text-param', suggestion.text || '')
-        element.setAttribute('data-f-c-ai-text-suggestions-key-param', suggestion.key || '')
+        element.setAttribute('data-action', 'click->f-ai-c-text-suggestions#accept keydown->f-ai-c-text-suggestions#acceptFromKeyboard')
+        element.setAttribute('data-f-ai-c-text-suggestions-text-param', suggestion.text || '')
+        element.setAttribute('data-f-ai-c-text-suggestions-key-param', suggestion.key || '')
 
         const body = document.createElement('span')
-        body.className = 'f-c-ai-text-suggestions__suggestion-body'
+        body.className = 'f-ai-c-text-suggestions__suggestion-body'
         if (this.showMetaValue) body.appendChild(this.suggestionMetaElement(suggestion))
         body.appendChild(this.suggestionTextElement(suggestion.text || ''))
 
         const actions = document.createElement('span')
-        actions.className = 'f-c-ai-text-suggestions__suggestion-actions'
+        actions.className = 'f-ai-c-text-suggestions__suggestion-actions'
         actions.appendChild(this.actionButton('copy',
           this.copyButtonLabelValue,
           this.copyLabelValue,
@@ -351,7 +351,7 @@
 
       suggestionMetaElement (suggestion) {
         const meta = document.createElement('span')
-        meta.className = 'f-c-ai-text-suggestions__suggestion-meta'
+        meta.className = 'f-ai-c-text-suggestions__suggestion-meta'
 
         const tone = suggestion.meta?.tone_label || suggestion.meta?.toneLabel
         if (tone) meta.appendChild(this.metaItem(tone))
@@ -373,7 +373,7 @@
 
       suggestionTextElement (text) {
         const span = document.createElement('span')
-        span.className = 'f-c-ai-text-suggestions__suggestion-text'
+        span.className = 'f-ai-c-text-suggestions__suggestion-text'
         span.textContent = text
         return span
       }
@@ -381,12 +381,12 @@
       actionButton (action, buttonLabel, label, text) {
         const button = document.createElement('button')
         button.type = 'button'
-        button.className = `f-c-ai-text-suggestions__suggestion-${action}`
+        button.className = `f-ai-c-text-suggestions__suggestion-${action}`
         button.textContent = buttonLabel
         button.setAttribute('aria-label', label)
         button.setAttribute('title', label)
-        button.setAttribute('data-action', `click->f-c-ai-text-suggestions#${action}`)
-        button.setAttribute('data-f-c-ai-text-suggestions-text-param', text)
+        button.setAttribute('data-action', `click->f-ai-c-text-suggestions#${action}`)
+        button.setAttribute('data-f-ai-c-text-suggestions-text-param', text)
         return button
       }
 
@@ -397,7 +397,7 @@
 
         for (let i = 0; i < this.suggestionCountValue; i += 1) {
           const item = document.createElement('div')
-          item.className = 'f-c-ai-text-suggestions__suggestion f-c-ai-text-suggestions__suggestion--loading'
+          item.className = 'f-ai-c-text-suggestions__suggestion f-ai-c-text-suggestions__suggestion--loading'
           item.textContent = this.loadingTextValue
           this.suggestionsTarget.appendChild(item)
         }
@@ -410,7 +410,7 @@
       }
 
       showError (message) {
-        this.panelTarget.classList.add('f-c-ai-text-suggestions__panel--error')
+        this.panelTarget.classList.add('f-ai-c-text-suggestions__panel--error')
         this.statusTarget.hidden = false
         this.statusTarget.textContent = message
       }
@@ -423,13 +423,13 @@
           return
         }
 
-        this.panelTarget.classList.remove('f-c-ai-text-suggestions__panel--error')
+        this.panelTarget.classList.remove('f-ai-c-text-suggestions__panel--error')
         this.statusTarget.hidden = false
         this.statusTarget.textContent = messages.join(' ')
       }
 
       hideStatus () {
-        this.panelTarget.classList.remove('f-c-ai-text-suggestions__panel--error')
+        this.panelTarget.classList.remove('f-ai-c-text-suggestions__panel--error')
         this.statusTarget.hidden = true
         this.statusTarget.textContent = ''
       }
@@ -444,13 +444,13 @@
       markSelected (selectedElement) {
         this.clearSelection()
 
-        const suggestion = selectedElement.closest('.f-c-ai-text-suggestions__suggestion') || selectedElement
-        suggestion.classList.add('f-c-ai-text-suggestions__suggestion--selected')
+        const suggestion = selectedElement.closest('.f-ai-c-text-suggestions__suggestion') || selectedElement
+        suggestion.classList.add('f-ai-c-text-suggestions__suggestion--selected')
       }
 
       clearSelection () {
-        this.suggestionsTarget.querySelectorAll('.f-c-ai-text-suggestions__suggestion--selected').forEach((element) => {
-          element.classList.remove('f-c-ai-text-suggestions__suggestion--selected')
+        this.suggestionsTarget.querySelectorAll('.f-ai-c-text-suggestions__suggestion--selected').forEach((element) => {
+          element.classList.remove('f-ai-c-text-suggestions__suggestion--selected')
         })
       }
 

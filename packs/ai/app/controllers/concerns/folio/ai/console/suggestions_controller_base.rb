@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Folio::Console::Ai::SuggestionsControllerBase
+module Folio::Ai::Console::SuggestionsControllerBase
   extend ActiveSupport::Concern
 
   CURRENT_FORM_SNAPSHOT_FIELD_LIMIT = 200
@@ -70,8 +70,8 @@ module Folio::Console::Ai::SuggestionsControllerBase
     end
 
     def folio_ai_error_message(error_code)
-      I18n.t("folio.console.ai.errors.#{error_code}",
-             default: I18n.t("folio.console.ai.errors.provider_error"))
+      I18n.t("folio.ai.console.errors.#{error_code}",
+             default: I18n.t("folio.ai.console.errors.provider_error"))
     end
 
     def folio_ai_status_for(error_code)
@@ -139,7 +139,7 @@ module Folio::Console::Ai::SuggestionsControllerBase
     end
 
     def folio_ai_warning_message(warning)
-      I18n.t("folio.console.ai.warnings.#{warning[:code]}",
+      I18n.t("folio.ai.console.warnings.#{warning[:code]}",
              requested_model: warning[:requested_model],
              fallback_model: warning[:fallback_model],
              default: nil)

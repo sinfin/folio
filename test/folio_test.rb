@@ -40,8 +40,8 @@ class Folio::Test < ActiveSupport::TestCase
     base_js = Folio::Engine.root.join("app/assets/javascripts/folio/console/base.js").read
     base_sass = Folio::Engine.root.join("app/assets/stylesheets/folio/console/base.sass").read
 
-    assert_not_includes base_js, "folio/console/ai/text_suggestions_component"
-    assert_not_includes base_sass, "packs/ai/app/components/folio/console/ai"
+    assert_not_includes base_js, "folio/ai/console/text_suggestions_component"
+    assert_not_includes base_sass, "packs/ai/app/components/folio/ai/console"
   end
 
   test "console layout includes enabled pack logical assets" do

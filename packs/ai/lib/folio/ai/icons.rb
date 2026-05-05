@@ -8,8 +8,8 @@ module Folio::Ai::Icons
 
   class << self
     def sparkles(template, class_name: nil)
-      template.tag.span(class: class_names("f-c-ai-text-suggestions__spark", class_name), aria: { hidden: true }) do
-        template.tag.svg(class: "f-c-ai-text-suggestions__spark-svg",
+      template.tag.span(class: class_names("f-ai-c-text-suggestions__spark", class_name), aria: { hidden: true }) do
+        template.tag.svg(class: "f-ai-c-text-suggestions__spark-svg",
                          fill: "none",
                          viewBox: "0 0 24 24",
                          xmlns: "http://www.w3.org/2000/svg") do
@@ -19,8 +19,8 @@ module Folio::Ai::Icons
     end
 
     def undo(template, class_name: nil)
-      template.tag.span(class: class_names("f-c-ai-text-suggestions__undo-icon", class_name), aria: { hidden: true }) do
-        template.tag.svg(class: "f-c-ai-text-suggestions__undo-svg",
+      template.tag.span(class: class_names("f-ai-c-text-suggestions__undo-icon", class_name), aria: { hidden: true }) do
+        template.tag.svg(class: "f-ai-c-text-suggestions__undo-svg",
                          fill: "none",
                          viewBox: "0 0 24 24",
                          xmlns: "http://www.w3.org/2000/svg") do
