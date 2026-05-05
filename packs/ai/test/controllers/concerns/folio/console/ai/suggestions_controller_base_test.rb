@@ -4,7 +4,19 @@ require "test_helper"
 
 class Folio::Console::Ai::SuggestionsControllerBaseTest < ActionController::TestCase
   class FakeProviderAdapter
+    attr_reader :calls
+
+    def initialize
+      @calls = []
+    end
+
     def generate_suggestions(prompt:, field:, suggestion_count:)
+      calls << {
+        prompt:,
+        field:,
+        suggestion_count:,
+      }
+
       [
         Folio::Ai::Suggestion.new(key: 1,
                                   text: "Generated text",
@@ -30,6 +42,7 @@ class Folio::Console::Ai::SuggestionsControllerBaseTest < ActionController::Test
                   :user,
                   :context,
                   :context_calls,
+                  :snapshot_context,
                   :host_eligible,
                   :provider_adapter
 
@@ -48,6 +61,8 @@ class Folio::Console::Ai::SuggestionsControllerBaseTest < ActionController::Test
 
       def folio_ai_context
         self.context_calls = context_calls.to_i + 1
+
+        return { snapshot: folio_ai_current_form_snapshot } if snapshot_context
 
         context || {}
       end
@@ -135,6 +150,25 @@ class Folio::Console::Ai::SuggestionsControllerBaseTest < ActionController::Test
     assert_response :unprocessable_entity
     assert_equal "host_ineligible", json["error_code"]
     assert_equal 0, @controller.context_calls
+  end
+
+  test "exposes sanitized current form snapshot to context builders" do
+    @controller.snapshot_context = true
+
+    with_ai_config(enabled: true) do
+      post :create, params: request_params.merge(current_form_snapshot: {
+        "article[title]" => "Draft title",
+        "article[tag_ids][]" => %w[1 2],
+        "article[nested]" => { invalid: "ignored" },
+      }), as: :json
+    end
+
+    prompt = @controller.provider_adapter.calls.first[:prompt]
+
+    assert_response :success
+    assert_includes prompt, '"article[title]": "Draft title"'
+    assert_includes prompt, '"article[tag_ids][]": ['
+    assert_not_includes prompt, "ignored"
   end
 
   test "returns gateway timeout when provider times out" do

@@ -58,7 +58,8 @@ module Folio::Ai::SimpleFormInputExtension
         class_name: "f-c-ai-text-suggestions--auto-attached",
         external_controls: true,
         external_button_selector: "##{component_id}_button",
-        external_undo_selector: "##{component_id}_undo"
+        external_undo_selector: "##{component_id}_undo",
+        current_state_policy: context.current_state_policy
       ))
     end
 

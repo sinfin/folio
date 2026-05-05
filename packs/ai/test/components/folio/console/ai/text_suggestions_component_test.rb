@@ -12,6 +12,7 @@ class Folio::Console::Ai::TextSuggestionsComponentTest < Folio::Console::Compone
     assert_selector(".f-c-ai-text-suggestions__undo-icon svg", visible: :all)
     assert_selector("[data-f-c-ai-text-suggestions-endpoint-value='/ai']")
     assert_selector("[data-f-c-ai-text-suggestions-target-selector-value='#article_title']")
+    assert_selector("[data-f-c-ai-text-suggestions-current-state-policy-value='persisted_record']")
     assert_selector("[data-f-c-ai-text-suggestions-request-timeout-ms-value='45000']")
     assert_selector("[data-f-c-ai-text-suggestions-request-timeout-text-value]")
     assert_selector("[data-f-c-ai-text-suggestions-copy-button-label-value]")
@@ -34,6 +35,12 @@ class Folio::Console::Ai::TextSuggestionsComponentTest < Folio::Console::Compone
     assert_selector("#ai_title.f-c-ai-text-suggestions--external-controls")
     assert_selector("[data-f-c-ai-text-suggestions-external-button-selector-value='#ai_title_button']")
     assert_selector("[data-f-c-ai-text-suggestions-external-undo-selector-value='#ai_title_undo']")
+  end
+
+  def test_render_with_current_form_snapshot_policy
+    render_inline(component(current_state_policy: :current_form_snapshot))
+
+    assert_selector("[data-f-c-ai-text-suggestions-current-state-policy-value='current_form_snapshot']")
   end
 
   private

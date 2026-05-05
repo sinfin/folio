@@ -17,6 +17,7 @@ class Folio::Console::Ai::TextSuggestionsComponent < Folio::Console::Application
                  external_button_selector: nil,
                  external_undo_selector: nil,
                  show_meta: false,
+                 current_state_policy: :persisted_record,
                  request_timeout_ms: Folio::Ai.client_request_timeout_ms)
     @integration_key = integration_key.to_s
     @field_key = field_key.to_s
@@ -34,6 +35,7 @@ class Folio::Console::Ai::TextSuggestionsComponent < Folio::Console::Application
     @external_button_selector = external_button_selector
     @external_undo_selector = external_undo_selector
     @show_meta = show_meta
+    @current_state_policy = current_state_policy.to_s
     @request_timeout_ms = request_timeout_ms
   end
 
@@ -70,6 +72,7 @@ class Folio::Console::Ai::TextSuggestionsComponent < Folio::Console::Application
         external_button_selector: @external_button_selector,
         external_undo_selector: @external_undo_selector,
         show_meta: @show_meta,
+        current_state_policy: @current_state_policy,
         request_timeout_ms: @request_timeout_ms,
       }.compact
     end

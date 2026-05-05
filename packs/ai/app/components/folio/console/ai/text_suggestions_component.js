@@ -30,6 +30,7 @@
         charsLabel: String,
         externalButtonSelector: String,
         externalUndoSelector: String,
+        currentStatePolicy: { type: String, default: 'persisted_record' },
         showMeta: { type: Boolean, default: false }
       }
 
@@ -235,13 +236,19 @@
       }
 
       requestPayload (persistInstructions) {
-        return {
+        const payload = {
           integration_key: this.integrationKeyValue,
           field_key: this.fieldKeyValue,
           instructions: this.instructionsTarget.value,
           persist_instructions: persistInstructions,
           suggestion_count: this.suggestionCountValue
         }
+
+        if (this.usesCurrentFormSnapshot) {
+          payload.current_form_snapshot = this.currentFormSnapshot()
+        }
+
+        return payload
       }
 
       handleSuccess (response, { persistInstructions }) {
@@ -517,6 +524,32 @@
         }
       }
 
+      currentFormSnapshot () {
+        const form = this.targetInput?.form
+        if (!form) return {}
+
+        const snapshot = {}
+        const formData = new FormData(form)
+
+        formData.forEach((value, key) => {
+          if (value instanceof File) return
+
+          this.addSnapshotValue(snapshot, key, value.toString())
+        })
+
+        return snapshot
+      }
+
+      addSnapshotValue (snapshot, key, value) {
+        if (Object.prototype.hasOwnProperty.call(snapshot, key)) {
+          snapshot[key] = Array.isArray(snapshot[key])
+            ? [...snapshot[key], value]
+            : [snapshot[key], value]
+        } else {
+          snapshot[key] = value
+        }
+      }
+
       setButtonsExpanded (expanded) {
         const value = expanded ? 'true' : 'false'
 
@@ -536,6 +569,10 @@
 
       get isOpen () {
         return !this.panelTarget.hidden
+      }
+
+      get usesCurrentFormSnapshot () {
+        return this.currentStatePolicyValue === 'current_form_snapshot'
       }
 
       get externalButtonElement () {

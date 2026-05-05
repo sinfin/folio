@@ -84,6 +84,30 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
     assert_not page.has_css?(".f-c-ai-text-suggestions")
   end
 
+  test "auto-attaches AI suggestions to a new record with current form snapshot policy" do
+    site = create_site(force: true)
+    record = build(:folio_page, site:)
+    register_ai_field
+    site.update!(ai_settings: enabled_ai_settings)
+    Folio::Current.site = site
+
+    html = with_ai_config(enabled: true) do
+      simple_form_for(record, url: "/") do |f|
+        concat(folio_ai_form_context(integration_key: :articles,
+                                     endpoint: "/ai",
+                                     record:,
+                                     current_state_policy: :current_form_snapshot) do
+          f.input(:title)
+        end)
+      end
+    end
+
+    page = Capybara.string(html)
+
+    assert page.has_css?(".f-c-ai-text-suggestions")
+    assert page.has_css?("[data-f-c-ai-text-suggestions-current-state-policy-value='current_form_snapshot']")
+  end
+
   private
     def register_ai_field
       Folio::Ai.reset_registry!

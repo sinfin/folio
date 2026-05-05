@@ -3,6 +3,8 @@
 module Folio::Console::Ai::SuggestionsControllerBase
   extend ActiveSupport::Concern
 
+  CURRENT_FORM_SNAPSHOT_FIELD_LIMIT = 200
+
   included do
     skip_before_action :add_root_breadcrumb, raise: false
     skip_before_action :update_current_user_console_url, raise: false
@@ -102,7 +104,12 @@ module Folio::Console::Ai::SuggestionsControllerBase
                     :field_key,
                     :instructions,
                     :persist_instructions,
-                    :suggestion_count)
+                    :suggestion_count,
+                    current_form_snapshot: {})
+    end
+
+    def folio_ai_current_form_snapshot
+      @folio_ai_current_form_snapshot ||= folio_ai_sanitize_current_form_snapshot(params[:current_form_snapshot])
     end
 
     def folio_ai_persist_instructions?
@@ -156,5 +163,32 @@ module Folio::Console::Ai::SuggestionsControllerBase
 
     def folio_ai_provider_adapter
       nil
+    end
+
+    def folio_ai_sanitize_current_form_snapshot(snapshot)
+      snapshot = snapshot.to_unsafe_h if snapshot.respond_to?(:to_unsafe_h)
+      return {} unless snapshot.is_a?(Hash)
+
+      snapshot.first(CURRENT_FORM_SNAPSHOT_FIELD_LIMIT).each_with_object({}) do |(key, value), sanitized|
+        sanitized_value = folio_ai_sanitize_current_form_snapshot_value(value)
+        sanitized[key.to_s] = sanitized_value unless sanitized_value.nil?
+      end
+    end
+
+    def folio_ai_sanitize_current_form_snapshot_value(value)
+      if value.is_a?(Array)
+        value.filter_map { |item| folio_ai_sanitize_current_form_snapshot_scalar(item) }
+      else
+        folio_ai_sanitize_current_form_snapshot_scalar(value)
+      end
+    end
+
+    def folio_ai_sanitize_current_form_snapshot_scalar(value)
+      case value
+      when String
+        value
+      when Numeric, TrueClass, FalseClass
+        value.to_s
+      end
     end
 end
