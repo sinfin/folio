@@ -4,5 +4,13 @@
 
 $transition-base: $f-c-transition-base !default
 
-@import 'folio/ai/console/site_settings_component'
-@import 'folio/ai/console/text_suggestions_component'
+.form-group--with-ai-text-suggestions > .form-group__input-controls
+  background-color: transparent
+  height: auto
+  min-height: px-to-rem(20px)
+  padding-right: 0
+  right: 0
+  top: 0
+  z-index: 2
+
+@import '../../components/folio/ai/**/*'

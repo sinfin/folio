@@ -75,8 +75,7 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
         accept_label: t(".accept_label"),
         accept_button_label: t(".accept_button_label"),
         chars_label: t(".chars_label"),
-        external_button_selector: @external_button_selector,
-        external_undo_selector: @external_undo_selector,
+        component_id: component_id,
         show_meta: @show_meta,
         current_state_policy: @current_state_policy,
         request_timeout_ms: @request_timeout_ms,
@@ -84,7 +83,21 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
     end
 
     def html_id
-      @id
+      component_id
+    end
+
+    def component_id
+      @component_id ||= @id.presence || generated_component_id
+    end
+
+    def generated_component_id
+      key = [@integration_key, @field_key, @target_selector].join("_")
+                                                           .gsub(/[^a-zA-Z0-9_-]/, "_")
+                                                           .squeeze("_")
+                                                           .delete_prefix("_")
+                                                           .delete_suffix("_")
+
+      "folio_ai_text_suggestions_#{key}"
     end
 
     def stimulus_actions
@@ -92,6 +105,8 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
         "click@window": "onWindowClick",
         "keydown@window": "onWindowKeydown",
         "folio:ai-text-suggestions:open@document": "onOtherPanelOpen",
+        "f-ai-c-text-suggestions-actions:toggle@document": "onActionsToggle",
+        "f-ai-c-text-suggestions-actions:undo@document": "onActionsUndo",
       }
     end
 
@@ -103,16 +118,9 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
       end
     end
 
-    def button_label
-      @button_label.presence || t(".button_label")
-    end
-
-    def sparkles_icon
-      Folio::Ai::Icons.sparkles(self)
-    end
-
-    def undo_icon
-      Folio::Ai::Icons.undo(self)
+    def actions_component
+      Folio::Ai::Console::TextSuggestions::ActionsComponent.new(component_id: component_id,
+                                                                button_label: @button_label)
     end
 
     def external_controls?

@@ -37,7 +37,11 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
     assert page.has_css?(".form-group__input-controls .f-ai-c-text-suggestions__spark svg")
     assert page.has_css?(".form-group__input-controls .f-ai-c-text-suggestions__undo-icon svg", visible: :all)
     assert page.has_css?("[data-f-ai-c-text-suggestions-target-selector-value='#page_title']")
-    assert page.has_css?("[data-controller='f-click-trigger']")
+    assert page.has_css?("[data-controller='f-ai-c-text-suggestions-actions']")
+    assert page.has_css?("[data-action*='f-ai-c-text-suggestions:state@document->f-ai-c-text-suggestions-actions#onState']")
+    assert page.has_no_css?("[data-controller='f-click-trigger']")
+    assert page.has_no_css?("[data-f-ai-c-text-suggestions-external-button-selector-value]")
+    assert page.has_no_css?("[data-f-ai-c-text-suggestions-external-undo-selector-value]")
   end
 
   test "does not auto-attach AI suggestions without prompt" do

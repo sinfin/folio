@@ -11,12 +11,16 @@ class Folio::Ai::Console::TextSuggestionsComponentTest < Folio::Console::Compone
     assert_selector(".f-ai-c-text-suggestions__spark svg")
     assert_selector(".f-ai-c-text-suggestions__undo-icon svg", visible: :all)
     assert_selector("[data-controller='f-ai-c-text-suggestions']")
+    assert_selector("[data-controller='f-ai-c-text-suggestions-actions']")
     assert_selector("[data-f-ai-c-text-suggestions-endpoint-value='/ai']")
     assert_selector("[data-f-ai-c-text-suggestions-target-selector-value='#article_title']")
+    assert_selector("[data-f-ai-c-text-suggestions-component-id-value='folio_ai_text_suggestions_articles_title_article_title']")
     assert_selector("[data-f-ai-c-text-suggestions-current-state-policy-value='persisted_record']")
     assert_selector("[data-f-ai-c-text-suggestions-request-timeout-ms-value='45000']")
     assert_selector("[data-f-ai-c-text-suggestions-open-class='f-ai-c-text-suggestions--open']")
     assert_selector("[data-f-ai-c-text-suggestions-loading-class='f-ai-c-text-suggestions--loading']")
+    assert_selector("[data-action*='f-ai-c-text-suggestions-actions:toggle@document->f-ai-c-text-suggestions#onActionsToggle']")
+    assert_selector("[data-action*='f-ai-c-text-suggestions-actions:undo@document->f-ai-c-text-suggestions#onActionsUndo']")
     assert_selector("[data-f-ai-c-text-suggestions-request-timeout-text-value]")
     assert_selector("[data-f-ai-c-text-suggestions-copy-button-label-value]")
     assert_selector("[data-f-ai-c-text-suggestions-accept-button-label-value]")
@@ -36,8 +40,10 @@ class Folio::Ai::Console::TextSuggestionsComponentTest < Folio::Console::Compone
                             external_undo_selector: "#ai_title_undo"))
 
     assert_selector("#ai_title.f-ai-c-text-suggestions--external-controls")
-    assert_selector("[data-f-ai-c-text-suggestions-external-button-selector-value='#ai_title_button']")
-    assert_selector("[data-f-ai-c-text-suggestions-external-undo-selector-value='#ai_title_undo']")
+    assert_selector("[data-f-ai-c-text-suggestions-component-id-value='ai_title']")
+    assert_no_selector("#ai_title .f-ai-c-text-suggestions__actions", visible: :all)
+    assert_no_selector("[data-f-ai-c-text-suggestions-external-button-selector-value]")
+    assert_no_selector("[data-f-ai-c-text-suggestions-external-undo-selector-value]")
   end
 
   def test_render_with_current_form_snapshot_policy

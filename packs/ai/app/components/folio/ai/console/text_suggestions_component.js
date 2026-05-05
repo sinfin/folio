@@ -2,8 +2,6 @@
   const registerTextSuggestionsController = () => {
     window.Folio.Stimulus.register('f-ai-c-text-suggestions', class extends window.Stimulus.Controller {
       static targets = [
-        'button',
-        'undoButton',
         'panel',
         'status',
         'suggestions',
@@ -28,8 +26,7 @@
         acceptLabel: String,
         acceptButtonLabel: String,
         charsLabel: String,
-        externalButtonSelector: String,
-        externalUndoSelector: String,
+        componentId: String,
         currentStatePolicy: { type: String, default: 'persisted_record' },
         showMeta: { type: Boolean, default: false }
       }
@@ -42,9 +39,11 @@
         this.requestSequence = 0
         this.requestTimeoutId = null
         this.requestTimedOut = false
+        this.undoVisible = false
         this.savedInstructions = this.initialInstructionsValue
         this.targetInputListener = () => this.onTargetInput()
         this.targetInput?.addEventListener('input', this.targetInputListener)
+        this.dispatchState()
       }
 
       disconnect () {
@@ -53,8 +52,7 @@
       }
 
       toggle (event) {
-        event.preventDefault()
-        event.stopPropagation()
+        this.stopActionEvent(event)
 
         if (this.isOpen) {
           this.close()
@@ -74,7 +72,7 @@
 
         document.dispatchEvent(new CustomEvent('folio:ai-text-suggestions:open', {
           bubbles: true,
-          detail: { controller: this }
+          detail: { controller: this, componentId: this.componentIdValue }
         }))
 
         this.snapshot = input.value || ''
@@ -94,14 +92,13 @@
         this.snapshot = null
         this.selectedText = null
         this.panelTarget.hidden = true
-        this.undoButtonTarget.hidden = true
         this.suggestionsTarget.innerHTML = ''
         this.hideStatus()
         this.element.classList.remove(this.openClass)
         this.element.classList.remove(this.loadingClass)
-        this.setButtonsExpanded(false)
-        this.setExternalUndoVisible(false)
+        this.undoVisible = false
         this.instructionsTarget.value = this.savedInstructions
+        this.dispatchState()
       }
 
       regenerate (event) {
@@ -114,8 +111,7 @@
       }
 
       undo (event) {
-        event.preventDefault()
-        event.stopPropagation()
+        this.stopActionEvent(event)
 
         if (this.snapshot === null) return
 
@@ -125,8 +121,8 @@
         this.writeValue(input, this.snapshot)
         this.selectedText = null
         this.clearSelection()
-        this.undoButtonTarget.hidden = true
-        this.setExternalUndoVisible(false)
+        this.undoVisible = false
+        this.dispatchState()
 
         this.dispatch('undo', { detail: this.trackingDetail() })
       }
@@ -142,8 +138,8 @@
         this.selectedText = text
         this.writeValue(input, text)
         this.markSelected(event.currentTarget)
-        this.undoButtonTarget.hidden = false
-        this.setExternalUndoVisible(true)
+        this.undoVisible = true
+        this.dispatchState()
 
         this.dispatch('accepted', { detail: this.trackingDetail() })
       }
@@ -177,8 +173,6 @@
         if (!this.isOpen) return
         if (this.element.contains(event.target)) return
         if (this.panelTarget.contains(event.target)) return
-        if (this.externalButtonElement?.contains(event.target)) return
-        if (this.externalUndoElement?.contains(event.target)) return
 
         this.close()
       }
@@ -195,6 +189,18 @@
         if (event.detail?.controller === this) return
 
         this.close()
+      }
+
+      onActionsToggle (event) {
+        if (!this.matchesActionEvent(event)) return
+
+        this.toggle(event)
+      }
+
+      onActionsUndo (event) {
+        if (!this.matchesActionEvent(event)) return
+
+        this.undo(event)
       }
 
       stopPropagation (event) {
@@ -232,6 +238,7 @@
             this.abortController = null
             this.requestTimedOut = false
             this.element.classList.remove(this.loadingClass)
+            this.dispatchState()
           })
       }
 
@@ -392,6 +399,7 @@
 
       setLoading () {
         this.element.classList.add(this.loadingClass)
+        this.dispatchState()
         this.hideStatus()
         this.suggestionsTarget.innerHTML = ''
 
@@ -406,7 +414,7 @@
       showPanel () {
         this.panelTarget.hidden = false
         this.element.classList.add(this.openClass)
-        this.setButtonsExpanded(true)
+        this.dispatchState()
       }
 
       showError (message) {
@@ -550,17 +558,27 @@
         }
       }
 
-      setButtonsExpanded (expanded) {
-        const value = expanded ? 'true' : 'false'
-
-        this.buttonTarget.setAttribute('aria-expanded', value)
-        this.externalButtonElement?.setAttribute('aria-expanded', value)
+      matchesActionEvent (event) {
+        return event.detail?.componentId === this.componentIdValue
       }
 
-      setExternalUndoVisible (visible) {
-        if (!this.externalUndoElement) return
+      stopActionEvent (event) {
+        if (!event) return
 
-        this.externalUndoElement.hidden = !visible
+        event.preventDefault()
+        event.stopPropagation()
+      }
+
+      dispatchState () {
+        this.dispatch('state', {
+          detail: {
+            ...this.trackingDetail(),
+            componentId: this.componentIdValue,
+            open: this.isOpen,
+            loading: this.element.classList.contains(this.loadingClass),
+            undoVisible: this.undoVisible
+          }
+        })
       }
 
       get targetInput () {
@@ -573,18 +591,6 @@
 
       get usesCurrentFormSnapshot () {
         return this.currentStatePolicyValue === 'current_form_snapshot'
-      }
-
-      get externalButtonElement () {
-        if (!this.hasExternalButtonSelectorValue) return null
-
-        return document.querySelector(this.externalButtonSelectorValue)
-      }
-
-      get externalUndoElement () {
-        if (!this.hasExternalUndoSelectorValue) return null
-
-        return document.querySelector(this.externalUndoSelectorValue)
       }
     })
   }

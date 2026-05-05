@@ -20,7 +20,7 @@ module Folio::Ai::SimpleFormInputExtension
     component_id = ai_text_suggestions_component_id(target_id)
 
     mark_ai_wrapper
-    append_input_control(ai_text_suggestions_controls(component_id:))
+    append_input_control(ai_text_suggestions_actions(component_id:))
     append_custom_html(ai_text_suggestions_component(context:,
                                                      field:,
                                                      target_id:,
@@ -57,70 +57,15 @@ module Folio::Ai::SimpleFormInputExtension
         field_label: field.label,
         class_name: "f-ai-c-text-suggestions--auto-attached",
         external_controls: true,
-        external_button_selector: "##{component_id}_button",
-        external_undo_selector: "##{component_id}_undo",
         current_state_policy: context.current_state_policy
       ))
     end
 
-    def ai_text_suggestions_controls(component_id:)
-      template = @builder.template
-
-      template.tag.div(class: "f-ai-c-text-suggestions f-ai-c-text-suggestions--external-actions") do
-        template.tag.div(class: "f-ai-c-text-suggestions__actions") do
-          template.safe_join([
-            ai_text_suggestions_button(component_id:),
-            ai_text_suggestions_undo(component_id:),
-          ])
-        end
-      end
-    end
-
-    def ai_text_suggestions_button(component_id:)
-      template = @builder.template
-
-      template.tag.button(type: "button",
-                          id: "#{component_id}_button",
-                          class: "f-ai-c-text-suggestions__button",
-                          aria: { expanded: "false", controls: component_id },
-                          data: ai_click_trigger_data("##{component_id} .f-ai-c-text-suggestions__button")) do
-        template.safe_join([
-          ai_text_suggestions_sparkles_icon(template),
-          template.tag.span(I18n.t("folio.ai.console.text_suggestions_component.button_label"),
-                            class: "f-ai-c-text-suggestions__button-label"),
-        ])
-      end
-    end
-
-    def ai_text_suggestions_undo(component_id:)
-      template = @builder.template
-
-      template.tag.button(type: "button",
-                          id: "#{component_id}_undo",
-                          class: "f-ai-c-text-suggestions__undo",
-                          hidden: true,
-                          data: ai_click_trigger_data("##{component_id} .f-ai-c-text-suggestions__undo")) do
-        template.safe_join([
-          ai_text_suggestions_undo_icon(template),
-          template.tag.span(I18n.t("folio.ai.console.text_suggestions_component.undo_label"),
-                            class: "f-ai-c-text-suggestions__undo-label"),
-        ])
-      end
-    end
-
-    def ai_text_suggestions_sparkles_icon(template)
-      Folio::Ai::Icons.sparkles(template)
-    end
-
-    def ai_text_suggestions_undo_icon(template)
-      Folio::Ai::Icons.undo(template)
-    end
-
-    def ai_click_trigger_data(target)
-      {
-        controller: "f-click-trigger",
-        "f-click-trigger-target-value": target,
-      }
+    def ai_text_suggestions_actions(component_id:)
+      @builder.template.render(Folio::Ai::Console::TextSuggestions::ActionsComponent.new(
+        component_id:,
+        external: true
+      ))
     end
 
     def mark_ai_wrapper

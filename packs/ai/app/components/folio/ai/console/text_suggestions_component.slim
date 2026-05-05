@@ -5,24 +5,8 @@ div[
   class=("f-ai-c-text-suggestions--external-controls" if external_controls?)
   data=data
 ]
-  .f-ai-c-text-suggestions__actions
-    button.f-ai-c-text-suggestions__button[
-      type="button"
-      data=stimulus_action(click: "toggle")
-      aria-expanded="false"
-      data-f-ai-c-text-suggestions-target="button"
-    ]
-      = sparkles_icon
-      span.f-ai-c-text-suggestions__button-label = button_label
-
-    button.f-ai-c-text-suggestions__undo[
-      type="button"
-      hidden=true
-      data=stimulus_target("undoButton")
-      data-action="click->f-ai-c-text-suggestions#undo"
-    ]
-      = undo_icon
-      span.f-ai-c-text-suggestions__undo-label = t(".undo_label")
+  - unless external_controls?
+    = render(actions_component)
 
   .f-ai-c-text-suggestions__panel[
     hidden=true
