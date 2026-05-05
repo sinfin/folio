@@ -20,10 +20,17 @@ application context. `test/dummy/packwerk.yml` includes the Folio engine root an
 Enabled packs are listed in `Folio.enabled_packs`. The default is:
 
 ```ruby
-Folio.enabled_packs # => [:ai]
+Folio.enabled_packs # => []
 ```
 
-The engine loader adds these runtime paths when a pack is enabled:
+Enable optional packs explicitly in the host application before the engine
+initializers run:
+
+```ruby
+Folio.enabled_packs = [:ai]
+```
+
+The engine loader adds these runtime paths for enabled packs:
 
 - `app/models`, `app/models/concerns`
 - `app/components`, `app/components/concerns`
@@ -34,9 +41,28 @@ The engine loader adds these runtime paths when a pack is enabled:
 - `config/locales/**/*.yml`
 - `db/migrate`
 
-Asset paths from all packs are added to the asset pipeline so shared manifests
-can safely reference sidecar JavaScript/CSS even when a pack is runtime-disabled.
-Disabled packs must still not render UI or load Ruby code.
+Asset paths from all packs are added to the asset pipeline so pack manifests can
+reference component sidecar JavaScript/CSS through Sprockets. Enabled packs
+declare their logical asset names from their module, and Folio includes those
+assets with `Folio.enabled_pack_assets(type)`. The engine does not check logical
+asset file presence on each request.
+
+Pack-owned asset names should use `folio_pack_<pack_name>`:
+
+```ruby
+module Folio::Ai
+  PACK_ASSETS = {
+    javascripts: %w[folio_pack_ai],
+    stylesheets: %w[folio_pack_ai],
+  }.freeze
+
+  def self.pack_assets
+    PACK_ASSETS
+  end
+end
+```
+
+Disabled packs must not render UI or load pack runtime code.
 
 If the pack has `lib/folio/<pack>.rb`, Folio requires it. Use that file to define
 the pack namespace and require a railtie.
@@ -75,6 +101,10 @@ integration guide is [`docs/features/ai_prompts.md`](features/ai_prompts.md);
 agent workflows should use
 [`folio-ai-inputs`](../.skills/folio-ai-inputs/SKILL.md) when wiring concrete
 Console inputs.
+
+The AI pack is disabled by default. Host applications opt in with
+`Folio.enabled_packs = [:ai]` and configure the feature through
+`Folio::Ai.configure`.
 
 - prompt registry, provider adapters, prompt composition and response handling
 - site prompt settings and validation

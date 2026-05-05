@@ -121,21 +121,33 @@ These decisions are part of the implementation plan unless explicitly reopened.
 Use this sequence when a Folio-based application wants to enable AI suggestions
 for one or more editor inputs.
 
-1. Keep the `:ai` pack enabled. The pack is enabled by default through
-   `Folio.enabled_packs`; disabling the pack must remove the feature entirely.
+1. Enable the optional `:ai` pack explicitly in the host application:
+
+   ```ruby
+   Folio.enabled_packs = [:ai]
+   ```
+
+   The default `Folio.enabled_packs` is `[]`. Disabling the pack must remove the
+   feature entirely.
 2. Run the AI pack migrations from `packs/ai/db/migrate`.
 3. Configure the feature and providers in the host app:
 
    ```ruby
-   Rails.application.config.folio_ai_enabled = ENV["FOLIO_AI_ENABLED"].present?
-   Rails.application.config.folio_ai_default_provider = :openai
-   Rails.application.config.folio_ai_provider_models = {
-     openai: "gpt-5.5",
-     anthropic: "claude-opus-4-7",
-   }
-   Rails.application.config.folio_ai_model_fallback_enabled = true
-   Rails.application.config.folio_ai_model_catalog_cache_ttl = 1.hour
+   Folio::Ai.configure do |config|
+     config.enabled = ENV["FOLIO_AI_ENABLED"].present?
+     config.default_provider = :openai
+     config.provider_models = {
+       openai: "gpt-5.5",
+       anthropic: "claude-opus-4-7",
+     }
+     config.model_fallback_enabled = true
+     config.model_catalog_cache_ttl = 1.hour
+     config.provider_request_storage = false
+   end
    ```
+
+   `provider_request_storage` defaults to `false`. OpenAI Responses API requests
+   send `store: false` unless a host application explicitly opts in.
 
 4. Configure provider credentials with `OPENAI_API_KEY` and/or
    `ANTHROPIC_API_KEY`. The environment kill switch `FOLIO_AI_DISABLED`
@@ -143,22 +155,24 @@ for one or more editor inputs.
 5. Optionally expose curated model labels and cost tiers in site settings:
 
    ```ruby
-   Rails.application.config.folio_ai_provider_model_options = {
-     openai: {
-       "gpt-5.5" => { label: "GPT-5.5", cost_tier: "premium", default: true },
-     },
-     anthropic: {
-       "claude-opus-4-7" => { label: "Claude Opus 4.7", cost_tier: "premium" },
-     },
-   }
+   Folio::Ai.configure do |config|
+     config.provider_model_options = {
+       openai: {
+         "gpt-5.5" => { label: "GPT-5.5", cost_tier: "premium", default: true },
+       },
+       anthropic: {
+         "claude-opus-4-7" => { label: "Claude Opus 4.7", cost_tier: "premium" },
+       },
+     }
+   end
    ```
 
    If API credentials are available, Folio lists live provider models and caches
-   them in `Rails.cache` for `folio_ai_model_catalog_cache_ttl`. Configured
+   them in `Rails.cache` for `Folio::Ai.model_catalog_cache_ttl`. Configured
    metadata only enriches those options with labels/cost tiers. If the live
    catalog cannot be fetched, Folio falls back to configured options. If a saved
    site model later disappears, Folio keeps it visible as unavailable and, when
-   `folio_ai_model_fallback_enabled` is true, generation falls back to the
+   `Folio::Ai.model_fallback_enabled?` is true, generation falls back to the
    provider default model and returns a warning for the editor UI.
 6. Register promptable fields after Rails initialization:
 
@@ -206,11 +220,29 @@ for one or more editor inputs.
     manual edit detach, ghost undo, close, instruction persistence, regenerate,
     model fallback warning, and rate-limit behavior.
 
+### Pack Assets And Stimulus
+
+The AI pack owns logical assets named `folio_pack_ai.js` and
+`folio_pack_ai.css`. Those manifests live in `packs/ai/app/assets` and include
+component sidecar JavaScript/Sass through Sprockets, so the component files stay
+next to the component while the pack exposes one stable asset name.
+
+The root Console layout includes pack assets returned by
+`Folio.enabled_pack_assets(type)` for enabled packs only. The AI pack declares
+its names through `Folio::Ai.pack_assets`; Folio does not perform per-request
+logical asset file existence checks.
+
+Core Stimulus dispatches `folio:stimulus-ready` once
+`window.Folio.Stimulus.register` is available. Optional pack controllers should
+register immediately when `window.Folio.Stimulus.register` and
+`window.Stimulus.Controller` already exist, or listen once for
+`folio:stimulus-ready`.
+
 ### Site Settings Tab
 
-When `Rails.application.config.folio_ai_enabled` is true and at least one AI
-integration is registered, the AI pack prepends `Folio::Site#console_form_tabs`
-and adds the `ai_prompts` tab. The tab renders
+When the `:ai` pack is enabled, `Folio::Ai.enabled?` is true, and at least one
+AI integration is registered, the AI pack prepends
+`Folio::Site#console_form_tabs` and adds the `ai_prompts` tab. The tab renders
 `Folio::Console::Ai::SiteSettingsComponent` and stores values in
 `folio_sites.ai_settings`.
 
@@ -245,6 +277,18 @@ Host applications opt a form into AI attachment with
 
 The form context is deliberately explicit. A configured site prompt alone does
 not attach AI controls to arbitrary forms.
+
+`current_state_policy` controls which state the host endpoint should use:
+
+- `persisted_record` is the default. Auto-attached inputs render only for
+  persisted records, and suggestions are based on server-side persisted state.
+- `current_form_snapshot` allows the controls to render for an unsaved record
+  object and sends the current successful form control values with the request.
+  File inputs are ignored and repeated field names are sent as arrays.
+
+Host endpoints still authorize and validate the persisted record. Context
+builders can read the sanitized submitted snapshot with
+`folio_ai_current_form_snapshot`.
 
 ### Manual Custom-Field Wiring
 
@@ -281,15 +325,19 @@ class Console::Articles::AiSuggestionsController < Folio::Console::Api::BaseCont
   include Folio::Console::Ai::SuggestionsControllerBase
 
   private
+    def folio_ai_host_eligible?
+      @article.persisted?
+    end
+
     def folio_ai_context
       Articles::AiContextBuilder.new(article: @article).call
     end
-
-    def folio_ai_host_eligible?
-      @article.persisted? && folio_ai_context[:body_text].present?
-    end
 end
 ```
+
+The base controller checks `folio_ai_host_eligible?` before evaluating
+`folio_ai_context`, so expensive context serialization can stay in the context
+builder without running for ineligible requests.
 
 The response contract is:
 
@@ -373,9 +421,12 @@ At the application level, Folio should default to AI being off. Runtime gates
 must be layered, not collapsed into a single prompt check.
 
 ```ruby
-Rails.application.config.folio_ai_enabled = false
-Rails.application.config.folio_ai_provider_request_timeout = 30
-Rails.application.config.folio_ai_client_request_timeout_ms = 45_000
+Folio::Ai.configure do |config|
+  config.enabled = false
+  config.provider_request_timeout = 30
+  config.client_request_timeout_ms = 45_000
+  config.provider_request_storage = false
+end
 ```
 
 Provider timeout is enforced in the server adapter boundary and maps to
@@ -463,17 +514,20 @@ Host apps should register integrations and fields in a single initializer.
 Illustrative DSL:
 
 ```ruby
-Rails.application.config.folio_ai_registry.register(:content_editor) do |integration|
-  integration.context_builder = "MyApp::Ai::ContentContextBuilder"
-
-  integration.field(:title,
-                    prompt_key: "content.title",
-                    response_format: :text)
-
-  integration.field(:summary,
-                    prompt_key: "content.summary",
-                    response_format: :text)
-end
+Folio::Ai.register_integration(:content_editor,
+                               label: "Content editor",
+                               fields: [
+                                 Folio::Ai::Field.new(key: :title,
+                                                      label: "Title",
+                                                      auto_attach: true,
+                                                      input_types: %i[string],
+                                                      character_limit: 120),
+                                 Folio::Ai::Field.new(key: :summary,
+                                                      label: "Summary",
+                                                      auto_attach: true,
+                                                      input_types: %i[text],
+                                                      character_limit: 400),
+                               ])
 ```
 
 The registry should own:
@@ -603,7 +657,7 @@ snapshot, a cheaper model, or a provider-specific production identifier.
 Folio keeps model selection as a cost-aware site setting, but provider APIs do
 not expose a complete pricing contract in their model-list endpoints. Host apps
 should therefore provide curated model metadata through
-`config.folio_ai_provider_model_options` when labels such as "premium",
+`Folio::Ai.provider_model_options` when labels such as "premium",
 "standard", or "economy" are needed. Folio merges that metadata with the live
 provider model list.
 
@@ -612,7 +666,7 @@ The live model catalog should:
 1. Fetch available models from the provider model-list endpoint.
 2. Filter the list to text-generation models relevant for AI prompts.
 3. Cache the verified list through `Rails.cache` for
-   `config.folio_ai_model_catalog_cache_ttl` (default: one hour).
+   `Folio::Ai.model_catalog_cache_ttl` (default: one hour).
 4. Fall back to configured model options when the provider list cannot be
    verified, without blocking the settings form.
 5. Keep an already selected model visible and flagged when the live list proves
@@ -641,7 +695,7 @@ Runtime fallback rules:
 
 1. If the provider rejects the selected model as missing or unavailable, Folio
    retries once with the provider's configured default model when
-   `config.folio_ai_model_fallback_enabled` is true.
+   `Folio::Ai.model_fallback_enabled?` is true.
 2. Successful fallback responses include a warning payload so the editor sees
    that generation used a fallback and the site settings must be fixed.
 3. If the fallback model is also unavailable, the endpoint returns
@@ -702,9 +756,9 @@ Host apps must choose and document one current-state policy per integration:
 
 - `persisted_record`: generation uses the last saved server state only; the UI
   must not imply that unsaved form edits affect suggestions.
-- `current_form_snapshot`: generation sends the current field values and editor
-  plain text from the open form; the backend still authorizes the persisted
-  record and validates the snapshot shape.
+- `current_form_snapshot`: generation sends the current successful form control
+  values from the open form; the backend still authorizes the persisted record
+  and validates the snapshot shape.
 
 For editor UIs where the body can be dirty and cannot be serialized safely,
 the panel should either block generation with `record_not_ready` or ask the
@@ -790,9 +844,17 @@ Suggested request schema for a single field:
 {
   "integration_key": "content_editor",
   "field_key": "summary",
-  "instructions": "Make the summary more factual."
+  "instructions": "Make the summary more factual.",
+  "current_form_snapshot": {
+    "article[title]": "Unsaved title",
+    "article[tag_ids][]": ["1", "2"]
+  }
 }
 ```
+
+`current_form_snapshot` is sent only when the rendered component uses the
+`current_form_snapshot` policy. The controller exposes a sanitized flat hash to
+host context builders through `folio_ai_current_form_snapshot`.
 
 Aggregate workflows such as multi-field generation should stay in the host
 application. They may call the same Folio service repeatedly or wrap it in an
@@ -895,11 +957,11 @@ generator.
 
 Recommended installation steps:
 
-1. Upgrade Folio and keep `:ai` in `Folio.enabled_packs` (enabled by default).
+1. Upgrade Folio and opt into the AI pack with `Folio.enabled_packs = [:ai]`.
 2. Run the AI pack migrations from `packs/ai/db/migrate`.
 3. Configure provider credentials in the host app environment.
 4. Register integrations and field metadata in a host-app initializer.
-5. Optionally configure `folio_ai_provider_model_options` with curated labels
+5. Optionally configure `Folio::Ai.provider_model_options` with curated labels
    and cost tiers for models the team is willing to expose in site settings.
 6. Ensure the host app has a production cache store, ideally Redis-backed, so
    provider model catalogs can be cached for the configured TTL.

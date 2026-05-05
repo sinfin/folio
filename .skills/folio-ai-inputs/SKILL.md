@@ -28,7 +28,30 @@ file before changing code.
 
 ## Implementation Steps
 
-1. Register an integration in a host-app initializer after Rails initialization:
+1. Enable the optional pack before engine initializers run:
+
+   ```ruby
+   Folio.enabled_packs = [:ai]
+   ```
+
+2. Configure the feature through `Folio::Ai.configure`:
+
+   ```ruby
+   Folio::Ai.configure do |config|
+     config.enabled = ENV["FOLIO_AI_ENABLED"].present?
+     config.default_provider = :openai
+     config.provider_models = {
+       openai: "gpt-5.5",
+       anthropic: "claude-opus-4-7",
+     }
+     config.provider_request_storage = false
+   end
+   ```
+
+   The AI pack is disabled by default. OpenAI request storage remains disabled
+   unless the host app explicitly opts in.
+
+3. Register an integration in a host-app initializer after Rails initialization:
 
    ```ruby
    Folio::Ai.register_integration(:content_editor,
@@ -42,31 +65,46 @@ file before changing code.
                                   ])
    ```
 
-2. Use `auto_attach: true` only for standard SimpleForm `string` or `text`
+4. Use `auto_attach: true` only for standard SimpleForm `string` or `text`
    inputs that can receive the default Folio AI action inside an explicit form
    context.
-3. Wrap eligible form sections with `folio_ai_form_context`, passing the
+5. Wrap eligible form sections with `folio_ai_form_context`, passing the
    integration key, endpoint, current record, and an explicit
-   `current_state_policy`.
-4. For custom inputs, composite components, rich-text wrappers, or unusual
+   `current_state_policy`. Use `:persisted_record` when generation should use
+   saved server state. Use `:current_form_snapshot` when the request should
+   include the current successful form control values; host context builders can
+   read the sanitized flat hash with `folio_ai_current_form_snapshot`.
+6. For custom inputs, composite components, rich-text wrappers, or unusual
    placement, render `Folio::Console::Ai::TextSuggestionsComponent` manually and
    pass `target_selector`, `integration_key`, `field_key`, `endpoint`,
-   instructions, and character limit.
-5. Implement a thin authenticated endpoint that includes
+   instructions, character limit, and `current_state_policy`.
+7. Implement a thin authenticated endpoint that includes
    `Folio::Console::Ai::SuggestionsControllerBase`. Override only record lookup,
    authorization, `folio_ai_context`, and `folio_ai_host_eligible?`.
-6. Build context from safe plain text. For TipTap content prefer
+   `folio_ai_host_eligible?` runs before the context builder, so keep expensive
+   serialization in `folio_ai_context`.
+8. Build context from safe plain text. For TipTap content prefer
    `Folio::Tiptap::PlainText.from_value(...)` or an existing stored plain-text
    projection before falling back to JSON traversal.
-7. Configure provider models and optional cost labels through
-   `folio_ai_provider_models` and `folio_ai_provider_model_options`. Let Folio
+9. Configure provider models and optional cost labels through
+   `Folio::Ai.provider_models` and `Folio::Ai.provider_model_options`. Let Folio
    use live provider catalogs when API credentials are present and keep fallback
    enabled for unavailable saved models.
-8. Add Console site prompts for each site and field. Editor controls must stay
+10. Add Console site prompts for each site and field. Editor controls must stay
    hidden until the field has a non-blank site prompt and the record is eligible.
-9. Cover visible and hidden gates, endpoint success and errors, context
+11. Cover visible and hidden gates, endpoint success and errors, context
    serialization, instruction persistence, timeout/rate-limit handling, model
    fallback warnings, and the full panel lifecycle in tests.
+
+## Pack Assets
+
+- The AI pack exposes `folio_pack_ai.js` and `folio_pack_ai.css` through
+  `Folio::Ai.pack_assets`.
+- `folio_pack_ai.*` should include colocated component sidecars through
+  Sprockets imports/requires.
+- Optional pack Stimulus controllers register immediately when
+  `window.Folio.Stimulus.register` exists, or listen once for
+  `folio:stimulus-ready`.
 
 ## UI Checklist
 
