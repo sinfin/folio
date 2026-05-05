@@ -29,6 +29,7 @@ class Folio::Console::Ai::SuggestionsControllerBaseTest < ActionController::Test
     attr_accessor :site,
                   :user,
                   :context,
+                  :context_calls,
                   :host_eligible,
                   :provider_adapter
 
@@ -46,6 +47,8 @@ class Folio::Console::Ai::SuggestionsControllerBaseTest < ActionController::Test
       end
 
       def folio_ai_context
+        self.context_calls = context_calls.to_i + 1
+
         context || {}
       end
 
@@ -76,6 +79,7 @@ class Folio::Console::Ai::SuggestionsControllerBaseTest < ActionController::Test
     @controller.site = @site
     @controller.user = @user
     @controller.provider_adapter = FakeProviderAdapter.new
+    @controller.context_calls = 0
   end
 
   teardown do
@@ -117,6 +121,20 @@ class Folio::Console::Ai::SuggestionsControllerBaseTest < ActionController::Test
 
     assert_response :unprocessable_entity
     assert_equal "prompt_missing", json["error_code"]
+  end
+
+  test "does not build context when host is ineligible" do
+    @controller.host_eligible = false
+
+    with_ai_config(enabled: true) do
+      post :create, params: request_params
+    end
+
+    json = JSON.parse(response.body)
+
+    assert_response :unprocessable_entity
+    assert_equal "host_ineligible", json["error_code"]
+    assert_equal 0, @controller.context_calls
   end
 
   test "returns gateway timeout when provider times out" do

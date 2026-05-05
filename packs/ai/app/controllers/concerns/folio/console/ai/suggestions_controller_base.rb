@@ -28,7 +28,7 @@ module Folio::Console::Ai::SuggestionsControllerBase
                                          user: folio_ai_user,
                                          integration_key: folio_ai_params[:integration_key],
                                          field_key: folio_ai_params[:field_key],
-                                         context: folio_ai_context,
+                                         context: -> { folio_ai_context },
                                          instructions: folio_ai_params[:instructions],
                                          persist_instructions: folio_ai_persist_instructions?,
                                          host_eligible: folio_ai_host_eligible?,

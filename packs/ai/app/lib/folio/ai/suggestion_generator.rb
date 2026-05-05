@@ -29,7 +29,7 @@ class Folio::Ai::SuggestionGenerator
     @user = user
     @integration_key = integration_key
     @field_key = field_key
-    @context = context || {}
+    @context_source = context
     @instructions = instructions
     @persist_instructions = persist_instructions
     @host_eligible = host_eligible
@@ -79,7 +79,7 @@ class Folio::Ai::SuggestionGenerator
                 :user,
                 :integration_key,
                 :field_key,
-                :context,
+                :context_source,
                 :instructions,
                 :persist_instructions,
                 :host_eligible,
@@ -91,6 +91,13 @@ class Folio::Ai::SuggestionGenerator
                                   integration_key:,
                                   field_key:,
                                   host_eligible:).call
+    end
+
+    def context
+      return @context if defined?(@context)
+
+      value = context_source.respond_to?(:call) ? context_source.call : context_source
+      @context = value || {}
     end
 
     def effective_instruction
