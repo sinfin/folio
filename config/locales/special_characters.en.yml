@@ -1,0 +1,9 @@
+---
+en:
+  folio:
+    special_characters:
+      popup_component:
+        title: Special characters
+        close: Close
+      trigger_component:
+        label: :folio.special_characters.popup_component.title

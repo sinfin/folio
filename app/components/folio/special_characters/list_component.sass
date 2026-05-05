@@ -1,0 +1,23 @@
+.f-special-characters-list
+  display: grid
+  grid-template-columns: repeat(10, minmax(0, 1fr))
+  gap: var(--f-special-characters-popup__inner-padding)
+  padding: var(--f-special-characters-popup__inner-padding)
+
+  &__char
+    appearance: none
+    aspect-ratio: 1
+    background: var(--#{$prefix}body-bg, #fff)
+    border-radius: 2px
+    border: 1px solid var(--#{$prefix}border-color-translucent, rgba(0, 0, 0, 0.12))
+    color: inherit
+    cursor: pointer
+    line-height: 1
+    padding: px-to-rem(2px)
+
+    &:hover
+      background: var(--#{$prefix}secondary-bg, #f8f9fa)
+      border-color: var(--#{$prefix}primary, #0d6efd)
+
+    &, &:focus
+      outline: 0

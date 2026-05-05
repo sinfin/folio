@@ -303,6 +303,9 @@ send_clock:
 send_lock:
   width: 24
   height: 24
+special_character:
+  width: 24
+  height: 24
 speedometer:
   width: 24
   height: 24

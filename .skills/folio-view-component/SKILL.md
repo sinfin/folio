@@ -35,7 +35,7 @@ description: >-
 
   `rails generate folio:component /folio/console/ui/example`
 
-- **Host app** components: app namespace without the slash, per that app’s docs (e.g. `rails generate folio:component blog/post`).
+- **Host app** components: omit the app namespace when using a relative path; the generator auto-prefixes it (e.g. in MyProject, use `rails generate folio:component footer/menu` for `MyProject::Web::Footer::MenuComponent`). Use a leading slash only when specifying the full namespace explicitly.
 
 See **`AGENTS.md`** (Generators + View Components) for the slash rule and examples.
 
@@ -48,6 +48,12 @@ See **`AGENTS.md`** (Generators + View Components) for the slash rule and exampl
 | Host app (typical) | App’s **`ApplicationComponent < Folio::ApplicationComponent`** (and console analogue if applicable) — match sibling components; do not subclass `Folio::ApplicationComponent` directly if the app defines its own base. |
 
 Generator parent is configurable via **`folio_component_generator_parent_component_class_name_proc`**.
+
+## Initialize
+
+- Components **should define `initialize`** most of the time — even an empty `def initialize; end` is preferable to omitting it.
+- **Required** when the component inherits directly from `Folio::ApplicationComponent` / `Folio::Console::ApplicationComponent` (or the host app's `ApplicationComponent`).
+- **Skippable** only in rare cases where a shared ancestor or concern already defines `initialize` for this component family.
 
 ## Markup & styling
 

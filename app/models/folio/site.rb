@@ -67,6 +67,7 @@ class Folio::Site < Folio::ApplicationRecord
        twitter
        linkedin
        youtube
+       spotify
        linktree
        appstore
        google_play

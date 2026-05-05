@@ -62,6 +62,13 @@ en:
       content: This image contains sensitive content. To see it, verify your age. Are you over 18?
       accept: Yes
       cancel: No
+    special_characters:
+      popup_component:
+        title: Special characters
+        close: Close
+      trigger_component:
+        label: Special characters
+
     console:
       pages:
         clone:

@@ -14,7 +14,7 @@
           = t('.title')
       - if outdated_revision?
         h3.f-c-tiptap-simple-form-wrap-autosave-info__top-label
-          = t('.object_is_meantime_updated_by', name: updated_by_user.to_label)
+          = object_is_meantime_updated_by_message
 
         .f-c-tiptap-simple-form-wrap-autosave-info__bottom
           .f-c-tiptap-simple-form-wrap-autosave-info__buttons
@@ -23,7 +23,7 @@
                                                               data: stimulus_action(click: "onReloadButtonClick")))
       - if conflicted_revisions?
         h3.f-c-tiptap-simple-form-wrap-autosave-info__top-label
-          = t('.unsaved_newest_changes_from', name: other_user.to_label)
+          = unsaved_newest_changes_from_message
 
         .f-c-tiptap-simple-form-wrap-autosave-info__middle
           = latest_revisions_info

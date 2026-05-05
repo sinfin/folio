@@ -78,6 +78,12 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     this.iframeTarget.contentWindow.postMessage(data, this.originValue || window.origin)
   }
 
+  onSpecialCharactersInsertText (e) {
+    const text = e.detail?.text
+    if (typeof text !== 'string' || !text) return
+    this.sendMessageToIframe({ type: 'f-input-tiptap:insert-text', text })
+  }
+
   isSingleEmptyParagraphDoc (content) {
     if (!content || content.type !== 'doc') return false
     const children = content.content
@@ -153,7 +159,6 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     const valueKeys = this.valueKeys()
 
     const isEmptyDocument = this.isSingleEmptyParagraphDoc(content)
-    console.log('isEmptyDocument', { isEmptyDocument, content })
 
     if (content && !isEmptyDocument) {
       const value = {

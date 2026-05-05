@@ -164,6 +164,7 @@ declare global {
     Folio: {
       Tiptap: {
         root: ReturnType<typeof import("react-dom/client").createRoot> | null;
+        editor?: TiptapEditor;
         init: (props: {
           node: HTMLElement;
           folioTiptapConfig?: FolioTiptapConfig;
