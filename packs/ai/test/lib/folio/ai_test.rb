@@ -27,6 +27,10 @@ class Folio::AiTest < ActiveSupport::TestCase
     end
   end
 
+  test "disables provider request storage by default" do
+    assert_not_predicate Folio::Ai, :provider_request_storage?
+  end
+
   test "is disabled by default" do
     with_ai_config(enabled: false) do
       assert_not Folio::Ai.enabled?

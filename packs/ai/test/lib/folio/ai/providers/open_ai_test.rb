@@ -14,8 +14,22 @@ class Folio::Ai::Providers::OpenAiTest < ActiveSupport::TestCase
     assert_equal "https://api.openai.com/v1/responses", request.uri.to_s
     assert_equal "Bearer secret", request.headers["Authorization"]
     assert_equal "gpt-5.5", request.body[:model]
+    assert_equal false, request.body[:store]
     assert_equal "title", request.body.dig(:metadata, :folio_ai_field_key)
     assert_includes request.body[:input].first[:content], "suggestions"
+  end
+
+  test "allows explicit opt in to provider request storage" do
+    provider = Folio::Ai::Providers::OpenAi.new(api_key: "secret", model: "gpt-5.5")
+    field = Folio::Ai::Field.new(key: :title)
+
+    request = with_ai_config(provider_request_storage: true) do
+      provider.build_request(prompt: "Write a title.",
+                             field:,
+                             suggestion_count: 3)
+    end
+
+    assert_equal true, request.body[:store]
   end
 
   test "lists relevant text models" do

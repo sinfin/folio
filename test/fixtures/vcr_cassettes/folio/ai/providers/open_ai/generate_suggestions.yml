@@ -5,8 +5,8 @@ http_interactions:
     uri: https://api.openai.com/v1/responses
     body:
       encoding: UTF-8
-      string: '{"model":"gpt-5.5","input":[{"role":"system","content":"Return only
-        valid JSON with a top-level \"suggestions\" array. Generate 1 suggestions.
+      string: '{"model":"gpt-5.5","store":false,"input":[{"role":"system","content":"Return
+        only valid JSON with a top-level \"suggestions\" array. Generate 1 suggestions.
         Each suggestion must contain \"text\" and may contain \"key\" and \"meta\"."},{"role":"user","content":"Create
         one concise Czech news headline for an article about safe AI prompt management
         in a CMS. Return the text in Czech."}],"metadata":{"folio_ai_field_key":"title"}}'

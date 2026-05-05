@@ -42,6 +42,7 @@ module Folio::Ai
     attr_accessor :enabled,
                   :default_provider,
                   :model_fallback_enabled,
+                  :provider_request_storage,
                   :max_prompt_chars,
                   :rate_limit
 
@@ -61,6 +62,7 @@ module Folio::Ai
       self.provider_model_options = {}
       self.model_catalog_cache_ttl = 1.hour
       self.model_fallback_enabled = true
+      self.provider_request_storage = false
       self.provider_request_timeout = 30
       self.client_request_timeout_ms = 45_000
       self.max_prompt_chars = 80_000
@@ -133,6 +135,10 @@ module Folio::Ai
 
     def model_fallback_enabled?
       ActiveModel::Type::Boolean.new.cast(model_fallback_enabled)
+    end
+
+    def provider_request_storage?
+      ActiveModel::Type::Boolean.new.cast(provider_request_storage)
     end
 
     def provider_adapter_class(provider)
