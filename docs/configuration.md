@@ -61,6 +61,12 @@ After changing configuration, restart your Rails server.
 
 ## SEO Helpers
 
+## Sign-in dev auto-fill
+Opt-in dev-only button on `/users/sign_in` that fills credentials and submits. Hidden unless configured and `Rails.env.development?`.
+```ruby
+config.folio_devise_dev_login_credentials = { email: "test@test.test", password: "test@test.test" }
+```
+
 ## Cookie Consent Banner
 Enable and configure the built-in cookie-consent component:
 ```ruby

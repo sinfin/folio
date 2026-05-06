@@ -21,9 +21,9 @@
 
     = submit_button(f, t('.sign_in'), test_id: 'sign-in-form-submit-button')
 
-    - if ::Rails.env.development?
-      button.btn.btn-warning.my-3 onclick="const form = this.closest('form'); for (const input of form.querySelectorAll('.form-control')) { input.value = 'test@test.test' }; form.submit();"
-        ' #{t('.sign_in')} (test@test.test)
+    - if dev_login?
+      button.btn.btn-warning.my-3.f-devise__dev-login type="button" data-dev-login-email=dev_login_email data-dev-login-password=dev_login_password onclick="const form = this.closest('form'); form.querySelector('input[name*=\'email\']').value = this.dataset.devLoginEmail; form.querySelector('input[name*=\'password\']').value = this.dataset.devLoginPassword; form.submit();"
+        ' #{t('.sign_in')} (#{dev_login_email})
 
     - unless omniauth_above?
       == cell('folio/devise/omniauth', 'sessions')

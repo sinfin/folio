@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Development-only auto-fill login button on `folio/devise/sessions/new` is configurable and hidden by default. It can be enabled by setting e.g. `config.folio_devise_dev_login_credentials = { email: "test@test.test", password: "test@test.test" }`.
+
 ### Changed
 
 ### Fixed
