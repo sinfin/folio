@@ -13,6 +13,9 @@ $f-ai-c-text-suggestions-background: #F3EBFC !default
     align-items: center
     display: inline-flex
     gap: px-to-rem(8px)
+    margin-bottom: px-to-rem(8px)
+    margin-left: px-to-rem(8px)
+    vertical-align: top
 
   &__button,
   &__undo,
@@ -258,25 +261,6 @@ $f-ai-c-text-suggestions-background: #F3EBFC !default
 
   &--open
     display: block
-
-  &--auto-attached
-    display: block
-    margin-top: px-to-rem(8px)
-
-  &--external-controls
-    &:not(.f-ai-c-text-suggestions--open)
-      display: none
-
-  &--external-controls &__actions
-    display: none
-
-  &--external-actions
-    display: inline-flex
-    margin-top: 0
-
-  &--external-actions &__actions
-    align-items: center
-    display: inline-flex
 
 @keyframes f-ai-c-text-suggestions-spin
   to

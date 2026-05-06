@@ -102,7 +102,6 @@ class Folio::Console::Dummy::Blog::ArticleAiSuggestionsControllerTest < Folio::C
 
     def ai_field(key, **options)
       Folio::Ai::Field.new(key:,
-                           auto_attach: true,
                            **options)
     end
 

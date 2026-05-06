@@ -1,7 +1,16 @@
 (() => {
-  const registerTextSuggestionsController = () => {
-    window.Folio.Stimulus.register('f-ai-c-text-suggestions', class extends window.Stimulus.Controller {
+  const CONTROLLER_NAME = 'f-input-ai-text-suggestions'
+  const BEM_CLASS_NAME = 'f-ai-c-text-suggestions'
+  const OPEN_CLASS = `${BEM_CLASS_NAME}--open`
+  const LOADING_CLASS = `${BEM_CLASS_NAME}--loading`
+  let openController = null
+
+  const registerInputAiTextSuggestionsController = () => {
+    window.Folio.Stimulus.register(CONTROLLER_NAME, class extends window.Stimulus.Controller {
       static targets = [
+        'input',
+        'button',
+        'undoButton',
         'panel',
         'status',
         'suggestions',
@@ -12,10 +21,14 @@
         endpoint: String,
         integrationKey: String,
         fieldKey: String,
-        targetSelector: String,
         suggestionCount: { type: Number, default: 3 },
         characterLimit: Number,
         initialInstructions: { type: String, default: '' },
+        fieldLabel: String,
+        buttonLabel: String,
+        undoLabel: String,
+        closeLabel: String,
+        panelTitle: String,
         loadingText: String,
         genericErrorText: String,
         requestTimeoutText: String,
@@ -26,14 +39,19 @@
         acceptLabel: String,
         acceptButtonLabel: String,
         charsLabel: String,
+        instructionsPlaceholder: String,
+        regenerateLabel: String,
         componentId: String,
         currentStatePolicy: { type: String, default: 'persisted_record' },
-        showMeta: { type: Boolean, default: false }
+        showMeta: { type: Boolean, default: false },
+        sparklesPath: String,
+        undoPath: String
       }
 
-      static classes = ['open', 'loading']
-
       connect () {
+        if (!this.input) return
+
+        this.mount()
         this.snapshot = null
         this.selectedText = null
         this.requestSequence = 0
@@ -42,13 +60,15 @@
         this.undoVisible = false
         this.savedInstructions = this.initialInstructionsValue
         this.targetInputListener = () => this.onTargetInput()
-        this.targetInput?.addEventListener('input', this.targetInputListener)
-        this.dispatchState()
+        this.input.addEventListener('input', this.targetInputListener)
+        this.syncControls()
       }
 
       disconnect () {
         this.abortRequest()
-        this.targetInput?.removeEventListener('input', this.targetInputListener)
+        this.input?.removeEventListener('input', this.targetInputListener)
+
+        if (openController === this) openController = null
       }
 
       toggle (event) {
@@ -62,18 +82,11 @@
       }
 
       open () {
-        const input = this.targetInput
+        const input = this.input
+        if (!input) return
 
-        if (!input) {
-          this.showPanel()
-          this.showError(this.genericErrorTextValue)
-          return
-        }
-
-        document.dispatchEvent(new CustomEvent('folio:ai-text-suggestions:open', {
-          bubbles: true,
-          detail: { controller: this, componentId: this.componentIdValue }
-        }))
+        if (openController && openController !== this) openController.close()
+        openController = this
 
         this.snapshot = input.value || ''
         this.selectedText = null
@@ -94,11 +107,14 @@
         this.panelTarget.hidden = true
         this.suggestionsTarget.innerHTML = ''
         this.hideStatus()
-        this.element.classList.remove(this.openClass)
-        this.element.classList.remove(this.loadingClass)
+        this.element.classList.remove(OPEN_CLASS)
+        this.element.classList.remove(LOADING_CLASS)
         this.undoVisible = false
         this.instructionsTarget.value = this.savedInstructions
-        this.dispatchState()
+
+        if (openController === this) openController = null
+
+        this.syncControls()
       }
 
       regenerate (event) {
@@ -114,15 +130,13 @@
         this.stopActionEvent(event)
 
         if (this.snapshot === null) return
+        if (!this.input) return
 
-        const input = this.targetInput
-        if (!input) return
-
-        this.writeValue(input, this.snapshot)
+        this.writeValue(this.input, this.snapshot)
         this.selectedText = null
         this.clearSelection()
         this.undoVisible = false
-        this.dispatchState()
+        this.syncControls()
 
         this.dispatch('undo', { detail: this.trackingDetail() })
       }
@@ -131,15 +145,14 @@
         event.preventDefault()
         event.stopPropagation()
 
-        const input = this.targetInput
-        if (!input) return
+        if (!this.input) return
 
         const text = event.params.text || ''
         this.selectedText = text
-        this.writeValue(input, text)
+        this.writeValue(this.input, text)
         this.markSelected(event.currentTarget)
         this.undoVisible = true
-        this.dispatchState()
+        this.syncControls()
 
         this.dispatch('accepted', { detail: this.trackingDetail() })
       }
@@ -163,7 +176,7 @@
 
       onTargetInput () {
         if (!this.selectedText) return
-        if (!this.targetInput || this.targetInput.value === this.selectedText) return
+        if (!this.input || this.input.value === this.selectedText) return
 
         this.selectedText = null
         this.clearSelection()
@@ -172,7 +185,6 @@
       onWindowClick (event) {
         if (!this.isOpen) return
         if (this.element.contains(event.target)) return
-        if (this.panelTarget.contains(event.target)) return
 
         this.close()
       }
@@ -182,25 +194,6 @@
         if (event.key !== 'Escape') return
 
         this.close()
-      }
-
-      onOtherPanelOpen (event) {
-        if (!this.isOpen) return
-        if (event.detail?.controller === this) return
-
-        this.close()
-      }
-
-      onActionsToggle (event) {
-        if (!this.matchesActionEvent(event)) return
-
-        this.toggle(event)
-      }
-
-      onActionsUndo (event) {
-        if (!this.matchesActionEvent(event)) return
-
-        this.undo(event)
       }
 
       stopPropagation (event) {
@@ -237,8 +230,8 @@
             this.clearRequestTimeout()
             this.abortController = null
             this.requestTimedOut = false
-            this.element.classList.remove(this.loadingClass)
-            this.dispatchState()
+            this.element.classList.remove(LOADING_CLASS)
+            this.syncControls()
           })
       }
 
@@ -327,20 +320,20 @@
 
       suggestionElement (suggestion) {
         const element = document.createElement('div')
-        element.className = 'f-ai-c-text-suggestions__suggestion'
+        element.className = `${BEM_CLASS_NAME}__suggestion`
         element.setAttribute('role', 'button')
         element.setAttribute('tabindex', '0')
-        element.setAttribute('data-action', 'click->f-ai-c-text-suggestions#accept keydown->f-ai-c-text-suggestions#acceptFromKeyboard')
-        element.setAttribute('data-f-ai-c-text-suggestions-text-param', suggestion.text || '')
-        element.setAttribute('data-f-ai-c-text-suggestions-key-param', suggestion.key || '')
+        element.setAttribute('data-action', `click->${CONTROLLER_NAME}#accept keydown->${CONTROLLER_NAME}#acceptFromKeyboard`)
+        element.setAttribute(`data-${CONTROLLER_NAME}-text-param`, suggestion.text || '')
+        element.setAttribute(`data-${CONTROLLER_NAME}-key-param`, suggestion.key || '')
 
         const body = document.createElement('span')
-        body.className = 'f-ai-c-text-suggestions__suggestion-body'
+        body.className = `${BEM_CLASS_NAME}__suggestion-body`
         if (this.showMetaValue) body.appendChild(this.suggestionMetaElement(suggestion))
         body.appendChild(this.suggestionTextElement(suggestion.text || ''))
 
         const actions = document.createElement('span')
-        actions.className = 'f-ai-c-text-suggestions__suggestion-actions'
+        actions.className = `${BEM_CLASS_NAME}__suggestion-actions`
         actions.appendChild(this.actionButton('copy',
           this.copyButtonLabelValue,
           this.copyLabelValue,
@@ -358,7 +351,7 @@
 
       suggestionMetaElement (suggestion) {
         const meta = document.createElement('span')
-        meta.className = 'f-ai-c-text-suggestions__suggestion-meta'
+        meta.className = `${BEM_CLASS_NAME}__suggestion-meta`
 
         const tone = suggestion.meta?.tone_label || suggestion.meta?.toneLabel
         if (tone) meta.appendChild(this.metaItem(tone))
@@ -380,7 +373,7 @@
 
       suggestionTextElement (text) {
         const span = document.createElement('span')
-        span.className = 'f-ai-c-text-suggestions__suggestion-text'
+        span.className = `${BEM_CLASS_NAME}__suggestion-text`
         span.textContent = text
         return span
       }
@@ -388,24 +381,24 @@
       actionButton (action, buttonLabel, label, text) {
         const button = document.createElement('button')
         button.type = 'button'
-        button.className = `f-ai-c-text-suggestions__suggestion-${action}`
+        button.className = `${BEM_CLASS_NAME}__suggestion-${action}`
         button.textContent = buttonLabel
         button.setAttribute('aria-label', label)
         button.setAttribute('title', label)
-        button.setAttribute('data-action', `click->f-ai-c-text-suggestions#${action}`)
-        button.setAttribute('data-f-ai-c-text-suggestions-text-param', text)
+        button.setAttribute('data-action', `click->${CONTROLLER_NAME}#${action}`)
+        button.setAttribute(`data-${CONTROLLER_NAME}-text-param`, text)
         return button
       }
 
       setLoading () {
-        this.element.classList.add(this.loadingClass)
-        this.dispatchState()
+        this.element.classList.add(LOADING_CLASS)
+        this.syncControls()
         this.hideStatus()
         this.suggestionsTarget.innerHTML = ''
 
         for (let i = 0; i < this.suggestionCountValue; i += 1) {
           const item = document.createElement('div')
-          item.className = 'f-ai-c-text-suggestions__suggestion f-ai-c-text-suggestions__suggestion--loading'
+          item.className = `${BEM_CLASS_NAME}__suggestion ${BEM_CLASS_NAME}__suggestion--loading`
           item.textContent = this.loadingTextValue
           this.suggestionsTarget.appendChild(item)
         }
@@ -413,12 +406,12 @@
 
       showPanel () {
         this.panelTarget.hidden = false
-        this.element.classList.add(this.openClass)
-        this.dispatchState()
+        this.element.classList.add(OPEN_CLASS)
+        this.syncControls()
       }
 
       showError (message) {
-        this.panelTarget.classList.add('f-ai-c-text-suggestions__panel--error')
+        this.panelTarget.classList.add(`${BEM_CLASS_NAME}__panel--error`)
         this.statusTarget.hidden = false
         this.statusTarget.textContent = message
       }
@@ -431,13 +424,13 @@
           return
         }
 
-        this.panelTarget.classList.remove('f-ai-c-text-suggestions__panel--error')
+        this.panelTarget.classList.remove(`${BEM_CLASS_NAME}__panel--error`)
         this.statusTarget.hidden = false
         this.statusTarget.textContent = messages.join(' ')
       }
 
       hideStatus () {
-        this.panelTarget.classList.remove('f-ai-c-text-suggestions__panel--error')
+        this.panelTarget.classList.remove(`${BEM_CLASS_NAME}__panel--error`)
         this.statusTarget.hidden = true
         this.statusTarget.textContent = ''
       }
@@ -452,13 +445,13 @@
       markSelected (selectedElement) {
         this.clearSelection()
 
-        const suggestion = selectedElement.closest('.f-ai-c-text-suggestions__suggestion') || selectedElement
-        suggestion.classList.add('f-ai-c-text-suggestions__suggestion--selected')
+        const suggestion = selectedElement.closest(`.${BEM_CLASS_NAME}__suggestion`) || selectedElement
+        suggestion.classList.add(`${BEM_CLASS_NAME}__suggestion--selected`)
       }
 
       clearSelection () {
-        this.suggestionsTarget.querySelectorAll('.f-ai-c-text-suggestions__suggestion--selected').forEach((element) => {
-          element.classList.remove('f-ai-c-text-suggestions__suggestion--selected')
+        this.suggestionsTarget.querySelectorAll(`.${BEM_CLASS_NAME}__suggestion--selected`).forEach((element) => {
+          element.classList.remove(`${BEM_CLASS_NAME}__suggestion--selected`)
         })
       }
 
@@ -533,7 +526,7 @@
       }
 
       currentFormSnapshot () {
-        const form = this.targetInput?.form
+        const form = this.input?.form
         if (!form) return {}
 
         const snapshot = {}
@@ -558,10 +551,6 @@
         }
       }
 
-      matchesActionEvent (event) {
-        return event.detail?.componentId === this.componentIdValue
-      }
-
       stopActionEvent (event) {
         if (!event) return
 
@@ -569,24 +558,189 @@
         event.stopPropagation()
       }
 
-      dispatchState () {
-        this.dispatch('state', {
-          detail: {
-            ...this.trackingDetail(),
-            componentId: this.componentIdValue,
-            open: this.isOpen,
-            loading: this.element.classList.contains(this.loadingClass),
-            undoVisible: this.undoVisible
-          }
-        })
+      syncControls () {
+        const loading = this.element.classList.contains(LOADING_CLASS)
+
+        this.buttonTarget.setAttribute('aria-expanded', this.isOpen ? 'true' : 'false')
+        this.undoButtonTarget.hidden = !this.undoVisible
+        this.controlsElement?.classList.toggle(OPEN_CLASS, this.isOpen)
+        this.controlsElement?.classList.toggle(LOADING_CLASS, loading)
       }
 
-      get targetInput () {
-        return document.querySelector(this.targetSelectorValue)
+      mount () {
+        this.mountControls()
+        this.mountPanel()
+      }
+
+      mountControls () {
+        if (this.hasButtonTarget && this.hasUndoButtonTarget) return
+
+        const controls = document.createElement('div')
+        controls.className = `${BEM_CLASS_NAME} ${BEM_CLASS_NAME}__actions`
+
+        const button = document.createElement('button')
+        button.type = 'button'
+        button.id = `${this.componentIdValue}_button`
+        button.className = `${BEM_CLASS_NAME}__button`
+        button.setAttribute('aria-expanded', 'false')
+        button.setAttribute('aria-controls', this.componentIdValue)
+        button.setAttribute('data-action', `click->${CONTROLLER_NAME}#toggle`)
+        button.setAttribute(`data-${CONTROLLER_NAME}-target`, 'button')
+        button.appendChild(this.iconElement('sparkles'))
+        button.appendChild(this.labelElement(`${BEM_CLASS_NAME}__button-label`, this.buttonLabelValue))
+
+        const undoButton = document.createElement('button')
+        undoButton.type = 'button'
+        undoButton.id = `${this.componentIdValue}_undo`
+        undoButton.className = `${BEM_CLASS_NAME}__undo`
+        undoButton.hidden = true
+        undoButton.setAttribute('data-action', `click->${CONTROLLER_NAME}#undo`)
+        undoButton.setAttribute(`data-${CONTROLLER_NAME}-target`, 'undoButton')
+        undoButton.appendChild(this.iconElement('undo'))
+        undoButton.appendChild(this.labelElement(`${BEM_CLASS_NAME}__undo-label`, this.undoLabelValue))
+
+        controls.appendChild(button)
+        controls.appendChild(undoButton)
+        this.insertControls(controls)
+      }
+
+      insertControls (controls) {
+        const label = this.input.id
+          ? Array.from(this.element.querySelectorAll('label')).find((label) => label.htmlFor === this.input.id)
+          : null
+        const insertionTarget = label || this.element.querySelector('label')
+
+        if (insertionTarget) {
+          insertionTarget.insertAdjacentElement('afterend', controls)
+        } else {
+          this.element.insertBefore(controls, this.element.firstChild)
+        }
+      }
+
+      mountPanel () {
+        if (this.hasPanelTarget) return
+
+        const panel = document.createElement('div')
+        panel.id = this.componentIdValue
+        panel.className = `${BEM_CLASS_NAME}__panel`
+        panel.hidden = true
+        panel.setAttribute('role', 'region')
+        panel.setAttribute('aria-label', this.panelTitleValue)
+        panel.setAttribute(`data-${CONTROLLER_NAME}-target`, 'panel')
+        panel.setAttribute('data-action', `click->${CONTROLLER_NAME}#stopPropagation`)
+
+        panel.appendChild(this.panelHeaderElement())
+        panel.appendChild(this.statusElement())
+        panel.appendChild(this.suggestionsElement())
+        panel.appendChild(this.instructionsElement())
+
+        this.insertPanel(panel)
+      }
+
+      insertPanel (panel) {
+        const inputGroup = this.input.closest('.input-group')
+        const anchor = inputGroup && this.element.contains(inputGroup) ? inputGroup : this.input
+        anchor.insertAdjacentElement('afterend', panel)
+      }
+
+      panelHeaderElement () {
+        const header = document.createElement('div')
+        header.className = `${BEM_CLASS_NAME}__header`
+
+        const title = document.createElement('div')
+        title.className = `${BEM_CLASS_NAME}__title`
+        title.textContent = this.panelTitleValue
+
+        const closeButton = document.createElement('button')
+        closeButton.type = 'button'
+        closeButton.className = `${BEM_CLASS_NAME}__close`
+        closeButton.setAttribute('aria-label', this.closeLabelValue)
+        closeButton.setAttribute('data-action', `click->${CONTROLLER_NAME}#close`)
+        closeButton.textContent = '\u00d7'
+
+        header.appendChild(title)
+        header.appendChild(closeButton)
+
+        return header
+      }
+
+      statusElement () {
+        const status = document.createElement('div')
+        status.className = `${BEM_CLASS_NAME}__status`
+        status.hidden = true
+        status.setAttribute(`data-${CONTROLLER_NAME}-target`, 'status')
+        return status
+      }
+
+      suggestionsElement () {
+        const suggestions = document.createElement('div')
+        suggestions.className = `${BEM_CLASS_NAME}__suggestions`
+        suggestions.setAttribute(`data-${CONTROLLER_NAME}-target`, 'suggestions')
+        return suggestions
+      }
+
+      instructionsElement () {
+        const instructions = document.createElement('div')
+        instructions.className = `${BEM_CLASS_NAME}__instructions`
+
+        const textarea = document.createElement('textarea')
+        textarea.className = `${BEM_CLASS_NAME}__instructions-input`
+        textarea.rows = 2
+        textarea.placeholder = this.instructionsPlaceholderValue
+        textarea.value = this.initialInstructionsValue
+        textarea.setAttribute(`data-${CONTROLLER_NAME}-target`, 'instructions')
+
+        const regenerate = document.createElement('button')
+        regenerate.type = 'button'
+        regenerate.className = `${BEM_CLASS_NAME}__regenerate`
+        regenerate.setAttribute('data-action', `click->${CONTROLLER_NAME}#regenerate`)
+        regenerate.textContent = this.regenerateLabelValue
+
+        instructions.appendChild(textarea)
+        instructions.appendChild(regenerate)
+
+        return instructions
+      }
+
+      iconElement (icon) {
+        const isUndo = icon === 'undo'
+        const wrapper = document.createElement('span')
+        wrapper.className = isUndo ? `${BEM_CLASS_NAME}__undo-icon` : `${BEM_CLASS_NAME}__spark`
+        wrapper.setAttribute('aria-hidden', 'true')
+
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+        svg.setAttribute('class', isUndo ? `${BEM_CLASS_NAME}__undo-svg` : `${BEM_CLASS_NAME}__spark-svg`)
+        svg.setAttribute('fill', 'none')
+        svg.setAttribute('viewBox', '0 0 24 24')
+        svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
+        path.setAttribute('d', isUndo ? this.undoPathValue : this.sparklesPathValue)
+        path.setAttribute('fill', 'currentColor')
+
+        svg.appendChild(path)
+        wrapper.appendChild(svg)
+
+        return wrapper
+      }
+
+      labelElement (className, text) {
+        const label = document.createElement('span')
+        label.className = className
+        label.textContent = text
+        return label
+      }
+
+      get input () {
+        return this.hasInputTarget ? this.inputTarget : null
+      }
+
+      get controlsElement () {
+        return this.hasButtonTarget ? this.buttonTarget.closest(`.${BEM_CLASS_NAME}`) : null
       }
 
       get isOpen () {
-        return !this.panelTarget.hidden
+        return this.hasPanelTarget && !this.panelTarget.hidden
       }
 
       get usesCurrentFormSnapshot () {
@@ -596,8 +750,8 @@
   }
 
   if (window.Folio?.Stimulus?.register && window.Stimulus?.Controller) {
-    registerTextSuggestionsController()
+    registerInputAiTextSuggestionsController()
   } else {
-    document.addEventListener('folio:stimulus-ready', registerTextSuggestionsController, { once: true })
+    document.addEventListener('folio:stimulus-ready', registerInputAiTextSuggestionsController, { once: true })
   }
 })()

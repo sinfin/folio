@@ -3,9 +3,8 @@ name: folio-ai-inputs
 description: >-
   Wire Folio AI prompts and text suggestions to concrete Console inputs in a
   Folio-based host application. Use when registering AI promptable fields,
-  adding folio_ai_form_context, auto-attaching standard SimpleForm inputs,
-  manually rendering the AI suggestions component for custom inputs, building
-  host-app AI suggestion endpoints, or preparing QA for this feature.
+  adding field-level SimpleForm `ai:` options, building host-app AI suggestion
+  endpoints, or preparing QA for this feature.
 ---
 
 # Folio AI input wiring
@@ -18,7 +17,7 @@ file before changing code.
 
 - Keep generic behavior in `packs/ai`: registry, site prompt settings,
   availability gates, provider adapters, prompt composition, response
-  normalization, user instructions, reusable component, Stimulus lifecycle,
+  normalization, user instructions, Stimulus lifecycle,
   instrumentation, rate limits, and TipTap/plain-text helpers.
 - Keep host-app behavior in the host app: concrete routes, authorization,
   record loading, context builder, promptable field list, form placement,
@@ -59,25 +58,29 @@ file before changing code.
                                   fields: [
                                     Folio::Ai::Field.new(key: :title,
                                                          label: "Title",
-                                                         auto_attach: true,
                                                          input_types: %i[string],
                                                          character_limit: 120),
                                   ])
    ```
 
-4. Use `auto_attach: true` only for standard SimpleForm `string` or `text`
-   inputs that can receive the default Folio AI action inside an explicit form
-   context.
-5. Wrap eligible form sections with `folio_ai_form_context`, passing the
-   integration key, endpoint, current record, and an explicit
-   `current_state_policy`. Use `:persisted_record` when generation should use
+4. Add `ai:` to each eligible standard SimpleForm `string` or `text` input:
+
+   ```ruby
+   f.input :title,
+           ai: { integration_key: :content_editor,
+                 endpoint: console_article_ai_suggestions_path(article) }
+   ```
+
+   `integration_key` defaults to the form object's table name and `field_key`
+   defaults to the input attribute. `endpoint` is required. `ai: false` or a
+   missing `ai:` option renders the normal input.
+5. Use `current_state_policy: :persisted_record` when generation should use
    saved server state. Use `:current_form_snapshot` when the request should
    include the current successful form control values; host context builders can
    read the sanitized flat hash with `folio_ai_current_form_snapshot`.
-6. For custom inputs, composite components, rich-text wrappers, or unusual
-   placement, render `Folio::Ai::Console::TextSuggestionsComponent` manually and
-   pass `target_selector`, `integration_key`, `field_key`, `endpoint`,
-   instructions, character limit, and `current_state_policy`.
+6. Keep custom inputs, composite components, rich-text wrappers, or unusual
+   placement on explicit host-app wiring until their input ownership and undo
+   contract is reviewed.
 7. Implement a thin authenticated endpoint that includes
    `Folio::Ai::Console::SuggestionsControllerBase`. Override only record lookup,
    authorization, `folio_ai_context`, and `folio_ai_host_eligible?`.

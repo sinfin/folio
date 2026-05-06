@@ -20,10 +20,8 @@ Implemented in the Folio `:ai` pack:
 - Site settings validation against registered integrations, registered fields,
   and configured providers while Folio AI is globally enabled.
 - Console site settings tab for registered promptable fields.
-- Auto-attachment for supported standard SimpleForm `string` and `text` inputs
-  inside an explicit AI form context.
-- Public `Folio::Ai::Console::TextSuggestionsComponent` for manual custom-field
-  wiring.
+- Field-level `ai:` option for supported standard SimpleForm `string` and
+  `text` inputs.
 - Shared Stimulus state machine for loading, error, suggestions, accept, copy,
   ghost undo, close, and regenerate/save-instructions.
 - Reusable controller concern for host-app endpoint contracts.
@@ -75,8 +73,8 @@ migrations, components and tests live under `packs/ai`.
 | Prompt registry and validation for registered fields | Resource loading and authorization |
 | Site-level prompt storage | Context building for a specific record type |
 | User instruction persistence | App-specific aggregate actions such as multi-field bulk generation |
-| Shared AI suggestion panel component and JS state machine | AI form context wiring for concrete resources |
-| Auto-attachment to supported Folio SimpleForm inputs | Custom input/component wiring and aggregate workflows |
+| Shared AI suggestion panel JS state machine | Field-level `ai:` wiring for concrete resources |
+| Attachment to supported Folio SimpleForm inputs | Custom input/component wiring and aggregate workflows |
 | Prompt composition pipeline | Rich-text output mapping for app-owned editors |
 | Provider adapter interface and built-in providers | Client-specific prompt text entered by admins |
 | Reusable TipTap plain-text helpers | Field labels, ordering, and site-specific rollout decisions |
@@ -183,12 +181,10 @@ for one or more editor inputs.
                                     fields: [
                                       Folio::Ai::Field.new(key: :title,
                                                            label: "Title",
-                                                           auto_attach: true,
                                                            input_types: %i[string],
                                                            character_limit: 120),
                                       Folio::Ai::Field.new(key: :summary,
                                                            label: "Summary",
-                                                           auto_attach: true,
                                                            input_types: %i[text],
                                                            character_limit: 400),
                                     ])
@@ -197,9 +193,9 @@ for one or more editor inputs.
    end
    ```
 
-   Use `auto_attach: true` only for standard SimpleForm `string` or `text`
-   inputs that should receive AI controls automatically inside an explicit form
-   context. Custom inputs and aggregate workflows should use manual wiring.
+   Standard SimpleForm `string` or `text` inputs receive AI controls only when
+   their `f.input` call passes `ai:`. Custom inputs and aggregate workflows
+   should use explicit host-app wiring.
 7. Add a host-app endpoint that includes
    `Folio::Ai::Console::SuggestionsControllerBase`. The controller stays thin:
    load and authorize the record, return context, and provide record-specific
@@ -207,11 +203,12 @@ for one or more editor inputs.
 8. Build context with reusable plain-text helpers where possible. For TipTap
    fields prefer `Folio::Tiptap::PlainText.from_value(...)`; do not serialize
    raw editor JSON into prompts unless the host app has a reviewed mapper.
-9. Wrap the concrete form section in `folio_ai_form_context` to enable
-   auto-attachment for registered standard fields.
-10. Render `Folio::Ai::Console::TextSuggestionsComponent` manually for custom
-    inputs, rich-text wrappers, unusual placement, or app-owned aggregate
-    workflows.
+9. Add `ai:` to each concrete SimpleForm input that should expose suggestions.
+   Pass the endpoint explicitly; Folio infers `integration_key` from the form
+   object's table name and `field_key` from the input attribute unless supplied.
+10. Keep custom inputs, rich-text wrappers, unusual placement, or app-owned
+    aggregate workflows on explicit host-app wiring until their input and undo
+    contract is reviewed.
 11. Enable AI and fill default prompts per site and field in Console site
     settings. A field remains hidden from editors until its site prompt is
     non-blank.
@@ -262,21 +259,25 @@ the field unavailable until an admin fills a default prompt.
 
 ### Auto-Attachment For Standard Fields
 
-Host applications opt a form into AI attachment with
-`folio_ai_form_context`. Folio then enriches eligible standard SimpleForm
-`string` and `text` inputs if the registered field has `auto_attach: true`.
+Host applications opt individual fields into AI suggestions with the SimpleForm
+`ai:` option. Folio enriches eligible standard SimpleForm `string` and `text`
+inputs when the registered field, site prompt settings, record readiness, and
+input type gates pass.
 
 ```slim
-= folio_ai_form_context(integration_key: :content_editor,
-                        endpoint: console_article_ai_suggestions_path(@article),
-                        record: @article,
-                        current_state_policy: :persisted_record) do
-  = f.input :title
-  = f.input :perex, as: :text, character_counter: 400
+= f.input :title,
+          ai: { integration_key: :content_editor,
+                endpoint: console_article_ai_suggestions_path(@article) }
+= f.input :perex,
+          as: :text,
+          character_counter: 400,
+          ai: { endpoint: console_article_ai_suggestions_path(@article) }
 ```
 
-The form context is deliberately explicit. A configured site prompt alone does
-not attach AI controls to arbitrary forms.
+The field option is deliberately explicit. A configured site prompt alone does
+not attach AI controls to arbitrary forms. `ai: false` or a missing `ai:` option
+renders the normal input. `ai:` without `endpoint:` raises a developer-facing
+error.
 
 `current_state_policy` controls which state the host endpoint should use:
 
@@ -293,26 +294,10 @@ builders can read the sanitized submitted snapshot with
 ### Manual Custom-Field Wiring
 
 Custom ViewComponents, custom SimpleForm inputs, rich-text editors, and unusual
-placements should render the same component manually:
-
-```ruby
-render Folio::Ai::Console::TextSuggestionsComponent.new(
-  integration_key: :content_editor,
-  field_key: :social_text,
-  endpoint: console_article_ai_suggestions_path(@article),
-  target_selector: "#article_social_text",
-  user_instructions: Folio::Ai::UserInstruction
-    .find_or_initialize_for(user: current_user,
-                            site: Folio::Current.site,
-                            integration_key: :content_editor,
-                            field_key: :social_text)
-    .instruction,
-  character_limit: 250,
-)
-```
-
-Manual wiring must still use `Folio::Ai::Availability` or equivalent host-app
-gates before rendering the component.
+placements should not use the standard SimpleForm `ai:` shortcut until their
+serialization, placement, and undo behavior are explicit. Manual wiring must use
+`Folio::Ai::Availability` or equivalent host-app gates before rendering any
+custom controls.
 
 ### Host-App Endpoint
 
@@ -382,10 +367,9 @@ The dummy app wires a no-credentials demo integration for local validation:
 - `test/dummy/app/controllers/folio/console/dummy/blog/article_ai_suggestions_controller.rb`
   includes the reusable endpoint concern and uses an in-process demo adapter
   instead of OpenAI or Anthropic credentials.
-- The persisted dummy blog article form wraps standard text fields in
-  `folio_ai_form_context`, so `title`, `perex`, `meta_title`, and
-  `meta_description` auto-attach AI controls once the current site has prompts
-  configured.
+- The persisted dummy blog article form passes `ai:` to `title`, `perex`,
+  `meta_title`, and `meta_description`, so those fields attach AI controls once
+  the current site has prompts configured.
 
 Manual demosite check:
 
@@ -519,12 +503,10 @@ Folio::Ai.register_integration(:content_editor,
                                fields: [
                                  Folio::Ai::Field.new(key: :title,
                                                       label: "Title",
-                                                      auto_attach: true,
                                                       input_types: %i[string],
                                                       character_limit: 120),
                                  Folio::Ai::Field.new(key: :summary,
                                                       label: "Summary",
-                                                      auto_attach: true,
                                                       input_types: %i[text],
                                                       character_limit: 400),
                                ])
@@ -539,7 +521,7 @@ The registry should own:
 - optional char-limit lambdas
 - field eligibility hooks for record-level checks
 - context requirements such as required body text or required source fields
-- whether the field can auto-attach to supported console inputs
+- supported console input types
 
 Folio should not ship any application-specific prompt keys. Host apps define
 them and Folio validates only against what the app registered.
@@ -553,22 +535,23 @@ Registry validation should fail fast at boot or in tests when:
 
 ### 2.1 Console Field Attachment
 
-For supported standard console fields, AI controls should attach automatically.
-The site prompt configuration alone is not enough; all of these conditions must
-be true:
+Supported standard console fields can attach AI controls through `ai:`. The
+site prompt configuration alone is not enough; all of these conditions must be
+true:
 
-1. The host form declares an AI form context, including `integration_key`,
-   endpoint, record identity, and current-state policy.
-2. The field is registered in the Folio AI registry with `auto_attach: true`.
+1. The host input declares `ai:` with an endpoint. `integration_key` and
+   `field_key` can be explicit or inferred from the form object table and input
+   attribute.
+2. The field is registered in the Folio AI registry.
 3. The rendered input is a supported Folio SimpleForm input type (`string` or
    `text` in v1).
 4. The global/site/field availability gates pass.
 5. The field is editable and the host eligibility hook returns true.
 
 When those conditions pass, Folio should enrich the field wrapper with the AI
-action icon and the data attributes needed by the shared panel controller. This
-should use the existing SimpleForm `custom_html` / wrapper mechanism rather than
-requiring every standard field to manually render a separate component.
+Stimulus controller and the input target data needed by the shared panel
+controller. The controller mounts its controls and panel inside the same
+`.form-group`.
 
 Unsupported cases require explicit host-app wiring:
 
@@ -578,27 +561,21 @@ Unsupported cases require explicit host-app wiring:
 - aggregate workflows such as multi-field generation
 - fields where the app wants custom placement, labels, or grouped UI
 
-The automatic attachment must be conservative. If Folio cannot determine the
+The field-level attachment must be conservative. If Folio cannot determine the
 field key, target input, endpoint, or record readiness, it should not render the
 AI action.
 
-Folio must also expose a public manual component API for custom fields. Host
-applications need to be able to render the same AI action and panel manually
-next to a custom field when they provide:
+Custom fields need a separately reviewed manual API that provides at least
+`integration_key`, `field_key`, endpoint, target input ownership, and undo
+behavior.
 
-- `integration_key`
-- `field_key`
-- target input reference or selector
-- endpoint or form-level AI context reference
-- response format (`plain_text` in v1; structured formats when explicitly
-  supported)
-- character limit, if any
-- disabled/eligible state
-- optional serializer hook for non-standard field values
+Such an API should account for response format (`plain_text` in v1; structured
+formats when explicitly supported), character limit, disabled/eligible state,
+and optional serializer hooks for non-standard field values.
 
 Manual custom-field wiring must use the same availability gates, registry
 metadata, provider service, prompt composition, user-instruction persistence,
-response schema, tracking events, and frontend state machine as auto-attached
+response schema, tracking events, and frontend state machine as field-level
 standard fields. It must not create a second AI implementation path.
 
 ### 3. User Instructions Persistence
@@ -794,10 +771,9 @@ Required panel actions:
 - manual field edit after `accept`: clears the selected card state but keeps the
   panel open.
 
-For auto-attached standard fields, the action icon is rendered in the input
-wrapper. Clicking it opens the same shared panel below or next to the target
-field according to the component layout. The panel behavior is identical whether
-it was auto-attached or rendered explicitly by a host app.
+For field-level standard inputs, the action icon is mounted in the input
+wrapper. Clicking it opens the shared panel below the target field. The panel
+behavior is identical for every supported SimpleForm input.
 
 Folio should also define a reusable response schema:
 
@@ -965,10 +941,9 @@ Recommended installation steps:
    and cost tiers for models the team is willing to expose in site settings.
 6. Ensure the host app has a production cache store, ideally Redis-backed, so
    provider model catalogs can be cached for the configured TTL.
-7. Add an AI form context wrapper to host-app forms that should support
-   auto-attached standard fields.
-8. Explicitly wire custom inputs, rich-text fields, and aggregate workflows via
-   the public manual AI component API.
+7. Add `ai:` to host-app SimpleForm fields that should support AI suggestions.
+8. Keep custom inputs, rich-text fields, and aggregate workflows on explicit
+   host-app wiring until their manual AI contract is reviewed.
 9. Add a thin host-app controller/route if the app wants a resource-specific API.
 10. Enable the feature per site in the site settings tab.
 
@@ -1010,7 +985,7 @@ The Folio AI pack should cover:
 
 - site-level config validation and visibility rules
 - registry validation for unknown fields
-- auto-attachment behavior for supported SimpleForm inputs
+- field-level attachment behavior for supported SimpleForm inputs
 - prompt composition order
 - provider selection fallback order
 - user instruction persistence semantics
