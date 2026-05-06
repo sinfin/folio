@@ -15,6 +15,7 @@ When a task matches a skill’s description, **read that `SKILL.md` and follow i
 | Skill | Triggers (examples) |
 |-------|---------------------|
 | **folio-view-component** | Build or change ViewComponents (generator, BEM, Slim/Sass, Stimulus data attrs, tests); frontend in `app/components` |
+| **folio-pack** | Optional pack boundaries and namespaces; files under `packs/<name>`; route mappings to pack-owned controllers/components |
 | **folio-slim** | Slim template formatting: multi-line attributes, multiple `class` attrs, avoid inline Ruby, template length; `.slim` files |
 | **folio-scss** | SCSS/Sass styling: BEM nesting with `&`, colocated component stylesheets, scoping, don't style child components; `.sass`/`.scss` files |
 | **folio-javascript** | JavaScript conventions: ES6+, StandardJS, `Folio.Api`, flash events, debounce/throttle, DOM APIs; `.js` files |

@@ -22,15 +22,15 @@ Implemented in the Folio `:ai` pack:
 - Console site settings tab for registered promptable fields.
 - Field-level `ai:` option for supported standard SimpleForm `string` and
   `text` inputs.
-- Shared Stimulus state machine for loading, error, suggestions, accept, copy,
-  ghost undo, close, and regenerate/save-instructions.
-- Reusable controller concern for host-app endpoint contracts.
+- Shared Stimulus state machine for loading HTML, error, accept, copy, ghost
+  undo, close, and regenerate/save-instructions.
+- Centralized HTML-over-wire API under `Folio::Ai::Console::Api`.
 - TipTap/plain-text helper for context builders.
 - Cost/rate-limit guards and safe instrumentation events without prompts or
   generated content.
 
 The root Folio package only provides generic extension points and pack loading.
-AI-specific model concerns, controller concerns, SimpleForm decoration, locales,
+AI-specific model concerns, API controllers, SimpleForm decoration, locales,
 migrations, components and tests live under `packs/ai`.
 
 ## Goals
@@ -196,16 +196,15 @@ for one or more editor inputs.
    Standard SimpleForm `string` or `text` inputs receive AI controls only when
    their `f.input` call passes `ai:`. Custom inputs and aggregate workflows
    should use explicit host-app wiring.
-7. Add a host-app endpoint that includes
-   `Folio::Ai::Console::SuggestionsControllerBase`. The controller stays thin:
-   load and authorize the record, return context, and provide record-specific
-   eligibility.
+7. Add model methods for records that use suggestions. The centralized pack API
+   loads and authorizes records model-agnostically, then calls the model for
+   context and optional eligibility/provider overrides.
 8. Build context with reusable plain-text helpers where possible. For TipTap
    fields prefer `Folio::Tiptap::PlainText.from_value(...)`; do not serialize
    raw editor JSON into prompts unless the host app has a reviewed mapper.
 9. Add `ai:` to each concrete SimpleForm input that should expose suggestions.
-   Pass the endpoint explicitly; Folio infers `integration_key` from the form
-   object's table name and `field_key` from the input attribute unless supplied.
+   Folio infers `integration_key` from the form object's table name and
+   `field_key` from the input attribute unless supplied.
 10. Keep custom inputs, rich-text wrappers, unusual placement, or app-owned
     aggregate workflows on explicit host-app wiring until their input and undo
     contract is reviewed.
@@ -266,30 +265,29 @@ input type gates pass.
 
 ```slim
 = f.input :title,
-          ai: { integration_key: :content_editor,
-                endpoint: console_article_ai_suggestions_path(@article) }
+          ai: { integration_key: :content_editor }
 = f.input :perex,
           as: :text,
           character_counter: 400,
-          ai: { endpoint: console_article_ai_suggestions_path(@article) }
+          ai: true
 ```
 
 The field option is deliberately explicit. A configured site prompt alone does
 not attach AI controls to arbitrary forms. `ai: false` or a missing `ai:` option
-renders the normal input. `ai:` without `endpoint:` raises a developer-facing
-error.
+renders the normal input. `endpoint:` is not supported; the AI pack uses its
+centralized HTML-over-wire API.
 
-`current_state_policy` controls which state the host endpoint should use:
+`current_state_policy` controls which state the centralized endpoint sends to
+the model:
 
 - `persisted_record` is the default. Auto-attached inputs render only for
   persisted records, and suggestions are based on server-side persisted state.
-- `current_form_snapshot` allows the controls to render for an unsaved record
-  object and sends the current successful form control values with the request.
+- `current_form_snapshot` sends the current successful form control values with
+  the request for persisted records.
   File inputs are ignored and repeated field names are sent as arrays.
 
-Host endpoints still authorize and validate the persisted record. Context
-builders can read the sanitized submitted snapshot with
-`folio_ai_current_form_snapshot`.
+The central API still authorizes and validates the persisted record before it
+calls the model context method.
 
 ### Manual Custom-Field Wiring
 
@@ -299,46 +297,30 @@ serialization, placement, and undo behavior are explicit. Manual wiring must use
 `Folio::Ai::Availability` or equivalent host-app gates before rendering any
 custom controls.
 
-### Host-App Endpoint
+### Model Context Contract
 
-Folio provides `Folio::Ai::Console::SuggestionsControllerBase`. A host app
-should include it in a thin authenticated controller and override only the
-resource-specific methods:
+Folio provides one reusable API controller:
+`Folio::Ai::Console::Api::TextSuggestionsController`. Host apps should expose
+record-specific behavior on the model:
 
 ```ruby
-class Console::Articles::AiSuggestionsController < Folio::Console::Api::BaseController
-  include Folio::Ai::Console::SuggestionsControllerBase
+class Article < ApplicationRecord
+  def folio_ai_context(field_key:, current_form_snapshot:)
+    Articles::AiContextBuilder.new(article: self,
+                                   field_key:,
+                                   current_form_snapshot:).call
+  end
 
-  private
-    def folio_ai_host_eligible?
-      @article.persisted?
-    end
-
-    def folio_ai_context
-      Articles::AiContextBuilder.new(article: @article).call
-    end
+  def folio_ai_suggestions_eligible?(field_key:, current_form_snapshot:)
+    persisted? && title.present?
+  end
 end
 ```
 
-The base controller checks `folio_ai_host_eligible?` before evaluating
-`folio_ai_context`, so expensive context serialization can stay in the context
-builder without running for ineligible requests.
-
-The response contract is:
-
-```json
-{
-  "data": {
-    "suggestions": [
-      { "key": "1", "text": "Suggested text", "char_count": 182, "meta": {} }
-    ],
-    "user_instructions": "Last saved instructions",
-    "provider": "openai",
-    "model": "gpt-5.5",
-    "warnings": []
-  }
-}
-```
+`folio_ai_context` is required for models using `ai:`. Optional methods are
+`folio_ai_suggestions_eligible?`, `folio_ai_provider_adapter`, and
+`folio_ai_site`. The API returns rendered
+`Folio::Ai::Console::TextSuggestionsComponent` HTML, not JSON suggestions.
 
 ### Context Serialization Helpers
 
@@ -364,9 +346,9 @@ The dummy app wires a no-credentials demo integration for local validation:
 
 - `test/dummy/config/initializers/folio_ai.rb` enables Folio AI in development
   and registers `dummy_blog_articles`.
-- `test/dummy/app/controllers/folio/console/dummy/blog/article_ai_suggestions_controller.rb`
-  includes the reusable endpoint concern and uses an in-process demo adapter
-  instead of OpenAI or Anthropic credentials.
+- `test/dummy/app/models/dummy/blog/article.rb` implements the model AI context
+  methods and uses an in-process demo adapter instead of OpenAI or Anthropic
+  credentials.
 - The persisted dummy blog article form passes `ai:` to `title`, `perex`,
   `meta_title`, and `meta_description`, so those fields attach AI controls once
   the current site has prompts configured.
@@ -437,7 +419,7 @@ If the global AI gate is off:
 - the site settings AI tab is not rendered
 - prompt textareas are not rendered
 - field-level AI buttons/panels are not rendered
-- AI endpoints should reject requests with `feature_disabled`
+- the AI HTML API should render a `feature_disabled` panel for direct requests
 
 When the app-level flag is on, each site gets its own AI settings payload stored
 on `folio_sites`. A JSONB column is preferable here because:
@@ -539,19 +521,18 @@ Supported standard console fields can attach AI controls through `ai:`. The
 site prompt configuration alone is not enough; all of these conditions must be
 true:
 
-1. The host input declares `ai:` with an endpoint. `integration_key` and
-   `field_key` can be explicit or inferred from the form object table and input
-   attribute.
+1. The host input declares `ai:`. `integration_key` and `field_key` can be
+   explicit or inferred from the form object table and input attribute.
 2. The field is registered in the Folio AI registry.
 3. The rendered input is a supported Folio SimpleForm input type (`string` or
    `text` in v1).
 4. The global/site/field availability gates pass.
-5. The field is editable and the host eligibility hook returns true.
+5. The field is editable and the model eligibility hook returns true.
 
-When those conditions pass, Folio should enrich the field wrapper with the AI
-Stimulus controller and the input target data needed by the shared panel
-controller. The controller mounts its controls and panel inside the same
-`.form-group`.
+When those conditions pass, Folio enriches the field wrapper with the AI
+Stimulus controller, input target data, a visible spark action, an undo action,
+and an empty `.form-group__custom-html` target. The controller loads the full
+suggestions component HTML into that target on click.
 
 Unsupported cases require explicit host-app wiring:
 
@@ -562,11 +543,11 @@ Unsupported cases require explicit host-app wiring:
 - fields where the app wants custom placement, labels, or grouped UI
 
 The field-level attachment must be conservative. If Folio cannot determine the
-field key, target input, endpoint, or record readiness, it should not render the
-AI action.
+field key, target input, model class/id, or record readiness, it should not
+render the AI action.
 
 Custom fields need a separately reviewed manual API that provides at least
-`integration_key`, `field_key`, endpoint, target input ownership, and undo
+`integration_key`, `field_key`, target input ownership, and undo
 behavior.
 
 Such an API should account for response format (`plain_text` in v1; structured
@@ -675,7 +656,7 @@ Runtime fallback rules:
    `Folio::Ai.model_fallback_enabled?` is true.
 2. Successful fallback responses include a warning payload so the editor sees
    that generation used a fallback and the site settings must be fixed.
-3. If the fallback model is also unavailable, the endpoint returns
+3. If the fallback model is also unavailable, the API renders
    `provider_model_unavailable`.
 4. Folio must never silently switch models without tracking the requested model,
    fallback model, provider, field, site, and warning code.

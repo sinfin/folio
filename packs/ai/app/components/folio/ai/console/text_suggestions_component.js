@@ -11,54 +11,37 @@
         'input',
         'button',
         'undoButton',
-        'panel',
-        'status',
-        'suggestions',
+        'customHtml',
+        'component',
         'instructions'
       ]
 
       static values = {
-        endpoint: String,
+        url: String,
+        instructionsUrl: String,
+        klass: String,
+        recordId: String,
         integrationKey: String,
         fieldKey: String,
         suggestionCount: { type: Number, default: 3 },
-        characterLimit: Number,
-        initialInstructions: { type: String, default: '' },
-        fieldLabel: String,
-        buttonLabel: String,
-        undoLabel: String,
-        closeLabel: String,
-        panelTitle: String,
-        loadingText: String,
-        genericErrorText: String,
-        requestTimeoutText: String,
-        requestTimeoutMs: { type: Number, default: 45000 },
-        missingContextText: String,
-        copyLabel: String,
-        copyButtonLabel: String,
-        acceptLabel: String,
-        acceptButtonLabel: String,
-        charsLabel: String,
-        instructionsPlaceholder: String,
-        regenerateLabel: String,
         componentId: String,
         currentStatePolicy: { type: String, default: 'persisted_record' },
         showMeta: { type: Boolean, default: false },
-        sparklesPath: String,
-        undoPath: String
+        requestTimeoutMs: { type: Number, default: 45000 },
+        loadingText: String,
+        genericErrorText: String,
+        requestTimeoutText: String
       }
 
       connect () {
-        if (!this.input) return
+        if (!this.input || !this.hasCustomHtmlTarget) return
 
-        this.mount()
         this.snapshot = null
         this.selectedText = null
         this.requestSequence = 0
         this.requestTimeoutId = null
         this.requestTimedOut = false
         this.undoVisible = false
-        this.savedInstructions = this.initialInstructionsValue
         this.targetInputListener = () => this.onTargetInput()
         this.input.addEventListener('input', this.targetInputListener)
         this.syncControls()
@@ -91,8 +74,7 @@
         this.snapshot = input.value || ''
         this.selectedText = null
         this.clearSelection()
-        this.showPanel()
-        this.generate({ persistInstructions: false })
+        this.loadHtml({ method: 'GET' })
       }
 
       close (event) {
@@ -104,13 +86,10 @@
         this.abortRequest()
         this.snapshot = null
         this.selectedText = null
-        this.panelTarget.hidden = true
-        this.suggestionsTarget.innerHTML = ''
-        this.hideStatus()
+        this.customHtmlTarget.innerHTML = ''
         this.element.classList.remove(OPEN_CLASS)
         this.element.classList.remove(LOADING_CLASS)
         this.undoVisible = false
-        this.instructionsTarget.value = this.savedInstructions
 
         if (openController === this) openController = null
 
@@ -121,9 +100,7 @@
         event.preventDefault()
         event.stopPropagation()
 
-        if (!this.isOpen) this.showPanel()
-
-        this.generate({ persistInstructions: true })
+        this.loadHtml({ method: 'POST' })
       }
 
       undo (event) {
@@ -200,19 +177,24 @@
         event.stopPropagation()
       }
 
-      generate ({ persistInstructions }) {
+      loadHtml ({ method }) {
         const requestId = this.nextRequestId()
+        const body = this.requestPayload({ includeInstructions: method === 'POST' })
         this.abortRequest()
         this.abortController = new AbortController()
         this.requestTimedOut = false
         this.setRequestTimeout(requestId)
         this.setLoading()
 
-        window.Folio.Api.apiPost(this.endpointValue, this.requestPayload(persistInstructions), this.abortController.signal)
-          .then((response) => {
+        const request = method === 'POST'
+          ? window.Folio.Api.apiHtmlPost(this.instructionsUrlValue, body, this.abortController.signal)
+          : window.Folio.Api.apiHtmlGet(this.urlWithParams(this.urlValue, body), null, this.abortController.signal)
+
+        request
+          .then((html) => {
             if (this.staleRequest(requestId)) return
 
-            this.handleSuccess(response, { persistInstructions })
+            this.handleHtml(html)
           })
           .catch((error) => {
             if (this.staleRequest(requestId)) return
@@ -235,73 +217,59 @@
           })
       }
 
-      requestPayload (persistInstructions) {
+      requestPayload ({ includeInstructions }) {
         const payload = {
+          klass: this.klassValue,
+          id: this.recordIdValue,
           integration_key: this.integrationKeyValue,
           field_key: this.fieldKeyValue,
-          instructions: this.instructionsTarget.value,
-          persist_instructions: persistInstructions,
+          component_id: this.componentIdValue,
+          show_meta: this.showMetaValue,
           suggestion_count: this.suggestionCountValue
         }
 
+        if (includeInstructions) {
+          payload.instructions = this.hasInstructionsTarget ? this.instructionsTarget.value : ''
+        }
+
         if (this.usesCurrentFormSnapshot) {
-          payload.current_form_snapshot = this.currentFormSnapshot()
+          payload.current_form_snapshot_json = JSON.stringify(this.currentFormSnapshot())
         }
 
         return payload
       }
 
-      handleSuccess (response, { persistInstructions }) {
-        if (response.error_code || response.error || response.code) {
-          this.handleError({ responseData: response })
-          return
-        }
+      urlWithParams (url, payload) {
+        const urlObject = new URL(url, window.location.origin)
 
-        const data = response.data || response
-        const suggestions = data.suggestions || []
-        const warnings = data.warnings || []
+        Object.entries(payload).forEach(([key, value]) => {
+          if (value === null || typeof value === 'undefined') return
 
-        if (typeof data.user_instructions !== 'undefined') {
-          this.instructionsTarget.value = data.user_instructions || ''
+          urlObject.searchParams.set(key, value)
+        })
 
-          if (persistInstructions) {
-            this.savedInstructions = this.instructionsTarget.value
-          }
-        }
+        return `${urlObject.pathname}${urlObject.search}${urlObject.hash}`
+      }
 
-        if (suggestions.length === 0) {
-          this.showError(this.genericErrorTextValue)
-          return
-        }
-
-        this.renderSuggestions(suggestions)
-        this.showWarnings(warnings)
+      handleHtml (html) {
+        this.customHtmlTarget.innerHTML = html
+        this.element.classList.add(OPEN_CLASS)
+        this.syncControls()
       }
 
       handleError (error) {
-        this.suggestionsTarget.innerHTML = ''
-        this.showError(this.errorMessage(error))
+        this.showClientError(this.errorMessage(error))
       }
 
       handleTimeout () {
-        this.handleError({
-          responseData: {
-            error_code: 'client_timeout',
-            message: this.timeoutErrorText()
-          }
-        })
+        this.showClientError(this.timeoutErrorText())
       }
 
       errorMessage (error) {
         const responseData = error.responseData || {}
-        const code = responseData.error_code || responseData.code || responseData.error
         const detail = responseData.message || this.errorDetail(responseData)
 
-        if (['missing_context', 'record_not_ready', 'host_ineligible'].includes(code)) {
-          return detail || this.missingContextTextValue
-        }
-
-        return detail || this.genericErrorTextValue
+        return detail || error.message || this.genericErrorTextValue
       }
 
       errorDetail (responseData) {
@@ -310,129 +278,52 @@
         return responseData.errors[0].detail || responseData.errors[0].title
       }
 
-      renderSuggestions (suggestions) {
-        this.suggestionsTarget.innerHTML = ''
-
-        suggestions.forEach((suggestion) => {
-          this.suggestionsTarget.appendChild(this.suggestionElement(suggestion))
-        })
-      }
-
-      suggestionElement (suggestion) {
-        const element = document.createElement('div')
-        element.className = `${BEM_CLASS_NAME}__suggestion`
-        element.setAttribute('role', 'button')
-        element.setAttribute('tabindex', '0')
-        element.setAttribute('data-action', `click->${CONTROLLER_NAME}#accept keydown->${CONTROLLER_NAME}#acceptFromKeyboard`)
-        element.setAttribute(`data-${CONTROLLER_NAME}-text-param`, suggestion.text || '')
-        element.setAttribute(`data-${CONTROLLER_NAME}-key-param`, suggestion.key || '')
-
-        const body = document.createElement('span')
-        body.className = `${BEM_CLASS_NAME}__suggestion-body`
-        if (this.showMetaValue) body.appendChild(this.suggestionMetaElement(suggestion))
-        body.appendChild(this.suggestionTextElement(suggestion.text || ''))
-
-        const actions = document.createElement('span')
-        actions.className = `${BEM_CLASS_NAME}__suggestion-actions`
-        actions.appendChild(this.actionButton('copy',
-          this.copyButtonLabelValue,
-          this.copyLabelValue,
-          suggestion.text || ''))
-        actions.appendChild(this.actionButton('accept',
-          this.acceptButtonLabelValue,
-          this.acceptLabelValue,
-          suggestion.text || ''))
-
-        element.appendChild(body)
-        element.appendChild(actions)
-
-        return element
-      }
-
-      suggestionMetaElement (suggestion) {
-        const meta = document.createElement('span')
-        meta.className = `${BEM_CLASS_NAME}__suggestion-meta`
-
-        const tone = suggestion.meta?.tone_label || suggestion.meta?.toneLabel
-        if (tone) meta.appendChild(this.metaItem(tone))
-
-        meta.appendChild(this.metaItem(`${suggestion.char_count || (suggestion.text || '').length} ${this.charsLabelValue}`))
-
-        if (suggestion.meta?.over_limit && this.hasCharacterLimitValue) {
-          meta.appendChild(this.metaItem(`> ${this.characterLimitValue}`))
-        }
-
-        return meta
-      }
-
-      metaItem (text) {
-        const item = document.createElement('span')
-        item.textContent = text
-        return item
-      }
-
-      suggestionTextElement (text) {
-        const span = document.createElement('span')
-        span.className = `${BEM_CLASS_NAME}__suggestion-text`
-        span.textContent = text
-        return span
-      }
-
-      actionButton (action, buttonLabel, label, text) {
-        const button = document.createElement('button')
-        button.type = 'button'
-        button.className = `${BEM_CLASS_NAME}__suggestion-${action}`
-        button.textContent = buttonLabel
-        button.setAttribute('aria-label', label)
-        button.setAttribute('title', label)
-        button.setAttribute('data-action', `click->${CONTROLLER_NAME}#${action}`)
-        button.setAttribute(`data-${CONTROLLER_NAME}-text-param`, text)
-        return button
-      }
-
       setLoading () {
         this.element.classList.add(LOADING_CLASS)
+        this.element.classList.add(OPEN_CLASS)
+        this.customHtmlTarget.replaceChildren(this.loadingElement())
         this.syncControls()
-        this.hideStatus()
-        this.suggestionsTarget.innerHTML = ''
+      }
+
+      loadingElement () {
+        const wrapper = document.createElement('div')
+        wrapper.className = `${BEM_CLASS_NAME} ${OPEN_CLASS} ${LOADING_CLASS}`
+
+        const panel = document.createElement('div')
+        panel.className = `${BEM_CLASS_NAME}__panel`
+        panel.setAttribute('role', 'region')
+        panel.setAttribute('aria-label', this.loadingTextValue)
+
+        const suggestions = document.createElement('div')
+        suggestions.className = `${BEM_CLASS_NAME}__suggestions`
 
         for (let i = 0; i < this.suggestionCountValue; i += 1) {
           const item = document.createElement('div')
           item.className = `${BEM_CLASS_NAME}__suggestion ${BEM_CLASS_NAME}__suggestion--loading`
           item.textContent = this.loadingTextValue
-          this.suggestionsTarget.appendChild(item)
-        }
-      }
-
-      showPanel () {
-        this.panelTarget.hidden = false
-        this.element.classList.add(OPEN_CLASS)
-        this.syncControls()
-      }
-
-      showError (message) {
-        this.panelTarget.classList.add(`${BEM_CLASS_NAME}__panel--error`)
-        this.statusTarget.hidden = false
-        this.statusTarget.textContent = message
-      }
-
-      showWarnings (warnings) {
-        const messages = warnings.map((warning) => warning.message).filter((message) => message)
-
-        if (messages.length === 0) {
-          this.hideStatus()
-          return
+          suggestions.appendChild(item)
         }
 
-        this.panelTarget.classList.remove(`${BEM_CLASS_NAME}__panel--error`)
-        this.statusTarget.hidden = false
-        this.statusTarget.textContent = messages.join(' ')
+        panel.appendChild(suggestions)
+        wrapper.appendChild(panel)
+
+        return wrapper
       }
 
-      hideStatus () {
-        this.panelTarget.classList.remove(`${BEM_CLASS_NAME}__panel--error`)
-        this.statusTarget.hidden = true
-        this.statusTarget.textContent = ''
+      showClientError (message) {
+        const wrapper = document.createElement('div')
+        wrapper.className = `${BEM_CLASS_NAME} ${OPEN_CLASS}`
+
+        const panel = document.createElement('div')
+        panel.className = `${BEM_CLASS_NAME}__panel ${BEM_CLASS_NAME}__panel--error`
+
+        const status = document.createElement('div')
+        status.className = `${BEM_CLASS_NAME}__status`
+        status.textContent = message
+
+        panel.appendChild(status)
+        wrapper.appendChild(panel)
+        this.customHtmlTarget.replaceChildren(wrapper)
       }
 
       writeValue (input, value) {
@@ -450,7 +341,7 @@
       }
 
       clearSelection () {
-        this.suggestionsTarget.querySelectorAll(`.${BEM_CLASS_NAME}__suggestion--selected`).forEach((element) => {
+        this.customHtmlTarget.querySelectorAll(`.${BEM_CLASS_NAME}__suggestion--selected`).forEach((element) => {
           element.classList.remove(`${BEM_CLASS_NAME}__suggestion--selected`)
         })
       }
@@ -561,174 +452,16 @@
       syncControls () {
         const loading = this.element.classList.contains(LOADING_CLASS)
 
-        this.buttonTarget.setAttribute('aria-expanded', this.isOpen ? 'true' : 'false')
-        this.undoButtonTarget.hidden = !this.undoVisible
+        if (this.hasButtonTarget) {
+          this.buttonTarget.setAttribute('aria-expanded', this.isOpen ? 'true' : 'false')
+        }
+
+        if (this.hasUndoButtonTarget) {
+          this.undoButtonTarget.hidden = !this.undoVisible
+        }
+
         this.controlsElement?.classList.toggle(OPEN_CLASS, this.isOpen)
         this.controlsElement?.classList.toggle(LOADING_CLASS, loading)
-      }
-
-      mount () {
-        this.mountControls()
-        this.mountPanel()
-      }
-
-      mountControls () {
-        if (this.hasButtonTarget && this.hasUndoButtonTarget) return
-
-        const controls = document.createElement('div')
-        controls.className = `${BEM_CLASS_NAME} ${BEM_CLASS_NAME}__actions`
-
-        const button = document.createElement('button')
-        button.type = 'button'
-        button.id = `${this.componentIdValue}_button`
-        button.className = `${BEM_CLASS_NAME}__button`
-        button.setAttribute('aria-expanded', 'false')
-        button.setAttribute('aria-controls', this.componentIdValue)
-        button.setAttribute('data-action', `click->${CONTROLLER_NAME}#toggle`)
-        button.setAttribute(`data-${CONTROLLER_NAME}-target`, 'button')
-        button.appendChild(this.iconElement('sparkles'))
-        button.appendChild(this.labelElement(`${BEM_CLASS_NAME}__button-label`, this.buttonLabelValue))
-
-        const undoButton = document.createElement('button')
-        undoButton.type = 'button'
-        undoButton.id = `${this.componentIdValue}_undo`
-        undoButton.className = `${BEM_CLASS_NAME}__undo`
-        undoButton.hidden = true
-        undoButton.setAttribute('data-action', `click->${CONTROLLER_NAME}#undo`)
-        undoButton.setAttribute(`data-${CONTROLLER_NAME}-target`, 'undoButton')
-        undoButton.appendChild(this.iconElement('undo'))
-        undoButton.appendChild(this.labelElement(`${BEM_CLASS_NAME}__undo-label`, this.undoLabelValue))
-
-        controls.appendChild(button)
-        controls.appendChild(undoButton)
-        this.insertControls(controls)
-      }
-
-      insertControls (controls) {
-        const label = this.input.id
-          ? Array.from(this.element.querySelectorAll('label')).find((label) => label.htmlFor === this.input.id)
-          : null
-        const insertionTarget = label || this.element.querySelector('label')
-
-        if (insertionTarget) {
-          insertionTarget.insertAdjacentElement('afterend', controls)
-        } else {
-          this.element.insertBefore(controls, this.element.firstChild)
-        }
-      }
-
-      mountPanel () {
-        if (this.hasPanelTarget) return
-
-        const panel = document.createElement('div')
-        panel.id = this.componentIdValue
-        panel.className = `${BEM_CLASS_NAME}__panel`
-        panel.hidden = true
-        panel.setAttribute('role', 'region')
-        panel.setAttribute('aria-label', this.panelTitleValue)
-        panel.setAttribute(`data-${CONTROLLER_NAME}-target`, 'panel')
-        panel.setAttribute('data-action', `click->${CONTROLLER_NAME}#stopPropagation`)
-
-        panel.appendChild(this.panelHeaderElement())
-        panel.appendChild(this.statusElement())
-        panel.appendChild(this.suggestionsElement())
-        panel.appendChild(this.instructionsElement())
-
-        this.insertPanel(panel)
-      }
-
-      insertPanel (panel) {
-        const inputGroup = this.input.closest('.input-group')
-        const anchor = inputGroup && this.element.contains(inputGroup) ? inputGroup : this.input
-        anchor.insertAdjacentElement('afterend', panel)
-      }
-
-      panelHeaderElement () {
-        const header = document.createElement('div')
-        header.className = `${BEM_CLASS_NAME}__header`
-
-        const title = document.createElement('div')
-        title.className = `${BEM_CLASS_NAME}__title`
-        title.textContent = this.panelTitleValue
-
-        const closeButton = document.createElement('button')
-        closeButton.type = 'button'
-        closeButton.className = `${BEM_CLASS_NAME}__close`
-        closeButton.setAttribute('aria-label', this.closeLabelValue)
-        closeButton.setAttribute('data-action', `click->${CONTROLLER_NAME}#close`)
-        closeButton.textContent = '\u00d7'
-
-        header.appendChild(title)
-        header.appendChild(closeButton)
-
-        return header
-      }
-
-      statusElement () {
-        const status = document.createElement('div')
-        status.className = `${BEM_CLASS_NAME}__status`
-        status.hidden = true
-        status.setAttribute(`data-${CONTROLLER_NAME}-target`, 'status')
-        return status
-      }
-
-      suggestionsElement () {
-        const suggestions = document.createElement('div')
-        suggestions.className = `${BEM_CLASS_NAME}__suggestions`
-        suggestions.setAttribute(`data-${CONTROLLER_NAME}-target`, 'suggestions')
-        return suggestions
-      }
-
-      instructionsElement () {
-        const instructions = document.createElement('div')
-        instructions.className = `${BEM_CLASS_NAME}__instructions`
-
-        const textarea = document.createElement('textarea')
-        textarea.className = `${BEM_CLASS_NAME}__instructions-input`
-        textarea.rows = 2
-        textarea.placeholder = this.instructionsPlaceholderValue
-        textarea.value = this.initialInstructionsValue
-        textarea.setAttribute(`data-${CONTROLLER_NAME}-target`, 'instructions')
-
-        const regenerate = document.createElement('button')
-        regenerate.type = 'button'
-        regenerate.className = `${BEM_CLASS_NAME}__regenerate`
-        regenerate.setAttribute('data-action', `click->${CONTROLLER_NAME}#regenerate`)
-        regenerate.textContent = this.regenerateLabelValue
-
-        instructions.appendChild(textarea)
-        instructions.appendChild(regenerate)
-
-        return instructions
-      }
-
-      iconElement (icon) {
-        const isUndo = icon === 'undo'
-        const wrapper = document.createElement('span')
-        wrapper.className = isUndo ? `${BEM_CLASS_NAME}__undo-icon` : `${BEM_CLASS_NAME}__spark`
-        wrapper.setAttribute('aria-hidden', 'true')
-
-        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
-        svg.setAttribute('class', isUndo ? `${BEM_CLASS_NAME}__undo-svg` : `${BEM_CLASS_NAME}__spark-svg`)
-        svg.setAttribute('fill', 'none')
-        svg.setAttribute('viewBox', '0 0 24 24')
-        svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
-
-        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
-        path.setAttribute('d', isUndo ? this.undoPathValue : this.sparklesPathValue)
-        path.setAttribute('fill', 'currentColor')
-
-        svg.appendChild(path)
-        wrapper.appendChild(svg)
-
-        return wrapper
-      }
-
-      labelElement (className, text) {
-        const label = document.createElement('span')
-        label.className = className
-        label.textContent = text
-        return label
       }
 
       get input () {
@@ -736,11 +469,11 @@
       }
 
       get controlsElement () {
-        return this.hasButtonTarget ? this.buttonTarget.closest(`.${BEM_CLASS_NAME}`) : null
+        return this.hasButtonTarget ? this.buttonTarget.closest('.f-input-ai-text-suggestions__actions') : null
       }
 
       get isOpen () {
-        return this.hasPanelTarget && !this.panelTarget.hidden
+        return this.hasCustomHtmlTarget && this.customHtmlTarget.childElementCount > 0
       }
 
       get usesCurrentFormSnapshot () {

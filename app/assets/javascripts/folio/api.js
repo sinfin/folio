@@ -197,12 +197,12 @@ window.Folio.Api.apiHtmlGet = (url, body = null, signal) => {
   return window.Folio.Api.htmlApi('GET', url, body, signal)
 }
 
-window.Folio.Api.apiHtmlPost = (url, body) => {
-  return window.Folio.Api.htmlApi('POST', url, body)
+window.Folio.Api.apiHtmlPost = (url, body, signal) => {
+  return window.Folio.Api.htmlApi('POST', url, body, signal)
 }
 
-window.Folio.Api.apiHtmlPatch = (url, body) => {
-  return window.Folio.Api.htmlApi('PATCH', url, body)
+window.Folio.Api.apiHtmlPatch = (url, body, signal) => {
+  return window.Folio.Api.htmlApi('PATCH', url, body, signal)
 }
 
 window.Folio.Api.apiXhrFilePut = (url, file) => {

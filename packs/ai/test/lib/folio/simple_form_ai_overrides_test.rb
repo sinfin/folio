@@ -24,7 +24,6 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
         concat f.input(:title,
                        ai: {
                          integration_key: :articles,
-                         endpoint: "/ai",
                        })
       end
     end
@@ -34,13 +33,16 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
     assert page.has_css?(".form-group--with-ai-text-suggestions")
     assert page.has_css?("[data-controller='f-input-ai-text-suggestions']")
     assert page.has_css?("[data-f-input-ai-text-suggestions-target='input']")
-    assert page.has_css?("[data-f-input-ai-text-suggestions-endpoint-value='/ai']")
+    assert page.has_css?("[data-f-input-ai-text-suggestions-url-value='/console/api/ai_text_suggestions']")
+    assert page.has_css?("[data-f-input-ai-text-suggestions-instructions-url-value='/console/api/ai_text_suggestions/instructions']")
+    assert page.has_css?("[data-f-input-ai-text-suggestions-klass-value='Folio::Page']")
+    assert page.has_css?("[data-f-input-ai-text-suggestions-record-id-value='#{record.id}']")
     assert page.has_css?("[data-f-input-ai-text-suggestions-integration-key-value='articles']")
     assert page.has_css?("[data-f-input-ai-text-suggestions-field-key-value='title']")
     assert page.has_css?("[data-f-input-ai-text-suggestions-current-state-policy-value='persisted_record']")
-    assert page.has_css?("[data-f-input-ai-text-suggestions-character-limit-value='120']")
-    assert page.has_css?("[data-f-input-ai-text-suggestions-initial-instructions-value='']")
-    assert page.has_no_css?(".form-group__input-controls .f-ai-c-text-suggestions")
+    assert page.has_css?(".form-group__input-controls .f-ai-c-text-suggestions__button")
+    assert page.has_css?(".form-group__input-controls .f-ai-c-text-suggestions__undo", visible: :hidden)
+    assert page.has_css?(".form-group__custom-html [data-f-input-ai-text-suggestions-target='customHtml']")
     assert page.has_no_css?(".form-group__custom-html .f-ai-c-text-suggestions")
     assert page.has_no_css?(".f-ai-c-text-suggestions")
     assert page.has_no_css?("[data-controller='f-ai-c-text-suggestions-actions']")
@@ -56,7 +58,7 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
 
     html = with_ai_config(enabled: true) do
       simple_form_for(record, url: "/") do |f|
-        concat f.input(:title, ai: { endpoint: "/ai" })
+        concat f.input(:title, ai: true)
       end
     end
 
@@ -79,7 +81,6 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
                        as: :text,
                        ai: {
                          integration_key: :articles,
-                         endpoint: "/ai",
                        })
       end
     end
@@ -89,7 +90,6 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
     assert page.has_css?("[data-controller='f-input-ai-text-suggestions']")
     assert page.has_css?("textarea[data-f-input-ai-text-suggestions-target='input']")
     assert page.has_css?("[data-f-input-ai-text-suggestions-field-key-value='perex']")
-    assert page.has_css?("[data-f-input-ai-text-suggestions-character-limit-value='400']")
   end
 
   test "does not attach AI suggestions without prompt" do
@@ -104,7 +104,6 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
         concat f.input(:title,
                        ai: {
                          integration_key: :articles,
-                         endpoint: "/ai",
                        })
       end
     end
@@ -127,7 +126,6 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
         concat f.input(:title,
                        ai: {
                          integration_key: :articles,
-                         endpoint: "/ai",
                        })
       end
     end
@@ -149,7 +147,6 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
         concat f.input(:title,
                        ai: {
                          integration_key: :articles,
-                         endpoint: "/ai",
                        })
       end
     end
@@ -159,7 +156,7 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
     assert_not page.has_css?("[data-controller='f-input-ai-text-suggestions']")
   end
 
-  test "attaches AI suggestions to a new record with current form snapshot policy" do
+  test "does not attach AI suggestions to a new record with current form snapshot policy" do
     site = create_site(force: true)
     record = build(:folio_page, site:)
     register_ai_field
@@ -171,7 +168,6 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
         concat f.input(:title,
                        ai: {
                          integration_key: :articles,
-                         endpoint: "/ai",
                          current_state_policy: :current_form_snapshot,
                        })
       end
@@ -179,8 +175,7 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
 
     page = Capybara.string(html)
 
-    assert page.has_css?("[data-controller='f-input-ai-text-suggestions']")
-    assert page.has_css?("[data-f-input-ai-text-suggestions-current-state-policy-value='current_form_snapshot']")
+    assert_not page.has_css?("[data-controller='f-input-ai-text-suggestions']")
   end
 
   test "does not attach AI suggestions to disabled or readonly inputs" do
@@ -196,13 +191,11 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
                        disabled: true,
                        ai: {
                          integration_key: :articles,
-                         endpoint: "/ai",
                        })
         concat f.input(:title,
                        readonly: true,
                        ai: {
                          integration_key: :articles,
-                         endpoint: "/ai",
                        })
       end
     end
@@ -224,7 +217,6 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
         concat f.input(:title,
                        ai: {
                          integration_key: :articles,
-                         endpoint: "/ai",
                        })
       end
     end
@@ -252,7 +244,7 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
     assert_not page.has_css?("[data-controller='f-input-ai-text-suggestions']")
   end
 
-  test "raises developer-facing error when endpoint is missing" do
+  test "raises developer-facing error when endpoint is supplied" do
     site = create_site(force: true)
     record = create(:folio_page, site:)
     register_ai_field
@@ -262,12 +254,12 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
     error = assert_raises(ArgumentError) do
       with_ai_config(enabled: true) do
         simple_form_for(record, url: "/") do |f|
-          concat f.input(:title, ai: { integration_key: :articles })
+          concat f.input(:title, ai: { integration_key: :articles, endpoint: "/ai" })
         end
       end
     end
 
-    assert_includes error.message, "ai: requires endpoint"
+    assert_includes error.message, "endpoint is no longer supported"
   end
 
   private

@@ -3,8 +3,8 @@ name: folio-ai-inputs
 description: >-
   Wire Folio AI prompts and text suggestions to concrete Console inputs in a
   Folio-based host application. Use when registering AI promptable fields,
-  adding field-level SimpleForm `ai:` options, building host-app AI suggestion
-  endpoints, or preparing QA for this feature.
+  adding field-level SimpleForm `ai:` options, implementing model context
+  methods for the centralized pack API, or preparing QA for this feature.
 ---
 
 # Folio AI input wiring
@@ -15,13 +15,13 @@ file before changing code.
 
 ## Boundary
 
-- Keep generic behavior in `packs/ai`: registry, site prompt settings,
-  availability gates, provider adapters, prompt composition, response
-  normalization, user instructions, Stimulus lifecycle,
-  instrumentation, rate limits, and TipTap/plain-text helpers.
-- Keep host-app behavior in the host app: concrete routes, authorization,
-  record loading, context builder, promptable field list, form placement,
-  aggregate workflows, rollout decisions, and prompt copy.
+- Keep generic behavior in `packs/ai` under `Folio::Ai::*`: registry, site
+  prompt settings, availability gates, provider adapters, prompt composition,
+  response normalization, user instructions, Stimulus lifecycle, API
+  controllers, instrumentation, rate limits, and TipTap/plain-text helpers.
+- Keep host-app behavior in the host app: model context methods, promptable
+  field list, form placement, aggregate workflows, rollout decisions, and
+  prompt copy.
 - Do not put site names, customer names, product-specific prompt text, or
   app-specific aggregate actions into Folio.
 
@@ -67,25 +67,24 @@ file before changing code.
 
    ```ruby
    f.input :title,
-           ai: { integration_key: :content_editor,
-                 endpoint: console_article_ai_suggestions_path(article) }
+           ai: { integration_key: :content_editor }
    ```
 
    `integration_key` defaults to the form object's table name and `field_key`
-   defaults to the input attribute. `endpoint` is required. `ai: false` or a
-   missing `ai:` option renders the normal input.
+   defaults to the input attribute. `ai: true` uses both defaults. `ai: false`
+   or a missing `ai:` option renders the normal input. Do not pass a host
+   endpoint; the reusable pack API serves the HTML component.
 5. Use `current_state_policy: :persisted_record` when generation should use
    saved server state. Use `:current_form_snapshot` when the request should
-   include the current successful form control values; host context builders can
-   read the sanitized flat hash with `folio_ai_current_form_snapshot`.
+   include current successful form control values in the centralized request.
 6. Keep custom inputs, composite components, rich-text wrappers, or unusual
    placement on explicit host-app wiring until their input ownership and undo
    contract is reviewed.
-7. Implement a thin authenticated endpoint that includes
-   `Folio::Ai::Console::SuggestionsControllerBase`. Override only record lookup,
-   authorization, `folio_ai_context`, and `folio_ai_host_eligible?`.
-   `folio_ai_host_eligible?` runs before the context builder, so keep expensive
-   serialization in `folio_ai_context`.
+7. Implement model methods for records that use AI suggestions:
+   `folio_ai_context(field_key:, current_form_snapshot:)` is required.
+   `folio_ai_suggestions_eligible?(field_key:, current_form_snapshot:)`,
+   `folio_ai_provider_adapter`, and `folio_ai_site` are optional extension
+   points.
 8. Build context from safe plain text. For TipTap content prefer
    `Folio::Tiptap::PlainText.from_value(...)` or an existing stored plain-text
    projection before falling back to JSON traversal.
@@ -95,7 +94,7 @@ file before changing code.
    enabled for unavailable saved models.
 10. Add Console site prompts for each site and field. Editor controls must stay
    hidden until the field has a non-blank site prompt and the record is eligible.
-11. Cover visible and hidden gates, endpoint success and errors, context
+11. Cover visible and hidden gates, HTML API success and errors, context
    serialization, instruction persistence, timeout/rate-limit handling, model
    fallback warnings, and the full panel lifecycle in tests.
 
@@ -113,6 +112,9 @@ file before changing code.
 
 - AI action is inline with the input action area and uses the shared sparkle
   mark from `Folio::Ai::Icons`.
+- Initial form HTML renders only the spark action, undo action, and an empty
+  `.form-group__custom-html` wrap. The API returns the full
+  `Folio::Ai::Console::TextSuggestionsComponent` HTML into that wrap.
 - Panel expands in normal DOM flow under the target input, not as a floating
   popup.
 - Loading, missing context, provider error, variants, copy, accept, manual edit

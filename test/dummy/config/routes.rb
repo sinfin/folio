@@ -58,11 +58,7 @@ Rails.application.routes.draw do
         end
 
         namespace :blog do
-          resources :articles do
-            resource :ai_suggestions,
-                     only: [:create],
-                     controller: :article_ai_suggestions
-          end
+          resources :articles
           resources :authors do
             post :set_positions, on: :collection
           end

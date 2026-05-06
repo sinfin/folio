@@ -23,13 +23,15 @@ module Folio::Ai::SimpleFormInputExtension
 
     ensure_ai_target_id
     prepare_ai_wrapper
+    append_input_control(ai_text_suggestions_controls(config))
+    append_ai_custom_html(ai_text_suggestions_custom_html)
     register_stimulus(CONTROLLER_NAME,
                       wrapper: true,
                       action: {
                         "click@window": "onWindowClick",
                         "keydown@window": "onWindowKeydown",
                       },
-                      values: ai_text_suggestions_values(config:, field:))
+                      values: ai_text_suggestions_values(config))
   end
 
   private
@@ -37,20 +39,26 @@ module Folio::Ai::SimpleFormInputExtension
       return unless options.key?(:ai)
       return if options[:ai] == false || options[:ai].nil?
 
-      unless options[:ai].respond_to?(:to_h)
-        raise ArgumentError, "SimpleForm ai: requires endpoint and must be a hash"
+      config = case options[:ai]
+               when true
+                 {}
+               else
+                 unless options[:ai].respond_to?(:to_h)
+                   raise ArgumentError, "SimpleForm ai: must be true, false, or a hash"
+                 end
+
+                 options[:ai].to_h.symbolize_keys
       end
 
-      config = options[:ai].to_h.symbolize_keys
-      raise ArgumentError, "SimpleForm ai: requires endpoint" if config[:endpoint].blank?
+      if config[:endpoint].present?
+        raise ArgumentError, "SimpleForm ai: endpoint is no longer supported; use the centralized Folio AI API"
+      end
 
       config[:record] = config.fetch(:record, @builder.object)
       config[:site] = config.fetch(:site, Folio::Current.site)
-      config[:user] = config.fetch(:user, Folio::Current.user)
       config[:integration_key] = ai_integration_key(config).to_s
       config[:field_key] = config.fetch(:field_key, attribute_name).to_s
       config[:current_state_policy] = config.fetch(:current_state_policy, DEFAULT_CURRENT_STATE_POLICY).to_sym
-      config[:host_eligible] = config.fetch(:host_eligible, true)
       config
     end
 
@@ -72,25 +80,19 @@ module Folio::Ai::SimpleFormInputExtension
     end
 
     def ai_record_ready?(config)
+      return false unless %i[persisted_record current_form_snapshot].include?(config[:current_state_policy])
+
       record = config[:record]
 
-      case config[:current_state_policy]
-      when :persisted_record
-        record.respond_to?(:persisted?) ? record.persisted? : record.present?
-      when :current_form_snapshot
-        record.present?
-      else
-        false
-      end
+      record.respond_to?(:persisted?) ? record.persisted? : record.present?
     end
 
     def ai_host_eligible(config)
-      host_eligible = config[:host_eligible]
-      return host_eligible unless host_eligible.respond_to?(:call)
+      record = config[:record]
+      return true unless record.respond_to?(:folio_ai_suggestions_eligible?)
 
-      host_eligible.call(field_key: config[:field_key],
-                         attribute_name:,
-                         record: config[:record])
+      record.folio_ai_suggestions_eligible?(field_key: config[:field_key],
+                                            current_form_snapshot: {})
     end
 
     def prepare_ai_wrapper
@@ -110,37 +112,116 @@ module Folio::Ai::SimpleFormInputExtension
                                                 .delete_suffix("_")
     end
 
-    def ai_text_suggestions_values(config:, field:)
+    def ai_text_suggestions_controls(config)
+      template = @builder.template
+
+      template.tag.div(class: "f-input-ai-text-suggestions__actions") do
+        template.safe_join([
+          ai_text_suggestions_button(config),
+          ai_text_suggestions_undo_button(config),
+        ])
+      end
+    end
+
+    def ai_text_suggestions_button(config)
+      template = @builder.template
+
+      template.tag.button(type: "button",
+                          id: "#{ai_text_suggestions_component_id}_button",
+                          class: "f-ai-c-text-suggestions__button",
+                          aria: {
+                            controls: ai_text_suggestions_component_id,
+                            expanded: "false",
+                          },
+                          data: {
+                            action: "click->#{CONTROLLER_NAME}#toggle",
+                            "#{CONTROLLER_NAME}-target" => "button",
+                          }) do
+        template.safe_join([
+          ai_text_suggestions_icon(path: Folio::Ai::Icons::SPARKLES_PATH,
+                                   class_name: "f-ai-c-text-suggestions__spark"),
+          template.tag.span(ai_text_suggestions_translation(:button_label, config:),
+                            class: "f-ai-c-text-suggestions__button-label"),
+        ])
+      end
+    end
+
+    def ai_text_suggestions_undo_button(config)
+      template = @builder.template
+
+      template.tag.button(type: "button",
+                          id: "#{ai_text_suggestions_component_id}_undo",
+                          class: "f-ai-c-text-suggestions__undo",
+                          hidden: true,
+                          data: {
+                            action: "click->#{CONTROLLER_NAME}#undo",
+                            "#{CONTROLLER_NAME}-target" => "undoButton",
+                          }) do
+        template.safe_join([
+          ai_text_suggestions_icon(path: Folio::Ai::Icons::UNDO_PATH,
+                                   class_name: "f-ai-c-text-suggestions__undo-icon"),
+          template.tag.span(ai_text_suggestions_translation(:undo_label, config:),
+                            class: "f-ai-c-text-suggestions__undo-label"),
+        ])
+      end
+    end
+
+    def ai_text_suggestions_icon(path:, class_name:)
+      template = @builder.template
+
+      template.tag.span(class: class_name, aria: { hidden: true }) do
+        template.tag.svg(class: "#{class_name}-svg",
+                         fill: "none",
+                         viewBox: "0 0 24 24",
+                         xmlns: "http://www.w3.org/2000/svg") do
+          template.tag.path(d: path, fill: "currentColor")
+        end
+      end
+    end
+
+    def ai_text_suggestions_custom_html
+      @builder.template.tag.div("",
+                                class: "f-input-ai-text-suggestions__custom-html",
+                                data: { "#{CONTROLLER_NAME}-target" => "customHtml" })
+    end
+
+    def append_ai_custom_html(html)
+      options[:custom_html] = [options[:custom_html], html].compact.join.html_safe
+    end
+
+    def ai_text_suggestions_values(config)
       {
-        endpoint: config[:endpoint],
+        url: ai_text_suggestions_url,
+        instructions_url: ai_text_suggestions_instructions_url,
+        klass: config[:record].class.name,
+        record_id: config[:record].id,
         integration_key: config[:integration_key],
         field_key: config[:field_key],
         suggestion_count: config.fetch(:suggestion_count, Folio::Ai::ResponseNormalizer::DEFAULT_SUGGESTION_COUNT),
-        character_limit: ai_character_limit(field),
-        initial_instructions: ai_user_instruction(config),
-        field_label: config.fetch(:field_label, field.label),
-        button_label: ai_text_suggestions_translation(:button_label, config:),
-        undo_label: ai_text_suggestions_translation(:undo_label, config:),
-        close_label: ai_text_suggestions_translation(:close_label, config:),
-        panel_title: ai_panel_title(config:, field:),
-        loading_text: ai_text_suggestions_translation(:loading_text, config:),
-        generic_error_text: ai_text_suggestions_translation(:generic_error_text, config:),
-        request_timeout_text: ai_text_suggestions_translation(:request_timeout_text, config:),
-        missing_context_text: ai_text_suggestions_translation(:missing_context_text, config:),
-        copy_label: ai_text_suggestions_translation(:copy_label, config:),
-        copy_button_label: ai_text_suggestions_translation(:copy_button_label, config:),
-        accept_label: ai_text_suggestions_translation(:accept_label, config:),
-        accept_button_label: ai_text_suggestions_translation(:accept_button_label, config:),
-        chars_label: ai_text_suggestions_translation(:chars_label, config:),
-        instructions_placeholder: ai_text_suggestions_translation(:instructions_placeholder, config:),
-        regenerate_label: ai_text_suggestions_translation(:regenerate_label, config:),
         component_id: ai_text_suggestions_component_id,
         show_meta: config.fetch(:show_meta, false),
         current_state_policy: config[:current_state_policy],
         request_timeout_ms: config.fetch(:request_timeout_ms, Folio::Ai.client_request_timeout_ms),
-        sparkles_path: Folio::Ai::Icons::SPARKLES_PATH,
-        undo_path: Folio::Ai::Icons::UNDO_PATH,
+        loading_text: ai_text_suggestions_translation(:loading_text, config:),
+        generic_error_text: ai_text_suggestions_translation(:generic_error_text, config:),
+        request_timeout_text: ai_text_suggestions_translation(:request_timeout_text, config:),
       }.compact
+    end
+
+    def ai_text_suggestions_url
+      ai_route_proxy.console_api_ai_text_suggestions_path
+    end
+
+    def ai_text_suggestions_instructions_url
+      ai_route_proxy.instructions_console_api_ai_text_suggestions_path
+    end
+
+    def ai_route_proxy
+      if @builder.template.respond_to?(:folio)
+        @builder.template.folio
+      else
+        Folio::Engine.routes.url_helpers
+      end
     end
 
     def ai_text_suggestions_translation(key, config:)
@@ -149,33 +230,8 @@ module Folio::Ai::SimpleFormInputExtension
       end
     end
 
-    def ai_panel_title(config:, field:)
-      return config[:panel_title] if config[:panel_title].present?
-
-      I18n.t("folio.ai.console.text_suggestions_component.panel_title_with_field",
-             field: config.fetch(:field_label, field.label))
-    end
-
-    def ai_user_instruction(config)
-      return config[:user_instructions].to_s if config.key?(:user_instructions)
-      return "" if config[:user].blank? || config[:site].blank?
-
-      Folio::Ai::UserInstruction.find_or_initialize_for(user: config[:user],
-                                                        site: config[:site],
-                                                        integration_key: config[:integration_key],
-                                                        field_key: config[:field_key]).instruction.to_s
-    end
-
     def ai_text_suggestions_component_id
       "folio_ai_text_suggestions_#{input_html_options[:id].to_s.gsub(/[^a-zA-Z0-9_-]/, '_')}"
-    end
-
-    def ai_character_limit(field)
-      if options[:character_counter].is_a?(Numeric)
-        options[:character_counter]
-      else
-        field.character_limit
-      end
     end
 end
 

@@ -277,6 +277,12 @@ Folio::Engine.routes.draw do
         get :react_select
       end
 
+      resource :ai_text_suggestions,
+               only: %i[show],
+               controller: "/folio/ai/console/api/text_suggestions" do
+        post :instructions
+      end
+
       resources :file_placements, only: %i[index],
                                   path: "files/:file_id/file_placements"
     end

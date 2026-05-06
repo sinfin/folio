@@ -1,0 +1,69 @@
+.f-ai-c-text-suggestions[
+  class="f-ai-c-text-suggestions--open"
+  data={ "#{CONTROLLER_NAME}-target" => "component" }
+]
+  .f-ai-c-text-suggestions__panel[
+    id=@component_id
+    class=panel_error_class
+    role="region"
+    aria-label=panel_title
+    data-action="click->#{CONTROLLER_NAME}#stopPropagation"
+  ]
+    .f-ai-c-text-suggestions__header
+      .f-ai-c-text-suggestions__title = panel_title
+      button.f-ai-c-text-suggestions__close[
+        type="button"
+        aria-label=close_label
+        data-action="click->#{CONTROLLER_NAME}#close"
+      ] = "\u00d7"
+
+    .f-ai-c-text-suggestions__status hidden=status_hidden?
+      = status_message
+
+    .f-ai-c-text-suggestions__suggestions
+      - suggestions.each do |suggestion|
+        .f-ai-c-text-suggestions__suggestion[
+          role="button"
+          tabindex="0"
+          data-action="click->#{CONTROLLER_NAME}#accept keydown->#{CONTROLLER_NAME}#acceptFromKeyboard"
+          data-f-input-ai-text-suggestions-text-param=suggestion.text
+          data-f-input-ai-text-suggestions-key-param=suggestion.key
+        ]
+          span.f-ai-c-text-suggestions__suggestion-body
+            - if @show_meta
+              span.f-ai-c-text-suggestions__suggestion-meta
+                - if suggestion_tone_label(suggestion).present?
+                  span = suggestion_tone_label(suggestion)
+                span = "#{suggestion.char_count} #{chars_label}"
+                - if suggestion_over_limit?(suggestion) && character_limit.present?
+                  span = "> #{character_limit}"
+
+            span.f-ai-c-text-suggestions__suggestion-text = suggestion.text
+
+          span.f-ai-c-text-suggestions__suggestion-actions
+            button.f-ai-c-text-suggestions__suggestion-copy[
+              type="button"
+              aria-label=copy_label
+              title=copy_label
+              data-action="click->#{CONTROLLER_NAME}#copy"
+              data-f-input-ai-text-suggestions-text-param=suggestion.text
+            ] = copy_button_label
+            button.f-ai-c-text-suggestions__suggestion-accept[
+              type="button"
+              aria-label=accept_label
+              title=accept_label
+              data-action="click->#{CONTROLLER_NAME}#accept"
+              data-f-input-ai-text-suggestions-text-param=suggestion.text
+            ] = accept_button_label
+
+    .f-ai-c-text-suggestions__instructions
+      textarea.f-ai-c-text-suggestions__instructions-input[
+        rows="2"
+        placeholder=instructions_placeholder
+        data-f-input-ai-text-suggestions-target="instructions"
+      ]
+        = instructions
+      button.f-ai-c-text-suggestions__regenerate[
+        type="button"
+        data-action="click->#{CONTROLLER_NAME}#regenerate"
+      ] = regenerate_label

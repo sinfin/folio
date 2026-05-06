@@ -13,10 +13,5 @@
       .col-md-auto
         = file_picker_for_cover(f)
       .col-md
-        - if f.object.persisted?
-          = render partial: "folio/console/dummy/blog/articles/ai_text_inputs",
-                   locals: { f: f,
-                             ai_options: { endpoint: main_app.console_dummy_blog_article_ai_suggestions_path(f.object) } }
-        - else
-          = render partial: "folio/console/dummy/blog/articles/ai_text_inputs",
-                   locals: { f: f, ai_options: false }
+        = render partial: "folio/console/dummy/blog/articles/ai_text_inputs",
+                 locals: { f: f, ai_options: true }
