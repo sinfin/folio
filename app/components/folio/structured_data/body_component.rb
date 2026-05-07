@@ -191,15 +191,23 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
     return unless cover.present?
 
     thumb = cover.thumb(record_cover_thumb_size)
-    credit = [cover.try(:author).presence, cover.try(:attribution_source).presence].compact.join(" / ").presence
 
     {
       "@type" => "ImageObject",
       "url" => thumb.url,
-      "creditText" => credit,
+      "creditText" => structured_data_credit_for(cover),
       "width" => thumb.width,
       "height" => thumb.height,
     }.compact
+  end
+
+  def structured_data_credit_for(file)
+    return if file.blank?
+
+    [
+      file.try(:author).presence,
+      file.try(:attribution_source).presence,
+    ].compact_blank.uniq.join(" / ").presence || file.try(:file_list_source).presence
   end
 
   private
