@@ -203,6 +203,7 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
 
   def structured_data_credit_for(file)
     return if file.blank?
+    return file.credit_text if file.respond_to?(:credit_text)
 
     [
       file.try(:author).presence,
