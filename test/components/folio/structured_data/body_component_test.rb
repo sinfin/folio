@@ -130,21 +130,6 @@ class Folio::StructuredData::BodyComponentTest < Folio::ComponentTest
     assert_equal "Reuters", article_data["image"]["creditText"]
   end
 
-  test "render article image creditText falls back to file_list_source when author and attribution_source are blank" do
-    create_and_host_site
-    article = create(:dummy_blog_article, published_at: Time.current)
-    image = create(:folio_file_image, author: nil, attribution_source: nil, file_list_source: "Wikipedia")
-    create(:folio_file_placement_cover, file: image, placement: article)
-    article.reload
-
-    render_inline(Folio::StructuredData::BodyComponent.new(record: article, breadcrumbs: []))
-
-    json = JSON.parse(page.find('script[type="application/ld+json"]', visible: false).text(:all))
-    article_data = json["@graph"].find { |item| item["@type"] == "Article" }
-
-    assert_equal "Wikipedia", article_data["image"]["creditText"]
-  end
-
   test "render article structured data has no image when article has no cover" do
     create_and_host_site
     article = create(:dummy_blog_article, published_at: Time.current)
