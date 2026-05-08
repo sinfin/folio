@@ -211,6 +211,24 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
     ].compact_blank.uniq.join(" / ").presence || file.try(:file_list_source).presence
   end
 
+  # Schema.org `creator` entity for `file`. Picks a single primary entity following
+  # the same author → attribution_source → file_list_source priority used by
+  # `structured_data_credit_for`; type is "Person" when the author field provides
+  # the name, otherwise "Organization".
+  def structured_data_creator_for(file)
+    return if file.blank?
+
+    author = file.try(:author).presence
+    source = file.try(:attribution_source).presence || file.try(:file_list_source).presence
+    name = author || source
+    return if name.blank?
+
+    {
+      "@type" => author.present? ? "Person" : "Organization",
+      "name" => name,
+    }
+  end
+
   private
     def record_cover_thumb_size
       @record.try(:structured_data_cover_thumb_size) || Folio::OG_IMAGE_DIMENSIONS
