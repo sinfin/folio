@@ -36,8 +36,9 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
     end
 
     def suggestion_data(suggestion)
-      stimulus_action({ click: "accept", keydown: "acceptFromKeyboard" },
-                      suggestion_params(suggestion))
+      stimulus_data(action: { click: "accept" },
+                    params: suggestion_params(suggestion),
+                    target: "suggestion")
     end
 
     def accept_suggestion_data(suggestion)

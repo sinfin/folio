@@ -5,11 +5,15 @@
 
   const registerTextSuggestionsComponentController = () => {
     window.Folio.Stimulus.register(CONTROLLER_NAME, class extends window.Stimulus.Controller {
-      static targets = ['instructions']
+      static targets = ['instructions', 'suggestion']
 
       static values = {
         integrationKey: String,
         fieldKey: String
+      }
+
+      connect () {
+        this.markSelectedSuggestion()
       }
 
       close (event) {
@@ -28,17 +32,19 @@
       accept (event) {
         this.stopActionEvent(event)
 
+        const suggestion = event.target.closest(`.${BEM_CLASS_NAME}__suggestion`) || event.target
+
+        if (suggestion.classList.contains(SELECTED_CLASS)) {
+          this.close()
+          return
+        }
+
+        this.clearSelection()
         const text = event.params.text || ''
         this.dispatch('accept', { bubbles: true, detail: { text } })
-        this.markSelected(event.currentTarget)
+        suggestion.classList.add(SELECTED_CLASS)
 
         this.dispatch('accepted', { detail: this.trackingDetail() })
-      }
-
-      acceptFromKeyboard (event) {
-        if (!['Enter', ' '].includes(event.key)) return
-
-        this.accept(event)
       }
 
       clearSuggestionSelection () {
@@ -47,13 +53,6 @@
 
       stopPropagation (event) {
         event.stopPropagation()
-      }
-
-      markSelected (selectedElement) {
-        this.clearSelection()
-
-        const suggestion = selectedElement.closest(`.${BEM_CLASS_NAME}__suggestion`) || selectedElement
-        suggestion.classList.add(SELECTED_CLASS)
       }
 
       clearSelection () {
@@ -74,6 +73,22 @@
 
         event.preventDefault()
         event.stopPropagation()
+      }
+
+      markSelectedSuggestion () {
+        const wrap = this.element.closest('.f-ai-input')
+        if (!wrap) return
+
+        const input = wrap.querySelector('input[data-f-ai-input-target="input"]')
+        if (!input) return
+
+        const value = input.value
+        if (!value) return
+
+        const suggestion = this.suggestionTargets.find((suggestion) => suggestion.querySelector('.f-ai-c-text-suggestions__suggestion-text').textContent === value)
+        if (!suggestion) return
+
+        suggestion.classList.add(SELECTED_CLASS)
       }
     })
   }

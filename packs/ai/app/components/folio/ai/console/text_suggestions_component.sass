@@ -82,25 +82,22 @@ $f-ai-c-text-suggestions-inner-gap: px-to-rem(12px)
   &__suggestion
     align-items: center
     background: $f-ai-c-text-suggestions-background
-    border: 1px solid $f-ai-c-text-suggestions-accent-light
     border-radius: px-to-rem(4px)
+    border: 1px solid $f-ai-c-text-suggestions-accent-light
     cursor: pointer
     display: flex
     gap: px-to-rem(16px)
+    outline: 0
     padding: px-to-rem(12px)
     width: 100%
-
-    &:focus-visible
-      outline: 2px solid $f-ai-c-text-suggestions-accent
-      outline-offset: 2px
 
     &:hover
       border-color: $f-ai-c-text-suggestions-accent
 
     &--selected
       &, &:hover
-        border-color: $f-ai-c-text-suggestions-accent
-        box-shadow: 0 0 0 1px $f-ai-c-text-suggestions-accent
+        border-color: $green
+        background: $green-background
 
   &__suggestion-body
     display: flex
