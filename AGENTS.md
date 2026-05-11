@@ -20,6 +20,7 @@ When a task matches a skill’s description, **read that `SKILL.md` and follow i
 | **folio-scss** | SCSS/Sass styling: BEM nesting with `&`, colocated component stylesheets, scoping, don't style child components; `.sass`/`.scss` files |
 | **folio-javascript** | JavaScript conventions: ES6+, StandardJS, `Folio.Api`, flash events, debounce/throttle, DOM APIs; `.js` files |
 | **folio-stimulus** | Stimulus controllers: registration, StimulusHelper data attributes, values/targets/actions, `inline: true`; uses **folio-javascript** |
+| **folio-simple-form-inputs** | SimpleForm inputs/extensions: `app/inputs`, overrides/prepends, `register_stimulus`, `input_controls`, `custom_html`, standalone input JS/Sass |
 | **folio-tiptap-node** | Create or edit custom Tiptap block-editor nodes; `rails g folio:tiptap:node`; node structure, icons, groups, paste config; uses **folio-view-component** |
 | **folio-view-component-migration-from-cells** | Replace Trailblazer `*Cell` with `*Component`; `cell(` → `render`; uses **folio-view-component** |
 | **folio-file-editing** | File hygiene: trailing whitespace, single trailing newline, no BOM, LF line endings; applies to every file edit |
