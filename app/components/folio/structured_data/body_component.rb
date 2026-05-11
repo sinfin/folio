@@ -195,38 +195,10 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
     {
       "@type" => "ImageObject",
       "url" => thumb.url,
-      "creditText" => structured_data_credit_for(cover),
+      "creditText" => cover.credit_text,
       "width" => thumb.width,
       "height" => thumb.height,
     }.compact
-  end
-
-  def structured_data_credit_for(file)
-    return if file.blank?
-    return file.credit_text if file.respond_to?(:credit_text)
-
-    [
-      file.try(:author).presence,
-      file.try(:attribution_source).presence,
-    ].compact_blank.uniq.join(" / ").presence || file.try(:file_list_source).presence
-  end
-
-  # Schema.org `creator` entity for `file`. Picks a single primary entity following
-  # the same author → attribution_source → file_list_source priority used by
-  # `structured_data_credit_for`; type is "Person" when the author field provides
-  # the name, otherwise "Organization".
-  def structured_data_creator_for(file)
-    return if file.blank?
-
-    author = file.try(:author).presence
-    source = file.try(:attribution_source).presence || file.try(:file_list_source).presence
-    name = author || source
-    return if name.blank?
-
-    {
-      "@type" => author.present? ? "Person" : "Organization",
-      "name" => name,
-    }
   end
 
   private
