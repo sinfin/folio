@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- keep `index_for_picker` pagination links targeting the picker frame after uploads refresh pagy
 - refresh CSRF headers before JS API requests
 
 ## [7.6.4] - 2026-04-28

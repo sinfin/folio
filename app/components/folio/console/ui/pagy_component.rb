@@ -27,13 +27,21 @@ class Folio::Console::Ui::PagyComponent < Folio::Console::ApplicationComponent
   def pagy_url_for(page, opts = {})
     url = super(page, opts)
     if @options && @options[:request_path]
-      # Replace the path portion with custom path, preserving query string
+      # Replace the path portion with custom path, preserving the public query string
       uri = URI.parse(url)
       uri.path = @options[:request_path]
+      uri.query = query_without_request_path(uri.query)
       uri.to_s
     else
       url
     end
+  end
+
+  def query_without_request_path(query)
+    return if query.blank?
+
+    pairs = URI.decode_www_form(query).reject { |key, _| key == "request_path" }
+    pairs.present? ? URI.encode_www_form(pairs) : nil
   end
 
   def icon(code)
