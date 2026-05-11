@@ -34,7 +34,7 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
     assert page.has_css?(".form-group--with-ai-text-suggestions")
     assert page.has_css?("[data-controller='f-ai-input']")
     assert page.has_css?("[data-f-ai-input-target='input'][data-action*='onInputSyncAiSuggestion']")
-    assert page.has_css?("[data-f-ai-input-target='undo']")
+    assert page.has_css?("[data-f-ai-input-target='undo']", visible: :hidden)
     assert page.has_css?("[data-action*='f-ai-c-text-suggestions:accept']")
     assert page.has_css?("[data-f-ai-input-url-value='/console/api/ai_text_suggestions']")
     assert page.has_css?("[data-f-ai-input-instructions-url-value='/console/api/ai_text_suggestions/instructions']")
@@ -43,8 +43,8 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
     assert page.has_css?("[data-f-ai-input-integration-key-value='articles']")
     assert page.has_css?("[data-f-ai-input-field-key-value='title']")
     assert page.has_css?("[data-f-ai-input-current-state-policy-value='persisted_record']")
-    assert page.has_css?(".form-group__input-controls .f-ai-input__button")
-    assert page.has_css?(".form-group__input-controls .f-ai-input__undo", visible: :hidden)
+    assert page.has_css?(".form-group__custom-html .f-ai-input__button")
+    assert page.has_css?(".form-group__custom-html .f-ai-input__undo", visible: :hidden)
     assert page.has_css?(".form-group__custom-html [data-f-ai-input-target='customHtml']")
     assert page.has_no_css?(".form-group__custom-html .f-ai-c-text-suggestions")
     assert page.has_no_css?(".f-ai-c-text-suggestions")
@@ -266,6 +266,12 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
   end
 
   private
+    def cell(name, model = nil, options = {}, &block)
+      options[:context] ||= {}
+      options[:context][:view] = self
+      @controller.cell(name, model, options, &block)
+    end
+
     def register_ai_field(integration_key: :articles, key: :title, auto_attach: true, input_types: %i[string], character_limit: 120)
       Folio::Ai.reset_registry!
       Folio::Ai.register_integration(integration_key,
