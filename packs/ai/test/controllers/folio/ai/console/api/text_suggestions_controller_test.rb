@@ -121,7 +121,7 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
   end
 
   test "renders provider timeout in component json" do
-    Dummy::Blog::Article.stub(:folio_ai_demo_provider_adapter_class, RaisingProviderAdapter) do
+    Dummy::Ai.stub(:demo_provider_adapter_class, RaisingProviderAdapter) do
       with_ai_config(enabled: true) do
         get console_api_ai_text_suggestions_path,
             params: request_params(field_key: :title),

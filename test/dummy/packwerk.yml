@@ -9,6 +9,7 @@
 
 include:
   - "**/*.rb"
+  - "packs/**/*.rb"
   - "../../app/**/*.rb"
   - "../../lib/**/*.rb"
   - "../../packs/**/*.rb"
@@ -22,6 +23,7 @@ exclude:
 
 package_paths:
   - "."
+  - "packs/*"
   - "../.."
   - "../../packs/*"
 
