@@ -7,12 +7,11 @@
   const CONTROLS_LOADING_CLASS = `${INPUT_CLASS_NAME}__controls--loading`
   const PANEL_CLASS_NAME = 'f-ai-c-text-suggestions'
   const PANEL_OPEN_CLASS = `${PANEL_CLASS_NAME}--open`
-  const PANEL_LOADING_CLASS = `${PANEL_CLASS_NAME}--loading`
   let openController = null
 
   const registerAiInputController = () => {
     window.Folio.Stimulus.register(CONTROLLER_NAME, class extends window.Stimulus.Controller {
-      static targets = ['input', 'button', 'customHtml']
+      static targets = ['input', 'button', 'customHtml', 'undo']
 
       static values = {
         url: String,
@@ -85,6 +84,43 @@
         })
       }
 
+      acceptSuggestion (event) {
+        const text = event.detail && typeof event.detail.text !== 'undefined' ? event.detail.text : ''
+        if (!this.input) return
+
+        this.writeInputValue(text)
+        this.element.dataset.fAiInputSelectedText = text
+        this.element.dataset.fAiInputUndoVisible = 'true'
+        if (this.hasUndoTarget) this.undoTarget.hidden = false
+      }
+
+      undoSuggestion (event) {
+        this.stopActionEvent(event)
+
+        const snapshot = this.sessionSnapshot
+        if (snapshot === null) return
+        if (!this.input) return
+
+        this.writeInputValue(snapshot)
+        delete this.element.dataset.fAiInputSelectedText
+        this.element.dataset.fAiInputUndoVisible = 'false'
+        this.hideUndoButton()
+        this.dispatchSuggestionStale()
+
+        this.dispatch('undo', { bubbles: true, detail: this.trackingDetail() })
+      }
+
+      onInputSyncAiSuggestion () {
+        if (!this.input) return
+
+        const selected = this.element.dataset.fAiInputSelectedText
+        if (!selected) return
+        if (this.input.value === selected) return
+
+        delete this.element.dataset.fAiInputSelectedText
+        this.dispatchSuggestionStale()
+      }
+
       onWindowClick (event) {
         if (!this.isOpen) return
         if (this.element.contains(event.target)) return
@@ -146,7 +182,6 @@
           integration_key: this.integrationKeyValue,
           field_key: this.fieldKeyValue,
           component_id: this.componentIdValue,
-          target_input_id: this.input?.id,
           show_meta: this.showMetaValue,
           suggestion_count: this.suggestionCountValue
         }
@@ -309,10 +344,33 @@
       }
 
       hideUndoButton () {
-        const undoButton = this.element.querySelector('.f-ai-input__undo')
+        if (this.hasUndoTarget) {
+          this.undoTarget.hidden = true
+        }
+      }
 
-        if (undoButton) {
-          undoButton.hidden = true
+      writeInputValue (value) {
+        if (!this.input) return
+
+        this.input.value = value
+        this.input.dispatchEvent(new Event('input', { bubbles: true }))
+        this.input.dispatchEvent(new Event('change', { bubbles: true }))
+        this.input.dispatchEvent(new CustomEvent('folioConsoleCustomChange', { bubbles: true }))
+      }
+
+      dispatchSuggestionStale () {
+        if (!this.hasCustomHtmlTarget) return
+
+        const panel = this.customHtmlTarget.querySelector(`.${PANEL_CLASS_NAME}`)
+        if (!panel) return
+
+        this.dispatch('suggestionStale', { target: panel, bubbles: true })
+      }
+
+      trackingDetail () {
+        return {
+          integrationKey: this.integrationKeyValue,
+          fieldKey: this.fieldKeyValue
         }
       }
 
@@ -348,6 +406,12 @@
 
       get usesCurrentFormSnapshot () {
         return this.currentStatePolicyValue === 'current_form_snapshot'
+      }
+
+      get sessionSnapshot () {
+        return Object.prototype.hasOwnProperty.call(this.element.dataset, 'fAiInputSnapshot')
+          ? this.element.dataset.fAiInputSnapshot
+          : null
       }
     })
   }

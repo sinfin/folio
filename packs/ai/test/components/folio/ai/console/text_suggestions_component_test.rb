@@ -8,14 +8,12 @@ class Folio::Ai::Console::TextSuggestionsComponentTest < Folio::Console::Compone
                                                                   component_id: "ai_title",
                                                                   field_label: "Title",
                                                                   show_meta: true,
-                                                                  target_input_id: "target_title",
                                                                   integration_key: "articles",
                                                                   field_key: "title"))
 
-    assert_selector(".f-ai-c-text-suggestions--open")
     assert_selector("#ai_title.f-ai-c-text-suggestions__panel")
     assert_selector("[data-controller='f-ai-c-text-suggestions']")
-    assert_selector("[data-f-ai-c-text-suggestions-target-input-id-value='target_title']")
+    assert_selector("[data-action*='f-ai-input:suggestionStale->f-ai-c-text-suggestions#clearSuggestionSelection']")
     assert_selector("[data-f-ai-c-text-suggestions-integration-key-value='articles']")
     assert_selector("[data-f-ai-c-text-suggestions-field-key-value='title']")
     assert_selector("[data-action*='f-ai-c-text-suggestions#accept']", text: "Generated text")

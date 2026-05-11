@@ -5,6 +5,7 @@ require "test_helper"
 class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
   include SimpleForm::ActionViewExtensions::FormHelper
   include Folio::Console::FormsHelper
+  include Folio::IconHelper
 
   teardown do
     Folio::Ai.reset_registry!
@@ -32,7 +33,9 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
 
     assert page.has_css?(".form-group--with-ai-text-suggestions")
     assert page.has_css?("[data-controller='f-ai-input']")
-    assert page.has_css?("[data-f-ai-input-target='input']")
+    assert page.has_css?("[data-f-ai-input-target='input'][data-action*='onInputSyncAiSuggestion']")
+    assert page.has_css?("[data-f-ai-input-target='undo']")
+    assert page.has_css?("[data-action*='f-ai-c-text-suggestions:accept']")
     assert page.has_css?("[data-f-ai-input-url-value='/console/api/ai_text_suggestions']")
     assert page.has_css?("[data-f-ai-input-instructions-url-value='/console/api/ai_text_suggestions/instructions']")
     assert page.has_css?("[data-f-ai-input-klass-value='Folio::Page']")

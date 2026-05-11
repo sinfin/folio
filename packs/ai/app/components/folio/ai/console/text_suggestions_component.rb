@@ -7,14 +7,12 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
                  component_id:,
                  field_label:,
                  show_meta: false,
-                 target_input_id: nil,
                  integration_key: nil,
                  field_key: nil)
     @result = result
     @component_id = component_id
     @field_label = field_label
     @show_meta = show_meta
-    @target_input_id = target_input_id
     @integration_key = integration_key
     @field_key = field_key
   end
@@ -23,10 +21,10 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
     def component_data
       stimulus_controller(CONTROLLER_NAME,
                           values: {
-                            target_input_id: @target_input_id,
                             integration_key: @integration_key,
                             field_key: @field_key,
-                          }.compact)
+                          }.compact,
+                          action: { "f-ai-input:suggestionStale" => "clearSuggestionSelection" })
     end
 
     def panel_data
@@ -49,7 +47,6 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
     def instructions_data
       stimulus_merge(stimulus_controller("f-input-autosize", inline: true),
                      stimulus_target("instructions"))
-
     end
 
     def regenerate_data

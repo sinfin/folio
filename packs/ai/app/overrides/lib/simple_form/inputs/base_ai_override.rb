@@ -33,8 +33,16 @@ module Folio::Ai::SimpleFormInputExtension
                         "keydown@window": "onWindowKeydown",
                         "f-ai-c-text-suggestions:close": "close",
                         "f-ai-c-text-suggestions:regenerate": "regenerate",
+                        "f-ai-c-text-suggestions:accept": "acceptSuggestion",
                       },
                       values: ai_text_suggestions_values(config))
+
+    input_sync_action = "input->#{CONTROLLER_NAME}#onInputSyncAiSuggestion"
+    input_html_options["data-action"] = if input_html_options["data-action"].present?
+      "#{input_html_options["data-action"]} #{input_sync_action}"
+    else
+      input_sync_action
+    end
   end
 
   private
@@ -154,7 +162,10 @@ module Folio::Ai::SimpleFormInputExtension
       template.tag.button(type: "button",
                           id: "#{ai_text_suggestions_component_id}_undo",
                           class: "f-ai-input__undo",
-                          hidden: true) do
+                          hidden: true,
+                          data: stimulus_data(controller: CONTROLLER_NAME,
+                                              target: "undo",
+                                              action: { click: "undoSuggestion" })) do
         template.safe_join([
           ai_text_suggestions_icon(:arrow_u_left_top),
           template.tag.span(ai_text_suggestions_translation(:undo_label, config:),
