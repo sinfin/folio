@@ -127,10 +127,12 @@ module Folio::Console::FileControllerBase
     end
 
     def set_pagy_options
-      pagination_params = filter_params.to_h.merge("page" => params[:page])
+      pagination_params = filter_params.to_h.merge("page" => params[:page],
+                                                   "request_path" => request.path)
 
       @pagy_options = {
         reload_url: url_for([:pagination, :console, :api, @klass, pagination_params]),
+        request_path: request.path,
         skip_default_layout_pagination: true,
       }
 
