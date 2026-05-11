@@ -42,16 +42,14 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
                       suggestion_params(suggestion))
     end
 
-    def copy_suggestion_data(suggestion)
-      stimulus_action({ click: "copy" }, suggestion_params(suggestion).slice(:text))
-    end
-
     def accept_suggestion_data(suggestion)
       stimulus_action({ click: "accept" }, suggestion_params(suggestion).slice(:text))
     end
 
     def instructions_data
-      stimulus_target("instructions")
+      stimulus_merge(stimulus_controller("f-input-autosize", inline: true),
+                     stimulus_target("instructions"))
+
     end
 
     def regenerate_data

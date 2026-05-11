@@ -77,16 +77,6 @@
         this.accept(event)
       }
 
-      copy (event) {
-        this.stopActionEvent(event)
-
-        const text = event.params.text || ''
-
-        this.copyText(text).then(() => {
-          this.dispatch('copied', { detail: this.trackingDetail() })
-        })
-      }
-
       stopPropagation (event) {
         event.stopPropagation()
       }
@@ -117,24 +107,6 @@
         this.element.querySelectorAll(`.${SELECTED_CLASS}`).forEach((element) => {
           element.classList.remove(SELECTED_CLASS)
         })
-      }
-
-      copyText (text) {
-        if (navigator.clipboard?.writeText) {
-          return navigator.clipboard.writeText(text)
-        }
-
-        const input = document.createElement('textarea')
-        input.value = text
-        input.setAttribute('readonly', 'readonly')
-        input.style.position = 'absolute'
-        input.style.left = '-9999px'
-        document.body.appendChild(input)
-        input.select()
-        document.execCommand('copy')
-        input.remove()
-
-        return Promise.resolve()
       }
 
       syncControls () {
