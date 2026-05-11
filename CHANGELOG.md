@@ -5,9 +5,10 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- **Reusable `structured_data_credit_for(file)`**: extracted from `structured_data_hash_for_cover` and made public on `Folio::StructuredData::BodyComponent` so host-app overrides (e.g. `VideoObject`) can format `creditText` consistently with `ImageObject`.
-
 ### Changed
+
+- **`ImageObject` `creditText`**: now uses `Folio::File#credit_text`, deduplicating matching `author` / `attribution_source` (e.g. `"Reuters / Reuters"` → `"Reuters"`) and falling back to `file_list_source` when both are
+  blank.
 
 ### Fixed
 
