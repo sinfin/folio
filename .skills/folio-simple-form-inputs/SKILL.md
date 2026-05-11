@@ -18,6 +18,11 @@ field-level extensions.
   behavior on existing inputs.
 - Call `register_stimulus(..., wrapper: true)` when behavior needs the whole
   `.form-group`; it marks the input as the controller `input` target.
+- For Ruby-generated input HTML, use `stimulus_data`, `stimulus_action`, or
+  `stimulus_target` for Stimulus actions, targets, params, values, classes,
+  and outlets. Include `Folio::StimulusHelper` in SimpleForm override modules
+  and pass `controller:` explicitly when `register_stimulus` has not set helper
+  context.
 - Put extra inline actions in `options[:input_controls]` via `append_input_control`.
 - Put below-input HTML in `options[:custom_html]`; append instead of overwriting
   when decorating an existing input.

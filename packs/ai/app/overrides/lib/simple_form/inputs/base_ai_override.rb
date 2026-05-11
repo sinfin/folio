@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module Folio::Ai::SimpleFormInputExtension
+  include Folio::StimulusHelper
+
   CONTROLLER_NAME = "f-ai-input"
   DEFAULT_CURRENT_STATE_POLICY = :persisted_record
 
@@ -135,10 +137,9 @@ module Folio::Ai::SimpleFormInputExtension
                             controls: ai_text_suggestions_component_id,
                             expanded: "false",
                           },
-                          data: {
-                            action: "click->#{CONTROLLER_NAME}#toggle",
-                            "#{CONTROLLER_NAME}-target" => "button",
-                          }) do
+                          data: stimulus_data(controller: CONTROLLER_NAME,
+                                              action: { click: "toggle" },
+                                              target: "button")) do
         template.safe_join([
           ai_text_suggestions_icon(path: Folio::Ai::Icons::SPARKLES_PATH,
                                    class_name: "f-ai-input__button-icon"),
@@ -180,7 +181,8 @@ module Folio::Ai::SimpleFormInputExtension
     def ai_text_suggestions_custom_html
       @builder.template.tag.div("",
                                 class: "f-ai-input__custom-html",
-                                data: { "#{CONTROLLER_NAME}-target" => "customHtml" })
+                                data: stimulus_data(controller: CONTROLLER_NAME,
+                                                    target: "customHtml"))
     end
 
     def append_ai_custom_html(html)

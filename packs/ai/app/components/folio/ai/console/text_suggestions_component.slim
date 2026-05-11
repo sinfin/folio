@@ -7,14 +7,14 @@
     class=panel_error_class
     role="region"
     aria-label=panel_title
-    data-action="click->#{CONTROLLER_NAME}#stopPropagation"
+    data=panel_data
   ]
     .f-ai-c-text-suggestions__header
       .f-ai-c-text-suggestions__title = panel_title
       button.f-ai-c-text-suggestions__close[
         type="button"
         aria-label=close_label
-        data-action="click->#{CONTROLLER_NAME}#close"
+        data=close_data
       ] = "\u00d7"
 
     .f-ai-c-text-suggestions__status hidden=status_hidden?
@@ -25,9 +25,7 @@
         .f-ai-c-text-suggestions__suggestion[
           role="button"
           tabindex="0"
-          data-action="click->#{CONTROLLER_NAME}#accept keydown->#{CONTROLLER_NAME}#acceptFromKeyboard"
-          data-f-ai-c-text-suggestions-text-param=suggestion.text
-          data-f-ai-c-text-suggestions-key-param=suggestion.key
+          data=suggestion_data(suggestion)
         ]
           span.f-ai-c-text-suggestions__suggestion-body
             - if @show_meta
@@ -45,25 +43,23 @@
               type="button"
               aria-label=copy_label
               title=copy_label
-              data-action="click->#{CONTROLLER_NAME}#copy"
-              data-f-ai-c-text-suggestions-text-param=suggestion.text
+              data=copy_suggestion_data(suggestion)
             ] = copy_button_label
             button.f-ai-c-text-suggestions__suggestion-accept[
               type="button"
               aria-label=accept_label
               title=accept_label
-              data-action="click->#{CONTROLLER_NAME}#accept"
-              data-f-ai-c-text-suggestions-text-param=suggestion.text
+              data=accept_suggestion_data(suggestion)
             ] = accept_button_label
 
     .f-ai-c-text-suggestions__instructions
       textarea.f-ai-c-text-suggestions__instructions-input[
         rows="2"
         placeholder=instructions_placeholder
-        data-f-ai-c-text-suggestions-target="instructions"
+        data=instructions_data
       ]
         = instructions
       button.f-ai-c-text-suggestions__regenerate[
         type="button"
-        data-action="click->#{CONTROLLER_NAME}#regenerate"
+        data=regenerate_data
       ] = regenerate_label

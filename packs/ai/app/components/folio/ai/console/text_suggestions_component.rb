@@ -21,16 +21,52 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
 
   private
     def component_data
-      {
-        controller: CONTROLLER_NAME,
-        "#{CONTROLLER_NAME}-target-input-id-value" => @target_input_id,
-        "#{CONTROLLER_NAME}-integration-key-value" => @integration_key,
-        "#{CONTROLLER_NAME}-field-key-value" => @field_key,
-      }.compact
+      stimulus_controller(CONTROLLER_NAME,
+                          values: {
+                            target_input_id: @target_input_id,
+                            integration_key: @integration_key,
+                            field_key: @field_key,
+                          }.compact)
+    end
+
+    def panel_data
+      stimulus_action(click: "stopPropagation")
+    end
+
+    def close_data
+      stimulus_action(click: "close")
+    end
+
+    def suggestion_data(suggestion)
+      stimulus_action({ click: "accept", keydown: "acceptFromKeyboard" },
+                      suggestion_params(suggestion))
+    end
+
+    def copy_suggestion_data(suggestion)
+      stimulus_action({ click: "copy" }, suggestion_params(suggestion).slice(:text))
+    end
+
+    def accept_suggestion_data(suggestion)
+      stimulus_action({ click: "accept" }, suggestion_params(suggestion).slice(:text))
+    end
+
+    def instructions_data
+      stimulus_target("instructions")
+    end
+
+    def regenerate_data
+      stimulus_action(click: "regenerate")
     end
 
     def suggestions
       Array(@result.suggestions)
+    end
+
+    def suggestion_params(suggestion)
+      {
+        text: suggestion.text,
+        key: suggestion.key,
+      }.compact
     end
 
     def successful?
