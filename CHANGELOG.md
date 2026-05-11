@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - **Console revision view**: Atoms preview iframe scrolls again in audit/revision mode when the editor uses horizontal layout (`pointer-events: auto` on `.f-c-simple-form-with-atoms__iframe` under `.f-c-layout-body--with-audit`). The read-only preview inside the iframe is unchanged (`.f-c-atoms-previews--non-interactive`).
+Left form column scrolls again in audit/revision mode (`pointer-events: auto` on `.f-c-simple-form-with-atoms__form-scroll`, with `pointer-events: none` re-applied on `.f-c-simple-form-with-atoms__form-container` to keep form fields non-interactive).
 
 ## [7.6.4] - 2026-04-28
 
