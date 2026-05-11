@@ -110,8 +110,6 @@ file before changing code.
 
 ## UI Checklist
 
-- AI action is inline with the input action area and uses the shared sparkle
-  mark from `Folio::Ai::Icons`.
 - Initial form HTML renders only the spark action, undo action, and an empty
   `.form-group__custom-html` wrap. The API returns the full
   `Folio::Ai::Console::TextSuggestionsComponent` HTML into that wrap.

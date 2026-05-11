@@ -3,11 +3,16 @@ $f-ai-input-accent: #9637D3 !default
 .f-ai-input
   position: relative
 
+  .form-label
+    max-width: calc(100% - #{px-to-rem(120px)})
+
   &__controls
     font-size: $font-size-sm
     position: absolute
     top: 0
     right: 0
+    display: flex
+    gap: px-to-rem(4px)
 
   &__custom-html
     width: 100%

@@ -5,7 +5,7 @@ $f-ai-c-text-suggestions-background: #F3EBFC !default
 .f-ai-c-text-suggestions
   align-items: center
   color: $gray-600
-  display: inline-flex
+  display: block
   font-size: px-to-rem(12px)
   line-height: 1.4
 
@@ -44,6 +44,9 @@ $f-ai-c-text-suggestions-background: #F3EBFC !default
         border: 0
         margin: 0
         padding: 0
+
+  .f-input-character-counter-wrap + .form-group__custom-html &__panel
+    margin-top: px-to-rem(8px) + px-to-rem(20px)
 
   &__header
     align-items: center
@@ -203,9 +206,6 @@ $f-ai-c-text-suggestions-background: #F3EBFC !default
     &:hover,
     &:focus
       background: darken($gray-medium-dark, 8%)
-
-  &--open
-    display: block
 
 @keyframes f-ai-c-text-suggestions-spin
   to

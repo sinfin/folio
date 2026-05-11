@@ -184,5 +184,4 @@ end
 
 Folio::Ai.reset_configuration!
 
-require_relative "ai/icons"
 require_relative "ai/railtie"
