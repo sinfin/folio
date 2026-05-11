@@ -25,8 +25,7 @@ module Folio::Ai::SimpleFormInputExtension
 
     ensure_ai_target_id
     prepare_ai_wrapper
-    append_input_control(ai_text_suggestions_controls(config))
-    append_ai_custom_html(ai_text_suggestions_custom_html)
+    append_ai_custom_html(controls: ai_text_suggestions_controls(config), html: ai_text_suggestions_custom_html)
     register_stimulus(CONTROLLER_NAME,
                       wrapper: true,
                       action: {
@@ -141,8 +140,8 @@ module Folio::Ai::SimpleFormInputExtension
                                               action: { click: "toggle" },
                                               target: "button")) do
         template.safe_join([
-          ai_text_suggestions_icon(path: Folio::Ai::Icons::SPARKLES_PATH,
-                                   class_name: "f-ai-input__button-icon"),
+          ai_text_suggestions_icon(:creation),
+          content_tag(:span, nil, class: "f-ai-input__button-loader folio-loader folio-loader--tiny folio-loader--transparent"),
           template.tag.span(ai_text_suggestions_translation(:button_label, config:),
                             class: "f-ai-input__button-label"),
         ])
@@ -157,24 +156,18 @@ module Folio::Ai::SimpleFormInputExtension
                           class: "f-ai-input__undo",
                           hidden: true) do
         template.safe_join([
-          ai_text_suggestions_icon(path: Folio::Ai::Icons::UNDO_PATH,
-                                   class_name: "f-ai-input__undo-icon"),
+          ai_text_suggestions_icon(:arrow_u_left_top),
           template.tag.span(ai_text_suggestions_translation(:undo_label, config:),
                             class: "f-ai-input__undo-label"),
         ])
       end
     end
 
-    def ai_text_suggestions_icon(path:, class_name:)
+    def ai_text_suggestions_icon(icon)
       template = @builder.template
 
-      template.tag.span(class: class_name, aria: { hidden: true }) do
-        template.tag.svg(class: "#{class_name}-svg",
-                         fill: "none",
-                         viewBox: "0 0 24 24",
-                         xmlns: "http://www.w3.org/2000/svg") do
-          template.tag.path(d: path, fill: "currentColor")
-        end
+      template.tag.span(class: "f-ai-input__icon", aria: { hidden: true }) do
+        template.folio_icon(icon, height: 16)
       end
     end
 
@@ -185,8 +178,8 @@ module Folio::Ai::SimpleFormInputExtension
                                                     target: "customHtml"))
     end
 
-    def append_ai_custom_html(html)
-      options[:custom_html] = [options[:custom_html], html].compact.join.html_safe
+    def append_ai_custom_html(controls:, html:)
+      options[:custom_html] = [options[:custom_html], controls, html].compact.join.html_safe
     end
 
     def ai_text_suggestions_values(config)

@@ -204,33 +204,7 @@
       setLoading () {
         this.element.classList.add(INPUT_LOADING_CLASS)
         this.element.classList.add(INPUT_OPEN_CLASS)
-        this.customHtmlTarget.replaceChildren(this.loadingElement())
         this.syncControls()
-      }
-
-      loadingElement () {
-        const wrapper = document.createElement('div')
-        wrapper.className = `${PANEL_CLASS_NAME} ${PANEL_OPEN_CLASS} ${PANEL_LOADING_CLASS}`
-
-        const panel = document.createElement('div')
-        panel.className = `${PANEL_CLASS_NAME}__panel`
-        panel.setAttribute('role', 'region')
-        panel.setAttribute('aria-label', this.loadingTextValue)
-
-        const suggestions = document.createElement('div')
-        suggestions.className = `${PANEL_CLASS_NAME}__suggestions`
-
-        for (let i = 0; i < this.suggestionCountValue; i += 1) {
-          const item = document.createElement('div')
-          item.className = `${PANEL_CLASS_NAME}__suggestion ${PANEL_CLASS_NAME}__suggestion--loading`
-          item.textContent = this.loadingTextValue
-          suggestions.appendChild(item)
-        }
-
-        panel.appendChild(suggestions)
-        wrapper.appendChild(panel)
-
-        return wrapper
       }
 
       showClientError (message) {
