@@ -37,6 +37,7 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
 
     assert_response :success
     assert page.has_css?(".f-ai-c-text-suggestions")
+    assert page.has_css?("[data-f-ai-c-text-suggestions-target-input-id-value='ai_target']")
     assert page.has_css?(".f-ai-c-text-suggestions__suggestion", text: "Demo AI headline focused on the main editorial hook")
     assert page.has_css?(".f-ai-c-text-suggestions__suggestion-meta", text: "Neutral")
   end
@@ -164,6 +165,7 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
         integration_key: integration_key.to_s,
         field_key: field_key.to_s,
         component_id: "ai_#{field_key}",
+        target_input_id: "ai_target",
         instructions:,
         show_meta:,
       }.compact

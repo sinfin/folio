@@ -1,0 +1,65 @@
+$f-ai-input-accent: #9637D3 !default
+
+.f-ai-input
+  &__controls
+    align-items: center
+    display: inline-flex
+    gap: px-to-rem(8px)
+
+  &__custom-html
+    width: 100%
+
+  &__button,
+  &__undo
+    background: none
+    border: 0
+    cursor: pointer
+    font: inherit
+    padding: 0
+
+  &__button
+    align-items: center
+    color: $f-ai-input-accent
+    display: inline-flex
+    gap: px-to-rem(4px)
+    font-weight: $font-weight-normal
+    line-height: 1.4
+    min-height: px-to-rem(20px)
+    white-space: nowrap
+
+  &__button-icon,
+  &__undo-icon
+    color: $f-ai-input-accent
+    display: inline-flex
+    flex: 0 0 px-to-rem(16px)
+    height: px-to-rem(16px)
+    justify-content: center
+    line-height: 1
+    width: px-to-rem(16px)
+
+    svg
+      display: block
+      height: px-to-rem(16px)
+      width: px-to-rem(16px)
+
+  &__button-icon-svg,
+  &__undo-icon-svg
+    height: px-to-rem(16px)
+    width: px-to-rem(16px)
+
+  &__undo
+    align-items: center
+    color: $gray-600
+    display: inline-flex
+    gap: px-to-rem(4px)
+    line-height: 1.4
+    min-height: px-to-rem(20px)
+    white-space: nowrap
+
+  &__undo-icon
+    color: $danger
+
+  &--loading &__button,
+  &__controls--loading &__button
+    cursor: wait
+    opacity: 0.65

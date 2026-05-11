@@ -1,6 +1,6 @@
 .f-ai-c-text-suggestions[
   class="f-ai-c-text-suggestions--open"
-  data={ "#{CONTROLLER_NAME}-target" => "component" }
+  data=component_data
 ]
   .f-ai-c-text-suggestions__panel[
     id=@component_id
@@ -26,8 +26,8 @@
           role="button"
           tabindex="0"
           data-action="click->#{CONTROLLER_NAME}#accept keydown->#{CONTROLLER_NAME}#acceptFromKeyboard"
-          data-f-input-ai-text-suggestions-text-param=suggestion.text
-          data-f-input-ai-text-suggestions-key-param=suggestion.key
+          data-f-ai-c-text-suggestions-text-param=suggestion.text
+          data-f-ai-c-text-suggestions-key-param=suggestion.key
         ]
           span.f-ai-c-text-suggestions__suggestion-body
             - if @show_meta
@@ -46,21 +46,21 @@
               aria-label=copy_label
               title=copy_label
               data-action="click->#{CONTROLLER_NAME}#copy"
-              data-f-input-ai-text-suggestions-text-param=suggestion.text
+              data-f-ai-c-text-suggestions-text-param=suggestion.text
             ] = copy_button_label
             button.f-ai-c-text-suggestions__suggestion-accept[
               type="button"
               aria-label=accept_label
               title=accept_label
               data-action="click->#{CONTROLLER_NAME}#accept"
-              data-f-input-ai-text-suggestions-text-param=suggestion.text
+              data-f-ai-c-text-suggestions-text-param=suggestion.text
             ] = accept_button_label
 
     .f-ai-c-text-suggestions__instructions
       textarea.f-ai-c-text-suggestions__instructions-input[
         rows="2"
         placeholder=instructions_placeholder
-        data-f-input-ai-text-suggestions-target="instructions"
+        data-f-ai-c-text-suggestions-target="instructions"
       ]
         = instructions
       button.f-ai-c-text-suggestions__regenerate[

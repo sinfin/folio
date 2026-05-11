@@ -11,9 +11,10 @@ class Folio::Ai::Console::TextSuggestionsComponentTest < Folio::Console::Compone
 
     assert_selector(".f-ai-c-text-suggestions--open")
     assert_selector("#ai_title.f-ai-c-text-suggestions__panel")
-    assert_selector("[data-action*='f-input-ai-text-suggestions#accept']", text: "Generated text")
+    assert_selector("[data-controller='f-ai-c-text-suggestions']")
+    assert_selector("[data-action*='f-ai-c-text-suggestions#accept']", text: "Generated text")
     assert_selector(".f-ai-c-text-suggestions__suggestion-meta", text: "Neutral")
-    assert_selector("textarea[data-f-input-ai-text-suggestions-target='instructions']", text: "Shorten it.")
+    assert_selector("textarea[data-f-ai-c-text-suggestions-target='instructions']", text: "Shorten it.")
   end
 
   test "renders error state" do

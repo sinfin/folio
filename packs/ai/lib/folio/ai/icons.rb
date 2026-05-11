@@ -7,9 +7,9 @@ module Folio::Ai::Icons
   UNDO_PATH = "M20 13.5a6.5 6.5 0 01-6.5 6.5H6v-2h7.5c2.5 0 4.5-2 4.5-4.5S16 9 13.5 9H7.83l3.08 3.09L9.5 13.5 4 8l5.5-5.5 1.42 1.41L7.83 7h5.67a6.5 6.5 0 016.5 6.5z"
 
   class << self
-    def sparkles(template, class_name: nil)
-      template.tag.span(class: class_names("f-ai-c-text-suggestions__spark", class_name), aria: { hidden: true }) do
-        template.tag.svg(class: "f-ai-c-text-suggestions__spark-svg",
+    def sparkles(template, class_name: "f-ai-input__button-icon")
+      template.tag.span(class: class_name, aria: { hidden: true }) do
+        template.tag.svg(class: "#{class_name}-svg",
                          fill: "none",
                          viewBox: "0 0 24 24",
                          xmlns: "http://www.w3.org/2000/svg") do
@@ -18,9 +18,9 @@ module Folio::Ai::Icons
       end
     end
 
-    def undo(template, class_name: nil)
-      template.tag.span(class: class_names("f-ai-c-text-suggestions__undo-icon", class_name), aria: { hidden: true }) do
-        template.tag.svg(class: "f-ai-c-text-suggestions__undo-svg",
+    def undo(template, class_name: "f-ai-input__undo-icon")
+      template.tag.span(class: class_name, aria: { hidden: true }) do
+        template.tag.svg(class: "#{class_name}-svg",
                          fill: "none",
                          viewBox: "0 0 24 24",
                          xmlns: "http://www.w3.org/2000/svg") do
@@ -28,10 +28,5 @@ module Folio::Ai::Icons
         end
       end
     end
-
-    private
-      def class_names(*names)
-        names.flatten.compact.map(&:to_s).reject(&:empty?).join(" ")
-      end
   end
 end

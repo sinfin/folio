@@ -31,18 +31,18 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
     page = Capybara.string(html)
 
     assert page.has_css?(".form-group--with-ai-text-suggestions")
-    assert page.has_css?("[data-controller='f-input-ai-text-suggestions']")
-    assert page.has_css?("[data-f-input-ai-text-suggestions-target='input']")
-    assert page.has_css?("[data-f-input-ai-text-suggestions-url-value='/console/api/ai_text_suggestions']")
-    assert page.has_css?("[data-f-input-ai-text-suggestions-instructions-url-value='/console/api/ai_text_suggestions/instructions']")
-    assert page.has_css?("[data-f-input-ai-text-suggestions-klass-value='Folio::Page']")
-    assert page.has_css?("[data-f-input-ai-text-suggestions-record-id-value='#{record.id}']")
-    assert page.has_css?("[data-f-input-ai-text-suggestions-integration-key-value='articles']")
-    assert page.has_css?("[data-f-input-ai-text-suggestions-field-key-value='title']")
-    assert page.has_css?("[data-f-input-ai-text-suggestions-current-state-policy-value='persisted_record']")
-    assert page.has_css?(".form-group__input-controls .f-ai-c-text-suggestions__button")
-    assert page.has_css?(".form-group__input-controls .f-ai-c-text-suggestions__undo", visible: :hidden)
-    assert page.has_css?(".form-group__custom-html [data-f-input-ai-text-suggestions-target='customHtml']")
+    assert page.has_css?("[data-controller='f-ai-input']")
+    assert page.has_css?("[data-f-ai-input-target='input']")
+    assert page.has_css?("[data-f-ai-input-url-value='/console/api/ai_text_suggestions']")
+    assert page.has_css?("[data-f-ai-input-instructions-url-value='/console/api/ai_text_suggestions/instructions']")
+    assert page.has_css?("[data-f-ai-input-klass-value='Folio::Page']")
+    assert page.has_css?("[data-f-ai-input-record-id-value='#{record.id}']")
+    assert page.has_css?("[data-f-ai-input-integration-key-value='articles']")
+    assert page.has_css?("[data-f-ai-input-field-key-value='title']")
+    assert page.has_css?("[data-f-ai-input-current-state-policy-value='persisted_record']")
+    assert page.has_css?(".form-group__input-controls .f-ai-input__button")
+    assert page.has_css?(".form-group__input-controls .f-ai-input__undo", visible: :hidden)
+    assert page.has_css?(".form-group__custom-html [data-f-ai-input-target='customHtml']")
     assert page.has_no_css?(".form-group__custom-html .f-ai-c-text-suggestions")
     assert page.has_no_css?(".f-ai-c-text-suggestions")
     assert page.has_no_css?("[data-controller='f-ai-c-text-suggestions-actions']")
@@ -64,8 +64,8 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
 
     page = Capybara.string(html)
 
-    assert page.has_css?("[data-f-input-ai-text-suggestions-integration-key-value='folio_pages']")
-    assert page.has_css?("[data-f-input-ai-text-suggestions-field-key-value='title']")
+    assert page.has_css?("[data-f-ai-input-integration-key-value='folio_pages']")
+    assert page.has_css?("[data-f-ai-input-field-key-value='title']")
   end
 
   test "attaches AI suggestions to eligible text input" do
@@ -87,9 +87,9 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
 
     page = Capybara.string(html)
 
-    assert page.has_css?("[data-controller='f-input-ai-text-suggestions']")
-    assert page.has_css?("textarea[data-f-input-ai-text-suggestions-target='input']")
-    assert page.has_css?("[data-f-input-ai-text-suggestions-field-key-value='perex']")
+    assert page.has_css?("[data-controller='f-ai-input']")
+    assert page.has_css?("textarea[data-f-ai-input-target='input']")
+    assert page.has_css?("[data-f-ai-input-field-key-value='perex']")
   end
 
   test "does not attach AI suggestions without prompt" do
@@ -110,7 +110,7 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
 
     page = Capybara.string(html)
 
-    assert_not page.has_css?("[data-controller='f-input-ai-text-suggestions']")
+    assert_not page.has_css?("[data-controller='f-ai-input']")
   end
 
   test "does not attach AI suggestions for unregistered field" do
@@ -132,7 +132,7 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
 
     page = Capybara.string(html)
 
-    assert_not page.has_css?("[data-controller='f-input-ai-text-suggestions']")
+    assert_not page.has_css?("[data-controller='f-ai-input']")
   end
 
   test "does not attach AI suggestions to a new record" do
@@ -153,7 +153,7 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
 
     page = Capybara.string(html)
 
-    assert_not page.has_css?("[data-controller='f-input-ai-text-suggestions']")
+    assert_not page.has_css?("[data-controller='f-ai-input']")
   end
 
   test "does not attach AI suggestions to a new record with current form snapshot policy" do
@@ -175,7 +175,7 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
 
     page = Capybara.string(html)
 
-    assert_not page.has_css?("[data-controller='f-input-ai-text-suggestions']")
+    assert_not page.has_css?("[data-controller='f-ai-input']")
   end
 
   test "does not attach AI suggestions to disabled or readonly inputs" do
@@ -202,7 +202,7 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
 
     page = Capybara.string(html)
 
-    assert_not page.has_css?("[data-controller='f-input-ai-text-suggestions']")
+    assert_not page.has_css?("[data-controller='f-ai-input']")
   end
 
   test "does not attach AI suggestions when input type is not registered for the field" do
@@ -223,7 +223,7 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
 
     page = Capybara.string(html)
 
-    assert_not page.has_css?("[data-controller='f-input-ai-text-suggestions']")
+    assert_not page.has_css?("[data-controller='f-ai-input']")
   end
 
   test "does not attach AI suggestions when ai option is false" do
@@ -241,7 +241,7 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
 
     page = Capybara.string(html)
 
-    assert_not page.has_css?("[data-controller='f-input-ai-text-suggestions']")
+    assert_not page.has_css?("[data-controller='f-ai-input']")
   end
 
   test "raises developer-facing error when endpoint is supplied" do

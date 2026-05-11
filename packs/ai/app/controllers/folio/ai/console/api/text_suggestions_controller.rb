@@ -22,6 +22,9 @@ class Folio::Ai::Console::Api::TextSuggestionsController < Folio::Console::Api::
                                                                                  persist_instructions:),
                                                        component_id: component_id,
                                                        field_label: field_label,
+                                                       target_input_id: ai_params[:target_input_id],
+                                                       integration_key: ai_params[:integration_key],
+                                                       field_key: ai_params[:field_key],
                                                        show_meta: show_meta?)
     end
 
@@ -193,6 +196,7 @@ class Folio::Ai::Console::Api::TextSuggestionsController < Folio::Console::Api::
                     :integration_key,
                     :field_key,
                     :component_id,
+                    :target_input_id,
                     :show_meta,
                     :suggestion_count,
                     :instructions,

@@ -1,16 +1,34 @@
 # frozen_string_literal: true
 
 class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::ApplicationComponent
-  CONTROLLER_NAME = "f-input-ai-text-suggestions"
+  CONTROLLER_NAME = "f-ai-c-text-suggestions"
 
-  def initialize(result:, component_id:, field_label:, show_meta: false)
+  def initialize(result:,
+                 component_id:,
+                 field_label:,
+                 show_meta: false,
+                 target_input_id: nil,
+                 integration_key: nil,
+                 field_key: nil)
     @result = result
     @component_id = component_id
     @field_label = field_label
     @show_meta = show_meta
+    @target_input_id = target_input_id
+    @integration_key = integration_key
+    @field_key = field_key
   end
 
   private
+    def component_data
+      {
+        controller: CONTROLLER_NAME,
+        "#{CONTROLLER_NAME}-target-input-id-value" => @target_input_id,
+        "#{CONTROLLER_NAME}-integration-key-value" => @integration_key,
+        "#{CONTROLLER_NAME}-field-key-value" => @field_key,
+      }.compact
+    end
+
     def suggestions
       Array(@result.suggestions)
     end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Folio::Ai::SimpleFormInputExtension
-  CONTROLLER_NAME = "f-input-ai-text-suggestions"
+  CONTROLLER_NAME = "f-ai-input"
   DEFAULT_CURRENT_STATE_POLICY = :persisted_record
 
   def add_text_suggestions(input_type:)
@@ -30,6 +30,8 @@ module Folio::Ai::SimpleFormInputExtension
                       action: {
                         "click@window": "onWindowClick",
                         "keydown@window": "onWindowKeydown",
+                        "f-ai-c-text-suggestions:close": "close",
+                        "f-ai-c-text-suggestions:regenerate": "regenerate",
                       },
                       values: ai_text_suggestions_values(config))
   end
@@ -115,7 +117,7 @@ module Folio::Ai::SimpleFormInputExtension
     def ai_text_suggestions_controls(config)
       template = @builder.template
 
-      template.tag.div(class: "f-input-ai-text-suggestions__actions") do
+      template.tag.div(class: "f-ai-input__controls") do
         template.safe_join([
           ai_text_suggestions_button(config),
           ai_text_suggestions_undo_button(config),
@@ -128,7 +130,7 @@ module Folio::Ai::SimpleFormInputExtension
 
       template.tag.button(type: "button",
                           id: "#{ai_text_suggestions_component_id}_button",
-                          class: "f-ai-c-text-suggestions__button",
+                          class: "f-ai-input__button",
                           aria: {
                             controls: ai_text_suggestions_component_id,
                             expanded: "false",
@@ -139,9 +141,9 @@ module Folio::Ai::SimpleFormInputExtension
                           }) do
         template.safe_join([
           ai_text_suggestions_icon(path: Folio::Ai::Icons::SPARKLES_PATH,
-                                   class_name: "f-ai-c-text-suggestions__spark"),
+                                   class_name: "f-ai-input__button-icon"),
           template.tag.span(ai_text_suggestions_translation(:button_label, config:),
-                            class: "f-ai-c-text-suggestions__button-label"),
+                            class: "f-ai-input__button-label"),
         ])
       end
     end
@@ -151,17 +153,13 @@ module Folio::Ai::SimpleFormInputExtension
 
       template.tag.button(type: "button",
                           id: "#{ai_text_suggestions_component_id}_undo",
-                          class: "f-ai-c-text-suggestions__undo",
-                          hidden: true,
-                          data: {
-                            action: "click->#{CONTROLLER_NAME}#undo",
-                            "#{CONTROLLER_NAME}-target" => "undoButton",
-                          }) do
+                          class: "f-ai-input__undo",
+                          hidden: true) do
         template.safe_join([
           ai_text_suggestions_icon(path: Folio::Ai::Icons::UNDO_PATH,
-                                   class_name: "f-ai-c-text-suggestions__undo-icon"),
+                                   class_name: "f-ai-input__undo-icon"),
           template.tag.span(ai_text_suggestions_translation(:undo_label, config:),
-                            class: "f-ai-c-text-suggestions__undo-label"),
+                            class: "f-ai-input__undo-label"),
         ])
       end
     end
@@ -181,7 +179,7 @@ module Folio::Ai::SimpleFormInputExtension
 
     def ai_text_suggestions_custom_html
       @builder.template.tag.div("",
-                                class: "f-input-ai-text-suggestions__custom-html",
+                                class: "f-ai-input__custom-html",
                                 data: { "#{CONTROLLER_NAME}-target" => "customHtml" })
     end
 

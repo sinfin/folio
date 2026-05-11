@@ -2,15 +2,6 @@ $f-ai-c-text-suggestions-accent: #9637D3 !default
 $f-ai-c-text-suggestions-accent-light: #D3B3E8 !default
 $f-ai-c-text-suggestions-background: #F3EBFC !default
 
-.f-input-ai-text-suggestions
-  &__actions
-    align-items: center
-    display: inline-flex
-    gap: px-to-rem(8px)
-
-  &__custom-html
-    width: 100%
-
 .f-ai-c-text-suggestions
   align-items: center
   color: $gray-600
@@ -18,16 +9,6 @@ $f-ai-c-text-suggestions-background: #F3EBFC !default
   font-size: px-to-rem(12px)
   line-height: 1.4
 
-  &__actions
-    align-items: center
-    display: inline-flex
-    gap: px-to-rem(8px)
-    margin-bottom: px-to-rem(8px)
-    margin-left: px-to-rem(8px)
-    vertical-align: top
-
-  &__button,
-  &__undo,
   &__close,
   &__regenerate,
   &__suggestion-copy,
@@ -37,47 +18,6 @@ $f-ai-c-text-suggestions-background: #F3EBFC !default
     cursor: pointer
     font: inherit
     padding: 0
-
-  &__button
-    align-items: center
-    color: $f-ai-c-text-suggestions-accent
-    display: inline-flex
-    gap: px-to-rem(4px)
-    font-weight: $font-weight-normal
-    line-height: 1.4
-    min-height: px-to-rem(20px)
-    white-space: nowrap
-
-  &__spark,
-  &__undo-icon
-    color: $f-ai-c-text-suggestions-accent
-    display: inline-flex
-    flex: 0 0 px-to-rem(16px)
-    height: px-to-rem(16px)
-    justify-content: center
-    line-height: 1
-    width: px-to-rem(16px)
-
-    svg
-      display: block
-      height: px-to-rem(16px)
-      width: px-to-rem(16px)
-
-  &__spark-svg
-    height: px-to-rem(16px)
-    width: px-to-rem(16px)
-
-  &__undo
-    align-items: center
-    color: $gray-600
-    display: inline-flex
-    gap: px-to-rem(4px)
-    line-height: 1.4
-    min-height: px-to-rem(20px)
-    white-space: nowrap
-
-  &__undo-icon
-    color: $danger
 
   &__panel
     background: $f-ai-c-text-suggestions-background
@@ -263,10 +203,6 @@ $f-ai-c-text-suggestions-background: #F3EBFC !default
     &:hover,
     &:focus
       background: darken($gray-medium-dark, 8%)
-
-  &--loading &__button
-    cursor: wait
-    opacity: 0.65
 
   &--open
     display: block
