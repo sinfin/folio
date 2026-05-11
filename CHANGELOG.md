@@ -7,6 +7,9 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- **`ImageObject` `creditText`**: now uses `Folio::File#credit_text`, deduplicating matching `author` / `attribution_source` (e.g. `"Reuters / Reuters"` → `"Reuters"`) and falling back to `file_list_source` when both are
+  blank.
+
 ### Fixed
 
 - keep `index_for_picker` pagination links targeting the picker frame after uploads refresh pagy
