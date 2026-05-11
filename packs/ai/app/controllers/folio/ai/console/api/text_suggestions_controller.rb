@@ -4,8 +4,6 @@ class Folio::Ai::Console::Api::TextSuggestionsController < Folio::Console::Api::
   CURRENT_FORM_SNAPSHOT_FIELD_LIMIT = 200
   MAX_SUGGESTION_COUNT = 10
 
-  respond_to :html
-
   def show
     render_text_suggestions(instructions: nil, persist_instructions: false)
   end
@@ -16,15 +14,15 @@ class Folio::Ai::Console::Api::TextSuggestionsController < Folio::Console::Api::
 
   private
     def render_text_suggestions(instructions:, persist_instructions:)
-      html = render_to_string(Folio::Ai::Console::TextSuggestionsComponent.new(result: suggestion_result(instructions:,
-                                                                                                         persist_instructions:),
-                                                                               component_id: component_id,
-                                                                               field_label: field_label,
-                                                                               show_meta: show_meta?),
-                              layout: false)
+      render_component_json(text_suggestions_component(instructions:, persist_instructions:))
+    end
 
-      render html: html.html_safe,
-             layout: false
+    def text_suggestions_component(instructions:, persist_instructions:)
+      Folio::Ai::Console::TextSuggestionsComponent.new(result: suggestion_result(instructions:,
+                                                                                 persist_instructions:),
+                                                       component_id: component_id,
+                                                       field_label: field_label,
+                                                       show_meta: show_meta?)
     end
 
     def suggestion_result(instructions:, persist_instructions:)

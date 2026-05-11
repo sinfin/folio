@@ -25,13 +25,15 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
     super
   end
 
-  test "renders suggestions html from the central pack endpoint" do
+  test "renders suggestions component json from the central pack endpoint" do
     with_ai_config(enabled: true) do
-      get console_api_ai_text_suggestions_path(params: request_params(field_key: :title,
-                                                                      show_meta: "1"))
+      get console_api_ai_text_suggestions_path,
+          params: request_params(field_key: :title,
+                                 show_meta: "1"),
+          as: :json
     end
 
-    page = Capybara.string(response.body)
+    page = Capybara.string(response_component_html)
 
     assert_response :success
     assert page.has_css?(".f-ai-c-text-suggestions")
@@ -43,7 +45,8 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
     with_ai_config(enabled: true) do
       post instructions_console_api_ai_text_suggestions_path,
            params: request_params(field_key: :perex,
-                                  instructions: "Use a calmer voice.")
+                                  instructions: "Use a calmer voice."),
+           as: :json
     end
 
     instruction = Folio::Ai::UserInstruction.find_or_initialize_for(user: @superadmin,
@@ -53,29 +56,33 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
 
     assert_response :success
     assert_equal "Use a calmer voice.", instruction.instruction
-    assert_includes response.body, "Alternative demo summary"
+    assert_includes response_component_html, "Alternative demo summary"
   end
 
-  test "renders prompt_missing as html" do
+  test "renders prompt_missing in component json" do
     @site.update!(ai_settings: enabled_ai_settings(prompt: ""))
 
     with_ai_config(enabled: true) do
-      get console_api_ai_text_suggestions_path(params: request_params(field_key: :title))
+      get console_api_ai_text_suggestions_path,
+          params: request_params(field_key: :title),
+          as: :json
     end
 
     assert_response :success
-    assert_includes response.body, I18n.t("folio.ai.console.errors.prompt_missing")
+    assert_includes response_component_html, I18n.t("folio.ai.console.errors.prompt_missing")
   end
 
-  test "renders host_ineligible as html" do
+  test "renders host_ineligible in component json" do
     @article.update_columns(title: "", perex: "")
 
     with_ai_config(enabled: true) do
-      get console_api_ai_text_suggestions_path(params: request_params(field_key: :title))
+      get console_api_ai_text_suggestions_path,
+          params: request_params(field_key: :title),
+          as: :json
     end
 
     assert_response :success
-    assert_includes response.body, I18n.t("folio.ai.console.errors.host_ineligible")
+    assert_includes response_component_html, I18n.t("folio.ai.console.errors.host_ineligible")
   end
 
   test "renders invalid_context when model contract is missing" do
@@ -86,13 +93,15 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
                                                   field_keys: %i[title]))
 
     with_ai_config(enabled: true) do
-      get console_api_ai_text_suggestions_path(params: request_params(record: page,
-                                                                      integration_key: :folio_pages,
-                                                                      field_key: :title))
+      get console_api_ai_text_suggestions_path,
+          params: request_params(record: page,
+                                 integration_key: :folio_pages,
+                                 field_key: :title),
+          as: :json
     end
 
     assert_response :success
-    assert_includes response.body, I18n.t("folio.ai.console.errors.invalid_context")
+    assert_includes response_component_html, I18n.t("folio.ai.console.errors.invalid_context")
   end
 
   test "renders record_not_ready when record is not accessible on the current site" do
@@ -100,26 +109,34 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
     other_article = create(:dummy_blog_article, site: other_site)
 
     with_ai_config(enabled: true) do
-      get console_api_ai_text_suggestions_path(params: request_params(record: other_article,
-                                                                      field_key: :title))
+      get console_api_ai_text_suggestions_path,
+          params: request_params(record: other_article,
+                                 field_key: :title),
+          as: :json
     end
 
     assert_response :success
-    assert_includes response.body, I18n.t("folio.ai.console.errors.record_not_ready")
+    assert_includes response_component_html, I18n.t("folio.ai.console.errors.record_not_ready")
   end
 
-  test "renders provider timeout as html" do
+  test "renders provider timeout in component json" do
     Dummy::Blog::Article.stub(:folio_ai_demo_provider_adapter_class, RaisingProviderAdapter) do
       with_ai_config(enabled: true) do
-        get console_api_ai_text_suggestions_path(params: request_params(field_key: :title))
+        get console_api_ai_text_suggestions_path,
+            params: request_params(field_key: :title),
+            as: :json
       end
     end
 
     assert_response :success
-    assert_includes response.body, I18n.t("folio.ai.console.errors.provider_timeout")
+    assert_includes response_component_html, I18n.t("folio.ai.console.errors.provider_timeout")
   end
 
   private
+    def response_component_html
+      response.parsed_body["data"]
+    end
+
     def register_dummy_ai_integration
       Folio::Ai.register_integration(:dummy_blog_articles,
                                      label: "Dummy blog articles",

@@ -187,14 +187,14 @@
         this.setLoading()
 
         const request = method === 'POST'
-          ? window.Folio.Api.apiHtmlPost(this.instructionsUrlValue, body, this.abortController.signal)
-          : window.Folio.Api.apiHtmlGet(this.urlWithParams(this.urlValue, body), null, this.abortController.signal)
+          ? window.Folio.Api.apiPost(this.instructionsUrlValue, body, this.abortController.signal)
+          : window.Folio.Api.apiGet(this.urlWithParams(this.urlValue, body), null, this.abortController.signal)
 
         request
-          .then((html) => {
+          .then((response) => {
             if (this.staleRequest(requestId)) return
 
-            this.handleHtml(html)
+            this.handleHtml(response.data)
           })
           .catch((error) => {
             if (this.staleRequest(requestId)) return
