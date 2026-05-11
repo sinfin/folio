@@ -9,8 +9,6 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-- **`structured_data_hash_for_cover` `creditText`**: now deduplicates matching `author` / `attribution_source` (e.g. `"Reuters / Reuters"` → `"Reuters"`) and falls back to `file.file_list_source` when both are blank. Previously emitted duplicated values and had no fallback.
-
 ### Fixed
 
 ## [7.6.3] - 2026-04-22
