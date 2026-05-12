@@ -24,10 +24,6 @@ $f-ai-c-text-suggestions-inner-gap: px-to-rem(12px)
     flex-direction: column
     z-index: 1
 
-    &--error
-      background: $red-background
-      border-color: rgba($danger, 0.45)
-
   &__panel,
   &__loader
     border-radius: px-to-rem(4px)
@@ -62,9 +58,12 @@ $f-ai-c-text-suggestions-inner-gap: px-to-rem(12px)
 
   &__status
     color: $f-ai-c-text-suggestions-text
-    font-size: $font-size-base
-    line-height: $line-height-base
+    font-size: $font-size-sm
     margin: 0
+    display: flex
+    align-items: center
+    gap: px-to-rem(4px)
+    line-height: 1
 
   &__body
     padding: 0 px-to-rem(20px) px-to-rem(20px)
