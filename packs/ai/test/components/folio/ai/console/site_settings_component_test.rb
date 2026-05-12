@@ -76,6 +76,28 @@ class Folio::Ai::Console::SiteSettingsComponentTest < Folio::Console::ComponentT
                     text: "Custom provider")
   end
 
+  def test_english_default_labels_do_not_use_inherit_wording
+    site = build(:folio_site)
+
+    I18n.with_locale(:en) do
+      render_component(site)
+    end
+
+    assert_selector("option[value='']", text: "Default")
+    assert_no_text("Inherit")
+  end
+
+  def test_czech_default_labels_do_not_use_inherit_wording
+    site = build(:folio_site)
+
+    I18n.with_locale(:cs) do
+      render_component(site)
+    end
+
+    assert_selector("option[value='']", text: "Výchozí")
+    assert_no_text("Dědit")
+  end
+
   def test_does_not_render_when_ai_is_disabled
     site = build(:folio_site)
 

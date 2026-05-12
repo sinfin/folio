@@ -28,14 +28,14 @@ en:
           enabled_label: Enable AI suggestions for this site
           default_provider: Default provider
           default_model: Default model
-          model_placeholder: Inherit provider default
+          model_placeholder: Provider default model
           integration_provider: Integration provider override
           integration_model: Integration model override
           field_provider: Field provider override
           field_model: Field model override
-          inherit_provider: Inherit provider
-          inherit_model: Inherit model
-          inherited_model: "Inherit model (%{model})"
+          inherit_provider: Default
+          inherit_model: Default
+          inherited_model: "Default (%{model})"
           provider_default_model: "Provider default model (%{model})"
           unavailable_model_option: "%{model} (unavailable)"
           model_catalog_unverified_notice: "The %{provider} model list cannot be verified right now; configured fallback options are shown."

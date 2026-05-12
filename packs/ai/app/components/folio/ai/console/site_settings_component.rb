@@ -82,11 +82,12 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
                    include_blank: false)
     end
 
-    def text_area_input(*path, label:, value:, rows:)
+    def text_area_input(*path, label:, value:, rows: 2)
       @form.input(input_attribute(*path),
                   as: :text,
                   label:,
                   required: false,
+                  autosize: true,
                   input_html: input_html(*path, value:, rows:))
     end
 

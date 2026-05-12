@@ -28,14 +28,14 @@ cs:
           enabled_label: Povolit AI návrhy pro tento web
           default_provider: Výchozí provider
           default_model: Výchozí model
-          model_placeholder: Dědit výchozí model providera
+          model_placeholder: Výchozí model providera
           integration_provider: Provider pro integraci
           integration_model: Model pro integraci
           field_provider: Provider pro pole
           field_model: Model pro pole
-          inherit_provider: Dědit provider
-          inherit_model: Dědit model
-          inherited_model: "Dědit model (%{model})"
+          inherit_provider: Výchozí
+          inherit_model: Výchozí
+          inherited_model: "Výchozí (%{model})"
           provider_default_model: "Výchozí model providera (%{model})"
           unavailable_model_option: "%{model} (nedostupný)"
           model_catalog_unverified_notice: "Seznam modelů providera %{provider} teď nejde ověřit; zobrazuje se nakonfigurovaný fallback."
