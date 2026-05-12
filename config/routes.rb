@@ -278,8 +278,9 @@ Folio::Engine.routes.draw do
       end
 
       resource :ai_text_suggestions,
-               only: %i[show],
+               only: [],
                controller: "/folio/ai/console/api/text_suggestions" do
+        post :text_suggestions
         post :instructions
       end
 

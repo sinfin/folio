@@ -210,7 +210,7 @@ module Folio::Ai::SimpleFormInputExtension
     end
 
     def ai_text_suggestions_url
-      ai_route_proxy.console_api_ai_text_suggestions_path
+      ai_route_proxy.text_suggestions_console_api_ai_text_suggestions_path
     end
 
     def ai_text_suggestions_instructions_url

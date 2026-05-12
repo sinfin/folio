@@ -60,7 +60,7 @@
         openController = this
 
         this.startSession()
-        this.loadHtml({ method: 'GET' })
+        this.loadHtml({ url: this.urlValue })
       }
 
       close (event) {
@@ -79,7 +79,7 @@
       regenerate (event) {
         this.stopActionEvent(event)
         this.loadHtml({
-          method: 'POST',
+          url: this.instructionsUrlValue,
           instructions: event?.detail?.instructions || ''
         })
       }
@@ -135,7 +135,7 @@
         this.close()
       }
 
-      loadHtml ({ method, instructions = null }) {
+      loadHtml ({ url, instructions = null }) {
         const requestId = this.nextRequestId()
         const body = this.requestPayload({ instructions })
         this.abortRequest()
@@ -144,9 +144,7 @@
         this.setRequestTimeout(requestId)
         this.setLoading()
 
-        const request = method === 'POST'
-          ? window.Folio.Api.apiPost(this.instructionsUrlValue, body, this.abortController.signal)
-          : window.Folio.Api.apiGet(this.urlWithParams(this.urlValue, body), null, this.abortController.signal)
+        const request = window.Folio.Api.apiPost(url, body, this.abortController.signal)
 
         request
           .then((response) => {
@@ -195,18 +193,6 @@
         }
 
         return payload
-      }
-
-      urlWithParams (url, payload) {
-        const urlObject = new URL(url, window.location.origin)
-
-        Object.entries(payload).forEach(([key, value]) => {
-          if (value === null || typeof value === 'undefined') return
-
-          urlObject.searchParams.set(key, value)
-        })
-
-        return `${urlObject.pathname}${urlObject.search}${urlObject.hash}`
       }
 
       handleHtml (html) {

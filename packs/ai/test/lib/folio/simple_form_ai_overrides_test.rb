@@ -36,7 +36,7 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
     assert page.has_css?("[data-f-ai-input-target='input'][data-action*='onInputSyncAiSuggestion']")
     assert page.has_css?("[data-f-ai-input-target='undo']", visible: :hidden)
     assert page.has_css?("[data-action*='f-ai-c-text-suggestions:accept']")
-    assert page.has_css?("[data-f-ai-input-url-value='/console/api/ai_text_suggestions']")
+    assert page.has_css?("[data-f-ai-input-url-value='/console/api/ai_text_suggestions/text_suggestions']")
     assert page.has_css?("[data-f-ai-input-instructions-url-value='/console/api/ai_text_suggestions/instructions']")
     assert page.has_css?("[data-f-ai-input-klass-value='Folio::Page']")
     assert page.has_css?("[data-f-ai-input-record-id-value='#{record.id}']")

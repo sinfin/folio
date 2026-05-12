@@ -47,10 +47,10 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
 
   test "renders suggestions component json from the central pack endpoint" do
     with_ai_config(enabled: true) do
-      get console_api_ai_text_suggestions_path,
-          params: request_params(field_key: :title,
-                                 show_meta: "1"),
-          as: :json
+      post text_suggestions_console_api_ai_text_suggestions_path,
+           params: request_params(field_key: :title,
+                                  show_meta: "1"),
+           as: :json
     end
 
     page = Capybara.string(response_component_html)
@@ -84,9 +84,9 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
     @site.update!(ai_settings: enabled_ai_settings(prompt: ""))
 
     with_ai_config(enabled: true) do
-      get console_api_ai_text_suggestions_path,
-          params: request_params(field_key: :title),
-          as: :json
+      post text_suggestions_console_api_ai_text_suggestions_path,
+           params: request_params(field_key: :title),
+           as: :json
     end
 
     assert_response :success
@@ -97,9 +97,9 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
     @article.update_columns(title: "", perex: "")
 
     with_ai_config(enabled: true) do
-      get console_api_ai_text_suggestions_path,
-          params: request_params(field_key: :title),
-          as: :json
+      post text_suggestions_console_api_ai_text_suggestions_path,
+           params: request_params(field_key: :title),
+           as: :json
     end
 
     assert_response :success
@@ -119,14 +119,14 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
 
     Folio::Ai.stub(:provider_adapter, provider_factory) do
       with_ai_config(enabled: true) do
-        get console_api_ai_text_suggestions_path,
-            params: request_params(record: page,
-                                   integration_key: :folio_pages,
-                                   field_key: :title,
-                                   current_form_snapshot_json: {
-                                     "page[title]" => "Unsaved title",
-                                   }.to_json),
-            as: :json
+        post text_suggestions_console_api_ai_text_suggestions_path,
+             params: request_params(record: page,
+                                    integration_key: :folio_pages,
+                                    field_key: :title,
+                                    current_form_snapshot_json: {
+                                      "page[title]" => "Unsaved title",
+                                    }.to_json),
+             as: :json
       end
     end
 
@@ -142,10 +142,10 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
     other_article = create(:dummy_blog_article, site: other_site)
 
     with_ai_config(enabled: true) do
-      get console_api_ai_text_suggestions_path,
-          params: request_params(record: other_article,
-                                 field_key: :title),
-          as: :json
+      post text_suggestions_console_api_ai_text_suggestions_path,
+           params: request_params(record: other_article,
+                                  field_key: :title),
+           as: :json
     end
 
     assert_response :success
@@ -155,9 +155,9 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
   test "renders provider timeout in component json" do
     Dummy::Ai.stub(:demo_provider_adapter_class, RaisingProviderAdapter) do
       with_ai_config(enabled: true) do
-        get console_api_ai_text_suggestions_path,
-            params: request_params(field_key: :title),
-            as: :json
+        post text_suggestions_console_api_ai_text_suggestions_path,
+             params: request_params(field_key: :title),
+             as: :json
       end
     end
 

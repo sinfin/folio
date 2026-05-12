@@ -4,7 +4,7 @@ class Folio::Ai::Console::Api::TextSuggestionsController < Folio::Console::Api::
   CURRENT_FORM_SNAPSHOT_FIELD_LIMIT = 200
   MAX_SUGGESTION_COUNT = 10
 
-  def show
+  def text_suggestions
     render_text_suggestions(instructions: nil, persist_instructions: false)
   end
 
