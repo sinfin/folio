@@ -14,8 +14,12 @@ class Folio::Ai::Console::TextSuggestionsComponentTest < Folio::Console::Compone
     assert_selector("#ai_title.f-ai-c-text-suggestions__panel")
     assert_selector("[data-controller='f-ai-c-text-suggestions']")
     assert_selector("[data-action*='f-ai-input:suggestionStale->f-ai-c-text-suggestions#clearSuggestionSelection']")
+    assert_selector("[data-action*='f-ai-input:clientError->f-ai-c-text-suggestions#showClientError']")
     assert_selector("[data-f-ai-c-text-suggestions-integration-key-value='articles']")
     assert_selector("[data-f-ai-c-text-suggestions-field-key-value='title']")
+    assert_selector(".f-ai-c-text-suggestions__status[data-f-ai-c-text-suggestions-target='status'][hidden]",
+                    visible: :hidden)
+    assert_selector("[data-f-ai-c-text-suggestions-target='statusMessage']", visible: :hidden)
     assert_selector("[data-action*='f-ai-c-text-suggestions#accept']", text: "Generated text")
     assert_selector("[data-f-ai-c-text-suggestions-text-param='Generated text']")
     assert_selector("[data-f-ai-c-text-suggestions-key-param='1']")
@@ -31,6 +35,9 @@ class Folio::Ai::Console::TextSuggestionsComponentTest < Folio::Console::Compone
                                                                   field_label: "Title"))
 
     assert_selector(".f-ai-c-text-suggestions__panel--error")
+    assert_selector(".f-ai-c-text-suggestions__status:not([hidden])")
+    assert_selector("[data-f-ai-c-text-suggestions-target='statusMessage']",
+                    text: I18n.t("folio.ai.console.errors.host_ineligible"))
     assert_text I18n.t("folio.ai.console.errors.host_ineligible")
     assert_no_selector(".f-ai-c-text-suggestions__suggestion")
   end
@@ -48,7 +55,8 @@ class Folio::Ai::Console::TextSuggestionsComponentTest < Folio::Console::Compone
                     count: 3)
     assert_selector(".f-ai-c-text-suggestions__suggestion-loader.folio-loader", count: 3)
     assert_no_selector(".f-ai-c-text-suggestions__loader")
-    assert_no_selector(".f-ai-c-text-suggestions__status")
+    assert_selector(".f-ai-c-text-suggestions__status[hidden]", visible: :hidden)
+    assert_selector(".f-ai-c-text-suggestions__status svg", visible: :hidden)
     assert_no_selector(".f-ai-c-text-suggestions__panel--error")
     assert_no_selector("[data-f-ai-c-text-suggestions-target='suggestion']")
     assert_selector("textarea[data-f-ai-c-text-suggestions-target='instructions']")

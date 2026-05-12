@@ -5,7 +5,7 @@
 
   const registerTextSuggestionsComponentController = () => {
     window.Folio.Stimulus.register(CONTROLLER_NAME, class extends window.Stimulus.Controller {
-      static targets = ['instructions', 'suggestion']
+      static targets = ['instructions', 'panel', 'status', 'statusMessage', 'suggestion', 'suggestions']
 
       static values = {
         integrationKey: String,
@@ -27,6 +27,20 @@
         this.dispatch('regenerate', {
           bubbles: true,
           detail: { instructions: this.hasInstructionsTarget ? this.instructionsTarget.value : '' }
+        })
+      }
+
+      showClientError (event) {
+        const message = event?.detail?.message || ''
+        if (!message) return
+
+        this.element.hidden = false
+        if (this.hasPanelTarget) this.panelTarget.classList.add(`${BEM_CLASS_NAME}__panel--error`)
+        if (this.hasStatusMessageTarget) this.statusMessageTarget.textContent = message
+        if (this.hasStatusTarget) this.statusTarget.hidden = false
+
+        this.suggestionsTargets.forEach((suggestions) => {
+          suggestions.hidden = true
         })
       }
 

@@ -4,12 +4,12 @@
   const INPUT_OPEN_CLASS = `${INPUT_CLASS_NAME}--open`
   const CONTROLS_OPEN_CLASS = `${INPUT_CLASS_NAME}__controls--open`
   const PANEL_CLASS_NAME = 'f-ai-c-text-suggestions'
-  const PANEL_OPEN_CLASS = `${PANEL_CLASS_NAME}--open`
   const TEXT_SUGGESTIONS_JOB_TYPE = 'Folio::Ai::TextSuggestionsJob'
   const STATUS_IDLE = 'idle'
   const STATUS_INITIAL_LOADING = 'initial-loading'
   const STATUS_WAITING_FOR_SUGGESTIONS = 'waiting-for-suggestions'
   const STATUS_SUBMITTING_INSTRUCTIONS = 'submitting-instructions'
+  const CLIENT_ERROR_STATUSES = [STATUS_WAITING_FOR_SUGGESTIONS, STATUS_SUBMITTING_INSTRUCTIONS]
   let openController = null
 
   const cssEscape = (value) => {
@@ -281,19 +281,14 @@
       }
 
       showClientError (message) {
-        const wrapper = document.createElement('div')
-        wrapper.className = `${PANEL_CLASS_NAME} ${PANEL_OPEN_CLASS}`
+        const textSuggestions = this.textSuggestionsElement
+        if (!this.shouldDispatchClientError || !textSuggestions) return
 
-        const panel = document.createElement('div')
-        panel.className = `${PANEL_CLASS_NAME}__panel ${PANEL_CLASS_NAME}__panel--error`
-
-        const status = document.createElement('div')
-        status.className = `${PANEL_CLASS_NAME}__status`
-        status.textContent = message
-
-        panel.appendChild(status)
-        wrapper.appendChild(panel)
-        this.customHtmlTarget.replaceChildren(wrapper)
+        this.dispatch('clientError', {
+          target: textSuggestions,
+          bubbles: true,
+          detail: { message }
+        })
       }
 
       applyBufferedMessageBusMessage () {
@@ -479,6 +474,16 @@
 
       get isOpen () {
         return this.hasCustomHtmlTarget && this.customHtmlTarget.childElementCount > 0
+      }
+
+      get shouldDispatchClientError () {
+        return CLIENT_ERROR_STATUSES.includes(this.statusValue)
+      }
+
+      get textSuggestionsElement () {
+        if (!this.hasCustomHtmlTarget) return null
+
+        return this.customHtmlTarget.querySelector(`.${PANEL_CLASS_NAME}`)
       }
 
       get usesCurrentFormSnapshot () {

@@ -27,11 +27,15 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
                             integration_key: @integration_key,
                             field_key: @field_key,
                           }.compact,
-                          action: { "f-ai-input:suggestionStale" => "clearSuggestionSelection" })
+                          action: {
+                            "f-ai-input:suggestionStale" => "clearSuggestionSelection",
+                            "f-ai-input:clientError" => "showClientError",
+                          })
     end
 
     def panel_data
-      stimulus_action(click: "stopPropagation")
+      stimulus_merge(stimulus_action(click: "stopPropagation"),
+                     stimulus_target("panel"))
     end
 
     def close_data
@@ -42,6 +46,18 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
       stimulus_data(action: { click: "accept" },
                     params: suggestion_params(suggestion),
                     target: "suggestion")
+    end
+
+    def suggestions_data
+      stimulus_target("suggestions")
+    end
+
+    def status_data
+      stimulus_target("status")
+    end
+
+    def status_message_data
+      stimulus_target("statusMessage")
     end
 
     def accept_suggestion_data(suggestion)
@@ -87,6 +103,8 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
     end
 
     def status_message
+      return if loading?
+
       if successful?
         warning_messages.presence
       else
@@ -99,7 +117,7 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
     end
 
     def status_icon
-      :alert unless loading?
+      :alert
     end
 
     def panel_title
