@@ -24,20 +24,9 @@ $f-ai-c-text-suggestions-inner-gap: px-to-rem(12px)
     flex-direction: column
     z-index: 1
 
-  &__panel,
-  &__loader
-    border-radius: px-to-rem(4px)
-
-  &__loader
-    display: none
-
-  &--loading &__body,
-  .f-ai-input--loading &__body
+  .f-ai-input[data-f-ai-input-status-value="waiting-for-suggestions"] &__body,
+  .f-ai-input[data-f-ai-input-status-value="submitting-instructions"] &__body
     pointer-events: none
-
-  &--loading &__loader,
-  .f-ai-input--loading &__loader
-    display: block
 
   &__title
     color: $f-ai-c-text-suggestions-text
@@ -100,6 +89,12 @@ $f-ai-c-text-suggestions-inner-gap: px-to-rem(12px)
         border-color: $green
         background: $green-background
 
+    &--loading
+      cursor: wait
+
+      &:hover
+        border-color: $f-ai-c-text-suggestions-accent-light
+
   &__suggestion-body
     display: flex
     flex: 1 1 auto
@@ -129,6 +124,13 @@ $f-ai-c-text-suggestions-inner-gap: px-to-rem(12px)
     display: inline-flex
     flex-shrink: 0
     gap: px-to-rem(4px)
+
+  &__suggestion-loader-wrap
+    display: block
+    flex: 0 0 px-to-rem(16px)
+    height: px-to-rem(16px)
+    position: relative
+    width: px-to-rem(16px)
 
   &__suggestion-copy-wrap
     display: inline-flex

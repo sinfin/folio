@@ -2,6 +2,7 @@
 
 class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::ApplicationComponent
   CONTROLLER_NAME = "f-ai-c-text-suggestions"
+  LOADING_SUGGESTION_COUNT = 3
 
   def initialize(result:,
                  component_id:,
@@ -27,10 +28,6 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
                             field_key: @field_key,
                           }.compact,
                           action: { "f-ai-input:suggestionStale" => "clearSuggestionSelection" })
-    end
-
-    def component_class
-      "f-ai-c-text-suggestions--loading" if loading?
     end
 
     def panel_data
@@ -64,6 +61,14 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
       Array(@result.suggestions)
     end
 
+    def loading_suggestions
+      Array.new(LOADING_SUGGESTION_COUNT)
+    end
+
+    def instructions_visible?
+      loading? || status_message.blank?
+    end
+
     def suggestion_params(suggestion)
       {
         text: suggestion.text,
@@ -82,8 +87,6 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
     end
 
     def status_message
-      return loading_text if loading?
-
       if successful?
         warning_messages.presence
       else

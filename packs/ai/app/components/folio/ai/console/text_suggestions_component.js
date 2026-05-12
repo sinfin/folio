@@ -23,6 +23,7 @@
 
       regenerate (event) {
         this.stopActionEvent(event)
+
         this.dispatch('regenerate', {
           bubbles: true,
           detail: { instructions: this.hasInstructionsTarget ? this.instructionsTarget.value : '' }

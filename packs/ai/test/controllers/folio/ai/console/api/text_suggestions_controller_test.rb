@@ -33,10 +33,13 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
 
     assert_response :success
     assert page.has_css?(".f-ai-c-text-suggestions")
-    assert page.has_css?(".f-ai-c-text-suggestions--loading")
+    assert page.has_no_css?(".f-ai-c-text-suggestions--loading")
+    assert page.has_css?(".f-ai-c-text-suggestions__suggestion--loading", count: 3)
+    assert page.has_css?(".f-ai-c-text-suggestions__suggestion-loader.folio-loader", count: 3)
+    assert page.has_no_css?(".f-ai-c-text-suggestions__loader")
     assert response.parsed_body.dig("meta", "request_id").present?
     assert page.has_css?("[data-action*='f-ai-input:suggestionStale->f-ai-c-text-suggestions#clearSuggestionSelection']")
-    assert page.has_no_css?(".f-ai-c-text-suggestions__suggestion")
+    assert page.has_no_css?("[data-f-ai-c-text-suggestions-target='suggestion']")
 
     job_params = enqueued_text_suggestions_job_arguments[:params].with_indifferent_access
     assert_not job_params.key?(:klass)

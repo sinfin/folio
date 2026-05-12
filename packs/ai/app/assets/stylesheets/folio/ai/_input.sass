@@ -42,14 +42,14 @@ $f-ai-input-accent: #9637D3 !default
     right: auto
     display: none
 
-  &--loading &__button-loader
+  &[data-f-ai-input-status-value="initial-loading"] &__button-loader
     display: block
 
-  &--loading &__button &__icon
+  &[data-f-ai-input-status-value="initial-loading"] &__button &__icon
     visibility: hidden
 
   &__undo &__icon
     color: $danger
 
-  &--loading &__button
+  &[data-f-ai-input-status-value="initial-loading"] &__button
     cursor: wait

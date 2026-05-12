@@ -21,6 +21,8 @@ class Folio::Ai::Console::TextSuggestionsComponentTest < Folio::Console::Compone
     assert_selector("[data-f-ai-c-text-suggestions-key-param='1']")
     assert_selector(".f-ai-c-text-suggestions__suggestion-meta", text: "Neutral")
     assert_selector("textarea[data-f-ai-c-text-suggestions-target='instructions']", text: "Shorten it.")
+    assert_no_selector("template[data-f-ai-c-text-suggestions-target='loadingSuggestionsTemplate']",
+                       visible: :all)
   end
 
   test "renders error state" do
@@ -33,17 +35,25 @@ class Folio::Ai::Console::TextSuggestionsComponentTest < Folio::Console::Compone
     assert_no_selector(".f-ai-c-text-suggestions__suggestion")
   end
 
-  test "renders loading state with request identifier" do
+  test "renders loading state with pseudo suggestions" do
     render_inline(Folio::Ai::Console::TextSuggestionsComponent.new(result: loading_result,
                                                                   component_id: "ai_title",
                                                                   field_label: "Title",
                                                                   loading: true))
 
-    assert_selector(".f-ai-c-text-suggestions--loading")
-    assert_selector(".f-ai-c-text-suggestions__status",
-                    text: I18n.t("folio.ai.console.text_suggestions_component.loading_text"))
+    assert_no_selector(".f-ai-c-text-suggestions--loading")
+    assert_selector(".f-ai-c-text-suggestions__suggestion--loading", count: 3)
+    assert_selector(".f-ai-c-text-suggestions__suggestion--loading .f-ai-c-text-suggestions__suggestion-text",
+                    text: I18n.t("folio.ai.console.text_suggestions_component.loading_text"),
+                    count: 3)
+    assert_selector(".f-ai-c-text-suggestions__suggestion-loader.folio-loader", count: 3)
+    assert_no_selector(".f-ai-c-text-suggestions__loader")
+    assert_no_selector(".f-ai-c-text-suggestions__status")
     assert_no_selector(".f-ai-c-text-suggestions__panel--error")
-    assert_no_selector(".f-ai-c-text-suggestions__suggestion")
+    assert_no_selector("[data-f-ai-c-text-suggestions-target='suggestion']")
+    assert_selector("textarea[data-f-ai-c-text-suggestions-target='instructions']")
+    assert_no_selector("template[data-f-ai-c-text-suggestions-target='loadingSuggestionsTemplate']",
+                       visible: :all)
   end
 
   private

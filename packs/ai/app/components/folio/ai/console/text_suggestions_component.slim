@@ -1,7 +1,4 @@
-.f-ai-c-text-suggestions[
-  class=component_class
-  data=component_data
-]
+.f-ai-c-text-suggestions data=component_data
   .f-ai-c-text-suggestions__panel[
     id=@component_id
     class=panel_error_class
@@ -17,7 +14,23 @@
       = folio_icon(:close, height: 16)
 
     .f-ai-c-text-suggestions__body
-      - if status_message.present?
+      - if loading?
+        .f-ai-c-text-suggestions__suggestions
+          - loading_suggestions.each do
+            .f-ai-c-text-suggestions__suggestion.f-ai-c-text-suggestions__suggestion--loading
+              span.f-ai-c-text-suggestions__suggestion-body
+                span.f-ai-c-text-suggestions__suggestion-text = loading_text
+
+              span.f-ai-c-text-suggestions__suggestion-actions
+                span.f-ai-c-text-suggestions__suggestion-loader-wrap
+                  span[
+                    class="f-ai-c-text-suggestions__suggestion-loader"
+                    class="folio-loader"
+                    class="folio-loader--tiny"
+                    class="folio-loader--transparent"
+                  ]
+
+      - elsif status_message.present?
         .f-ai-c-text-suggestions__status
           - if status_icon.present?
             = folio_icon(status_icon,
@@ -58,6 +71,7 @@
                 ]
                   = folio_icon(:check, height: 16)
 
+      - if instructions_visible?
         .f-ai-c-text-suggestions__instructions
           textarea.f-ai-c-text-suggestions__instructions-input.align-self-stretch[
             class="form-control"
@@ -72,5 +86,3 @@
                                                            data: regenerate_data,
                                                            variant: "medium-dark",
                                                            class_name: "f-ai-c-text-suggestions__regenerate"))
-
-      .f-ai-c-text-suggestions__loader.folio-loader

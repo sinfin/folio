@@ -2,12 +2,14 @@
   const CONTROLLER_NAME = 'f-ai-input'
   const INPUT_CLASS_NAME = 'f-ai-input'
   const INPUT_OPEN_CLASS = `${INPUT_CLASS_NAME}--open`
-  const INPUT_LOADING_CLASS = `${INPUT_CLASS_NAME}--loading`
   const CONTROLS_OPEN_CLASS = `${INPUT_CLASS_NAME}__controls--open`
-  const CONTROLS_LOADING_CLASS = `${INPUT_CLASS_NAME}__controls--loading`
   const PANEL_CLASS_NAME = 'f-ai-c-text-suggestions'
   const PANEL_OPEN_CLASS = `${PANEL_CLASS_NAME}--open`
   const TEXT_SUGGESTIONS_JOB_TYPE = 'Folio::Ai::TextSuggestionsJob'
+  const STATUS_IDLE = 'idle'
+  const STATUS_INITIAL_LOADING = 'initial-loading'
+  const STATUS_WAITING_FOR_SUGGESTIONS = 'waiting-for-suggestions'
+  const STATUS_SUBMITTING_INSTRUCTIONS = 'submitting-instructions'
   let openController = null
 
   const cssEscape = (value) => {
@@ -36,7 +38,8 @@
         requestTimeoutMs: { type: Number, default: 45000 },
         loadingText: String,
         genericErrorText: String,
-        requestTimeoutText: String
+        requestTimeoutText: String,
+        status: { type: String, default: STATUS_IDLE }
       }
 
       connect () {
@@ -47,6 +50,11 @@
         this.textSuggestionsMessages = {}
         this.abortController = null
         this.awaitingTextSuggestionsResult = false
+        this.setStatus(STATUS_IDLE)
+        this.syncControls()
+      }
+
+      statusValueChanged () {
         this.syncControls()
       }
 
@@ -81,7 +89,7 @@
         this.abortRequest()
         this.customHtmlTarget.innerHTML = ''
         this.element.classList.remove(INPUT_OPEN_CLASS)
-        this.element.classList.remove(INPUT_LOADING_CLASS)
+        this.setStatus(STATUS_IDLE)
         this.clearSession()
 
         if (openController === this) openController = null
@@ -169,7 +177,7 @@
         this.requestTimedOut = false
         this.awaitingTextSuggestionsResult = true
         this.setRequestTimeout(requestId)
-        this.setLoading()
+        this.setLoadingStatus(instructions === null ? STATUS_INITIAL_LOADING : STATUS_SUBMITTING_INSTRUCTIONS)
 
         const request = window.Folio.Api.apiPost(url, body, this.abortController.signal)
 
@@ -180,11 +188,15 @@
             this.handleHtml(response.data)
             this.pendingTextSuggestionsRequestId = response.meta?.request_id || null
             const receivedBufferedResult = this.applyBufferedMessageBusMessage()
+            if (receivedBufferedResult) return
 
-            if (!this.pendingTextSuggestionsRequestId && !receivedBufferedResult) {
-              this.handleError(new Error(this.genericErrorTextValue))
-              this.finishLoading()
+            if (this.pendingTextSuggestionsRequestId) {
+              this.setStatus(STATUS_WAITING_FOR_SUGGESTIONS)
+              return
             }
+
+            this.handleError(new Error(this.genericErrorTextValue))
+            this.finishLoading()
           })
           .catch((error) => {
             if (this.staleRequest(requestId)) return
@@ -258,10 +270,14 @@
         return responseData.errors[0].detail || responseData.errors[0].title
       }
 
-      setLoading () {
-        this.element.classList.add(INPUT_LOADING_CLASS)
+      setLoadingStatus (status) {
+        this.setStatus(status)
         this.element.classList.add(INPUT_OPEN_CLASS)
         this.syncControls()
+      }
+
+      setStatus (status) {
+        this.statusValue = status
       }
 
       showClientError (message) {
@@ -309,12 +325,13 @@
         return requestId !== this.requestSequence
       }
 
-      abortRequest () {
+      abortRequest ({ resetStatus = true } = {}) {
         this.clearRequestTimeout()
         this.requestTimedOut = false
         this.pendingTextSuggestionsRequestId = null
         this.textSuggestionsMessages = {}
         this.awaitingTextSuggestionsResult = false
+        if (resetStatus) this.setStatus(STATUS_IDLE)
 
         if (!this.abortController) return
 
@@ -361,7 +378,7 @@
         this.requestTimedOut = false
         this.pendingTextSuggestionsRequestId = null
         this.awaitingTextSuggestionsResult = false
-        this.element.classList.remove(INPUT_LOADING_CLASS)
+        this.setStatus(STATUS_IDLE)
         this.syncControls()
       }
 
@@ -441,17 +458,15 @@
 
         event.preventDefault()
         event.stopPropagation()
+        event.target.blur()
       }
 
       syncControls () {
-        const loading = this.element.classList.contains(INPUT_LOADING_CLASS)
-
         if (this.hasButtonTarget) {
           this.buttonTarget.setAttribute('aria-expanded', this.isOpen ? 'true' : 'false')
         }
 
         this.controlsElement?.classList.toggle(CONTROLS_OPEN_CLASS, this.isOpen)
-        this.controlsElement?.classList.toggle(CONTROLS_LOADING_CLASS, loading)
       }
 
       get input () {
