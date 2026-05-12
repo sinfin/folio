@@ -63,9 +63,10 @@ The pack is designed around reusable text suggestions:
 - host applications register integrations and fields
 - admins enable AI and enter default prompts per site and field
 - editors click an AI action beside an eligible input
-- the browser requests rendered suggestion-panel HTML from the centralized API
-- the API loads and authorizes the record, asks the model for context, calls the
-  provider, and returns `render_component_json`
+- the browser requests loading-panel HTML from the centralized API
+- the API enqueues a job and returns `render_component_json`
+- the job loads and authorizes the record, asks the model for context, calls the
+  provider, and publishes rendered suggestion-panel HTML over MessageBus
 - accepting a suggestion writes to the form field but never saves the record
 
 Host applications own product-specific decisions: which models and fields opt
@@ -118,6 +119,7 @@ Folio::Ai.configure do |config|
   config.model_catalog_cache_ttl = 1.hour
   config.provider_request_timeout = 30
   config.client_request_timeout_ms = 45_000
+  config.text_suggestions_queue = :default
   config.provider_request_storage = false
   config.max_prompt_chars = 80_000
   config.rate_limit = { limit: 30, period: 1.hour }
@@ -133,6 +135,7 @@ Important defaults:
 - `provider_request_storage` is `false`
 - `provider_request_timeout` is `30` seconds
 - `client_request_timeout_ms` is `45_000`
+- `text_suggestions_queue` is `:default`
 - `max_prompt_chars` is `80_000`
 - `rate_limit` is `nil`
 
@@ -233,9 +236,10 @@ A field-level AI action is rendered only when all gates pass:
 8. The record is persisted.
 9. Any optional model eligibility hook allows suggestions.
 
-Direct API requests still return rendered component HTML for failures, using
-public error messages such as `prompt_missing`, `record_not_ready`,
-`host_ineligible`, `provider_timeout`, or `rate_limited`.
+Direct API requests still enqueue the same job. Availability and provider
+failures are rendered into the MessageBus result with public messages such as
+`prompt_missing`, `record_not_ready`, `host_ineligible`, `provider_timeout`, or
+`rate_limited`.
 
 ## SimpleForm Integration
 
@@ -288,12 +292,11 @@ or host-ineligible records.
 
 The snapshot ignores file inputs. Repeated field names are sent as arrays. The
 controller keeps string values, stringifies numbers and booleans, and limits the
-snapshot to 200 fields before passing it to the model context method or the
-default context fallback.
+snapshot to 200 fields before passing it as the text suggestion job argument.
 
 ## Model Contract
 
-The centralized endpoint loads and authorizes records model-agnostically. A
+The text suggestion job loads and authorizes records model-agnostically. A
 registered persisted record can use AI suggestions without defining model
 methods. The default behavior is:
 
@@ -338,6 +341,9 @@ Optional methods:
 The context can be a hash or string. Hash contexts are formatted as pretty JSON
 inside the prompt. Host applications should keep context builders explicit and
 avoid sending raw rich-text editor JSON unless the app owns a reviewed mapper.
+Because generation runs in a background job, `folio_ai_provider_adapter` is only
+used by class name; custom adapters should be instantiable without record-local
+state.
 
 For TipTap content, prefer the reusable plain-text helper:
 
@@ -350,7 +356,7 @@ Folio::Tiptap::PlainText.from_value(record.tiptap_content)
 The shared route is mounted in the Folio Console API:
 
 ```text
-GET  /console/api/ai_text_suggestions
+POST /console/api/ai_text_suggestions/text_suggestions
 POST /console/api/ai_text_suggestions/instructions
 ```
 
@@ -358,8 +364,8 @@ Both actions are handled by
 `Folio::Ai::Console::Api::TextSuggestionsController`.
 
 The request contains the record class, record id, integration key, field key,
-component id, display options, suggestion count, and optionally instructions or
-a current form snapshot.
+component id, display options, suggestion count, the MessageBus client id, and
+optionally instructions or a current form snapshot.
 
 ```json
 {
@@ -369,6 +375,7 @@ a current form snapshot.
   "field_key": "perex",
   "component_id": "folio_ai_text_suggestions_article_perex",
   "suggestion_count": 3,
+  "message_bus_client_id": "message-bus-client",
   "instructions": "Use a calmer voice.",
   "current_form_snapshot_json": "{\"article[title]\":\"Draft title\"}"
 }
@@ -376,25 +383,63 @@ a current form snapshot.
 
 The controller:
 
-1. Resolves `klass` through `safe_constantize` and requires an
+1. Requires `message_bus_client_id`.
+2. Resolves `klass` through `safe_constantize` and requires an
    `ActiveRecord::Base` subclass.
-2. Starts from `record_class.accessible_by(Folio::Current.ability)`.
-3. Filters by `Folio::Current.site` when the model supports `by_site`.
-4. Rejects records from another site.
-5. Resolves default or model-provided context and eligibility.
-6. Calls `Folio::Ai::SuggestionGenerator`.
-7. Renders `Folio::Ai::Console::TextSuggestionsComponent`.
-8. Wraps the HTML with `render_component_json`.
+3. Starts from `record_class.accessible_by(Folio::Current.ability)`.
+4. Filters by the current site when the model supports `by_site`.
+5. Rejects records from another site.
+6. Persists editor instructions synchronously for the instructions endpoint.
+7. Sanitizes the optional current form snapshot.
+8. Resolves model-provided context, eligibility, field label, AI site, and any
+   serializable provider adapter class.
+9. Generates a request hash.
+10. Enqueues `Folio::Ai::TextSuggestionsJob`.
+11. Renders `Folio::Ai::Console::TextSuggestionsComponent` in a loading state.
+12. Wraps the loading HTML with `render_component_json`.
 
-The JSON response therefore has a string `data` key containing HTML:
+The initial JSON response therefore has a string `data` key containing loading
+HTML, and a `meta.request_id` value used to match the MessageBus result:
 
 ```json
 {
-  "data": "<div class=\"f-ai-c-text-suggestions\">...</div>"
+  "data": "<div class=\"f-ai-c-text-suggestions\">...</div>",
+  "meta": {
+    "request_id": "request-hash"
+  }
 }
 ```
 
-The API does not return raw suggestion JSON to the browser.
+The API does not wait for the provider and does not return raw suggestion JSON
+to the browser.
+
+The prepared context and request metadata are passed directly as ActiveJob
+arguments. Folio does not persist them separately; host queue backends such as
+Sidekiq may still expose job arguments in operational tooling. Record class/id
+and CanCanCan authorization stay in the controller and are not job inputs.
+
+`Folio::Ai::TextSuggestionsJob` runs on `Folio::Ai.text_suggestions_queue`.
+The job does not use `Folio::Current`; it only loads the already selected
+`user` and AI `site` by id, then:
+
+1. Calls `Folio::Ai::SuggestionGenerator` with the prepared context and
+   eligibility.
+2. Renders `Folio::Ai::Console::TextSuggestionsComponent`.
+3. Publishes rendered HTML to `Folio::MESSAGE_BUS_CHANNEL` for the original
+   MessageBus client id.
+
+The MessageBus payload is:
+
+```json
+{
+  "type": "Folio::Ai::TextSuggestionsJob",
+  "data": {
+    "request_id": "request-hash",
+    "component_id": "folio_ai_text_suggestions_article_perex",
+    "html": "<div class=\"f-ai-c-text-suggestions\">...</div>"
+  }
+}
+```
 
 ## Suggestion Pipeline
 
@@ -473,12 +518,16 @@ bootstrap.
 
 - opens only one AI panel in the form at a time
 - captures an undo snapshot when opened
-- sends GET for initial suggestions
+- sends POST for initial suggestions
 - sends POST with instructions for regenerate/save
 - optionally serializes a current form snapshot
+- includes the current `window.MessageBus.clientId`
 - aborts in-flight requests on close or regenerate
 - enforces the client request timeout
-- injects returned component HTML into the custom HTML target
+- injects returned loading component HTML into the custom HTML target
+- stores `meta.request_id` from the loading response
+- waits for a matching `Folio::Ai::TextSuggestionsJob` MessageBus payload
+- replaces the loading component with the final rendered component HTML
 - writes accepted suggestions into the input
 - dispatches `input`, `change`, and `folioConsoleCustomChange`
 - restores the opening snapshot on undo
@@ -579,7 +628,8 @@ Useful coverage areas:
 - site settings validation and visibility
 - availability gates
 - SimpleForm attachment and hidden cases
-- centralized API success and error rendering
+- centralized API loading response and job enqueueing
+- text suggestion job success and error broadcasts
 - model context and current form snapshot handling
 - provider requests, failures, and response normalization
 - model catalog and fallback warnings

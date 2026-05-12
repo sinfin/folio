@@ -31,6 +31,16 @@ class Folio::AiTest < ActiveSupport::TestCase
     assert_not_predicate Folio::Ai, :provider_request_storage?
   end
 
+  test "uses default text suggestions queue" do
+    assert_equal :default, Folio::Ai.text_suggestions_queue
+  end
+
+  test "normalizes configured text suggestions queue" do
+    with_ai_config(text_suggestions_queue: "critical") do
+      assert_equal :critical, Folio::Ai.text_suggestions_queue
+    end
+  end
+
   test "is disabled by default" do
     with_ai_config(enabled: false) do
       assert_not Folio::Ai.enabled?

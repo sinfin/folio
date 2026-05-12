@@ -1,4 +1,7 @@
-.f-ai-c-text-suggestions data=component_data
+.f-ai-c-text-suggestions[
+  class=component_class
+  data=component_data
+]
   .f-ai-c-text-suggestions__panel[
     id=@component_id
     class=panel_error_class
@@ -16,9 +19,10 @@
     .f-ai-c-text-suggestions__body
       - if status_message.present?
         .f-ai-c-text-suggestions__status
-          = folio_icon(:alert,
-                       height: 16,
-                       class: "text-danger flex-shrink-0 flex-grow-0")
+          - if status_icon.present?
+            = folio_icon(status_icon,
+                         height: 16,
+                         class: "text-danger flex-shrink-0 flex-grow-0")
           span = status_message
 
       - else

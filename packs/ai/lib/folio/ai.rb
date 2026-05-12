@@ -49,7 +49,8 @@ module Folio::Ai
     attr_writer :provider_model_options,
                 :model_catalog_cache_ttl,
                 :provider_request_timeout,
-                :client_request_timeout_ms
+                :client_request_timeout_ms,
+                :text_suggestions_queue
 
     def configure
       yield self
@@ -67,6 +68,7 @@ module Folio::Ai
       self.client_request_timeout_ms = 45_000
       self.max_prompt_chars = 80_000
       self.rate_limit = nil
+      self.text_suggestions_queue = :default
     end
 
     def provider_models=(value)
@@ -125,6 +127,10 @@ module Folio::Ai
 
     def client_request_timeout_ms
       positive_config_value(@client_request_timeout_ms, 45_000)
+    end
+
+    def text_suggestions_queue
+      (@text_suggestions_queue.presence || :default).to_sym
     end
 
     def model_catalog_cache_ttl

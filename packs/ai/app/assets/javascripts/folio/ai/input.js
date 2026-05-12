@@ -7,7 +7,16 @@
   const CONTROLS_LOADING_CLASS = `${INPUT_CLASS_NAME}__controls--loading`
   const PANEL_CLASS_NAME = 'f-ai-c-text-suggestions'
   const PANEL_OPEN_CLASS = `${PANEL_CLASS_NAME}--open`
+  const TEXT_SUGGESTIONS_JOB_TYPE = 'Folio::Ai::TextSuggestionsJob'
   let openController = null
+
+  const cssEscape = (value) => {
+    value = value.toString()
+
+    if (window.CSS?.escape) return window.CSS.escape(value)
+
+    return value.replace(/["\\]/g, '\\$&')
+  }
 
   const registerAiInputController = () => {
     window.Folio.Stimulus.register(CONTROLLER_NAME, class extends window.Stimulus.Controller {
@@ -34,6 +43,10 @@
         this.requestSequence = 0
         this.requestTimeoutId = null
         this.requestTimedOut = false
+        this.pendingTextSuggestionsRequestId = null
+        this.textSuggestionsMessages = {}
+        this.abortController = null
+        this.awaitingTextSuggestionsResult = false
         this.syncControls()
       }
 
@@ -135,12 +148,26 @@
         this.close()
       }
 
+      onMessage (event) {
+        const message = event?.detail?.message
+        if (!message || !message.data || !message.data.request_id) return
+        if (!this.awaitingTextSuggestionsResult) return
+        if (!this.pendingTextSuggestionsRequestId) {
+          this.textSuggestionsMessages[message.data.request_id] = message
+          return
+        }
+        if (message.data.request_id !== this.pendingTextSuggestionsRequestId) return
+
+        this.applyMessageBusResult(message)
+      }
+
       loadHtml ({ url, instructions = null }) {
         const requestId = this.nextRequestId()
         const body = this.requestPayload({ instructions })
         this.abortRequest()
         this.abortController = new AbortController()
         this.requestTimedOut = false
+        this.awaitingTextSuggestionsResult = true
         this.setRequestTimeout(requestId)
         this.setLoading()
 
@@ -151,6 +178,13 @@
             if (this.staleRequest(requestId)) return
 
             this.handleHtml(response.data)
+            this.pendingTextSuggestionsRequestId = response.meta?.request_id || null
+            const receivedBufferedResult = this.applyBufferedMessageBusMessage()
+
+            if (!this.pendingTextSuggestionsRequestId && !receivedBufferedResult) {
+              this.handleError(new Error(this.genericErrorTextValue))
+              this.finishLoading()
+            }
           })
           .catch((error) => {
             if (this.staleRequest(requestId)) return
@@ -161,15 +195,16 @@
             }
 
             this.handleError(error)
+            this.finishLoading()
           })
           .finally(() => {
             if (this.staleRequest(requestId)) return
 
-            this.clearRequestTimeout()
             this.abortController = null
-            this.requestTimedOut = false
-            this.element.classList.remove(INPUT_LOADING_CLASS)
-            this.syncControls()
+
+            if (!this.pendingTextSuggestionsRequestId) {
+              this.finishLoading()
+            }
           })
       }
 
@@ -181,7 +216,8 @@
           field_key: this.fieldKeyValue,
           component_id: this.componentIdValue,
           show_meta: this.showMetaValue,
-          suggestion_count: this.suggestionCountValue
+          suggestion_count: this.suggestionCountValue,
+          message_bus_client_id: this.messageBusClientId
         }
 
         if (instructions !== null) {
@@ -244,6 +280,26 @@
         this.customHtmlTarget.replaceChildren(wrapper)
       }
 
+      applyBufferedMessageBusMessage () {
+        const message = this.textSuggestionsMessages[this.pendingTextSuggestionsRequestId]
+        if (!message) return false
+
+        this.applyMessageBusResult(message)
+        return true
+      }
+
+      applyMessageBusResult (message) {
+        delete this.textSuggestionsMessages[message.data.request_id]
+
+        if (message.data.html) {
+          this.handleHtml(message.data.html)
+        } else {
+          this.handleError(new Error(this.genericErrorTextValue))
+        }
+
+        this.finishLoading()
+      }
+
       nextRequestId () {
         this.requestSequence += 1
         return this.requestSequence
@@ -256,6 +312,9 @@
       abortRequest () {
         this.clearRequestTimeout()
         this.requestTimedOut = false
+        this.pendingTextSuggestionsRequestId = null
+        this.textSuggestionsMessages = {}
+        this.awaitingTextSuggestionsResult = false
 
         if (!this.abortController) return
 
@@ -267,10 +326,18 @@
         if (this.requestTimeoutMsValue <= 0) return
 
         this.requestTimeoutId = window.setTimeout(() => {
-          if (this.staleRequest(requestId) || !this.abortController) return
+          if (this.staleRequest(requestId)) return
 
           this.requestTimedOut = true
-          this.abortController.abort()
+
+          if (this.abortController) {
+            this.abortController.abort()
+            return
+          }
+
+          this.pendingTextSuggestionsRequestId = null
+          this.handleTimeout()
+          this.finishLoading()
         }, this.requestTimeoutMsValue)
       }
 
@@ -287,6 +354,15 @@
         }
 
         return this.genericErrorTextValue
+      }
+
+      finishLoading () {
+        this.clearRequestTimeout()
+        this.requestTimedOut = false
+        this.pendingTextSuggestionsRequestId = null
+        this.awaitingTextSuggestionsResult = false
+        this.element.classList.remove(INPUT_LOADING_CLASS)
+        this.syncControls()
       }
 
       currentFormSnapshot () {
@@ -394,6 +470,10 @@
         return this.currentStatePolicyValue === 'current_form_snapshot'
       }
 
+      get messageBusClientId () {
+        return window.MessageBus?.clientId || null
+      }
+
       get sessionSnapshot () {
         return Object.prototype.hasOwnProperty.call(this.element.dataset, 'fAiInputSnapshot')
           ? this.element.dataset.fAiInputSnapshot
@@ -406,5 +486,20 @@
     registerAiInputController()
   } else {
     document.addEventListener('folio:stimulus-ready', registerAiInputController, { once: true })
+  }
+
+  if (window.Folio?.MessageBus?.callbacks) {
+    window.Folio.MessageBus.callbacks[CONTROLLER_NAME] = (message) => {
+      if (!message) return
+      if (message.type !== TEXT_SUGGESTIONS_JOB_TYPE) return
+      if (!message.data || !message.data.component_id) return
+
+      const selector = `.${INPUT_CLASS_NAME}[data-f-ai-input-component-id-value="${cssEscape(message.data.component_id)}"]`
+      const inputs = document.querySelectorAll(selector)
+
+      for (const input of inputs) {
+        input.dispatchEvent(new CustomEvent(`${CONTROLLER_NAME}/message`, { detail: { message } }))
+      }
+    }
   }
 })()

@@ -3,32 +3,6 @@
 require "test_helper"
 
 class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::BaseControllerTest
-  class RaisingProviderAdapter
-    def generate_suggestions(prompt:, field:, suggestion_count:)
-      raise Folio::Ai::ProviderTimeoutError, "timeout"
-    end
-  end
-
-  class CapturingProviderAdapter
-    attr_reader :calls
-
-    def initialize
-      @calls = []
-    end
-
-    def generate_suggestions(prompt:, field:, suggestion_count:)
-      calls << {
-        prompt:,
-        field:,
-        suggestion_count:,
-      }
-
-      [
-        Folio::Ai::Suggestion.new(key: 1, text: "Fallback snapshot suggestion"),
-      ]
-    end
-  end
-
   def setup
     super
 
@@ -45,29 +19,41 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
     super
   end
 
-  test "renders suggestions component json from the central pack endpoint" do
+  test "renders loading component json and enqueues text suggestions job" do
     with_ai_config(enabled: true) do
-      post text_suggestions_console_api_ai_text_suggestions_path,
-           params: request_params(field_key: :title,
-                                  show_meta: "1"),
-           as: :json
+      assert_enqueued_jobs 1, only: Folio::Ai::TextSuggestionsJob do
+        post text_suggestions_console_api_ai_text_suggestions_path,
+             params: request_params(field_key: :title,
+                                    show_meta: "1"),
+             as: :json
+      end
     end
 
     page = Capybara.string(response_component_html)
 
     assert_response :success
     assert page.has_css?(".f-ai-c-text-suggestions")
+    assert page.has_css?(".f-ai-c-text-suggestions--loading")
+    assert response.parsed_body.dig("meta", "request_id").present?
     assert page.has_css?("[data-action*='f-ai-input:suggestionStale->f-ai-c-text-suggestions#clearSuggestionSelection']")
-    assert page.has_css?(".f-ai-c-text-suggestions__suggestion", text: "Demo AI headline focused on the main editorial hook")
-    assert page.has_css?(".f-ai-c-text-suggestions__suggestion-meta", text: "Neutral")
+    assert page.has_no_css?(".f-ai-c-text-suggestions__suggestion")
+
+    job_params = enqueued_text_suggestions_job_arguments[:params].with_indifferent_access
+    assert_not job_params.key?(:klass)
+    assert_not job_params.key?(:id)
+    assert_equal true, job_params[:host_eligible]
+    assert_equal "Dummy::Ai::DemoProviderAdapter", job_params[:provider_adapter_class_name]
+    assert_includes job_params[:context].keys.map(&:to_s), "title"
   end
 
-  test "persists editor instructions through the instructions endpoint" do
+  test "persists editor instructions before enqueueing instructions job" do
     with_ai_config(enabled: true) do
-      post instructions_console_api_ai_text_suggestions_path,
-           params: request_params(field_key: :perex,
-                                  instructions: "Use a calmer voice."),
-           as: :json
+      assert_enqueued_jobs 1, only: Folio::Ai::TextSuggestionsJob do
+        post instructions_console_api_ai_text_suggestions_path,
+             params: request_params(field_key: :perex,
+                                    instructions: "Use a calmer voice."),
+             as: :json
+      end
     end
 
     instruction = Folio::Ai::UserInstruction.find_or_initialize_for(user: @superadmin,
@@ -77,97 +63,33 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
 
     assert_response :success
     assert_equal "Use a calmer voice.", instruction.instruction
-    assert_includes response_component_html, "Alternative demo summary"
+    assert_not_includes response_component_html, "Alternative demo summary"
   end
 
-  test "renders prompt_missing in component json" do
-    @site.update!(ai_settings: enabled_ai_settings(prompt: ""))
-
+  test "requires message bus client id" do
     with_ai_config(enabled: true) do
-      post text_suggestions_console_api_ai_text_suggestions_path,
-           params: request_params(field_key: :title),
-           as: :json
-    end
-
-    assert_response :success
-    assert_includes response_component_html, I18n.t("folio.ai.console.errors.prompt_missing")
-  end
-
-  test "renders host_ineligible in component json" do
-    @article.update_columns(title: "", perex: "")
-
-    with_ai_config(enabled: true) do
-      post text_suggestions_console_api_ai_text_suggestions_path,
-           params: request_params(field_key: :title),
-           as: :json
-    end
-
-    assert_response :success
-    assert_includes response_component_html, I18n.t("folio.ai.console.errors.host_ineligible")
-  end
-
-  test "uses fallback form snapshot context when model hooks are missing" do
-    page = create(:folio_page, site: @site)
-    adapter = CapturingProviderAdapter.new
-    provider_factory = ->(**) { adapter }
-
-    Folio::Ai.reset_registry!
-    Folio::Ai.register_integration(record_class_name: "Folio::Page",
-                                   fields: [Folio::Ai::Field.new(key: :title)])
-    @site.update!(ai_settings: enabled_ai_settings(integration_key: :folio_pages,
-                                                  field_keys: %i[title]))
-
-    Folio::Ai.stub(:provider_adapter, provider_factory) do
-      with_ai_config(enabled: true) do
+      assert_no_enqueued_jobs only: Folio::Ai::TextSuggestionsJob do
         post text_suggestions_console_api_ai_text_suggestions_path,
-             params: request_params(record: page,
-                                    integration_key: :folio_pages,
-                                    field_key: :title,
-                                    current_form_snapshot_json: {
-                                      "page[title]" => "Unsaved title",
-                                    }.to_json),
+             params: request_params(field_key: :title).except(:message_bus_client_id),
              as: :json
       end
     end
 
-    assert_response :success
-    assert_includes response_component_html, "Fallback snapshot suggestion"
-    assert_equal 1, adapter.calls.length
-    assert_includes adapter.calls.first[:prompt], '"current_form_snapshot": {'
-    assert_includes adapter.calls.first[:prompt], '"page[title]": "Unsaved title"'
-  end
-
-  test "renders record_not_ready when record is not accessible on the current site" do
-    other_site = create_site(force: true)
-    other_article = create(:dummy_blog_article, site: other_site)
-
-    with_ai_config(enabled: true) do
-      post text_suggestions_console_api_ai_text_suggestions_path,
-           params: request_params(record: other_article,
-                                  field_key: :title),
-           as: :json
-    end
-
-    assert_response :success
-    assert_includes response_component_html, I18n.t("folio.ai.console.errors.record_not_ready")
-  end
-
-  test "renders provider timeout in component json" do
-    Dummy::Ai.stub(:demo_provider_adapter_class, RaisingProviderAdapter) do
-      with_ai_config(enabled: true) do
-        post text_suggestions_console_api_ai_text_suggestions_path,
-             params: request_params(field_key: :title),
-             as: :json
-      end
-    end
-
-    assert_response :success
-    assert_includes response_component_html, I18n.t("folio.ai.console.errors.provider_timeout")
+    assert_response :unprocessable_entity
+    assert_equal "message_bus_client_id is required", response.parsed_body["errors"].first["title"]
   end
 
   private
     def response_component_html
       response.parsed_body["data"]
+    end
+
+    def enqueued_text_suggestions_job_arguments
+      job = enqueued_jobs.reverse.find { |enqueued_job| enqueued_job[:job] == Folio::Ai::TextSuggestionsJob }
+      args = job[:args]
+      args = ActiveJob::Arguments.deserialize(args) if args.first.is_a?(Hash) && args.first.key?("_aj_symbol_keys")
+
+      args.first.with_indifferent_access
     end
 
     def register_dummy_ai_integration
@@ -203,6 +125,7 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
         component_id: "ai_#{field_key}",
         instructions:,
         show_meta:,
+        message_bus_client_id: "message-bus-client",
         current_form_snapshot_json:,
       }.compact
     end

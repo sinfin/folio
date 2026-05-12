@@ -2,7 +2,6 @@
 
 class Folio::Ai::Console::Api::TextSuggestionsController < Folio::Console::Api::BaseController
   CURRENT_FORM_SNAPSHOT_FIELD_LIMIT = 200
-  MAX_SUGGESTION_COUNT = 10
 
   def text_suggestions
     render_text_suggestions(instructions: nil, persist_instructions: false)
@@ -14,41 +13,99 @@ class Folio::Ai::Console::Api::TextSuggestionsController < Folio::Console::Api::
 
   private
     def render_text_suggestions(instructions:, persist_instructions:)
-      render_component_json(text_suggestions_component(instructions:, persist_instructions:))
+      return render_missing_message_bus_client_id if message_bus_client_id.blank?
+
+      effective_instructions = if persist_instructions && record
+        persist_user_instruction(instructions)
+      elsif persist_instructions
+        instructions.to_s
+      else
+        instructions
+      end
+      request_id = SecureRandom.urlsafe_base64(18)
+
+      Folio::Ai::TextSuggestionsJob.perform_later(request_id:,
+                                                  message_bus_client_id:,
+                                                  user_id: Folio::Current.user.id,
+                                                  site_id: ai_site.id,
+                                                  params: job_params(instructions: effective_instructions))
+
+      render_component_json(text_suggestions_component(instructions: effective_instructions),
+                            meta: { request_id: })
     end
 
-    def text_suggestions_component(instructions:, persist_instructions:)
-      Folio::Ai::Console::TextSuggestionsComponent.new(result: suggestion_result(instructions:,
-                                                                                 persist_instructions:),
+    def text_suggestions_component(instructions:)
+      Folio::Ai::Console::TextSuggestionsComponent.new(result: loading_result(instructions:),
                                                        component_id: component_id,
                                                        field_label: field_label,
                                                        integration_key: ai_params[:integration_key],
                                                        field_key: ai_params[:field_key],
-                                                       show_meta: show_meta?)
+                                                       show_meta: show_meta?,
+                                                       loading: true)
     end
 
-    def suggestion_result(instructions:, persist_instructions:)
-      return error_result(:record_not_ready) unless record
-
-      Folio::Ai::SuggestionGenerator.new(site: ai_site,
-                                         user: Folio::Current.user,
-                                         integration_key: ai_params[:integration_key],
-                                         field_key: ai_params[:field_key],
-                                         context: -> { ai_context },
-                                         instructions:,
-                                         persist_instructions:,
-                                         host_eligible: host_eligible?,
-                                         suggestion_count: suggestion_count,
-                                         provider_adapter: provider_adapter).call
-    end
-
-    def error_result(error_code)
-      Folio::Ai::SuggestionGenerator::Result.new(success: false,
+    def loading_result(instructions:)
+      Folio::Ai::SuggestionGenerator::Result.new(success: true,
                                                  suggestions: [],
-                                                 error_code:,
                                                  field: registry_field,
-                                                 user_instruction: stored_instruction,
+                                                 user_instruction: loading_instruction(instructions),
                                                  warnings: [])
+    end
+
+    def loading_instruction(instructions)
+      instructions.nil? ? stored_instruction : instructions.to_s
+    end
+
+    def persist_user_instruction(instructions)
+      Folio::Ai::UserInstruction.upsert_instruction!(user: Folio::Current.user,
+                                                     site: ai_site,
+                                                     integration_key: ai_params[:integration_key],
+                                                     field_key: ai_params[:field_key],
+                                                     instruction: instructions.to_s)
+                                 .instruction
+                                 .tap do
+        Folio::Ai.track(:user_instruction_saved, tracking_payload)
+      end
+    end
+
+    def tracking_payload
+      {
+        site_id: ai_site&.id,
+        user_id: Folio::Current.user&.id,
+        integration_key: ai_params[:integration_key].to_s,
+        field_key: ai_params[:field_key].to_s,
+        record_class: record_class&.name,
+      }.compact
+    end
+
+    def render_missing_message_bus_client_id
+      render json: {
+        errors: [
+          {
+            title: "message_bus_client_id is required",
+          },
+        ],
+      }, status: :unprocessable_entity
+    end
+
+    def job_params(instructions:)
+      params = {
+        integration_key: ai_params[:integration_key],
+        field_key: ai_params[:field_key],
+        component_id: component_id,
+        field_label: field_label,
+        show_meta: ai_params[:show_meta],
+        suggestion_count: ai_params[:suggestion_count],
+        instructions:,
+      }
+
+      return params.merge(error_code: :record_not_ready).compact unless record
+
+      eligible = host_eligible?
+
+      params.merge(context: eligible ? ai_context : {},
+                   host_eligible: eligible,
+                   provider_adapter_class_name: provider_adapter_class_name).compact
     end
 
     def record
@@ -112,8 +169,10 @@ class Folio::Ai::Console::Api::TextSuggestionsController < Folio::Console::Api::
                                             current_form_snapshot:)
     end
 
-    def provider_adapter
-      record.folio_ai_provider_adapter if record.respond_to?(:folio_ai_provider_adapter)
+    def provider_adapter_class_name
+      return unless record.respond_to?(:folio_ai_provider_adapter)
+
+      record.folio_ai_provider_adapter&.class&.name
     end
 
     def stored_instruction
@@ -141,18 +200,12 @@ class Folio::Ai::Console::Api::TextSuggestionsController < Folio::Console::Api::
       ActiveModel::Type::Boolean.new.cast(ai_params[:show_meta])
     end
 
-    def suggestion_count
-      value = ai_params[:suggestion_count].to_i
-
-      if value.positive?
-        [value, MAX_SUGGESTION_COUNT].min
-      else
-        Folio::Ai::ResponseNormalizer::DEFAULT_SUGGESTION_COUNT
-      end
-    end
-
     def current_form_snapshot
       @current_form_snapshot ||= sanitize_current_form_snapshot(raw_current_form_snapshot)
+    end
+
+    def message_bus_client_id
+      ai_params[:message_bus_client_id].presence
     end
 
     def raw_current_form_snapshot
@@ -201,6 +254,7 @@ class Folio::Ai::Console::Api::TextSuggestionsController < Folio::Console::Api::
                     :show_meta,
                     :suggestion_count,
                     :instructions,
+                    :message_bus_client_id,
                     :current_form_snapshot_json,
                     current_form_snapshot: {})
     end

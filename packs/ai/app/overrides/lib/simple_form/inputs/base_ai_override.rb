@@ -32,6 +32,7 @@ module Folio::Ai::SimpleFormInputExtension
                       action: {
                         "click@window": "onWindowClick",
                         "keydown@window": "onWindowKeydown",
+                        "f-ai-input/message": "onMessage",
                         "f-ai-c-text-suggestions:close": "close",
                         "f-ai-c-text-suggestions:regenerate": "regenerate",
                         "f-ai-c-text-suggestions:accept": "acceptSuggestion",

@@ -33,6 +33,19 @@ class Folio::Ai::Console::TextSuggestionsComponentTest < Folio::Console::Compone
     assert_no_selector(".f-ai-c-text-suggestions__suggestion")
   end
 
+  test "renders loading state with request identifier" do
+    render_inline(Folio::Ai::Console::TextSuggestionsComponent.new(result: loading_result,
+                                                                  component_id: "ai_title",
+                                                                  field_label: "Title",
+                                                                  loading: true))
+
+    assert_selector(".f-ai-c-text-suggestions--loading")
+    assert_selector(".f-ai-c-text-suggestions__status",
+                    text: I18n.t("folio.ai.console.text_suggestions_component.loading_text"))
+    assert_no_selector(".f-ai-c-text-suggestions__panel--error")
+    assert_no_selector(".f-ai-c-text-suggestions__suggestion")
+  end
+
   private
     def success_result
       Folio::Ai::SuggestionGenerator::Result.new(success: true,
@@ -50,6 +63,14 @@ class Folio::Ai::Console::TextSuggestionsComponentTest < Folio::Console::Compone
       Folio::Ai::SuggestionGenerator::Result.new(success: false,
                                                  suggestions: [],
                                                  error_code: :host_ineligible,
+                                                 field: field,
+                                                 user_instruction: "",
+                                                 warnings: [])
+    end
+
+    def loading_result
+      Folio::Ai::SuggestionGenerator::Result.new(success: true,
+                                                 suggestions: [],
                                                  field: field,
                                                  user_instruction: "",
                                                  warnings: [])

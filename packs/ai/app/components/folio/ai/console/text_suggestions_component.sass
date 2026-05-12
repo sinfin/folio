@@ -31,9 +31,11 @@ $f-ai-c-text-suggestions-inner-gap: px-to-rem(12px)
   &__loader
     display: none
 
+  &--loading &__body,
   .f-ai-input--loading &__body
     pointer-events: none
 
+  &--loading &__loader,
   .f-ai-input--loading &__loader
     display: block
 

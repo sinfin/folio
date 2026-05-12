@@ -8,13 +8,15 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
                  field_label:,
                  show_meta: false,
                  integration_key: nil,
-                 field_key: nil)
+                 field_key: nil,
+                 loading: false)
     @result = result
     @component_id = component_id
     @field_label = field_label
     @show_meta = show_meta
     @integration_key = integration_key
     @field_key = field_key
+    @loading = loading
   end
 
   private
@@ -25,6 +27,10 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
                             field_key: @field_key,
                           }.compact,
                           action: { "f-ai-input:suggestionStale" => "clearSuggestionSelection" })
+    end
+
+    def component_class
+      "f-ai-c-text-suggestions--loading" if loading?
     end
 
     def panel_data
@@ -70,10 +76,14 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
     end
 
     def panel_error_class
+      return if loading?
+
       "f-ai-c-text-suggestions__panel--error" unless successful?
     end
 
     def status_message
+      return loading_text if loading?
+
       if successful?
         warning_messages.presence
       else
@@ -83,6 +93,10 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
 
     def status_hidden?
       status_message.blank?
+    end
+
+    def status_icon
+      :alert unless loading?
     end
 
     def panel_title
@@ -120,6 +134,10 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
 
     def regenerate_label
       text_suggestions_label(:regenerate_label)
+    end
+
+    def loading_text
+      text_suggestions_label(:loading_text)
     end
 
     def instructions
@@ -164,5 +182,9 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
 
     def text_suggestions_label(key)
       I18n.t(key, scope: "folio.ai.console.text_suggestions_component")
+    end
+
+    def loading?
+      @loading
     end
 end
