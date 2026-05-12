@@ -44,6 +44,8 @@ en:
           character_limit:
             one: "Limit: %{count} character"
             other: "Limit: %{count} characters"
+          providers:
+            openai: OpenAI
         errors:
           feature_disabled: AI suggestions are disabled.
           global_disabled: AI suggestions are disabled.

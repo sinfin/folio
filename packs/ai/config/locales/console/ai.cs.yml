@@ -45,6 +45,8 @@ cs:
             one: "Limit: %{count} znak"
             few: "Limit: %{count} znaky"
             other: "Limit: %{count} znaků"
+          providers:
+            openai: OpenAI
         errors:
           feature_disabled: AI návrhy jsou vypnuté.
           global_disabled: AI návrhy jsou vypnuté.

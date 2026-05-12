@@ -25,19 +25,19 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
       Folio::Ai.provider_models.keys.map(&:to_s)
     end
 
-    def provider_options(selected)
-      options_for_select(providers.map { |provider| [provider.humanize, provider] }, selected)
+    def provider_options
+      provider_collection
     end
 
     def model_options(provider:, selected:, blank_label:)
       options = [[blank_label, ""]]
-      return options_for_select(options, selected.to_s) unless Folio::Ai.known_provider?(provider)
+      return options unless Folio::Ai.known_provider?(provider)
 
       options += model_catalog_result(provider, selected).models.map do |option|
         [model_option_label(option), option.id]
       end
 
-      options_for_select(options, selected.to_s)
+      options
     end
 
     def model_notice(provider:, selected:, effective_model:)
@@ -51,11 +51,73 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
       if status.unavailable?
         t(".model_unavailable_notice",
           model:,
-          provider: provider.to_s.humanize)
+          provider: provider_label(provider))
       elsif selected.present? && !status.verified?
         t(".model_catalog_unverified_notice",
-          provider: provider.to_s.humanize)
+          provider: provider_label(provider))
       end
+    end
+
+    def boolean_input(*path, label:, checked:)
+      @form.input(input_attribute(*path),
+                  as: :boolean,
+                  label:,
+                  required: false,
+                  input_html: input_html(*path, checked:))
+    end
+
+    def provider_input(*path, label:, selected:, include_blank: false)
+      select_input(*path,
+                   label:,
+                   collection: provider_options,
+                   selected:,
+                   include_blank:)
+    end
+
+    def model_input(*path, label:, provider:, selected:, blank_label:)
+      select_input(*path,
+                   label:,
+                   collection: model_options(provider:, selected:, blank_label:),
+                   selected: selected.to_s,
+                   include_blank: false)
+    end
+
+    def text_area_input(*path, label:, value:, rows:)
+      @form.input(input_attribute(*path),
+                  as: :text,
+                  label:,
+                  required: false,
+                  input_html: input_html(*path, value:, rows:))
+    end
+
+    def select_input(*path, label:, collection:, selected:, include_blank:)
+      @form.input(input_attribute(*path),
+                  as: :select,
+                  collection:,
+                  include_blank:,
+                  selected: selected.to_s,
+                  label:,
+                  required: false,
+                  input_html: input_html(*path, class: "form-select"))
+    end
+
+    def input_attribute(*path)
+      :"ai_settings_#{path.join('_')}"
+    end
+
+    def input_html(*path, **options)
+      {
+        name: field_name(*path),
+        id: field_id(*path),
+      }.merge(options)
+    end
+
+    def provider_collection
+      providers.map { |provider| [provider_label(provider), provider] }
+    end
+
+    def provider_label(provider)
+      t(".providers.#{provider}", default: provider.to_s.humanize)
     end
 
     def field_name(*path)

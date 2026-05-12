@@ -2,41 +2,24 @@
   .f-ai-c-site-settings__intro.alert.alert-info
     = t(".intro")
 
-  .form-check.form-switch.mb-g
-    = hidden_field_tag field_name(:enabled), "0"
-    = check_box_tag field_name(:enabled),
-                    "1",
-                    site_enabled?,
-                    id: field_id(:enabled),
-                    class: "form-check-input"
-    = label_tag field_id(:enabled),
-                t(".enabled_label"),
-                class: "form-check-label"
+  = boolean_input(:enabled,
+                  label: t(".enabled_label"),
+                  checked: site_enabled?)
 
   .row
     .col-md-6
-      .form-group
-        = label_tag field_id(:default_provider),
-                    t(".default_provider"),
-                    class: "form-label"
-        = select_tag field_name(:default_provider),
-                     provider_options(default_provider),
-                     id: field_id(:default_provider),
-                     class: "form-select"
+      = provider_input(:default_provider,
+                       label: t(".default_provider"),
+                       selected: default_provider)
 
     .col-md-6
-      .form-group
-        = label_tag field_id(:default_model),
-                    t(".default_model"),
-                    class: "form-label"
-        = select_tag field_name(:default_model),
-                     model_options(provider: default_provider,
-                                   selected: default_model,
-                                   blank_label: provider_default_model_label(default_provider)),
-                     id: field_id(:default_model),
-                     class: "form-select"
-        - if default_model_notice
-          small.f-ai-c-site-settings__model-notice = default_model_notice
+      = model_input(:default_model,
+                    label: t(".default_model"),
+                    provider: default_provider,
+                    selected: default_model,
+                    blank_label: provider_default_model_label(default_provider))
+      - if default_model_notice
+        small.f-ai-c-site-settings__model-notice = default_model_notice
 
   - integrations.each do |integration|
     .f-ai-c-site-settings__integration.card.mb-g
@@ -46,79 +29,67 @@
       .card-body
         .row
           .col-md-6
-            .form-group
-              = label_tag field_id(:integrations, integration.key, :default_provider),
-                          t(".integration_provider"),
-                          class: "form-label"
-              = select_tag field_name(:integrations, integration.key, :default_provider),
-                           provider_options(integration_provider(integration)),
-                           include_blank: t(".inherit_provider"),
-                           id: field_id(:integrations, integration.key, :default_provider),
-                           class: "form-select"
+            = provider_input(:integrations,
+                             integration.key,
+                             :default_provider,
+                             label: t(".integration_provider"),
+                             selected: integration_provider(integration),
+                             include_blank: t(".inherit_provider"))
 
           .col-md-6
-            .form-group
-              = label_tag field_id(:integrations, integration.key, :default_model),
-                          t(".integration_model"),
-                          class: "form-label"
-              = select_tag field_name(:integrations, integration.key, :default_model),
-                           model_options(provider: integration_effective_provider(integration),
-                                         selected: integration_model(integration),
-                                         blank_label: integration_blank_model_label(integration)),
-                           id: field_id(:integrations, integration.key, :default_model),
-                           class: "form-select"
-              - if integration_model_notice(integration)
-                small.f-ai-c-site-settings__model-notice = integration_model_notice(integration)
+            = model_input(:integrations,
+                          integration.key,
+                          :default_model,
+                          label: t(".integration_model"),
+                          provider: integration_effective_provider(integration),
+                          selected: integration_model(integration),
+                          blank_label: integration_blank_model_label(integration))
+            - if integration_model_notice(integration)
+              small.f-ai-c-site-settings__model-notice = integration_model_notice(integration)
 
         - integration.fields.values.each do |field|
           .f-ai-c-site-settings__field
             .f-ai-c-site-settings__field-header
-              .form-check.form-switch
-                = hidden_field_tag field_name(:integrations, integration.key, :fields, field.key, :enabled), "0"
-                = check_box_tag field_name(:integrations, integration.key, :fields, field.key, :enabled),
-                                "1",
-                                field_enabled?(integration, field),
-                                id: field_id(:integrations, integration.key, :fields, field.key, :enabled),
-                                class: "form-check-input"
-                = label_tag field_id(:integrations, integration.key, :fields, field.key, :enabled),
-                            field.label,
-                            class: "form-check-label"
+              = boolean_input(:integrations,
+                              integration.key,
+                              :fields,
+                              field.key,
+                              :enabled,
+                              label: field.label,
+                              checked: field_enabled?(integration, field))
 
               - if field_hint(field)
                 small.f-ai-c-site-settings__field-hint = field_hint(field)
 
-            .form-group
-              = label_tag field_id(:integrations, integration.key, :fields, field.key, :prompt),
-                          t(".prompt_label"),
-                          class: "form-label"
-              = text_area_tag field_name(:integrations, integration.key, :fields, field.key, :prompt),
-                              field_prompt(integration, field),
-                              id: field_id(:integrations, integration.key, :fields, field.key, :prompt),
-                              class: "form-control",
-                              rows: 5
+            = text_area_input(:integrations,
+                              integration.key,
+                              :fields,
+                              field.key,
+                              :prompt,
+                              label: t(".prompt_label"),
+                              value: field_prompt(integration, field),
+                              rows: 5)
 
             .row
               .col-md-6
-                .form-group
-                  = label_tag field_id(:integrations, integration.key, :fields, field.key, :provider),
-                              t(".field_provider"),
-                              class: "form-label"
-                  = select_tag field_name(:integrations, integration.key, :fields, field.key, :provider),
-                               provider_options(field_provider(integration, field)),
-                               include_blank: t(".inherit_provider"),
-                               id: field_id(:integrations, integration.key, :fields, field.key, :provider),
-                               class: "form-select"
+                = provider_input(:integrations,
+                                 integration.key,
+                                 :fields,
+                                 field.key,
+                                 :provider,
+                                 label: t(".field_provider"),
+                                 selected: field_provider(integration, field),
+                                 include_blank: t(".inherit_provider"))
 
               .col-md-6
-                .form-group
-                  = label_tag field_id(:integrations, integration.key, :fields, field.key, :model),
-                              t(".field_model"),
-                              class: "form-label"
-                  = select_tag field_name(:integrations, integration.key, :fields, field.key, :model),
-                               model_options(provider: field_effective_provider(integration, field),
-                                             selected: field_model(integration, field),
-                                             blank_label: field_blank_model_label(integration, field)),
-                               id: field_id(:integrations, integration.key, :fields, field.key, :model),
-                               class: "form-select"
-                  - if field_model_notice(integration, field)
-                    small.f-ai-c-site-settings__model-notice = field_model_notice(integration, field)
+                = model_input(:integrations,
+                              integration.key,
+                              :fields,
+                              field.key,
+                              :model,
+                              label: t(".field_model"),
+                              provider: field_effective_provider(integration, field),
+                              selected: field_model(integration, field),
+                              blank_label: field_blank_model_label(integration, field))
+                - if field_model_notice(integration, field)
+                  small.f-ai-c-site-settings__model-notice = field_model_notice(integration, field)
