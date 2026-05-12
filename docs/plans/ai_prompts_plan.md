@@ -2,10 +2,9 @@
 
 ## Status
 
-Folio AI pack implementation slice is implemented on branch `feat/ai-prompts`
-and is pending review against this draft before publication.
-The document is both the implementation plan and the reusable contract for host
-applications.
+This document is the original implementation plan and design record for the
+Folio AI pack. The current technical integration reference is
+[`docs/ai.md`](../ai.md).
 
 This document intentionally stays product-agnostic. Client-specific prompt copy,
 site names, and custom editorial workflows belong in host applications and in
@@ -274,8 +273,7 @@ input type gates pass.
 
 The field option is deliberately explicit. A configured site prompt alone does
 not attach AI controls to arbitrary forms. `ai: false` or a missing `ai:` option
-renders the normal input. `endpoint:` is not supported; the AI pack uses its
-centralized HTML-over-wire API.
+renders the normal input.
 
 `current_state_policy` controls which state the centralized endpoint sends to
 the model:

@@ -61,10 +61,6 @@ module Folio::Ai::SimpleFormInputExtension
                  options[:ai].to_h.symbolize_keys
       end
 
-      if config[:endpoint].present?
-        raise ArgumentError, "SimpleForm ai: endpoint is no longer supported; use the centralized Folio AI API"
-      end
-
       config[:record] = config.fetch(:record, @builder.object)
       config[:site] = config.fetch(:site, Folio::Current.site)
       config[:integration_key] = ai_integration_key(config).to_s

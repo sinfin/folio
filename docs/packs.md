@@ -108,8 +108,9 @@ the application root unless a generator explicitly supports packing them.
 ## AI Pack
 
 `packs/ai` owns the reusable AI prompt/suggestion functionality. The canonical
-integration guide is [`docs/features/ai_prompts.md`](features/ai_prompts.md);
-agent workflows should use
+technical integration guide is [`docs/ai.md`](ai.md). The original design record
+is preserved in [`docs/plans/ai_prompts_plan.md`](plans/ai_prompts_plan.md). Agent
+workflows should use
 [`folio-ai-inputs`](../.skills/folio-ai-inputs/SKILL.md) when wiring concrete
 Console inputs.
 
@@ -123,8 +124,9 @@ The AI pack is disabled by default. Host applications opt in with
 - console site settings component
 - reusable text suggestions component and Stimulus controller
 - SimpleForm text-input decoration through a generic root hook
-- controller concern for host-app suggestion endpoints
+- centralized HTML-over-wire console API
 - TipTap/plain-text context helper
 
-Host applications own field registration, concrete routes, authorization,
-record loading, context building and domain-specific aggregate actions.
+Host applications own field registration, concrete form placement, model
+context methods, prompt copy, rollout decisions and domain-specific aggregate
+actions.

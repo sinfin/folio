@@ -10,8 +10,9 @@ description: >-
 # Folio AI input wiring
 
 Use this skill for host-app integration work around the reusable Folio AI pack.
-The canonical contract is documented in `docs/features/ai_prompts.md`; read that
-file before changing code.
+The canonical technical contract is documented in `docs/ai.md`; read that file
+before changing code. `docs/plans/ai_prompts_plan.md` is the original design
+record.
 
 ## Boundary
 
@@ -72,8 +73,7 @@ file before changing code.
 
    `integration_key` defaults to the form object's table name and `field_key`
    defaults to the input attribute. `ai: true` uses both defaults. `ai: false`
-   or a missing `ai:` option renders the normal input. Do not pass a host
-   endpoint; the reusable pack API serves the HTML component.
+   or a missing `ai:` option renders the normal input.
 5. Use `current_state_policy: :persisted_record` when generation should use
    saved server state. Use `:current_form_snapshot` when the request should
    include current successful form control values in the centralized request.

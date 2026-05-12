@@ -247,24 +247,6 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
     assert_not page.has_css?("[data-controller='f-ai-input']")
   end
 
-  test "raises developer-facing error when endpoint is supplied" do
-    site = create_site(force: true)
-    record = create(:folio_page, site:)
-    register_ai_field
-    site.update!(ai_settings: enabled_ai_settings)
-    Folio::Current.site = site
-
-    error = assert_raises(ArgumentError) do
-      with_ai_config(enabled: true) do
-        simple_form_for(record, url: "/") do |f|
-          concat f.input(:title, ai: { integration_key: :articles, endpoint: "/ai" })
-        end
-      end
-    end
-
-    assert_includes error.message, "endpoint is no longer supported"
-  end
-
   private
     def cell(name, model = nil, options = {}, &block)
       options[:context] ||= {}
