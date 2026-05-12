@@ -1,4 +1,5 @@
 .bundle/
+.devcontainer/tmp/
 .byebug_history
 log/*.log
 pkg/

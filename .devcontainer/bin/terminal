@@ -1,0 +1,161 @@
+#!/bin/bash
+# Open a host terminal attached to a tmux session inside the devcontainer.
+set -euo pipefail
+
+cd "$(dirname "$(readlink -f "$0")")/../.."
+
+PROJECT_NAME=$(basename "$PWD")
+SESSION_NAME=${TMUX_SESSION:-$PROJECT_NAME}
+SHELL_WRAPPER="$PWD/.devcontainer/bin/shell"
+TITLE_SUFFIX=${DEVCONTAINER_TERMINAL_TITLE_SUFFIX:-$PROJECT_NAME devcontainer}
+TMUX_ARGS=("$@")
+
+if [ "$#" -eq 0 ]; then
+        TMUX_ARGS=(new-session -A -s "$SESSION_NAME")
+fi
+
+TMUX_COMMAND=("$SHELL_WRAPPER" tmux "${TMUX_ARGS[@]}")
+TERMINAL_ERRORS=()
+
+start_detached() {
+        local log_file output pid
+        log_file=$(mktemp "${TMPDIR:-/tmp}/folio-terminal.XXXXXX")
+
+        nohup "$@" >"$log_file" 2>&1 &
+        pid=$!
+
+        sleep "${TMUX_TERMINAL_LAUNCH_DELAY:-0.2}"
+        if kill -0 "$pid" 2>/dev/null; then
+                rm -f "$log_file"
+                return 0
+        fi
+
+        if wait "$pid"; then
+                rm -f "$log_file"
+                return 0
+        fi
+
+        output=$(tr '\n' ' ' <"$log_file")
+        if [ -z "$output" ]; then
+                output="exited immediately"
+        fi
+
+        TERMINAL_ERRORS+=("$1: $output")
+        rm -f "$log_file"
+        return 1
+}
+
+terminal_title() {
+        local name=$1
+
+        case "$name" in
+        footclient)
+                name=foot
+                ;;
+        esac
+
+        printf '%s - %s\n' "$name" "$TITLE_SUFFIX"
+}
+
+launch_with_terminal() {
+        local terminal=$1
+        local name=${terminal##*/}
+        local title
+
+        if ! command -v "$terminal" >/dev/null 2>&1; then
+                return 1
+        fi
+
+        title=$(terminal_title "$name")
+
+        case "$name" in
+        foot | footclient)
+                start_detached "$terminal" --title="$title" "${TMUX_COMMAND[@]}"
+                ;;
+        kitty)
+                start_detached "$terminal" --title "$title" "${TMUX_COMMAND[@]}"
+                ;;
+        alacritty)
+                start_detached "$terminal" --title "$title" -e "${TMUX_COMMAND[@]}"
+                ;;
+        konsole | tilix)
+                start_detached "$terminal" --title "$title" -e "${TMUX_COMMAND[@]}"
+                ;;
+        xterm | urxvt)
+                start_detached "$terminal" -T "$title" -e "${TMUX_COMMAND[@]}"
+                ;;
+        wezterm)
+                start_detached "$terminal" start -- "${TMUX_COMMAND[@]}"
+                ;;
+        gnome-terminal)
+                start_detached "$terminal" --title "$title" -- "${TMUX_COMMAND[@]}"
+                ;;
+        xfce4-terminal | mate-terminal | terminator)
+                start_detached "$terminal" --title "$title" -x "${TMUX_COMMAND[@]}"
+                ;;
+        *)
+                start_detached "$terminal" "${TMUX_COMMAND[@]}"
+                ;;
+        esac
+}
+
+show_usage() {
+        cat <<EOF
+Usage: .devcontainer/bin/terminal [tmux args...]
+
+Defaults to: tmux new-session -A -s ${SESSION_NAME}
+
+Environment:
+  TMUX_TERMINAL                         Preferred host terminal executable
+  TERMINAL                              Fallback preferred host terminal executable
+  TMUX_SESSION                          Default tmux session name
+  DEVCONTAINER_TERMINAL_TITLE_SUFFIX    Terminal title suffix
+EOF
+}
+
+case "${1:-}" in
+-h | --help)
+        show_usage
+        exit 0
+        ;;
+esac
+
+TERMINALS=()
+
+if [ -n "${TMUX_TERMINAL:-}" ]; then
+        TERMINALS+=("$TMUX_TERMINAL")
+fi
+
+if [ -n "${TERMINAL:-}" ]; then
+        TERMINALS+=("$TERMINAL")
+fi
+
+TERMINALS+=(
+        foot
+        footclient
+        kitty
+        alacritty
+        wezterm
+        gnome-terminal
+        konsole
+        xfce4-terminal
+        tilix
+        mate-terminal
+        terminator
+        xterm
+        urxvt
+)
+
+for terminal in "${TERMINALS[@]}"; do
+        if launch_with_terminal "$terminal"; then
+                exit 0
+        fi
+done
+
+if [ "${#TERMINAL_ERRORS[@]}" -gt 0 ]; then
+        printf 'Terminal launch failures:\n' >&2
+        printf '  %s\n' "${TERMINAL_ERRORS[@]}" >&2
+fi
+
+echo "No supported terminal found. Set TMUX_TERMINAL or install one of: ${TERMINALS[*]}" >&2
+exit 1

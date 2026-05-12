@@ -1,19 +1,65 @@
 #!/bin/bash
 # Shell into the running devcontainer's app service as the vscode user.
-set -e
+set -euo pipefail
 cd "$(dirname "$(readlink -f "$0")")/../.."
+# shellcheck disable=SC1091
+# shellcheck source=.devcontainer/bin/_lib.sh
 source .devcontainer/bin/_lib.sh
 RUNTIME=$(detect_runtime)
 PROJECT=$(compose_project "$RUNTIME")
+REMOTE_USER=vscode
+REMOTE_HOME="/home/$REMOTE_USER"
+WORKSPACE="/workspaces/$(basename "$PWD")"
+REMOTE_ENV=(
+        -e "HOME=$REMOTE_HOME"
+        -e "USER=$REMOTE_USER"
+        -e "LOGNAME=$REMOTE_USER"
+        -e "SHELL=/bin/bash"
+)
 
 container=$("$RUNTIME" ps \
-	--filter "label=com.docker.compose.project=$PROJECT" \
-	--filter "label=com.docker.compose.service=app" \
-	--format '{{.Names}}' | head -n1)
+        --filter "label=com.docker.compose.project=$PROJECT" \
+        --filter "label=com.docker.compose.service=app" \
+        --format '{{.Names}}' | head -n1)
 
 if [ -z "$container" ]; then
-	echo "devcontainer not running — try .devcontainer/bin/up" >&2
-	exit 1
+        echo "devcontainer not running — try .devcontainer/bin/up" >&2
+        exit 1
 fi
 
-exec "$RUNTIME" exec -it -u vscode -w "/workspaces/$(basename "$PWD")" "$container" "${@:-bash}"
+sync_tmux_config() {
+        local command=${1:-}
+        local host_home=${HOME:-}
+        local host_tmux_conf
+
+        if [ "${command##*/}" != "tmux" ] || [ -z "$host_home" ]; then
+                return
+        fi
+
+        host_tmux_conf="$host_home/.tmux.conf"
+        if [ ! -f "$host_tmux_conf" ]; then
+                return
+        fi
+
+        "$RUNTIME" cp "$host_tmux_conf" "$container:$REMOTE_HOME/.tmux.conf"
+        "$RUNTIME" exec -u root "$container" chown "$REMOTE_USER:$REMOTE_USER" "$REMOTE_HOME/.tmux.conf" 2>/dev/null || true
+        "$RUNTIME" exec -u root "$container" chmod 0644 "$REMOTE_HOME/.tmux.conf"
+
+        if "$RUNTIME" exec -u "$REMOTE_USER" "${REMOTE_ENV[@]}" "$container" tmux has-session 2>/dev/null; then
+                "$RUNTIME" exec -u "$REMOTE_USER" "${REMOTE_ENV[@]}" "$container" tmux source-file "$REMOTE_HOME/.tmux.conf"
+        fi
+}
+
+sync_tmux_config "${1:-}"
+
+if [ "$#" -eq 0 ]; then
+        set -- bash
+fi
+
+exec "$RUNTIME" exec \
+        -it \
+        -u "$REMOTE_USER" \
+        "${REMOTE_ENV[@]}" \
+        -w "$WORKSPACE" \
+        "$container" \
+        "$@"
