@@ -146,10 +146,10 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
 
     def ai_fields
       [
-        ai_field(:title, input_types: %i[string], character_limit: 120),
-        ai_field(:perex, input_types: %i[text], character_limit: 400),
-        ai_field(:meta_title, input_types: %i[string], character_limit: 120),
-        ai_field(:meta_description, input_types: %i[text], character_limit: 400),
+        ai_field(:title, character_limit: 120),
+        ai_field(:perex, character_limit: 400),
+        ai_field(:meta_title, character_limit: 120),
+        ai_field(:meta_description, character_limit: 400),
       ]
     end
 

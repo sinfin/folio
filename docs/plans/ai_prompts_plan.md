@@ -179,10 +179,8 @@ for one or more editor inputs.
                                     record_class_name: "Article",
                                     fields: [
                                       Folio::Ai::Field.new(key: :title,
-                                                           input_types: %i[string],
                                                            character_limit: 120),
                                       Folio::Ai::Field.new(key: :summary,
-                                                           input_types: %i[text],
                                                            character_limit: 400),
                                     ])
    rescue ArgumentError => e
@@ -480,10 +478,8 @@ Folio::Ai.register_integration(key: :content_editor,
                                record_class_name: "Article",
                                fields: [
                                  Folio::Ai::Field.new(key: :title,
-                                                      input_types: %i[string],
                                                       character_limit: 120),
                                  Folio::Ai::Field.new(key: :summary,
-                                                      input_types: %i[text],
                                                       character_limit: 400),
                                ])
 ```

@@ -74,7 +74,7 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
   test "attaches AI suggestions to eligible text input" do
     site = create_site(force: true)
     record = create(:folio_page, site:)
-    register_ai_field(key: :perex, input_types: %i[text], character_limit: 400)
+    register_ai_field(key: :perex, character_limit: 400)
     site.update!(ai_settings: enabled_ai_settings(field_key: :perex))
     Folio::Current.site = site
 
@@ -210,16 +210,61 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
     assert_not page.has_css?("[data-controller='f-ai-input']")
   end
 
-  test "does not attach AI suggestions when input type is not registered for the field" do
+  test "does not attach AI suggestions when rendered input type does not match string column" do
     site = create_site(force: true)
     record = create(:folio_page, site:)
-    register_ai_field(input_types: %i[text])
+    register_ai_field
     site.update!(ai_settings: enabled_ai_settings)
     Folio::Current.site = site
 
     html = with_ai_config(enabled: true) do
       simple_form_for(record, url: "/") do |f|
         concat f.input(:title,
+                       as: :text,
+                       ai: {
+                         integration_key: :articles,
+                       })
+      end
+    end
+
+    page = Capybara.string(html)
+
+    assert_not page.has_css?("[data-controller='f-ai-input']")
+  end
+
+  test "does not attach AI suggestions when rendered input type does not match text column" do
+    site = create_site(force: true)
+    record = create(:folio_page, site:)
+    register_ai_field(key: :perex)
+    site.update!(ai_settings: enabled_ai_settings(field_key: :perex))
+    Folio::Current.site = site
+
+    html = with_ai_config(enabled: true) do
+      simple_form_for(record, url: "/") do |f|
+        concat f.input(:perex,
+                       as: :string,
+                       ai: {
+                         integration_key: :articles,
+                       })
+      end
+    end
+
+    page = Capybara.string(html)
+
+    assert_not page.has_css?("[data-controller='f-ai-input']")
+  end
+
+  test "does not attach AI suggestions for unsupported column type" do
+    site = create_site(force: true)
+    record = create(:folio_page, site:)
+    register_ai_field(key: :published)
+    site.update!(ai_settings: enabled_ai_settings(field_key: :published))
+    Folio::Current.site = site
+
+    html = with_ai_config(enabled: true) do
+      simple_form_for(record, url: "/") do |f|
+        concat f.input(:published,
+                       as: :string,
                        ai: {
                          integration_key: :articles,
                        })
@@ -256,14 +301,13 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
       @controller.cell(name, model, options, &block)
     end
 
-    def register_ai_field(integration_key: :articles, key: :title, auto_attach: true, input_types: %i[string], character_limit: 120)
+    def register_ai_field(integration_key: :articles, key: :title, auto_attach: true, character_limit: 120)
       Folio::Ai.reset_registry!
       Folio::Ai.register_integration(key: integration_key,
                                      record_class_name: "Folio::Page",
                                      fields: [
                                        Folio::Ai::Field.new(key:,
                                                             auto_attach:,
-                                                            input_types:,
                                                             character_limit:),
                                      ])
     end

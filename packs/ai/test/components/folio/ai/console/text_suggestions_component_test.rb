@@ -58,7 +58,6 @@ class Folio::Ai::Console::TextSuggestionsComponentTest < Folio::Console::Compone
     def field
       @field ||= Folio::Ai::Field.new(key: :title,
                                       label: "Title",
-                                      input_types: %i[string],
                                       character_limit: 120)
     end
 end

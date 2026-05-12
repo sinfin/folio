@@ -57,12 +57,12 @@ record.
    Folio::Ai.register_integration(record_class_name: "Article",
                                   fields: [
                                     Folio::Ai::Field.new(key: :title,
-                                                         input_types: %i[string],
                                                          character_limit: 120),
                                   ])
    ```
 
-4. Add `ai:` to each eligible standard SimpleForm `string` or `text` input:
+4. Add `ai:` to each eligible standard SimpleForm `string` or `text` input.
+   Folio infers eligibility from the registered record class attribute type:
 
    ```ruby
    f.input :title,

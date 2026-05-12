@@ -35,10 +35,8 @@ Rails.application.config.after_initialize do
   Folio::Ai.register_integration(record_class_name: "Article",
                                  fields: [
                                    Folio::Ai::Field.new(key: :title,
-                                                        input_types: %i[string],
                                                         character_limit: 120),
                                    Folio::Ai::Field.new(key: :perex,
-                                                        input_types: %i[text],
                                                         character_limit: 400),
                                  ])
 end
@@ -166,10 +164,8 @@ Rails.application.config.after_initialize do
   Folio::Ai.register_integration(record_class_name: "Article",
                                  fields: [
                                    Folio::Ai::Field.new(key: :title,
-                                                        input_types: %i[string],
                                                         character_limit: 120),
                                    Folio::Ai::Field.new(key: :perex,
-                                                        input_types: %i[text],
                                                         character_limit: 400),
                                  ])
 rescue ArgumentError => e
@@ -185,7 +181,6 @@ end
 - `response_format`: defaults to `:plain_text`
 - `auto_attach`: retained field metadata; SimpleForm controls still require
   explicit `ai:` input options
-- `input_types`: supported SimpleForm input types, usually `:string` or `:text`
 - `character_limit`: optional limit used in settings hints and suggestion meta
 - additional metadata keyword arguments for host-app use
 
@@ -193,6 +188,9 @@ end
 key defaults to the record class table name, matching `ai: true`; pass `key:`
 only when a model needs a non-default or additional integration key. The
 integration label defaults to `record_class.model_name.human(count: 2)`.
+The rendered SimpleForm input must match the registered attribute type:
+`:string` columns attach to string inputs and `:text` columns attach to text
+inputs. Other attribute types are ignored.
 
 The registry rejects blank or non-ActiveRecord class names, blank integration
 keys, duplicate integrations, blank field keys, and duplicate field keys inside

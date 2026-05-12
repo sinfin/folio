@@ -14,8 +14,9 @@ module Folio::Ai::SimpleFormInputExtension
     return if ai_input_disabled?
     return unless ai_record_ready?(config)
 
-    field = Folio::Ai.registry.field(config[:integration_key], config[:field_key])
-    return unless field&.input_types&.include?(input_type.to_sym)
+    integration = Folio::Ai.registry.integration(config[:integration_key])
+    field = integration&.fields&.[](config[:field_key])
+    return unless field&.supports_input_type?(input_type, record_class: integration.record_class)
 
     availability = Folio::Ai::Availability.new(site: config[:site],
                                                integration_key: config[:integration_key],

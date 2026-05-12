@@ -57,6 +57,18 @@ class Folio::Ai::RegistryTest < ActiveSupport::TestCase
     assert_equal "Headline", registry.field(:folio_pages, :title).label(record_class: integration.record_class)
   end
 
+  test "infers field input type from record class attributes" do
+    title_field = Folio::Ai::Field.new(key: :title)
+    perex_field = Folio::Ai::Field.new(key: :perex)
+    published_field = Folio::Ai::Field.new(key: :published)
+    missing_field = Folio::Ai::Field.new(key: :missing_ai_field)
+
+    assert_equal :string, title_field.input_type(record_class: Dummy::Blog::Article)
+    assert_equal :text, perex_field.input_type(record_class: Dummy::Blog::Article)
+    assert_nil published_field.input_type(record_class: Dummy::Blog::Article)
+    assert_nil missing_field.input_type(record_class: Dummy::Blog::Article)
+  end
+
   test "rejects blank record class name" do
     registry = Folio::Ai::Registry.new
 
