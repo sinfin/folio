@@ -162,9 +162,4 @@ SimpleForm::Inputs::Base.class_eval do
   def add_text_suggestions(input_type:)
     # Extension point for optional packs that decorate SimpleForm text inputs.
   end
-
-  private
-    def append_input_control(html)
-      options[:input_controls] = [options[:input_controls], html].compact.join.html_safe
-    end
 end

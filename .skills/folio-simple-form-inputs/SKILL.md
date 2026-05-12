@@ -23,7 +23,6 @@ field-level extensions.
   and outlets. Include `Folio::StimulusHelper` in SimpleForm override modules
   and pass `controller:` explicitly when `register_stimulus` has not set helper
   context.
-- Put extra inline actions in `options[:input_controls]` via `append_input_control`.
 - Put below-input HTML in `options[:custom_html]`; append instead of overwriting
   when decorating an existing input.
 
