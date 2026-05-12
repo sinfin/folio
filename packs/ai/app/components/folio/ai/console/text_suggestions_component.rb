@@ -34,8 +34,7 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
     end
 
     def panel_data
-      stimulus_merge(stimulus_action(click: "stopPropagation"),
-                     stimulus_target("panel"))
+      stimulus_action(click: "stopPropagation")
     end
 
     def close_data
@@ -94,12 +93,6 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
 
     def successful?
       @result.success? && suggestions.present?
-    end
-
-    def panel_error_class
-      return if loading?
-
-      "f-ai-c-text-suggestions__panel--error" unless successful?
     end
 
     def status_message

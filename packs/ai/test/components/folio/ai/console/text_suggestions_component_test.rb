@@ -34,7 +34,6 @@ class Folio::Ai::Console::TextSuggestionsComponentTest < Folio::Console::Compone
                                                                   component_id: "ai_title",
                                                                   field_label: "Title"))
 
-    assert_selector(".f-ai-c-text-suggestions__panel--error")
     assert_selector(".f-ai-c-text-suggestions__status:not([hidden])")
     assert_selector("[data-f-ai-c-text-suggestions-target='statusMessage']",
                     text: I18n.t("folio.ai.console.errors.host_ineligible"))
@@ -57,7 +56,6 @@ class Folio::Ai::Console::TextSuggestionsComponentTest < Folio::Console::Compone
     assert_no_selector(".f-ai-c-text-suggestions__loader")
     assert_selector(".f-ai-c-text-suggestions__status[hidden]", visible: :hidden)
     assert_selector(".f-ai-c-text-suggestions__status svg", visible: :hidden)
-    assert_no_selector(".f-ai-c-text-suggestions__panel--error")
     assert_no_selector("[data-f-ai-c-text-suggestions-target='suggestion']")
     assert_selector("textarea[data-f-ai-c-text-suggestions-target='instructions']")
     assert_no_selector("template[data-f-ai-c-text-suggestions-target='loadingSuggestionsTemplate']",
