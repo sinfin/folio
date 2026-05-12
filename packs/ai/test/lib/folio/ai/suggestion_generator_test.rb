@@ -28,7 +28,9 @@ class Folio::Ai::SuggestionGeneratorTest < ActiveSupport::TestCase
 
   setup do
     Folio::Ai.reset_registry!
-    Folio::Ai.register_integration(:articles, fields: [
+    Folio::Ai.register_integration(key: :articles,
+                                   record_class_name: "Folio::Page",
+                                   fields: [
       Folio::Ai::Field.new(key: :title, character_limit: 120),
     ])
 

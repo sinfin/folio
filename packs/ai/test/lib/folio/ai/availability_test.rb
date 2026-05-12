@@ -6,7 +6,9 @@ class Folio::Ai::AvailabilityTest < ActiveSupport::TestCase
   setup do
     @site = create_site(force: true)
     Folio::Ai.reset_registry!
-    Folio::Ai.register_integration(:articles, fields: %i[title perex])
+    Folio::Ai.register_integration(key: :articles,
+                                   record_class_name: "Folio::Page",
+                                   fields: %i[title perex])
   end
 
   teardown do

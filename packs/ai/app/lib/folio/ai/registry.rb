@@ -1,20 +1,44 @@
 # frozen_string_literal: true
 
 class Folio::Ai::Registry
-  Integration = Struct.new(:key, :label, :fields, :metadata, keyword_init: true)
+  class Integration
+    attr_reader :key,
+                :record_class_name,
+                :fields,
+                :metadata
+
+    def initialize(key:, record_class_name:, label: nil, fields:, metadata:)
+      @key = key
+      @record_class_name = record_class_name
+      @label = label.presence
+      @fields = fields
+      @metadata = metadata
+    end
+
+    def label
+      @label.presence || record_class.model_name.human(count: 2)
+    end
+
+    def record_class
+      record_class_name.safe_constantize ||
+        raise(ArgumentError, "AI integration record_class_name #{record_class_name} is unavailable")
+    end
+  end
 
   def initialize
     @integrations = {}
   end
 
-  def register_integration(key, label: nil, fields: [], **metadata)
-    normalized_key = normalize_key(key)
+  def register_integration(key: nil, record_class_name:, label: nil, fields: [], **metadata)
+    klass = normalize_record_class(record_class_name)
+    normalized_key = normalize_key(key.nil? ? klass.table_name : key)
 
     raise ArgumentError, "AI integration key is blank" if normalized_key.blank?
     raise ArgumentError, "AI integration #{normalized_key} is already registered" if integrations.key?(normalized_key)
 
     integrations[normalized_key] = Integration.new(key: normalized_key,
-                                                   label: label.presence || normalized_key.humanize,
+                                                   record_class_name: klass.name,
+                                                   label:,
                                                    fields: normalize_fields(fields),
                                                    metadata:)
   end
@@ -62,5 +86,15 @@ class Folio::Ai::Registry
 
     def normalize_key(key)
       key.to_s.strip
+    end
+
+    def normalize_record_class(record_class_name)
+      normalized_name = normalize_key(record_class_name)
+      raise ArgumentError, "AI integration record_class_name is blank" if normalized_name.blank?
+
+      klass = normalized_name.safe_constantize
+      return klass if klass && klass < ActiveRecord::Base
+
+      raise ArgumentError, "AI integration record_class_name must be an ActiveRecord::Base subclass"
     end
 end

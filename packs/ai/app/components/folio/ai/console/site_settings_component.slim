@@ -55,7 +55,7 @@
                               :fields,
                               field.key,
                               :enabled,
-                              label: field.label,
+                              label: field_label(integration, field),
                               checked: field_enabled?(integration, field))
 
               - if field_hint(field)

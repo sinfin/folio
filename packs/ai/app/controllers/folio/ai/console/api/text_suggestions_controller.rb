@@ -127,7 +127,7 @@ class Folio::Ai::Console::Api::TextSuggestionsController < Folio::Console::Api::
     end
 
     def field_label
-      registry_field&.label || ai_params[:field_key].to_s.humanize
+      registry_field&.label(record_class:) || ai_params[:field_key].to_s.humanize
     end
 
     def component_id

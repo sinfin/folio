@@ -120,7 +120,9 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
     site = create_site(force: true)
     record = create(:folio_page, site:)
     Folio::Ai.reset_registry!
-    Folio::Ai.register_integration(:articles, fields: [])
+    Folio::Ai.register_integration(key: :articles,
+                                   record_class_name: "Folio::Page",
+                                   fields: [])
     site.update!(ai_settings: enabled_ai_settings)
     Folio::Current.site = site
 
@@ -256,7 +258,8 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
 
     def register_ai_field(integration_key: :articles, key: :title, auto_attach: true, input_types: %i[string], character_limit: 120)
       Folio::Ai.reset_registry!
-      Folio::Ai.register_integration(integration_key,
+      Folio::Ai.register_integration(key: integration_key,
+                                     record_class_name: "Folio::Page",
                                      fields: [
                                        Folio::Ai::Field.new(key:,
                                                             auto_attach:,

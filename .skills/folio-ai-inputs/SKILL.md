@@ -54,11 +54,9 @@ record.
 3. Register an integration in a host-app initializer after Rails initialization:
 
    ```ruby
-   Folio::Ai.register_integration(:content_editor,
-                                  label: "Content editor",
+   Folio::Ai.register_integration(record_class_name: "Article",
                                   fields: [
                                     Folio::Ai::Field.new(key: :title,
-                                                         label: "Title",
                                                          input_types: %i[string],
                                                          character_limit: 120),
                                   ])
@@ -68,7 +66,7 @@ record.
 
    ```ruby
    f.input :title,
-           ai: { integration_key: :content_editor }
+           ai: true
    ```
 
    `integration_key` defaults to the form object's table name and `field_key`

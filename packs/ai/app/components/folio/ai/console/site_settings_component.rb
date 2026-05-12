@@ -158,6 +158,10 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
                           field_key: field.key)
     end
 
+    def field_label(integration, field)
+      field.label(record_class: integration.record_class)
+    end
+
     def default_provider
       (site_setting("default_provider").presence ||
         Folio::Ai.default_provider).to_s

@@ -32,15 +32,12 @@ Folio::Ai.configure do |config|
 end
 
 Rails.application.config.after_initialize do
-  Folio::Ai.register_integration(:articles,
-                                 label: "Articles",
+  Folio::Ai.register_integration(record_class_name: "Article",
                                  fields: [
                                    Folio::Ai::Field.new(key: :title,
-                                                        label: "Title",
                                                         input_types: %i[string],
                                                         character_limit: 120),
                                    Folio::Ai::Field.new(key: :perex,
-                                                        label: "Perex",
                                                         input_types: %i[text],
                                                         character_limit: 400),
                                  ])
@@ -65,7 +62,7 @@ end
 
 ```slim
 = f.input :title, ai: true
-= f.input :perex, as: :text, ai: { integration_key: :articles }
+= f.input :perex, as: :text, ai: true
 ```
 
 ## Overview
@@ -166,15 +163,12 @@ Host applications register promptable fields after Rails initialization:
 
 ```ruby
 Rails.application.config.after_initialize do
-  Folio::Ai.register_integration(:articles,
-                                 label: "Articles",
+  Folio::Ai.register_integration(record_class_name: "Article",
                                  fields: [
                                    Folio::Ai::Field.new(key: :title,
-                                                        label: "Title",
                                                         input_types: %i[string],
                                                         character_limit: 120),
                                    Folio::Ai::Field.new(key: :perex,
-                                                        label: "Perex",
                                                         input_types: %i[text],
                                                         character_limit: 400),
                                  ])
@@ -186,7 +180,8 @@ end
 `Folio::Ai::Field` accepts:
 
 - `key`: canonical field key, stored as a string internally
-- `label`: label for Console site settings and panel titles
+- `label`: optional label override for Console site settings and panel titles;
+  defaults to `record_class.human_attribute_name(key)`
 - `response_format`: defaults to `:plain_text`
 - `auto_attach`: retained field metadata; SimpleForm controls still require
   explicit `ai:` input options
@@ -194,8 +189,14 @@ end
 - `character_limit`: optional limit used in settings hints and suggestion meta
 - additional metadata keyword arguments for host-app use
 
-The registry rejects blank integration keys, duplicate integrations, blank field
-keys, and duplicate field keys inside one integration.
+`Folio::Ai.register_integration` requires `record_class_name`. The integration
+key defaults to the record class table name, matching `ai: true`; pass `key:`
+only when a model needs a non-default or additional integration key. The
+integration label defaults to `record_class.model_name.human(count: 2)`.
+
+The registry rejects blank or non-ActiveRecord class names, blank integration
+keys, duplicate integrations, blank field keys, and duplicate field keys inside
+one integration.
 
 ## Site Settings
 

@@ -89,7 +89,8 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
   test "renders invalid_context when model contract is missing" do
     page = create(:folio_page, site: @site)
     Folio::Ai.reset_registry!
-    Folio::Ai.register_integration(:folio_pages, fields: [Folio::Ai::Field.new(key: :title)])
+    Folio::Ai.register_integration(record_class_name: "Folio::Page",
+                                   fields: [Folio::Ai::Field.new(key: :title)])
     @site.update!(ai_settings: enabled_ai_settings(integration_key: :folio_pages,
                                                   field_keys: %i[title]))
 
@@ -139,8 +140,7 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
     end
 
     def register_dummy_ai_integration
-      Folio::Ai.register_integration(:dummy_blog_articles,
-                                     label: "Dummy blog articles",
+      Folio::Ai.register_integration(record_class_name: "Dummy::Blog::Article",
                                      fields: ai_fields)
     end
 

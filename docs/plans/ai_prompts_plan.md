@@ -175,15 +175,13 @@ for one or more editor inputs.
 
    ```ruby
    Rails.application.config.after_initialize do
-     Folio::Ai.register_integration(:content_editor,
-                                    label: "Content editor",
+     Folio::Ai.register_integration(key: :content_editor,
+                                    record_class_name: "Article",
                                     fields: [
                                       Folio::Ai::Field.new(key: :title,
-                                                           label: "Title",
                                                            input_types: %i[string],
                                                            character_limit: 120),
                                       Folio::Ai::Field.new(key: :summary,
-                                                           label: "Summary",
                                                            input_types: %i[text],
                                                            character_limit: 400),
                                     ])
@@ -478,15 +476,13 @@ Host apps should register integrations and fields in a single initializer.
 Illustrative DSL:
 
 ```ruby
-Folio::Ai.register_integration(:content_editor,
-                               label: "Content editor",
+Folio::Ai.register_integration(key: :content_editor,
+                               record_class_name: "Article",
                                fields: [
                                  Folio::Ai::Field.new(key: :title,
-                                                      label: "Title",
                                                       input_types: %i[string],
                                                       character_limit: 120),
                                  Folio::Ai::Field.new(key: :summary,
-                                                      label: "Summary",
                                                       input_types: %i[text],
                                                       character_limit: 400),
                                ])

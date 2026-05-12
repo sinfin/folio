@@ -2,7 +2,6 @@
 
 class Folio::Ai::Field
   attr_reader :key,
-              :label,
               :response_format,
               :auto_attach,
               :input_types,
@@ -17,12 +16,16 @@ class Folio::Ai::Field
                  character_limit: nil,
                  **metadata)
     @key = normalize_key(key)
-    @label = label.presence || @key.humanize
+    @label = label.presence
     @response_format = response_format.to_sym
     @auto_attach = !!auto_attach
     @input_types = Array(input_types).map(&:to_sym)
     @character_limit = character_limit
     @metadata = metadata
+  end
+
+  def label(record_class: nil)
+    @label.presence || record_class&.human_attribute_name(key) || key.humanize
   end
 
   def auto_attach?

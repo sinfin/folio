@@ -47,7 +47,9 @@ module Folio
 
     test "adds AI prompts tab only when feature is enabled and registry has integrations" do
       Folio::Ai.reset_registry!
-      Folio::Ai.register_integration(:articles, fields: %i[title])
+      Folio::Ai.register_integration(key: :articles,
+                                     record_class_name: "Folio::Page",
+                                     fields: %i[title])
       site = build(:folio_site)
 
       with_ai_config(enabled: true) do
@@ -79,7 +81,9 @@ module Folio
 
     test "validates AI settings against registry and providers" do
       Folio::Ai.reset_registry!
-      Folio::Ai.register_integration(:articles, fields: %i[title])
+      Folio::Ai.register_integration(key: :articles,
+                                     record_class_name: "Folio::Page",
+                                     fields: %i[title])
 
       site = build(:folio_site, ai_settings: {
                      enabled: true,

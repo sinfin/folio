@@ -15,11 +15,10 @@ class Folio::Ai::Console::SiteSettingsComponentTest < Folio::Console::ComponentT
       }.to_json)
 
     Folio::Ai.reset_registry!
-    Folio::Ai.register_integration(:articles,
-                                   label: "Articles",
+    Folio::Ai.register_integration(key: :articles,
+                                   record_class_name: "Dummy::Blog::Article",
                                    fields: [
                                      Folio::Ai::Field.new(key: :title,
-                                                          label: "Title",
                                                           character_limit: 120),
                                    ])
   end
@@ -55,6 +54,8 @@ class Folio::Ai::Console::SiteSettingsComponentTest < Folio::Console::ComponentT
 
     assert_selector(".f-ai-c-site-settings")
     assert_no_selector(".form-switch")
+    assert_text(Dummy::Blog::Article.model_name.human(count: 2))
+    assert_text(Dummy::Blog::Article.human_attribute_name(:title))
     assert_selector("input[name$='[ai_settings][enabled]'][value='1']", visible: :all)
     assert_selector("select[name$='[ai_settings][default_provider]'] option[value='openai']", text: "OpenAI")
     assert_no_selector("select[name$='[ai_settings][default_provider]'] option", text: "Openai")
