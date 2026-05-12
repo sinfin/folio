@@ -4,7 +4,7 @@ module Folio::Ai::SimpleFormInputExtension
   include Folio::StimulusHelper
 
   CONTROLLER_NAME = "f-ai-input"
-  DEFAULT_CURRENT_STATE_POLICY = :persisted_record
+  DEFAULT_CURRENT_STATE_POLICY = :current_form_snapshot
 
   def add_text_suggestions(input_type:)
     super if defined?(super)

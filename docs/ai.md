@@ -11,8 +11,8 @@ the current technical reference for the implemented pack.
 ## TLDR
 
 Enable the optional `:ai` pack, configure providers, register promptable fields,
-implement the model context methods, add `ai:` to supported SimpleForm inputs,
-and configure prompts per site in Console.
+add `ai:` to supported SimpleForm inputs, and configure prompts per site in
+Console.
 
 ```ruby
 # config/application.rb or another place loaded before Folio initializes
@@ -42,26 +42,14 @@ Rails.application.config.after_initialize do
 end
 ```
 
-```ruby
-class Article < ApplicationRecord
-  def folio_ai_context(field_key:, current_form_snapshot:)
-    {
-      title:,
-      perex:,
-      current_form_snapshot: current_form_snapshot.presence,
-    }.compact
-  end
-
-  def folio_ai_suggestions_eligible?(field_key:, current_form_snapshot:)
-    persisted? && [title, perex].any?(&:present?)
-  end
-end
-```
-
 ```slim
 = f.input :title, ai: true
 = f.input :perex, as: :text, ai: true
 ```
+
+For the default flow, registered persisted records do not need model methods.
+Folio sends the current form snapshot as context, uses the record's persisted
+state for eligibility, and falls through to the configured provider adapter.
 
 ## Overview
 
@@ -243,7 +231,7 @@ A field-level AI action is rendered only when all gates pass:
 6. The rendered input opts in with `ai:`.
 7. The input is editable and has a supported SimpleForm input type.
 8. The record is persisted.
-9. The model eligibility hook allows suggestions.
+9. Any optional model eligibility hook allows suggestions.
 
 Direct API requests still return rendered component HTML for failures, using
 public error messages such as `prompt_missing`, `record_not_ready`,
@@ -262,7 +250,6 @@ the `ai:` option:
 = f.input :perex,
           as: :text,
           ai: { integration_key: :articles,
-                current_state_policy: :current_form_snapshot,
                 suggestion_count: 3,
                 show_meta: true }
 ```
@@ -273,7 +260,7 @@ the `ai:` option:
 - `field_key` from the input attribute
 - `record` from the form object
 - `site` from `Folio::Current.site`
-- `current_state_policy` as `:persisted_record`
+- `current_state_policy` as `:current_form_snapshot`
 
 `ai: false` or a missing `ai:` option renders the normal input.
 
@@ -294,19 +281,30 @@ or host-ineligible records.
 
 `current_state_policy` controls what context the browser sends:
 
+- `:current_form_snapshot` is the default. It sends the current successful form
+  control values as JSON while the backend still authorizes the persisted record
 - `:persisted_record` sends no form snapshot and expects the model context to
   use saved server state
-- `:current_form_snapshot` sends the current successful form control values as
-  JSON while the backend still authorizes the persisted record
 
 The snapshot ignores file inputs. Repeated field names are sent as arrays. The
 controller keeps string values, stringifies numbers and booleans, and limits the
-snapshot to 200 fields before passing it to the model context method.
+snapshot to 200 fields before passing it to the model context method or the
+default context fallback.
 
 ## Model Contract
 
-The centralized endpoint loads and authorizes records model-agnostically, then
-delegates host-specific context to the record.
+The centralized endpoint loads and authorizes records model-agnostically. A
+registered persisted record can use AI suggestions without defining model
+methods. The default behavior is:
+
+- context is `{ current_form_snapshot: current_form_snapshot }`
+- eligibility is `persisted?`
+- provider adapter falls through to the configured Folio provider
+- site resolves from `folio_ai_site`, then `site`, then `Folio::Current.site`
+
+Host applications can override the defaults with model methods when they need
+product-specific context, stricter eligibility, a custom provider adapter, or a
+custom site association.
 
 ```ruby
 class Article < ApplicationRecord
@@ -330,12 +328,9 @@ class Article < ApplicationRecord
 end
 ```
 
-Required method:
-
-- `folio_ai_context(field_key:, current_form_snapshot:)`
-
 Optional methods:
 
+- `folio_ai_context(field_key:, current_form_snapshot:)`
 - `folio_ai_suggestions_eligible?(field_key:, current_form_snapshot:)`
 - `folio_ai_provider_adapter`
 - `folio_ai_site`
@@ -386,7 +381,7 @@ The controller:
 2. Starts from `record_class.accessible_by(Folio::Current.ability)`.
 3. Filters by `Folio::Current.site` when the model supports `by_site`.
 4. Rejects records from another site.
-5. Calls model context and eligibility hooks.
+5. Resolves default or model-provided context and eligibility.
 6. Calls `Folio::Ai::SuggestionGenerator`.
 7. Renders `Folio::Ai::Console::TextSuggestionsComponent`.
 8. Wraps the HTML with `render_component_json`.

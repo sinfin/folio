@@ -42,7 +42,7 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
     assert page.has_css?("[data-f-ai-input-record-id-value='#{record.id}']")
     assert page.has_css?("[data-f-ai-input-integration-key-value='articles']")
     assert page.has_css?("[data-f-ai-input-field-key-value='title']")
-    assert page.has_css?("[data-f-ai-input-current-state-policy-value='persisted_record']")
+    assert page.has_css?("[data-f-ai-input-current-state-policy-value='current_form_snapshot']")
     assert page.has_css?(".form-group__custom-html .f-ai-input__button")
     assert page.has_css?(".form-group__custom-html .f-ai-input__undo", visible: :hidden)
     assert page.has_css?(".form-group__custom-html [data-f-ai-input-target='customHtml']")
@@ -69,6 +69,28 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
 
     assert page.has_css?("[data-f-ai-input-integration-key-value='folio_pages']")
     assert page.has_css?("[data-f-ai-input-field-key-value='title']")
+  end
+
+  test "supports explicit persisted record policy" do
+    site = create_site(force: true)
+    record = create(:folio_page, site:)
+    register_ai_field
+    site.update!(ai_settings: enabled_ai_settings)
+    Folio::Current.site = site
+
+    html = with_ai_config(enabled: true) do
+      simple_form_for(record, url: "/") do |f|
+        concat f.input(:title,
+                       ai: {
+                         integration_key: :articles,
+                         current_state_policy: :persisted_record,
+                       })
+      end
+    end
+
+    page = Capybara.string(html)
+
+    assert page.has_css?("[data-f-ai-input-current-state-policy-value='persisted_record']")
   end
 
   test "attaches AI suggestions to eligible text input" do

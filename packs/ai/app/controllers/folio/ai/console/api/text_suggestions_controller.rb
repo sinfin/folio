@@ -29,7 +29,6 @@ class Folio::Ai::Console::Api::TextSuggestionsController < Folio::Console::Api::
 
     def suggestion_result(instructions:, persist_instructions:)
       return error_result(:record_not_ready) unless record
-      return error_result(:invalid_context) unless record.respond_to?(:folio_ai_context)
 
       Folio::Ai::SuggestionGenerator.new(site: ai_site,
                                          user: Folio::Current.user,
@@ -97,8 +96,12 @@ class Folio::Ai::Console::Api::TextSuggestionsController < Folio::Console::Api::
     end
 
     def ai_context
-      record.folio_ai_context(field_key: ai_params[:field_key].to_s,
-                              current_form_snapshot:)
+      if record.respond_to?(:folio_ai_context)
+        record.folio_ai_context(field_key: ai_params[:field_key].to_s,
+                                current_form_snapshot:)
+      else
+        { current_form_snapshot: }
+      end
     end
 
     def host_eligible?

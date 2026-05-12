@@ -72,17 +72,15 @@ record.
    `integration_key` defaults to the form object's table name and `field_key`
    defaults to the input attribute. `ai: true` uses both defaults. `ai: false`
    or a missing `ai:` option renders the normal input.
-5. Use `current_state_policy: :persisted_record` when generation should use
-   saved server state. Use `:current_form_snapshot` when the request should
-   include current successful form control values in the centralized request.
+5. `ai: true` uses `current_state_policy: :current_form_snapshot` by default.
+   Use `:persisted_record` when generation should use saved server state.
 6. Keep custom inputs, composite components, rich-text wrappers, or unusual
    placement on explicit host-app wiring until their input ownership and undo
    contract is reviewed.
-7. Implement model methods for records that use AI suggestions:
-   `folio_ai_context(field_key:, current_form_snapshot:)` is required.
-   `folio_ai_suggestions_eligible?(field_key:, current_form_snapshot:)`,
-   `folio_ai_provider_adapter`, and `folio_ai_site` are optional extension
-   points.
+7. Model methods are optional extension points. Without them, Folio uses
+   `{ current_form_snapshot: }` as context, requires a persisted record, falls
+   through to the configured provider adapter, and resolves site from
+   `folio_ai_site`, `site`, or `Folio::Current.site`.
 8. Build context from safe plain text. For TipTap content prefer
    `Folio::Tiptap::PlainText.from_value(...)` or an existing stored plain-text
    projection before falling back to JSON traversal.

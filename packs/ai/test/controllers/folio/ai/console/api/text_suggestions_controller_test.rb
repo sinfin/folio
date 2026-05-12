@@ -9,6 +9,26 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
     end
   end
 
+  class CapturingProviderAdapter
+    attr_reader :calls
+
+    def initialize
+      @calls = []
+    end
+
+    def generate_suggestions(prompt:, field:, suggestion_count:)
+      calls << {
+        prompt:,
+        field:,
+        suggestion_count:,
+      }
+
+      [
+        Folio::Ai::Suggestion.new(key: 1, text: "Fallback snapshot suggestion"),
+      ]
+    end
+  end
+
   def setup
     super
 
@@ -86,24 +106,35 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
     assert_includes response_component_html, I18n.t("folio.ai.console.errors.host_ineligible")
   end
 
-  test "renders invalid_context when model contract is missing" do
+  test "uses fallback form snapshot context when model hooks are missing" do
     page = create(:folio_page, site: @site)
+    adapter = CapturingProviderAdapter.new
+    provider_factory = ->(**) { adapter }
+
     Folio::Ai.reset_registry!
     Folio::Ai.register_integration(record_class_name: "Folio::Page",
                                    fields: [Folio::Ai::Field.new(key: :title)])
     @site.update!(ai_settings: enabled_ai_settings(integration_key: :folio_pages,
                                                   field_keys: %i[title]))
 
-    with_ai_config(enabled: true) do
-      get console_api_ai_text_suggestions_path,
-          params: request_params(record: page,
-                                 integration_key: :folio_pages,
-                                 field_key: :title),
-          as: :json
+    Folio::Ai.stub(:provider_adapter, provider_factory) do
+      with_ai_config(enabled: true) do
+        get console_api_ai_text_suggestions_path,
+            params: request_params(record: page,
+                                   integration_key: :folio_pages,
+                                   field_key: :title,
+                                   current_form_snapshot_json: {
+                                     "page[title]" => "Unsaved title",
+                                   }.to_json),
+            as: :json
+      end
     end
 
     assert_response :success
-    assert_includes response_component_html, I18n.t("folio.ai.console.errors.invalid_context")
+    assert_includes response_component_html, "Fallback snapshot suggestion"
+    assert_equal 1, adapter.calls.length
+    assert_includes adapter.calls.first[:prompt], '"current_form_snapshot": {'
+    assert_includes adapter.calls.first[:prompt], '"page[title]": "Unsaved title"'
   end
 
   test "renders record_not_ready when record is not accessible on the current site" do
@@ -158,7 +189,12 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
                            **options)
     end
 
-    def request_params(record: @article, integration_key: :dummy_blog_articles, field_key:, instructions: nil, show_meta: nil)
+    def request_params(record: @article,
+                       integration_key: :dummy_blog_articles,
+                       field_key:,
+                       instructions: nil,
+                       show_meta: nil,
+                       current_form_snapshot_json: nil)
       {
         klass: record.class.name,
         id: record.id,
@@ -167,6 +203,7 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
         component_id: "ai_#{field_key}",
         instructions:,
         show_meta:,
+        current_form_snapshot_json:,
       }.compact
     end
 
