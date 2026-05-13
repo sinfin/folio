@@ -47,6 +47,7 @@
         this.requestTimeoutId = null
         this.requestTimedOut = false
         this.pendingTextSuggestionsRequestId = null
+        this.cancelledTextSuggestionsRequestIds = new Set()
         this.textSuggestionsMessages = {}
         this.abortController = null
         this.awaitingTextSuggestionsResult = false
@@ -159,6 +160,7 @@
       onMessage (event) {
         const message = event?.detail?.message
         if (!message || !message.data || !message.data.request_id) return
+        if (this.cancelledTextSuggestionsRequestIds.delete(message.data.request_id)) return
         if (!this.awaitingTextSuggestionsResult) return
         if (!this.pendingTextSuggestionsRequestId) {
           this.textSuggestionsMessages[message.data.request_id] = message
@@ -321,6 +323,7 @@
       }
 
       abortRequest ({ resetStatus = true } = {}) {
+        this.cancelPendingTextSuggestionsRequest()
         this.clearRequestTimeout()
         this.requestTimedOut = false
         this.pendingTextSuggestionsRequestId = null
@@ -332,6 +335,12 @@
 
         this.abortController.abort()
         this.abortController = null
+      }
+
+      cancelPendingTextSuggestionsRequest () {
+        if (!this.pendingTextSuggestionsRequestId) return
+
+        this.cancelledTextSuggestionsRequestIds.add(this.pendingTextSuggestionsRequestId)
       }
 
       setRequestTimeout (requestId) {
