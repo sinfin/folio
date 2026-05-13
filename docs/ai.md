@@ -128,7 +128,7 @@ end
 
 Important defaults:
 
-- `enabled` is `false`
+- `enabled` is `true`
 - `default_provider` is `:openai`
 - provider defaults are `gpt-5.5` and `claude-opus-4-7`
 - `model_fallback_enabled` is `true`
