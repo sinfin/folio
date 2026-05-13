@@ -5,11 +5,7 @@ require "test_helper"
 class Folio::Ai::Console::SiteSettingsComponentTest < Folio::Console::ComponentTest
   setup do
     @original_rails_cache = Rails.cache
-    @original_openai_api_key = ENV["FOLIO_AI_OPENAI_API_KEY"]
-    @original_anthropic_api_key = ENV["FOLIO_AI_ANTHROPIC_API_KEY"]
     Rails.cache = ActiveSupport::Cache::MemoryStore.new
-    ENV["FOLIO_AI_OPENAI_API_KEY"] = "secret"
-    ENV.delete("FOLIO_AI_ANTHROPIC_API_KEY")
 
     stub_request(:get, "https://api.openai.com/v1/models")
       .to_return(body: {
@@ -29,15 +25,20 @@ class Folio::Ai::Console::SiteSettingsComponentTest < Folio::Console::ComponentT
 
   teardown do
     Rails.cache = @original_rails_cache
-    restore_env("FOLIO_AI_OPENAI_API_KEY", @original_openai_api_key)
-    restore_env("FOLIO_AI_ANTHROPIC_API_KEY", @original_anthropic_api_key)
     Folio::Ai.reset_registry!
   end
 
-  def render_component(site, **ai_config)
-    with_ai_config(**{ enabled: true }.merge(ai_config)) do
-      vc_test_controller.view_context.simple_form_for(site, url: "/") do |form|
-        render_inline(Folio::Ai::Console::SiteSettingsComponent.new(form:))
+  def render_component(site,
+                       provider_api_key_env_values: { openai: "secret" },
+                       provider_models_env_values: {},
+                       **ai_config)
+    Folio::Ai.stub(:provider_api_key_env_values, provider_api_key_env_values) do
+      Folio::Ai.stub(:provider_models_env_values, provider_models_env_values) do
+        with_ai_config(**{ enabled: true }.merge(ai_config)) do
+          vc_test_controller.view_context.simple_form_for(site, url: "/") do |form|
+            render_inline(Folio::Ai::Console::SiteSettingsComponent.new(form:))
+          end
+        end
       end
     end
   end
@@ -79,10 +80,12 @@ class Folio::Ai::Console::SiteSettingsComponentTest < Folio::Console::ComponentT
   end
 
   def test_render_hides_provider_without_credentials
-    ENV.delete("FOLIO_AI_OPENAI_API_KEY")
     site = build(:folio_site)
 
-    render_component(site, default_provider: :openai, provider_models: {
+    render_component(site,
+                     provider_api_key_env_values: {},
+                     default_provider: :openai,
+                     provider_models: {
                        openai: "gpt-5.5",
                        demo: "demo",
                      })
@@ -92,21 +95,22 @@ class Folio::Ai::Console::SiteSettingsComponentTest < Folio::Console::ComponentT
   end
 
   def test_render_shows_anthropic_with_credentials
-    ENV["FOLIO_AI_ANTHROPIC_API_KEY"] = "secret"
     site = build(:folio_site)
 
-    render_component(site)
+    render_component(site,
+                     provider_api_key_env_values: {
+                       openai: "secret",
+                       anthropic: "secret",
+                     })
 
     assert_selector("select[name$='[ai_settings][default_provider]'] option[value='anthropic']",
                     text: "Anthropic")
   end
 
   def test_render_disables_settings_without_eligible_providers
-    ENV.delete("FOLIO_AI_OPENAI_API_KEY")
-    ENV.delete("FOLIO_AI_ANTHROPIC_API_KEY")
     site = build(:folio_site, ai_settings: { enabled: true })
 
-    render_component(site)
+    render_component(site, provider_api_key_env_values: {})
 
     assert_selector(".f-ai-c-site-settings__intro.alert-danger",
                     text: I18n.t("folio.ai.console.site_settings_component.no_eligible_providers"))
@@ -117,7 +121,6 @@ class Folio::Ai::Console::SiteSettingsComponentTest < Folio::Console::ComponentT
   end
 
   def test_render_ignores_saved_ineligible_provider_overrides
-    ENV.delete("FOLIO_AI_OPENAI_API_KEY")
     site = build(:folio_site, ai_settings: {
                    default_provider: "openai",
                    default_model: "gpt-5.5",
@@ -135,7 +138,10 @@ class Folio::Ai::Console::SiteSettingsComponentTest < Folio::Console::ComponentT
                    },
                  })
 
-    render_component(site, default_provider: :openai, provider_models: {
+    render_component(site,
+                     provider_api_key_env_values: {},
+                     default_provider: :openai,
+                     provider_models: {
                        openai: "gpt-5.5",
                        demo: "demo",
                      })
@@ -148,20 +154,12 @@ class Folio::Ai::Console::SiteSettingsComponentTest < Folio::Console::ComponentT
   end
 
   def test_render_uses_env_model_options
-    original_value = ENV["FOLIO_AI_OPENAI_MODELS"]
-    ENV["FOLIO_AI_OPENAI_MODELS"] = "gpt-5.5-pro"
     site = build(:folio_site)
 
-    render_component(site)
+    render_component(site, provider_models_env_values: { openai: "gpt-5.5-pro" })
 
     assert_selector("select[name$='[ai_settings][default_model]'] option[value='gpt-5.5']")
     assert_selector("select[name$='[ai_settings][default_model]'] option[value='gpt-5.5-pro']")
-  ensure
-    if original_value
-      ENV["FOLIO_AI_OPENAI_MODELS"] = original_value
-    else
-      ENV.delete("FOLIO_AI_OPENAI_MODELS")
-    end
   end
 
   def test_provider_options_fall_back_to_humanized_label
@@ -209,13 +207,4 @@ class Folio::Ai::Console::SiteSettingsComponentTest < Folio::Console::ComponentT
 
     assert_no_selector(".f-ai-c-site-settings")
   end
-
-  private
-    def restore_env(key, value)
-      if value
-        ENV[key] = value
-      else
-        ENV.delete(key)
-      end
-    end
 end

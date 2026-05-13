@@ -100,7 +100,15 @@ module Folio::Ai
     end
 
     def env_disabled?
-      ENV["FOLIO_AI_DISABLED"].present?
+      env_disabled_value.present?
+    end
+
+    def env_disabled_key
+      "FOLIO_AI_DISABLED"
+    end
+
+    def env_disabled_value
+      ENV[env_disabled_key]
     end
 
     def default_model(provider)
@@ -125,7 +133,7 @@ module Folio::Ai
       return false unless known_provider?(provider)
 
       env_key = provider_api_key_env_key(provider)
-      env_key.blank? || ENV[env_key].present?
+      env_key.blank? || provider_api_key_env_value(provider).present?
     end
 
     def eligible_provider_models
@@ -183,13 +191,46 @@ module Folio::Ai
         raise Folio::Ai::UnknownProviderError, "Unknown AI provider: #{provider}"
       end
 
-      ENV.fetch(env_key) { raise ArgumentError, "#{env_key} is not configured" }
+      provider_api_key_env_value(provider).presence ||
+        raise(ArgumentError, "#{env_key} is not configured")
+    end
+
+    def provider_api_key_env_keys
+      PROVIDER_API_KEY_ENV_KEYS
     end
 
     def provider_api_key_env_key(provider)
       return if provider.blank?
 
-      PROVIDER_API_KEY_ENV_KEYS[provider.to_sym]
+      provider_api_key_env_keys[provider.to_sym]
+    end
+
+    def provider_api_key_env_values
+      provider_api_key_env_keys.transform_values { |env_key| ENV[env_key] }
+    end
+
+    def provider_api_key_env_value(provider)
+      return if provider.blank?
+
+      values = provider_api_key_env_values
+      values[provider.to_sym] || values[provider.to_s]
+    end
+
+    def provider_models_env_key(provider)
+      "FOLIO_AI_#{provider.to_s.upcase.gsub(/[^A-Z0-9]+/, '_')}_MODELS"
+    end
+
+    def provider_models_env_values
+      provider_models.keys.index_with do |provider|
+        ENV[provider_models_env_key(provider)]
+      end
+    end
+
+    def provider_models_env_value(provider)
+      return if provider.blank?
+
+      values = provider_models_env_values
+      values[provider.to_sym] || values[provider.to_s]
     end
 
     def track(event, payload = {})

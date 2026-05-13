@@ -4,7 +4,7 @@ description: >-
   Folio optional pack boundary and namespace rules. Use when editing files in
   optional pack directories, adding pack controllers/components/models/lib
   code, wiring routes to pack code, or moving reusable behavior between a host
-  app, the Folio engine, and an optional pack.
+  app, the Folio engine, and an optional pack, including Packwerk verification.
 ---
 
 # Folio Pack
@@ -40,3 +40,17 @@ description: >-
   engine conventions but the controller constant lives in a pack.
 - Do not create host-app routes or per-model endpoints for reusable pack
   behavior unless the feature genuinely requires host-owned request handling.
+
+## Verification
+
+- Run Packwerk through Bundler. Plain `rake app:packwerk:*` can activate the
+  wrong rake version.
+- In sandboxed runs where `$HOME` is not writable, give Bundler a repo-local
+  ignored home to avoid repeated temp-home cleanup traces from parallel
+  Packwerk workers:
+
+  ```bash
+  mkdir -p tmp/bundler-home-packwerk
+  env BUNDLE_USER_HOME="$PWD/tmp/bundler-home-packwerk" bundle exec rake app:packwerk:validate
+  env BUNDLE_USER_HOME="$PWD/tmp/bundler-home-packwerk" bundle exec rake app:packwerk:check
+  ```

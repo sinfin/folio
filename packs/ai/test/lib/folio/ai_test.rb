@@ -48,14 +48,11 @@ class Folio::AiTest < ActiveSupport::TestCase
   end
 
   test "respects global ENV kill switch" do
-    original_value = ENV["FOLIO_AI_DISABLED"]
-    ENV["FOLIO_AI_DISABLED"] = "1"
-
-    with_ai_config(enabled: true) do
-      assert_not Folio::Ai.enabled?
+    Folio::Ai.stub(:env_disabled_value, "1") do
+      with_ai_config(enabled: true) do
+        assert_not Folio::Ai.enabled?
+      end
     end
-  ensure
-    ENV["FOLIO_AI_DISABLED"] = original_value
   end
 
   test "builds provider adapter with explicit API key" do
@@ -68,30 +65,28 @@ class Folio::AiTest < ActiveSupport::TestCase
   end
 
   test "uses prefixed provider API keys" do
-    original_openai_value = ENV["FOLIO_AI_OPENAI_API_KEY"]
-    original_anthropic_value = ENV["FOLIO_AI_ANTHROPIC_API_KEY"]
-    ENV["FOLIO_AI_OPENAI_API_KEY"] = "openai-secret"
-    ENV["FOLIO_AI_ANTHROPIC_API_KEY"] = "anthropic-secret"
+    Folio::Ai.stub(:provider_api_key_env_values, {
+      openai: "openai-secret",
+      anthropic: "anthropic-secret",
+    }) do
+      assert_equal "openai-secret", Folio::Ai.provider_api_key(:openai)
+      assert_equal "anthropic-secret", Folio::Ai.provider_api_key(:anthropic)
+    end
+  end
 
-    assert_equal "openai-secret", Folio::Ai.provider_api_key(:openai)
-    assert_equal "anthropic-secret", Folio::Ai.provider_api_key(:anthropic)
-  ensure
-    restore_env("FOLIO_AI_OPENAI_API_KEY", original_openai_value)
-    restore_env("FOLIO_AI_ANTHROPIC_API_KEY", original_anthropic_value)
+  test "exposes provider ENV keys" do
+    assert_equal "FOLIO_AI_DISABLED", Folio::Ai.env_disabled_key
+    assert_equal "FOLIO_AI_OPENAI_API_KEY", Folio::Ai.provider_api_key_env_key(:openai)
+    assert_equal "FOLIO_AI_ANTHROPIC_API_KEY", Folio::Ai.provider_api_key_env_key(:anthropic)
+    assert_equal "FOLIO_AI_OPENAI_MODELS", Folio::Ai.provider_models_env_key(:openai)
   end
 
   test "filters eligible providers by required credentials" do
-    original_openai_value = ENV["FOLIO_AI_OPENAI_API_KEY"]
-    original_anthropic_value = ENV["FOLIO_AI_ANTHROPIC_API_KEY"]
-    ENV.delete("FOLIO_AI_OPENAI_API_KEY")
-    ENV["FOLIO_AI_ANTHROPIC_API_KEY"] = "anthropic-secret"
-
-    assert_not Folio::Ai.eligible_provider?(:openai)
-    assert Folio::Ai.eligible_provider?(:anthropic)
-    assert_equal({ anthropic: "claude-opus-4-7" }, Folio::Ai.eligible_provider_models)
-  ensure
-    restore_env("FOLIO_AI_OPENAI_API_KEY", original_openai_value)
-    restore_env("FOLIO_AI_ANTHROPIC_API_KEY", original_anthropic_value)
+    Folio::Ai.stub(:provider_api_key_env_values, { anthropic: "anthropic-secret" }) do
+      assert_not Folio::Ai.eligible_provider?(:openai)
+      assert Folio::Ai.eligible_provider?(:anthropic)
+      assert_equal({ anthropic: "claude-opus-4-7" }, Folio::Ai.eligible_provider_models)
+    end
   end
 
   test "treats configured custom providers as eligible" do
@@ -103,16 +98,11 @@ class Folio::AiTest < ActiveSupport::TestCase
   end
 
   test "raises safe error when provider API key is missing" do
-    original_prefixed_value = ENV.delete("FOLIO_AI_OPENAI_API_KEY")
-    original_legacy_value = ENV["OPENAI_API_KEY"]
-    ENV["OPENAI_API_KEY"] = "legacy-secret"
-
-    assert_raises(ArgumentError) do
-      Folio::Ai.provider_adapter(provider: :openai)
+    Folio::Ai.stub(:provider_api_key_env_values, {}) do
+      assert_raises(ArgumentError) do
+        Folio::Ai.provider_adapter(provider: :openai)
+      end
     end
-  ensure
-    restore_env("FOLIO_AI_OPENAI_API_KEY", original_prefixed_value)
-    restore_env("OPENAI_API_KEY", original_legacy_value)
   end
 
   test "rejects unknown provider adapter" do
@@ -120,13 +110,4 @@ class Folio::AiTest < ActiveSupport::TestCase
       Folio::Ai.provider_adapter_class(:unknown)
     end
   end
-
-  private
-    def restore_env(key, value)
-      if value
-        ENV[key] = value
-      else
-        ENV.delete(key)
-      end
-    end
 end

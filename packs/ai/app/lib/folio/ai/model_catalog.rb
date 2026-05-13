@@ -146,13 +146,9 @@ class Folio::Ai::ModelCatalog
     end
 
     def env_model_ids
-      ENV.fetch(provider_models_env_key, "").split(",").filter_map do |id|
+      Folio::Ai.provider_models_env_value(provider).to_s.split(",").filter_map do |id|
         id.strip.presence
       end
-    end
-
-    def provider_models_env_key
-      "FOLIO_AI_#{provider.to_s.upcase.gsub(/[^A-Z0-9]+/, '_')}_MODELS"
     end
 
     def normalized_provider_model_options

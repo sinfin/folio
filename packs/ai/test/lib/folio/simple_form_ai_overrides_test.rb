@@ -7,17 +7,7 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
   include Folio::Console::FormsHelper
   include Folio::IconHelper
 
-  setup do
-    @original_openai_api_key = ENV["FOLIO_AI_OPENAI_API_KEY"]
-    ENV["FOLIO_AI_OPENAI_API_KEY"] = "secret"
-  end
-
   teardown do
-    if @original_openai_api_key
-      ENV["FOLIO_AI_OPENAI_API_KEY"] = @original_openai_api_key
-    else
-      ENV.delete("FOLIO_AI_OPENAI_API_KEY")
-    end
     Folio::Ai.reset_registry!
   end
 
@@ -30,7 +20,7 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
     Folio::Current.site = site
     Folio::Current.user = user
 
-    html = with_ai_config(enabled: true) do
+    html = with_ai_enabled do
       simple_form_for(record, url: "/") do |f|
         concat f.input(:title,
                        ai: {
@@ -69,7 +59,7 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
     site.update!(ai_settings: enabled_ai_settings(integration_key: :folio_pages))
     Folio::Current.site = site
 
-    html = with_ai_config(enabled: true) do
+    html = with_ai_enabled do
       simple_form_for(record, url: "/") do |f|
         concat f.input(:title, ai: true)
       end
@@ -88,7 +78,7 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
     site.update!(ai_settings: enabled_ai_settings)
     Folio::Current.site = site
 
-    html = with_ai_config(enabled: true) do
+    html = with_ai_enabled do
       simple_form_for(record, url: "/") do |f|
         concat f.input(:title,
                        ai: {
@@ -110,7 +100,7 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
     site.update!(ai_settings: enabled_ai_settings(field_key: :perex))
     Folio::Current.site = site
 
-    html = with_ai_config(enabled: true) do
+    html = with_ai_enabled do
       simple_form_for(record, url: "/") do |f|
         concat f.input(:perex,
                        as: :text,
@@ -134,7 +124,7 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
     site.update!(ai_settings: enabled_ai_settings(prompt: ""))
     Folio::Current.site = site
 
-    html = with_ai_config(enabled: true) do
+    html = with_ai_enabled do
       simple_form_for(record, url: "/") do |f|
         concat f.input(:title,
                        ai: {
@@ -165,7 +155,7 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
                  })
     Folio::Current.site = site
 
-    html = with_ai_config(enabled: true) do
+    html = with_ai_enabled do
       simple_form_for(record, url: "/") do |f|
         concat f.input(:title,
                        ai: {
@@ -180,14 +170,13 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
   end
 
   test "does not attach AI suggestions when provider is unavailable" do
-    ENV.delete("FOLIO_AI_OPENAI_API_KEY")
     site = create_site(force: true)
     record = create(:folio_page, site:)
     register_ai_field
     site.update!(ai_settings: enabled_ai_settings)
     Folio::Current.site = site
 
-    html = with_ai_config(enabled: true) do
+    html = with_ai_enabled(provider_api_key_env_values: {}) do
       simple_form_for(record, url: "/") do |f|
         concat f.input(:title,
                        ai: {
@@ -208,7 +197,7 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
     site.update!(ai_settings: enabled_ai_settings)
     Folio::Current.site = site
 
-    html = with_ai_config(enabled: true) do
+    html = with_ai_enabled do
       simple_form_for(record, url: "/") do |f|
         concat f.input(:title,
                        ai: {
@@ -229,7 +218,7 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
     site.update!(ai_settings: enabled_ai_settings)
     Folio::Current.site = site
 
-    html = with_ai_config(enabled: true) do
+    html = with_ai_enabled do
       simple_form_for(record, url: "/") do |f|
         concat f.input(:title,
                        ai: {
@@ -251,7 +240,7 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
     site.update!(ai_settings: enabled_ai_settings)
     Folio::Current.site = site
 
-    html = with_ai_config(enabled: true) do
+    html = with_ai_enabled do
       simple_form_for(record, url: "/") do |f|
         concat f.input(:title,
                        disabled: true,
@@ -278,7 +267,7 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
     site.update!(ai_settings: enabled_ai_settings)
     Folio::Current.site = site
 
-    html = with_ai_config(enabled: true) do
+    html = with_ai_enabled do
       simple_form_for(record, url: "/") do |f|
         concat f.input(:title,
                        as: :text,
@@ -300,7 +289,7 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
     site.update!(ai_settings: enabled_ai_settings(field_key: :perex))
     Folio::Current.site = site
 
-    html = with_ai_config(enabled: true) do
+    html = with_ai_enabled do
       simple_form_for(record, url: "/") do |f|
         concat f.input(:perex,
                        as: :string,
@@ -322,7 +311,7 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
     site.update!(ai_settings: enabled_ai_settings(field_key: :published))
     Folio::Current.site = site
 
-    html = with_ai_config(enabled: true) do
+    html = with_ai_enabled do
       simple_form_for(record, url: "/") do |f|
         concat f.input(:published,
                        as: :string,
@@ -344,7 +333,7 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
     site.update!(ai_settings: enabled_ai_settings)
     Folio::Current.site = site
 
-    html = with_ai_config(enabled: true) do
+    html = with_ai_enabled do
       simple_form_for(record, url: "/") do |f|
         concat f.input(:title, ai: false)
       end
@@ -356,6 +345,12 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
   end
 
   private
+    def with_ai_enabled(provider_api_key_env_values: { openai: "secret" }, &)
+      Folio::Ai.stub(:provider_api_key_env_values, provider_api_key_env_values) do
+        with_ai_config(enabled: true, &)
+      end
+    end
+
     def cell(name, model = nil, options = {}, &block)
       options[:context] ||= {}
       options[:context][:view] = self

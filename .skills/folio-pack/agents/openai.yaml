@@ -1,4 +1,4 @@
 interface:
   display_name: "Folio Pack"
-  short_description: "Pack namespace and boundary rules for Folio optional packs."
-  default_prompt: "Use this skill when editing files under packs/ to keep namespaces and routes aligned with Folio pack boundaries."
+  short_description: "Pack namespace, boundary, and Packwerk rules for Folio optional packs."
+  default_prompt: "Use this skill when editing files under packs/ or running Packwerk verification for Folio pack changes."

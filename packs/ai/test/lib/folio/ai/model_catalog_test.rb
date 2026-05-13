@@ -11,12 +11,14 @@ class Folio::Ai::ModelCatalogTest < ActiveSupport::TestCase
 
     catalog = Folio::Ai::ModelCatalog.new(provider: :openai, api_key: "secret")
 
-    with_ai_config(provider_models: { openai: "gpt-5.5" }) do
-      result = catalog.result(selected: "site-model")
+    with_provider_models_env_values({}) do
+      with_ai_config(provider_models: { openai: "gpt-5.5" }) do
+        result = catalog.result(selected: "site-model")
 
-      assert_not result.verified?
-      assert_equal ["gpt-5.5", "site-model"], result.models.map(&:id)
-      assert result.models.last.available?
+        assert_not result.verified?
+        assert_equal ["gpt-5.5", "site-model"], result.models.map(&:id)
+        assert result.models.last.available?
+      end
     end
 
     assert_not_requested :get, "https://api.openai.com/v1/models"
@@ -25,7 +27,7 @@ class Folio::Ai::ModelCatalogTest < ActiveSupport::TestCase
   test "adds provider models from env" do
     catalog = Folio::Ai::ModelCatalog.new(provider: :openai, api_key: "secret")
 
-    with_env("FOLIO_AI_OPENAI_MODELS", "gpt-5.5-pro, gpt-5.5-mini") do
+    with_provider_models_env_values(openai: "gpt-5.5-pro, gpt-5.5-mini") do
       with_ai_config(provider_models: { openai: "gpt-5.5" }) do
         result = catalog.result
 
@@ -37,7 +39,7 @@ class Folio::Ai::ModelCatalogTest < ActiveSupport::TestCase
   test "normalizes provider model env ids" do
     catalog = Folio::Ai::ModelCatalog.new(provider: :openai, api_key: "secret")
 
-    with_env("FOLIO_AI_OPENAI_MODELS", " gpt-5.5 , , gpt-5.5-pro, gpt-5.5-pro ") do
+    with_provider_models_env_values(openai: " gpt-5.5 , , gpt-5.5-pro, gpt-5.5-pro ") do
       with_ai_config(provider_models: { openai: "gpt-5.5" }) do
         result = catalog.result
 
@@ -49,7 +51,7 @@ class Folio::Ai::ModelCatalogTest < ActiveSupport::TestCase
   test "uses provider model options as metadata" do
     catalog = Folio::Ai::ModelCatalog.new(provider: :openai, api_key: "secret")
 
-    with_env("FOLIO_AI_OPENAI_MODELS", "gpt-5.5-pro") do
+    with_provider_models_env_values(openai: "gpt-5.5-pro") do
       with_ai_config(provider_models: { openai: "gpt-5.5" },
                      provider_model_options: {
                        openai: {
@@ -66,16 +68,7 @@ class Folio::Ai::ModelCatalogTest < ActiveSupport::TestCase
   end
 
   private
-    def with_env(key, value)
-      original_value = ENV[key]
-      ENV[key] = value
-
-      yield
-    ensure
-      if original_value
-        ENV[key] = original_value
-      else
-        ENV.delete(key)
-      end
+    def with_provider_models_env_values(values, &)
+      Folio::Ai.stub(:provider_models_env_values, values, &)
     end
 end
