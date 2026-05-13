@@ -7,9 +7,14 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- **`ImageObject` `creditText`**: now uses `Folio::File#credit_text`, deduplicating matching `author` / `attribution_source` (e.g. `"Reuters / Reuters"` → `"Reuters"`) and falling back to `file_list_source` when both are
+  blank.
+
 ### Fixed
 
 - **friendly_id**: `strip_and_downcase_slug` now only normalizes the slug on new records or when the slug column was explicitly changed. Legacy records with mixed-case slugs are no longer silently downcased on every save, which previously broke `friendly_id` lookups (case-sensitive) on cached client-side URLs after the first save.
+- keep `index_for_picker` pagination links targeting the picker frame after uploads refresh pagy
+- refresh CSRF headers before JS API requests
 
 ## [7.6.4] - 2026-04-28
 
