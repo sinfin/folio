@@ -53,10 +53,12 @@ state for eligibility, and falls through to the configured provider adapter.
 
 ## Overview
 
-Folio AI lives in `packs/ai` and is disabled by default. The root Folio engine
-only provides pack loading, pack asset inclusion, shared routes, and generic
-SimpleForm and Stimulus extension points. AI-specific behavior stays under the
-`Folio::Ai` namespace.
+Folio AI lives in `packs/ai` and is opt-in through `Folio.enabled_packs`. The
+root Folio engine only provides pack loading, pack asset inclusion, shared
+routes, and generic SimpleForm and Stimulus extension points. AI-specific
+behavior stays under the `Folio::Ai` namespace. Once the pack is loaded, the
+runtime `Folio::Ai.enabled` flag defaults to true unless host configuration or
+`FOLIO_AI_DISABLED` turns it off.
 
 The pack is designed around reusable text suggestions:
 
@@ -64,9 +66,10 @@ The pack is designed around reusable text suggestions:
 - admins enable AI and enter default prompts per site and field
 - editors click an AI action beside an eligible input
 - the browser requests loading-panel HTML from the centralized API
-- the API enqueues a job and returns `render_component_json`
-- the job loads and authorizes the record, asks the model for context, calls the
-  provider, and publishes rendered suggestion-panel HTML over MessageBus
+- the API loads and authorizes the record, prepares context, enqueues a job, and
+  returns loading HTML through `render_component_json`
+- the job calls the provider through `Folio::Ai::SuggestionGenerator` and
+  publishes rendered suggestion-panel HTML over MessageBus
 - accepting a suggestion writes to the form field but never saves the record
 
 Host applications own product-specific decisions: which models and fields opt
@@ -88,6 +91,8 @@ Folio.enabled_packs = [:ai]
 
 The default is `[]`. When the pack is disabled, its runtime code, migrations,
 views, locales, and pack assets are not part of the enabled Folio feature set.
+`Folio::Ai.enabled` is a separate runtime feature flag inside the loaded pack and
+defaults to true.
 
 ### Run migrations
 
@@ -131,7 +136,9 @@ Important defaults:
 - `enabled` is `true`
 - `default_provider` is `:openai`
 - provider defaults are `gpt-5.5` and `claude-opus-4-7`
+- `provider_model_options` is `{}`
 - `model_fallback_enabled` is `true`
+- `model_catalog_cache_ttl` is `1.hour`
 - `provider_request_storage` is `false`
 - `provider_request_timeout` is `30` seconds
 - `client_request_timeout_ms` is `45_000`
@@ -144,7 +151,8 @@ Set provider credentials with `OPENAI_API_KEY` and/or `ANTHROPIC_API_KEY`.
 false even when configuration enables the feature.
 
 OpenAI requests use the Responses API and include `store: false` unless the
-host application explicitly sets `provider_request_storage = true`.
+host application explicitly sets `provider_request_storage = true`. Anthropic
+requests use the Messages API with `anthropic-version: 2023-06-01`.
 
 ## Field Registry
 
@@ -170,8 +178,8 @@ end
 - `label`: optional label override for Console site settings and panel titles;
   defaults to `record_class.human_attribute_name(key)`
 - `response_format`: defaults to `:plain_text`
-- `auto_attach`: retained field metadata; SimpleForm controls still require
-  explicit `ai:` input options
+- `auto_attach`: defaults to `false`; retained field metadata only, because
+  SimpleForm controls still require explicit `ai:` input options
 - `character_limit`: optional limit used in settings hints and suggestion meta
 - additional metadata keyword arguments for host-app use
 
@@ -181,7 +189,9 @@ only when a model needs a non-default or additional integration key. The
 integration label defaults to `record_class.model_name.human(count: 2)`.
 The rendered SimpleForm input must match the registered attribute type:
 `:string` columns attach to string inputs and `:text` columns attach to text
-inputs. Other attribute types are ignored.
+inputs. For translated models, localized columns returned by
+`record_class.locale_columns(field_key)` are considered when inferring the input
+type. Other attribute types are ignored.
 
 The registry rejects blank or non-ActiveRecord class names, blank integration
 keys, duplicate integrations, blank field keys, and duplicate field keys inside
@@ -220,7 +230,8 @@ The settings are stored on `folio_sites.ai_settings`:
 Site settings are validated while `Folio::Ai.enabled?` is true. Unknown
 integrations, unknown fields, invalid nested structures, and unknown providers
 are rejected. Blank prompts remain valid settings but keep that field
-unavailable to editors.
+unavailable to editors. Saved model ids are not rejected by validation; the site
+settings UI shows unavailable or unverified model notices from the model catalog.
 
 ### Availability gates
 
@@ -238,8 +249,9 @@ A field-level AI action is rendered only when all gates pass:
 
 Direct API requests still enqueue the same job. Availability and provider
 failures are rendered into the MessageBus result with public messages such as
-`prompt_missing`, `record_not_ready`, `host_ineligible`, `provider_timeout`, or
-`rate_limited`.
+`prompt_missing`, `record_not_ready`, `host_ineligible`, `provider_timeout`,
+`provider_rate_limited`, `provider_model_unavailable`, `response_invalid`,
+`cost_limit_exceeded`, or `rate_limited`.
 
 ## SimpleForm Integration
 
@@ -268,6 +280,12 @@ the `ai:` option:
 
 `ai: false` or a missing `ai:` option renders the normal input.
 
+Hash options may override `record`, `site`, `integration_key`, `field_key`,
+`current_state_policy`, `suggestion_count`, `show_meta`, `request_timeout_ms`,
+and the button/loading/error labels used by the input wrapper. Unsupported
+`current_state_policy` values prevent attachment. `suggestion_count` defaults to
+3 and is capped at 10 by `Folio::Ai::TextSuggestionsJob`.
+
 When attachment succeeds, the input wrapper receives:
 
 - `form-group--with-ai-text-suggestions`
@@ -277,7 +295,7 @@ When attachment succeeds, the input wrapper receives:
 - a hidden undo button
 - an empty custom HTML target for the loaded suggestion panel
 
-The field remains hidden on new records, disabled inputs, readonly inputs,
+AI controls are not attached on new records, disabled inputs, readonly inputs,
 unsupported input types, unregistered fields, disabled sites, missing prompts,
 or host-ineligible records.
 
@@ -296,14 +314,18 @@ snapshot to 200 fields before passing it as the text suggestion job argument.
 
 ## Model Contract
 
-The text suggestion job loads and authorizes records model-agnostically. A
-registered persisted record can use AI suggestions without defining model
-methods. The default behavior is:
+The API controller loads and authorizes records model-agnostically before
+queueing the job. A registered persisted record can use AI suggestions without
+defining model methods. The default behavior is:
 
 - context is `{ current_form_snapshot: current_form_snapshot }`
-- eligibility is `persisted?`
+- eligibility is `record.persisted?`
 - provider adapter falls through to the configured Folio provider
 - site resolves from `folio_ai_site`, then `site`, then `Folio::Current.site`
+
+If no authorized persisted record is found, the controller still returns loading
+HTML and enqueues a `record_not_ready` result so the panel receives a localized
+error over MessageBus.
 
 Host applications can override the defaults with model methods when they need
 product-specific context, stricter eligibility, a custom provider adapter, or a
@@ -342,8 +364,8 @@ The context can be a hash or string. Hash contexts are formatted as pretty JSON
 inside the prompt. Host applications should keep context builders explicit and
 avoid sending raw rich-text editor JSON unless the app owns a reviewed mapper.
 Because generation runs in a background job, `folio_ai_provider_adapter` is only
-used by class name; custom adapters should be instantiable without record-local
-state.
+serialized as a class name. The job instantiates that class with `.new`, so
+custom adapters should be instantiable without record-local state.
 
 For TipTap content, prefer the reusable plain-text helper:
 
@@ -375,6 +397,7 @@ optionally instructions or a current form snapshot.
   "field_key": "perex",
   "component_id": "folio_ai_text_suggestions_article_perex",
   "suggestion_count": 3,
+  "show_meta": true,
   "message_bus_client_id": "message-bus-client",
   "instructions": "Use a calmer voice.",
   "current_form_snapshot_json": "{\"article[title]\":\"Draft title\"}"
@@ -389,11 +412,12 @@ The controller:
 3. Starts from `record_class.accessible_by(Folio::Current.ability)`.
 4. Filters by the current site when the model supports `by_site`.
 5. Rejects records from another site.
-6. Persists editor instructions synchronously for the instructions endpoint.
+6. Persists editor instructions synchronously for the instructions endpoint when
+   a record was found.
 7. Sanitizes the optional current form snapshot.
 8. Resolves model-provided context, eligibility, field label, AI site, and any
    serializable provider adapter class.
-9. Generates a request hash.
+9. Generates a request id.
 10. Enqueues `Folio::Ai::TextSuggestionsJob`.
 11. Renders `Folio::Ai::Console::TextSuggestionsComponent` in a loading state.
 12. Wraps the loading HTML with `render_component_json`.
@@ -405,7 +429,7 @@ HTML, and a `meta.request_id` value used to match the MessageBus result:
 {
   "data": "<div class=\"f-ai-c-text-suggestions\">...</div>",
   "meta": {
-    "request_id": "request-hash"
+    "request_id": "request-id"
   }
 }
 ```
@@ -434,7 +458,7 @@ The MessageBus payload is:
 {
   "type": "Folio::Ai::TextSuggestionsJob",
   "data": {
-    "request_id": "request-hash",
+    "request_id": "request-id",
     "component_id": "folio_ai_text_suggestions_article_perex",
     "html": "<div class=\"f-ai-c-text-suggestions\">...</div>"
   }
@@ -446,7 +470,8 @@ The MessageBus payload is:
 `Folio::Ai::SuggestionGenerator` coordinates server-side generation:
 
 1. Check `Folio::Ai::Availability`.
-2. Load or persist `Folio::Ai::UserInstruction`.
+2. Load `Folio::Ai::UserInstruction`, or persist it only when the generator is
+   called with `persist_instructions: true`.
 3. Resolve provider and model through `Folio::Ai::ProviderConfig`.
 4. Compose the prompt with `Folio::Ai::PromptComposer`.
 5. Run `Folio::Ai::RequestGuard` for prompt length and rate limit.
@@ -460,8 +485,10 @@ Prompt composition is deterministic:
 2. Stored or submitted user instructions.
 3. Host-app context.
 
-The default prompt is mandatory. User instructions are persisted per
-user/site/integration/field only when the editor uses the regenerate/save action.
+The default prompt is mandatory. The Console API persists user instructions per
+user/site/integration/field when the editor uses the save/regenerate action,
+then passes the effective instruction to the job with `persist_instructions:
+false`.
 
 ## Providers and Models
 
@@ -473,7 +500,13 @@ Built-in adapters live under `Folio::Ai::Providers`:
 Adapters build provider-specific HTTP requests, set bounded timeouts, normalize
 provider failures, and pass response text through the shared normalizer. Rate
 limits become `provider_rate_limited`, timeouts become `provider_timeout`, and
-missing models become `provider_model_unavailable`.
+missing models become `provider_model_unavailable`. The OpenAI adapter posts to
+`/v1/responses`; the Anthropic adapter posts to `/v1/messages`.
+
+Host-provided adapters must respond to
+`generate_suggestions(prompt:, field:, suggestion_count:)` and return
+`Folio::Ai::Suggestion` objects. Adapters that call external providers can use
+`Folio::Ai::ResponseNormalizer` before returning.
 
 Provider model selection is resolved in this order:
 
@@ -488,10 +521,11 @@ inherited accidentally for an Anthropic provider override.
 
 `Folio::Ai::ModelCatalog` fetches live model lists through provider APIs when
 credentials are present and caches them in `Rails.cache` for
-`model_catalog_cache_ttl`. Configured `provider_model_options` supply labels,
-cost tiers, and fallback options when live catalogs cannot be verified. Saved
-models that are no longer available stay visible in site settings as
-unavailable.
+`model_catalog_cache_ttl`. OpenAI catalog results are limited to GPT text-model
+ids, while Anthropic catalog results are limited to Claude model ids. Configured
+`provider_model_options` supply labels, cost tiers, and select options when live
+catalogs cannot be verified. Saved models that are no longer available stay
+visible in site settings as unavailable.
 
 If generation fails because the selected model is unavailable and
 `model_fallback_enabled?` is true, Folio retries once with the provider default
@@ -516,14 +550,15 @@ bootstrap.
 
 `f-ai-input` owns the field session:
 
-- opens only one AI panel in the form at a time
+- opens only one AI panel on the page at a time
 - captures an undo snapshot when opened
 - sends POST for initial suggestions
-- sends POST with instructions for regenerate/save
+- sends POST with instructions for saving custom instructions and regeneration
 - optionally serializes a current form snapshot
 - includes the current `window.MessageBus.clientId`
 - aborts in-flight requests on close or regenerate
 - enforces the client request timeout
+- closes on outside click or Escape
 - injects returned loading component HTML into the custom HTML target
 - stores `meta.request_id` from the loading response
 - waits for a matching `Folio::Ai::TextSuggestionsJob` MessageBus payload
@@ -547,8 +582,8 @@ when the editor submits the form.
 - accept buttons
 - optional meta such as tone and character count
 - instructions textarea
-- regenerate/save button
-- loader
+- save/regenerate button
+- loading suggestion placeholders
 
 `f-ai-c-text-suggestions` dispatches component events back to `f-ai-input` for
 close, regenerate, and accept. Copying uses the shared Console clipboard
@@ -579,10 +614,10 @@ The dummy app enables the AI pack in development and test:
 Folio.enabled_packs = [:ai] if Rails.env.development? || Rails.env.test?
 ```
 
-`test/dummy/config/initializers/folio_ai.rb` enables AI in development and
-registers `dummy_blog_articles`. The dummy AI code lives in
-`test/dummy/packs/ai` and adds model hooks to `Dummy::Blog::Article` through a
-pack railtie.
+`test/dummy/config/initializers/folio_ai.rb` enables the runtime flag and
+registers `dummy_blog_articles` in development. Pack tests reset and register AI
+fields explicitly. The dummy AI code lives in `test/dummy/packs/ai` and adds
+model hooks to `Dummy::Blog::Article` through a pack railtie.
 
 The dummy provider adapter returns deterministic suggestions and does not call
 OpenAI or Anthropic. This keeps local UI verification possible without provider
@@ -602,7 +637,7 @@ Manual check:
 1. Start the dummy app in development.
 2. Open Console site settings and enable AI prompts for the current site.
 3. Fill non-blank prompts for the dummy blog article fields.
-4. Open an existing dummy blog article.
+4. Open an existing dummy blog article with a title or perex.
 5. Click the AI action beside a configured field.
 6. Verify loading, variants, copy, accept, undo, close, instructions, and
    regenerate.
