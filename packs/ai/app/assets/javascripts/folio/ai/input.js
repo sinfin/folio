@@ -66,7 +66,7 @@
       }
 
       toggle (event) {
-        this.stopActionEvent(event)
+        this.handleActionEvent(event)
 
         if (this.isOpen) {
           this.close()
@@ -86,7 +86,7 @@
       }
 
       close (event) {
-        this.stopActionEvent(event)
+        this.handleActionEvent(event)
         this.abortRequest()
         this.customHtmlTarget.innerHTML = ''
         this.element.classList.remove(INPUT_OPEN_CLASS)
@@ -99,7 +99,7 @@
       }
 
       regenerate (event) {
-        this.stopActionEvent(event)
+        this.handleActionEvent(event)
         this.loadHtml({
           url: this.instructionsUrlValue,
           instructions: event?.detail?.instructions || ''
@@ -117,7 +117,7 @@
       }
 
       undoSuggestion (event) {
-        this.stopActionEvent(event)
+        this.handleActionEvent(event)
 
         const snapshot = this.sessionSnapshot
         if (snapshot === null) return
@@ -457,11 +457,10 @@
         }
       }
 
-      stopActionEvent (event) {
+      handleActionEvent (event) {
         if (!event) return
 
         event.preventDefault()
-        event.stopPropagation()
         event.target.blur()
       }
 
