@@ -12,6 +12,13 @@ Structured agent workflows live in **`.skills/<name>/SKILL.md`** (YAML frontmatt
 
 When a task matches a skill’s description, **read that `SKILL.md` and follow it**. Host applications may use the same `.skills/` layout for their own workflows.
 
+When the user corrects an agent about Folio conventions, check whether the
+guidance belongs in an existing `.skills/*/SKILL.md` file. Prefer the relevant
+skill when the correction applies to a specific workflow. Before editing a
+skill, ask the user whether to update that specific skill with the correction.
+If no existing skill fits, suggest updating this `AGENTS.md` or creating a new
+`.skills/<name>/SKILL.md`.
+
 | Skill | Triggers (examples) |
 |-------|---------------------|
 | **folio-view-component** | Build or change ViewComponents (generator, BEM, Slim/Sass, Stimulus data attrs, tests); frontend in `app/components` |
