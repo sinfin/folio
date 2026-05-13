@@ -38,7 +38,7 @@
                     class="folio-loader--transparent"
                   ]
 
-      - elsif status_message.blank?
+      - elsif successful?
         .f-ai-c-text-suggestions__suggestions data=suggestions_data
           - suggestions.each do |suggestion|
             .f-ai-c-text-suggestions__suggestion[

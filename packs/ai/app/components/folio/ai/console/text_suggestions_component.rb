@@ -81,7 +81,7 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
     end
 
     def instructions_visible?
-      loading? || status_message.blank?
+      loading? || successful? || status_message.blank?
     end
 
     def suggestion_params(suggestion)

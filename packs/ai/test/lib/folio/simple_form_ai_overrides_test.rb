@@ -145,7 +145,14 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
     Folio::Ai.register_integration(key: :articles,
                                    record_class_name: "Folio::Page",
                                    fields: [])
-    site.update!(ai_settings: enabled_ai_settings)
+    site.update!(ai_settings: {
+                   enabled: true,
+                   integrations: {
+                     articles: {
+                       fields: {},
+                     },
+                   },
+                 })
     Folio::Current.site = site
 
     html = with_ai_config(enabled: true) do

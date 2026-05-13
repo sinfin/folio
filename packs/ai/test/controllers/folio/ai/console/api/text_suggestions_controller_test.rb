@@ -69,6 +69,28 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
     assert_not_includes response_component_html, "Alternative demo summary"
   end
 
+  test "treats client class mismatch as record not ready" do
+    page = create(:folio_page, site: @site)
+
+    with_ai_config(enabled: true) do
+      assert_enqueued_jobs 1, only: Folio::Ai::TextSuggestionsJob do
+        post text_suggestions_console_api_ai_text_suggestions_path,
+             params: request_params(record: page,
+                                    field_key: :title),
+             as: :json
+      end
+    end
+
+    job_params = enqueued_text_suggestions_job_arguments[:params].with_indifferent_access
+    error_code = job_params[:error_code]
+    error_code = error_code[:value] if error_code.is_a?(Hash)
+
+    assert_response :success
+    assert_equal "record_not_ready", error_code.to_s
+    assert_not job_params.key?(:context)
+    assert_not job_params.key?(:provider_adapter_class_name)
+  end
+
   test "requires message bus client id" do
     with_ai_config(enabled: true) do
       assert_no_enqueued_jobs only: Folio::Ai::TextSuggestionsJob do

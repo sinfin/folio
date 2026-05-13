@@ -41,6 +41,22 @@ class Folio::Ai::Console::TextSuggestionsComponentTest < Folio::Console::Compone
     assert_no_selector(".f-ai-c-text-suggestions__suggestion")
   end
 
+  test "renders suggestions when successful result has warnings" do
+    render_inline(Folio::Ai::Console::TextSuggestionsComponent.new(result: warning_result,
+                                                                  component_id: "ai_title",
+                                                                  field_label: "Title"))
+
+    warning = I18n.t("folio.ai.console.warnings.model_fallback",
+                     requested_model: "retired-model",
+                     fallback_model: "gpt-5.5")
+
+    assert_selector(".f-ai-c-text-suggestions__status:not([hidden])")
+    assert_selector("[data-f-ai-c-text-suggestions-target='statusMessage']",
+                    text: warning)
+    assert_selector("[data-action*='f-ai-c-text-suggestions#accept']", text: "Generated text")
+    assert_selector("textarea[data-f-ai-c-text-suggestions-target='instructions']", text: "Shorten it.")
+  end
+
   test "renders loading state with pseudo suggestions" do
     render_inline(Folio::Ai::Console::TextSuggestionsComponent.new(result: loading_result,
                                                                   component_id: "ai_title",
@@ -82,6 +98,23 @@ class Folio::Ai::Console::TextSuggestionsComponentTest < Folio::Console::Compone
                                                  field: field,
                                                  user_instruction: "",
                                                  warnings: [])
+    end
+
+    def warning_result
+      Folio::Ai::SuggestionGenerator::Result.new(success: true,
+                                                 suggestions: [
+                                                   Folio::Ai::Suggestion.new(key: 1,
+                                                                             text: "Generated text"),
+                                                 ],
+                                                 field: field,
+                                                 user_instruction: "Shorten it.",
+                                                 warnings: [
+                                                   {
+                                                     code: :model_fallback,
+                                                     requested_model: "retired-model",
+                                                     fallback_model: "gpt-5.5",
+                                                   },
+                                                 ])
     end
 
     def loading_result

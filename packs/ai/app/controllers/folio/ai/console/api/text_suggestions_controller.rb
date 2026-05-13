@@ -111,7 +111,9 @@ class Folio::Ai::Console::Api::TextSuggestionsController < Folio::Console::Api::
     def record
       return @record if defined?(@record)
 
-      @record = record_scope&.find_by(id: ai_params[:id])
+      @record = if requested_record_class_matches_integration?
+        record_scope&.find_by(id: ai_params[:id])
+      end
       @record = nil if @record && !record_site_allowed?
       @record
     end
@@ -131,8 +133,27 @@ class Folio::Ai::Console::Api::TextSuggestionsController < Folio::Console::Api::
     def record_class
       return @record_class if defined?(@record_class)
 
+      @record_class = registry_integration&.record_class
+    rescue ArgumentError
+      @record_class = nil
+    end
+
+    def registry_integration
+      @registry_integration ||= Folio::Ai.registry.integration(ai_params[:integration_key])
+    end
+
+    def requested_record_class_matches_integration?
+      return true if ai_params[:klass].blank?
+      return false unless record_class
+
+      requested_record_class.present? && requested_record_class <= record_class
+    end
+
+    def requested_record_class
+      return @requested_record_class if defined?(@requested_record_class)
+
       klass = ai_params[:klass].to_s.safe_constantize
-      @record_class = klass if klass && klass < ActiveRecord::Base
+      @requested_record_class = klass if klass && klass < ActiveRecord::Base
     end
 
     def record_site_allowed?
