@@ -121,7 +121,6 @@ Folio::Ai.configure do |config|
     },
   }
   config.model_fallback_enabled = true
-  config.model_catalog_cache_ttl = 1.hour
   config.provider_request_timeout = 30
   config.client_request_timeout_ms = 45_000
   config.text_suggestions_queue = :default
@@ -138,7 +137,6 @@ Important defaults:
 - provider defaults are `gpt-5.5` and `claude-opus-4-7`
 - `provider_model_options` is `{}`
 - `model_fallback_enabled` is `true`
-- `model_catalog_cache_ttl` is `1.hour`
 - `provider_request_storage` is `false`
 - `provider_request_timeout` is `30` seconds
 - `client_request_timeout_ms` is `45_000`
@@ -146,9 +144,14 @@ Important defaults:
 - `max_prompt_chars` is `80_000`
 - `rate_limit` is `nil`
 
-Set provider credentials with `OPENAI_API_KEY` and/or `ANTHROPIC_API_KEY`.
+Set provider credentials with `FOLIO_AI_OPENAI_API_KEY` and/or
+`FOLIO_AI_ANTHROPIC_API_KEY`.
 `FOLIO_AI_DISABLED` is a global kill switch and makes `Folio::Ai.enabled?`
 false even when configuration enables the feature.
+
+Set extra model select options with comma-separated provider ENV values such as
+`FOLIO_AI_OPENAI_MODELS="gpt-5.5,gpt-5.5-pro"` or
+`FOLIO_AI_ANTHROPIC_MODELS="claude-opus-4-7,claude-sonnet-4-7"`.
 
 OpenAI requests use the Responses API and include `store: false` unless the
 host application explicitly sets `provider_request_storage = true`. Anthropic
@@ -519,13 +522,11 @@ When a provider override is present without a model override, Folio uses that
 provider's configured default model. This prevents an OpenAI model from being
 inherited accidentally for an Anthropic provider override.
 
-`Folio::Ai::ModelCatalog` fetches live model lists through provider APIs when
-credentials are present and caches them in `Rails.cache` for
-`model_catalog_cache_ttl`. OpenAI catalog results are limited to GPT text-model
-ids, while Anthropic catalog results are limited to Claude model ids. Configured
-`provider_model_options` supply labels, cost tiers, and select options when live
-catalogs cannot be verified. Saved models that are no longer available stay
-visible in site settings as unavailable.
+`Folio::Ai::ModelCatalog` builds Console model select options without calling
+provider APIs. Options come from the provider default model,
+`FOLIO_AI_<PROVIDER>_MODELS`, configured `provider_model_options`, and any saved
+selected model that is no longer listed. Configured `provider_model_options`
+also supply optional labels and cost tiers.
 
 If generation fails because the selected model is unavailable and
 `model_fallback_enabled?` is true, Folio retries once with the provider default

@@ -161,9 +161,9 @@ module Folio::Ai
     def provider_api_key(provider)
       case provider.to_sym
       when :openai
-        ENV.fetch("OPENAI_API_KEY") { raise ArgumentError, "OPENAI_API_KEY is not configured" }
+        ENV.fetch("FOLIO_AI_OPENAI_API_KEY") { raise ArgumentError, "FOLIO_AI_OPENAI_API_KEY is not configured" }
       when :anthropic
-        ENV.fetch("ANTHROPIC_API_KEY") { raise ArgumentError, "ANTHROPIC_API_KEY is not configured" }
+        ENV.fetch("FOLIO_AI_ANTHROPIC_API_KEY") { raise ArgumentError, "FOLIO_AI_ANTHROPIC_API_KEY is not configured" }
       else
         raise Folio::Ai::UnknownProviderError, "Unknown AI provider: #{provider}"
       end

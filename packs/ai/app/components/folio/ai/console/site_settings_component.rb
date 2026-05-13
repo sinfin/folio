@@ -34,28 +34,10 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
       return options unless Folio::Ai.known_provider?(provider)
 
       options += model_catalog_result(provider, selected).models.map do |option|
-        [model_option_label(option), option.id]
+        [option.select_label, option.id]
       end
 
       options
-    end
-
-    def model_notice(provider:, selected:, effective_model:)
-      return unless Folio::Ai.known_provider?(provider)
-
-      model = selected.presence || effective_model
-      return if model.blank?
-
-      status = model_catalog(provider).status(model)
-
-      if status.unavailable?
-        t(".model_unavailable_notice",
-          model:,
-          provider: provider_label(provider))
-      elsif selected.present? && !status.verified?
-        t(".model_catalog_unverified_notice",
-          provider: provider_label(provider))
-      end
     end
 
     def boolean_input(*path, label:, checked:)
@@ -176,12 +158,6 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
       default_model.presence || provider_default_model(default_provider)
     end
 
-    def default_model_notice
-      model_notice(provider: default_provider,
-                   selected: default_model,
-                   effective_model: default_effective_model)
-    end
-
     def integration_provider(integration)
       integration_setting(integration, "default_provider")
     end
@@ -199,12 +175,6 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
       return provider_default_model(integration_provider(integration)) if integration_provider(integration).present?
 
       default_effective_model
-    end
-
-    def integration_model_notice(integration)
-      model_notice(provider: integration_effective_provider(integration),
-                   selected: integration_model(integration),
-                   effective_model: integration_effective_model(integration))
     end
 
     def integration_blank_model_label(integration)
@@ -232,12 +202,6 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
       return provider_default_model(field_provider(integration, field)) if field_provider(integration, field).present?
 
       integration_effective_model(integration)
-    end
-
-    def field_model_notice(integration, field)
-      model_notice(provider: field_effective_provider(integration, field),
-                   selected: field_model(integration, field),
-                   effective_model: field_effective_model(integration, field))
     end
 
     def field_blank_model_label(integration, field)
@@ -280,12 +244,6 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
     def model_catalog_result(provider, selected)
       @model_catalog_results ||= {}
       @model_catalog_results[[provider.to_s, selected.to_s]] ||= model_catalog(provider).result(selected:)
-    end
-
-    def model_option_label(option)
-      return option.select_label if option.available?
-
-      t(".unavailable_model_option", model: option.select_label)
     end
 
     def field_hint(field)

@@ -64,6 +64,31 @@ class Folio::Ai::Console::SiteSettingsComponentTest < Folio::Console::ComponentT
     assert_text("Limit: 120")
   end
 
+  def test_render_does_not_fetch_provider_models
+    site = build(:folio_site)
+
+    render_component(site)
+
+    assert_not_requested :get, "https://api.openai.com/v1/models"
+  end
+
+  def test_render_uses_env_model_options
+    original_value = ENV["FOLIO_AI_OPENAI_MODELS"]
+    ENV["FOLIO_AI_OPENAI_MODELS"] = "gpt-5.5-pro"
+    site = build(:folio_site)
+
+    render_component(site)
+
+    assert_selector("select[name$='[ai_settings][default_model]'] option[value='gpt-5.5']")
+    assert_selector("select[name$='[ai_settings][default_model]'] option[value='gpt-5.5-pro']")
+  ensure
+    if original_value
+      ENV["FOLIO_AI_OPENAI_MODELS"] = original_value
+    else
+      ENV.delete("FOLIO_AI_OPENAI_MODELS")
+    end
+  end
+
   def test_provider_options_fall_back_to_humanized_label
     site = build(:folio_site)
 

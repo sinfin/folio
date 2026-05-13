@@ -103,8 +103,10 @@ class Folio::Ai::Providers::OpenAiTest < ActiveSupport::TestCase
     cassette = "folio/ai/providers/open_ai/generate_suggestions"
     skip_without_openai_key_or_cassette(cassette)
 
-    provider = Folio::Ai::Providers::OpenAi.new(api_key: ENV.fetch("OPENAI_API_KEY", "recorded-openai-key"),
-                                                model: ENV.fetch("OPENAI_MODEL", Folio::Ai::DEFAULT_OPENAI_MODEL),
+    provider = Folio::Ai::Providers::OpenAi.new(api_key: ENV.fetch("FOLIO_AI_OPENAI_API_KEY",
+                                                                    "recorded-openai-key"),
+                                                model: ENV.fetch("FOLIO_AI_OPENAI_MODEL",
+                                                                 Folio::Ai::DEFAULT_OPENAI_MODEL),
                                                 timeout: 60)
     field = Folio::Ai::Field.new(key: :title, character_limit: 80)
     prompt = <<~TEXT.squish
@@ -122,9 +124,9 @@ class Folio::Ai::Providers::OpenAiTest < ActiveSupport::TestCase
 
   private
     def skip_without_openai_key_or_cassette(cassette)
-      return if ENV["OPENAI_API_KEY"].present?
+      return if ENV["FOLIO_AI_OPENAI_API_KEY"].present?
       return if File.exist?(File.join("test/fixtures/vcr_cassettes", "#{cassette}.yml"))
 
-      skip "Set OPENAI_API_KEY to record this VCR cassette."
+      skip "Set FOLIO_AI_OPENAI_API_KEY to record this VCR cassette."
     end
 end

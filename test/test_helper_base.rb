@@ -27,6 +27,8 @@ VCR.configure do |config|
   }
 
   %w[
+    FOLIO_AI_OPENAI_API_KEY
+    FOLIO_AI_ANTHROPIC_API_KEY
     OPENAI_API_KEY
     ANTHROPIC_API_KEY
   ].each do |env_key|

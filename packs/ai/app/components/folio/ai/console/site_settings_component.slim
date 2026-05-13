@@ -18,8 +18,6 @@
                     provider: default_provider,
                     selected: default_model,
                     blank_label: provider_default_model_label(default_provider))
-      - if default_model_notice
-        small.f-ai-c-site-settings__model-notice = default_model_notice
 
   - integrations.each do |integration|
     .f-ai-c-site-settings__integration.card.mb-g
@@ -44,8 +42,6 @@
                           provider: integration_effective_provider(integration),
                           selected: integration_model(integration),
                           blank_label: integration_blank_model_label(integration))
-            - if integration_model_notice(integration)
-              small.f-ai-c-site-settings__model-notice = integration_model_notice(integration)
 
         - integration.fields.values.each do |field|
           .f-ai-c-site-settings__field
@@ -90,5 +86,3 @@
                               provider: field_effective_provider(integration, field),
                               selected: field_model(integration, field),
                               blank_label: field_blank_model_label(integration, field))
-                - if field_model_notice(integration, field)
-                  small.f-ai-c-site-settings__model-notice = field_model_notice(integration, field)

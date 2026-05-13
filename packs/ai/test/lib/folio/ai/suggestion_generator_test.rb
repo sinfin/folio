@@ -146,7 +146,7 @@ class Folio::Ai::SuggestionGeneratorTest < ActiveSupport::TestCase
   end
 
   test "returns provider error when provider API key is missing" do
-    original_value = ENV.delete("OPENAI_API_KEY")
+    original_value = ENV.delete("FOLIO_AI_OPENAI_API_KEY")
 
     result = with_ai_enabled do
       generator.call
@@ -155,7 +155,7 @@ class Folio::Ai::SuggestionGeneratorTest < ActiveSupport::TestCase
     assert_not result.success?
     assert_equal :provider_error, result.error_code
   ensure
-    ENV["OPENAI_API_KEY"] = original_value if original_value
+    ENV["FOLIO_AI_OPENAI_API_KEY"] = original_value if original_value
   end
 
   test "does not call provider when cost guard rejects prompt" do

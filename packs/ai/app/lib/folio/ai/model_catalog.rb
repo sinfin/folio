@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Folio::Ai::ModelCatalog
-  CACHE_VERSION = 1
-
   Option = Struct.new(:id,
                       :label,
                       :provider,
@@ -69,22 +67,20 @@ class Folio::Ai::ModelCatalog
   end
 
   def result(selected: nil)
-    catalog = cached_live_catalog
-    models = options_from_catalog(catalog, selected:)
+    models = append_selected_option(configured_options, selected:)
 
     Result.new(models:,
-               verified: catalog["verified"] == true,
-               error: catalog["error"])
+               verified: false,
+               error: nil)
   end
 
   def status(model)
     return Status.new(available: nil, verified: false, model: nil) if model.blank?
 
     catalog_result = result(selected: model)
-    available = catalog_result.model_available?(model)
 
-    Status.new(available:,
-               verified: catalog_result.verified?,
+    Status.new(available: nil,
+               verified: false,
                model: catalog_result.models.find { |option| option.id == model })
   end
 
@@ -100,63 +96,6 @@ class Folio::Ai::ModelCatalog
     attr_reader :provider,
                 :api_key
 
-    def cached_live_catalog
-      return @cached_live_catalog if defined?(@cached_live_catalog)
-
-      @cached_live_catalog = Rails.cache.fetch(cache_key, expires_in: Folio::Ai.model_catalog_cache_ttl) do
-        fetch_live_catalog
-      end
-    rescue Folio::Ai::ProviderError, KeyError, ArgumentError => e
-      @cached_live_catalog = configured_catalog(error: "#{e.class.name}: #{e.message}")
-    end
-
-    def fetch_live_catalog
-      models = Folio::Ai.provider_adapter_class(provider)
-                        .list_models(api_key: api_key_for_provider,
-                                     timeout: Folio::Ai.provider_request_timeout)
-
-      {
-        "verified" => true,
-        "models" => models.map { |model| serialized_model(model) },
-        "fetched_at" => Time.current.iso8601,
-      }
-    end
-
-    def configured_catalog(error: nil)
-      {
-        "verified" => false,
-        "models" => [],
-        "error" => error,
-      }.compact
-    end
-
-    def options_from_catalog(catalog, selected:)
-      if catalog["verified"]
-        live_options(catalog["models"])
-      else
-        configured_options
-      end.then do |options|
-        append_selected_option(options, selected:, verified: catalog["verified"])
-      end
-    end
-
-    def live_options(models)
-      metadata = configured_model_metadata
-
-      Array(models).map do |attributes|
-        id = attributes.fetch("id")
-        option_metadata = metadata.fetch(id, {})
-
-        Option.new(id:,
-                   label: option_metadata["label"].presence || attributes["label"].presence || id,
-                   provider: provider.to_s,
-                   available: true,
-                   source: :provider,
-                   cost_tier: option_metadata["cost_tier"],
-                   default: option_metadata["default"])
-      end
-    end
-
     def configured_options
       configured_model_metadata.map do |id, metadata|
         Option.new(id:,
@@ -169,7 +108,7 @@ class Folio::Ai::ModelCatalog
       end
     end
 
-    def append_selected_option(options, selected:, verified:)
+    def append_selected_option(options, selected:)
       selected = selected.to_s
       return options if selected.blank?
       return options if options.any? { |option| option.id == selected }
@@ -178,7 +117,7 @@ class Folio::Ai::ModelCatalog
         Option.new(id: selected,
                    label: selected,
                    provider: provider.to_s,
-                   available: verified != true,
+                   available: true,
                    source: :selected,
                    cost_tier: nil,
                    default: false),
@@ -186,10 +125,34 @@ class Folio::Ai::ModelCatalog
     end
 
     def configured_model_metadata
-      configured = normalized_provider_model_options
+      metadata = normalized_provider_model_options
       default_model = Folio::Ai.provider_models[provider]
-      configured[default_model.to_s] ||= { "label" => default_model.to_s, "default" => true } if default_model.present?
-      configured
+
+      configured_model_ids.each_with_object({}) do |id, configured|
+        configured[id] = metadata.fetch(id, {}).dup
+        configured[id]["default"] = true if id == default_model.to_s && !configured[id].key?("default")
+      end.tap do |configured|
+        metadata.each do |id, model_metadata|
+          configured[id] ||= model_metadata
+        end
+      end
+    end
+
+    def configured_model_ids
+      [
+        Folio::Ai.provider_models[provider],
+        *env_model_ids,
+      ].filter_map { |id| id.to_s.presence }.uniq
+    end
+
+    def env_model_ids
+      ENV.fetch(provider_models_env_key, "").split(",").filter_map do |id|
+        id.strip.presence
+      end
+    end
+
+    def provider_models_env_key
+      "FOLIO_AI_#{provider.to_s.upcase.gsub(/[^A-Z0-9]+/, '_')}_MODELS"
     end
 
     def normalized_provider_model_options
@@ -222,24 +185,5 @@ class Folio::Ai::ModelCatalog
       return {} unless metadata.is_a?(Hash)
 
       metadata.stringify_keys.slice("label", "cost_tier", "default")
-    end
-
-    def serialized_model(model)
-      {
-        "id" => model.id,
-        "label" => model.label,
-        "created_at" => model.created_at,
-      }
-    end
-
-    def api_key_for_provider
-      key = api_key.presence || Folio::Ai.provider_api_key(provider)
-      raise ArgumentError, "AI provider API key is blank" if key.blank?
-
-      key
-    end
-
-    def cache_key
-      "folio/ai/model_catalog/v#{CACHE_VERSION}/#{provider}"
     end
 end

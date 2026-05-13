@@ -67,14 +67,30 @@ class Folio::AiTest < ActiveSupport::TestCase
     assert_equal 12, adapter.send(:timeout)
   end
 
+  test "uses prefixed provider API keys" do
+    original_openai_value = ENV["FOLIO_AI_OPENAI_API_KEY"]
+    original_anthropic_value = ENV["FOLIO_AI_ANTHROPIC_API_KEY"]
+    ENV["FOLIO_AI_OPENAI_API_KEY"] = "openai-secret"
+    ENV["FOLIO_AI_ANTHROPIC_API_KEY"] = "anthropic-secret"
+
+    assert_equal "openai-secret", Folio::Ai.provider_api_key(:openai)
+    assert_equal "anthropic-secret", Folio::Ai.provider_api_key(:anthropic)
+  ensure
+    restore_env("FOLIO_AI_OPENAI_API_KEY", original_openai_value)
+    restore_env("FOLIO_AI_ANTHROPIC_API_KEY", original_anthropic_value)
+  end
+
   test "raises safe error when provider API key is missing" do
-    original_value = ENV.delete("OPENAI_API_KEY")
+    original_prefixed_value = ENV.delete("FOLIO_AI_OPENAI_API_KEY")
+    original_legacy_value = ENV["OPENAI_API_KEY"]
+    ENV["OPENAI_API_KEY"] = "legacy-secret"
 
     assert_raises(ArgumentError) do
       Folio::Ai.provider_adapter(provider: :openai)
     end
   ensure
-    ENV["OPENAI_API_KEY"] = original_value if original_value
+    restore_env("FOLIO_AI_OPENAI_API_KEY", original_prefixed_value)
+    restore_env("OPENAI_API_KEY", original_legacy_value)
   end
 
   test "rejects unknown provider adapter" do
@@ -82,4 +98,13 @@ class Folio::AiTest < ActiveSupport::TestCase
       Folio::Ai.provider_adapter_class(:unknown)
     end
   end
+
+  private
+    def restore_env(key, value)
+      if value
+        ENV[key] = value
+      else
+        ENV.delete(key)
+      end
+    end
 end

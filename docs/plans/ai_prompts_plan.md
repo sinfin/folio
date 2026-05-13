@@ -134,20 +134,19 @@ for one or more editor inputs.
      config.enabled = true
      config.default_provider = :openai
      config.provider_models = {
-       openai: "gpt-5.5",
-       anthropic: "claude-opus-4-7",
-     }
-     config.model_fallback_enabled = true
-     config.model_catalog_cache_ttl = 1.hour
-     config.provider_request_storage = false
-   end
-   ```
+     openai: "gpt-5.5",
+     anthropic: "claude-opus-4-7",
+   }
+   config.model_fallback_enabled = true
+   config.provider_request_storage = false
+ end
+ ```
 
    `provider_request_storage` defaults to `false`. OpenAI Responses API requests
    send `store: false` unless a host application explicitly opts in.
 
-4. Configure provider credentials with `OPENAI_API_KEY` and/or
-   `ANTHROPIC_API_KEY`. The environment kill switch `FOLIO_AI_DISABLED`
+4. Configure provider credentials with `FOLIO_AI_OPENAI_API_KEY` and/or
+   `FOLIO_AI_ANTHROPIC_API_KEY`. The environment kill switch `FOLIO_AI_DISABLED`
    suppresses all runtime AI behavior even when the app config enables it.
 5. Optionally expose curated model labels and cost tiers in site settings:
 
@@ -164,13 +163,13 @@ for one or more editor inputs.
    end
    ```
 
-   If API credentials are available, Folio lists live provider models and caches
-   them in `Rails.cache` for `Folio::Ai.model_catalog_cache_ttl`. Configured
-   metadata only enriches those options with labels/cost tiers. If the live
-   catalog cannot be fetched, Folio falls back to configured options. If a saved
-   site model later disappears, Folio keeps it visible as unavailable and, when
-   `Folio::Ai.model_fallback_enabled?` is true, generation falls back to the
-   provider default model and returns a warning for the editor UI.
+   Console site settings build model options from the provider default,
+   comma-separated `FOLIO_AI_<PROVIDER>_MODELS`, configured
+   `provider_model_options`, and any saved selected model. Rendering the settings
+   form must not call provider APIs. If generation fails because a selected model
+   is unavailable and `Folio::Ai.model_fallback_enabled?` is true, generation
+   falls back to the provider default model and returns a warning for the editor
+   UI.
 6. Register promptable fields after Rails initialization:
 
    ```ruby
@@ -602,23 +601,21 @@ Both defaults are configuration values, not hardcoded service assumptions. Host
 applications should override them when the account requires a stable dated
 snapshot, a cheaper model, or a provider-specific production identifier.
 
-Folio keeps model selection as a cost-aware site setting, but provider APIs do
-not expose a complete pricing contract in their model-list endpoints. Host apps
-should therefore provide curated model metadata through
+Folio keeps model selection as a cost-aware site setting. Host apps should
+provide model IDs through `FOLIO_AI_<PROVIDER>_MODELS` and curated model
+metadata through
 `Folio::Ai.provider_model_options` when labels such as "premium",
-"standard", or "economy" are needed. Folio merges that metadata with the live
-provider model list.
+"standard", or "economy" are needed. Folio merges that metadata with the static
+model option list.
 
-The live model catalog should:
+The model option catalog should:
 
-1. Fetch available models from the provider model-list endpoint.
-2. Filter the list to text-generation models relevant for AI prompts.
-3. Cache the verified list through `Rails.cache` for
-   `Folio::Ai.model_catalog_cache_ttl` (default: one hour).
-4. Fall back to configured model options when the provider list cannot be
-   verified, without blocking the settings form.
-5. Keep an already selected model visible and flagged when the live list proves
-   it is no longer available.
+1. Include the configured provider default model.
+2. Include comma-separated `FOLIO_AI_<PROVIDER>_MODELS` entries.
+3. Include configured `provider_model_options` entries for programmatic options
+   and metadata.
+4. Keep an already selected model visible when it is no longer listed.
+5. Never call provider model-list APIs while rendering Console settings.
 
 Use `Rails.cache` rather than a direct Redis dependency. Host apps that run
 Folio with Redis-backed caching get Redis behavior without coupling the AI pack
