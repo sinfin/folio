@@ -7,7 +7,17 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
   include Folio::Console::FormsHelper
   include Folio::IconHelper
 
+  setup do
+    @original_openai_api_key = ENV["FOLIO_AI_OPENAI_API_KEY"]
+    ENV["FOLIO_AI_OPENAI_API_KEY"] = "secret"
+  end
+
   teardown do
+    if @original_openai_api_key
+      ENV["FOLIO_AI_OPENAI_API_KEY"] = @original_openai_api_key
+    else
+      ENV.delete("FOLIO_AI_OPENAI_API_KEY")
+    end
     Folio::Ai.reset_registry!
   end
 
@@ -153,6 +163,28 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
                      },
                    },
                  })
+    Folio::Current.site = site
+
+    html = with_ai_config(enabled: true) do
+      simple_form_for(record, url: "/") do |f|
+        concat f.input(:title,
+                       ai: {
+                         integration_key: :articles,
+                       })
+      end
+    end
+
+    page = Capybara.string(html)
+
+    assert_not page.has_css?("[data-controller='f-ai-input']")
+  end
+
+  test "does not attach AI suggestions when provider is unavailable" do
+    ENV.delete("FOLIO_AI_OPENAI_API_KEY")
+    site = create_site(force: true)
+    record = create(:folio_page, site:)
+    register_ai_field
+    site.update!(ai_settings: enabled_ai_settings)
     Folio::Current.site = site
 
     html = with_ai_config(enabled: true) do

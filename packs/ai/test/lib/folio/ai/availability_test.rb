@@ -4,6 +4,8 @@ require "test_helper"
 
 class Folio::Ai::AvailabilityTest < ActiveSupport::TestCase
   setup do
+    @original_openai_api_key = ENV["FOLIO_AI_OPENAI_API_KEY"]
+    ENV["FOLIO_AI_OPENAI_API_KEY"] = "secret"
     @site = create_site(force: true)
     Folio::Ai.reset_registry!
     Folio::Ai.register_integration(key: :articles,
@@ -12,6 +14,11 @@ class Folio::Ai::AvailabilityTest < ActiveSupport::TestCase
   end
 
   teardown do
+    if @original_openai_api_key
+      ENV["FOLIO_AI_OPENAI_API_KEY"] = @original_openai_api_key
+    else
+      ENV.delete("FOLIO_AI_OPENAI_API_KEY")
+    end
     Folio::Ai.reset_registry!
   end
 
@@ -79,6 +86,26 @@ class Folio::Ai::AvailabilityTest < ActiveSupport::TestCase
     assert_equal :host_ineligible, result.reason
   end
 
+  test "is unavailable when resolved provider is not eligible" do
+    ENV.delete("FOLIO_AI_OPENAI_API_KEY")
+    @site.ai_settings = enabled_settings
+
+    result = availability.call
+
+    assert_not result.available?
+    assert_equal :provider_unavailable, result.reason
+  end
+
+  test "is available with custom configured provider" do
+    @site.ai_settings = enabled_settings(default_provider: "demo")
+
+    with_ai_config(default_provider: :demo, provider_models: { demo: "demo" }) do
+      result = availability.call
+
+      assert result.available?
+    end
+  end
+
   test "is available when all gates pass" do
     @site.ai_settings = enabled_settings
 
@@ -96,9 +123,10 @@ class Folio::Ai::AvailabilityTest < ActiveSupport::TestCase
                                   global_enabled: true)
     end
 
-    def enabled_settings(enabled: true, field_enabled: true, prompt: "Write a title")
+    def enabled_settings(enabled: true, field_enabled: true, prompt: "Write a title", default_provider: nil)
       {
         enabled:,
+        default_provider:,
         integrations: {
           articles: {
             fields: {

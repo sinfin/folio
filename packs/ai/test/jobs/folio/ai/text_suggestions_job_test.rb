@@ -123,7 +123,9 @@ class Folio::Ai::TextSuggestionsJobTest < ActiveJob::TestCase
   private
     def perform_text_suggestions_job(params: job_params)
       messages = capture_message_bus do
-        with_ai_config(enabled: true) do
+        with_ai_config(enabled: true,
+                       default_provider: :demo,
+                       provider_models: { demo: "demo" }) do
           Folio::Ai::TextSuggestionsJob.perform_now(request_id: "request-hash",
                                                     message_bus_client_id: "message-bus-client",
                                                     user_id: @user.id,

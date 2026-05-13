@@ -3,6 +3,10 @@
 if Rails.env.development?
   Folio::Ai.configure do |config|
     config.enabled = true
+    config.default_provider = :demo
+    config.provider_models = {
+      demo: "demo",
+    }
   end
 
   Rails.application.config.after_initialize do

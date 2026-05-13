@@ -5,7 +5,11 @@ require "test_helper"
 class Folio::Ai::Console::SiteSettingsComponentTest < Folio::Console::ComponentTest
   setup do
     @original_rails_cache = Rails.cache
+    @original_openai_api_key = ENV["FOLIO_AI_OPENAI_API_KEY"]
+    @original_anthropic_api_key = ENV["FOLIO_AI_ANTHROPIC_API_KEY"]
     Rails.cache = ActiveSupport::Cache::MemoryStore.new
+    ENV["FOLIO_AI_OPENAI_API_KEY"] = "secret"
+    ENV.delete("FOLIO_AI_ANTHROPIC_API_KEY")
 
     stub_request(:get, "https://api.openai.com/v1/models")
       .to_return(body: {
@@ -25,6 +29,8 @@ class Folio::Ai::Console::SiteSettingsComponentTest < Folio::Console::ComponentT
 
   teardown do
     Rails.cache = @original_rails_cache
+    restore_env("FOLIO_AI_OPENAI_API_KEY", @original_openai_api_key)
+    restore_env("FOLIO_AI_ANTHROPIC_API_KEY", @original_anthropic_api_key)
     Folio::Ai.reset_registry!
   end
 
@@ -70,6 +76,75 @@ class Folio::Ai::Console::SiteSettingsComponentTest < Folio::Console::ComponentT
     render_component(site)
 
     assert_not_requested :get, "https://api.openai.com/v1/models"
+  end
+
+  def test_render_hides_provider_without_credentials
+    ENV.delete("FOLIO_AI_OPENAI_API_KEY")
+    site = build(:folio_site)
+
+    render_component(site, default_provider: :openai, provider_models: {
+                       openai: "gpt-5.5",
+                       demo: "demo",
+                     })
+
+    assert_no_selector("select[name$='[ai_settings][default_provider]'] option[value='openai']")
+    assert_selector("select[name$='[ai_settings][default_provider]'] option[value='demo']", text: "Demo")
+  end
+
+  def test_render_shows_anthropic_with_credentials
+    ENV["FOLIO_AI_ANTHROPIC_API_KEY"] = "secret"
+    site = build(:folio_site)
+
+    render_component(site)
+
+    assert_selector("select[name$='[ai_settings][default_provider]'] option[value='anthropic']",
+                    text: "Anthropic")
+  end
+
+  def test_render_disables_settings_without_eligible_providers
+    ENV.delete("FOLIO_AI_OPENAI_API_KEY")
+    ENV.delete("FOLIO_AI_ANTHROPIC_API_KEY")
+    site = build(:folio_site, ai_settings: { enabled: true })
+
+    render_component(site)
+
+    assert_selector(".f-ai-c-site-settings__intro.alert-danger",
+                    text: I18n.t("folio.ai.console.site_settings_component.no_eligible_providers"))
+    assert_selector("input[name$='[ai_settings][enabled]'][value='0']", visible: :all)
+    assert_selector("input[name$='[ai_settings][enabled]'][disabled]", visible: :all)
+    assert_no_selector("select[name$='[ai_settings][default_provider]']")
+    assert_no_selector(".f-ai-c-site-settings__integration")
+  end
+
+  def test_render_ignores_saved_ineligible_provider_overrides
+    ENV.delete("FOLIO_AI_OPENAI_API_KEY")
+    site = build(:folio_site, ai_settings: {
+                   default_provider: "openai",
+                   default_model: "gpt-5.5",
+                   integrations: {
+                     articles: {
+                       default_provider: "openai",
+                       default_model: "gpt-5.5",
+                       fields: {
+                         title: {
+                           provider: "openai",
+                           model: "gpt-5.5",
+                         },
+                       },
+                     },
+                   },
+                 })
+
+    render_component(site, default_provider: :openai, provider_models: {
+                       openai: "gpt-5.5",
+                       demo: "demo",
+                     })
+
+    assert_no_selector("select option[value='openai']")
+    assert_selector("select[name$='[ai_settings][default_provider]'] option[value='demo'][selected]")
+    assert_selector("select[name$='[ai_settings][default_model]'] option[value=''][selected]")
+    assert_selector("select[name$='[ai_settings][integrations][articles][default_provider]'] option[value='']")
+    assert_selector("select[name$='[ai_settings][integrations][articles][fields][title][provider]'] option[value='']")
   end
 
   def test_render_uses_env_model_options
@@ -134,4 +209,13 @@ class Folio::Ai::Console::SiteSettingsComponentTest < Folio::Console::ComponentT
 
     assert_no_selector(".f-ai-c-site-settings")
   end
+
+  private
+    def restore_env(key, value)
+      if value
+        ENV[key] = value
+      else
+        ENV.delete(key)
+      end
+    end
 end

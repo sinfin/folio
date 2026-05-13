@@ -22,7 +22,11 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
     end
 
     def providers
-      Folio::Ai.provider_models.keys.map(&:to_s)
+      Folio::Ai.eligible_provider_models.keys.map(&:to_s)
+    end
+
+    def provider_configuration_available?
+      providers.present?
     end
 
     def provider_options
@@ -31,7 +35,7 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
 
     def model_options(provider:, selected:, blank_label:)
       options = [[blank_label, ""]]
-      return options unless Folio::Ai.known_provider?(provider)
+      return options unless Folio::Ai.eligible_provider?(provider)
 
       options += model_catalog_result(provider, selected).models.map do |option|
         [option.select_label, option.id]
@@ -40,12 +44,12 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
       options
     end
 
-    def boolean_input(*path, label:, checked:)
+    def boolean_input(*path, label:, checked:, disabled: false)
       @form.input(input_attribute(*path),
                   as: :boolean,
                   label:,
                   required: false,
-                  input_html: input_html(*path, checked:))
+                  input_html: input_html(*path, checked:, disabled:))
     end
 
     def provider_input(*path, label:, selected:, include_blank: false)
@@ -111,6 +115,10 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
       "#{@form.object_name}_ai_settings_#{path.join("_")}".parameterize(separator: "_")
     end
 
+    def hidden_disabled_enabled_field
+      helpers.hidden_field_tag(field_name(:enabled), "0")
+    end
+
     def site_setting(key)
       @site.ai_settings_data[key.to_s]
     end
@@ -146,11 +154,12 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
     end
 
     def default_provider
-      (site_setting("default_provider").presence ||
-        Folio::Ai.default_provider).to_s
+      eligible_provider_or_nil(raw_default_provider) || providers.first.to_s
     end
 
     def default_model
+      return if default_provider != raw_default_provider
+
       site_setting("default_model")
     end
 
@@ -159,10 +168,12 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
     end
 
     def integration_provider(integration)
-      integration_setting(integration, "default_provider")
+      eligible_provider_or_nil(raw_integration_provider(integration))
     end
 
     def integration_model(integration)
+      return if raw_integration_provider(integration).present? && integration_provider(integration).blank?
+
       integration_setting(integration, "default_model")
     end
 
@@ -186,10 +197,12 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
     end
 
     def field_provider(integration, field)
-      field_setting(integration, field, "provider")
+      eligible_provider_or_nil(raw_field_provider(integration, field))
     end
 
     def field_model(integration, field)
+      return if raw_field_provider(integration, field).present? && field_provider(integration, field).blank?
+
       field_setting(integration, field, "model")
     end
 
@@ -213,7 +226,7 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
     end
 
     def provider_default_model(provider)
-      return unless Folio::Ai.known_provider?(provider)
+      return unless Folio::Ai.eligible_provider?(provider)
 
       Folio::Ai.default_model(provider)
     end
@@ -244,6 +257,24 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
     def model_catalog_result(provider, selected)
       @model_catalog_results ||= {}
       @model_catalog_results[[provider.to_s, selected.to_s]] ||= model_catalog(provider).result(selected:)
+    end
+
+    def raw_default_provider
+      (site_setting("default_provider").presence ||
+        Folio::Ai.default_provider).to_s
+    end
+
+    def raw_integration_provider(integration)
+      integration_setting(integration, "default_provider")
+    end
+
+    def raw_field_provider(integration, field)
+      field_setting(integration, field, "provider")
+    end
+
+    def eligible_provider_or_nil(provider)
+      provider = provider.to_s
+      provider if Folio::Ai.eligible_provider?(provider)
     end
 
     def field_hint(field)

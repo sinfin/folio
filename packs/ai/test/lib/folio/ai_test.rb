@@ -80,6 +80,28 @@ class Folio::AiTest < ActiveSupport::TestCase
     restore_env("FOLIO_AI_ANTHROPIC_API_KEY", original_anthropic_value)
   end
 
+  test "filters eligible providers by required credentials" do
+    original_openai_value = ENV["FOLIO_AI_OPENAI_API_KEY"]
+    original_anthropic_value = ENV["FOLIO_AI_ANTHROPIC_API_KEY"]
+    ENV.delete("FOLIO_AI_OPENAI_API_KEY")
+    ENV["FOLIO_AI_ANTHROPIC_API_KEY"] = "anthropic-secret"
+
+    assert_not Folio::Ai.eligible_provider?(:openai)
+    assert Folio::Ai.eligible_provider?(:anthropic)
+    assert_equal({ anthropic: "claude-opus-4-7" }, Folio::Ai.eligible_provider_models)
+  ensure
+    restore_env("FOLIO_AI_OPENAI_API_KEY", original_openai_value)
+    restore_env("FOLIO_AI_ANTHROPIC_API_KEY", original_anthropic_value)
+  end
+
+  test "treats configured custom providers as eligible" do
+    with_ai_config(provider_models: { demo: "demo" }) do
+      assert Folio::Ai.eligible_provider?(:demo)
+      assert_equal({ demo: "demo" }, Folio::Ai.eligible_provider_models)
+      assert_nil Folio::Ai.provider_api_key(:demo)
+    end
+  end
+
   test "raises safe error when provider API key is missing" do
     original_prefixed_value = ENV.delete("FOLIO_AI_OPENAI_API_KEY")
     original_legacy_value = ENV["OPENAI_API_KEY"]

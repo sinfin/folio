@@ -7,6 +7,10 @@ module Folio::Ai
     openai: DEFAULT_OPENAI_MODEL,
     anthropic: DEFAULT_ANTHROPIC_MODEL,
   }.freeze
+  PROVIDER_API_KEY_ENV_KEYS = {
+    openai: "FOLIO_AI_OPENAI_API_KEY",
+    anthropic: "FOLIO_AI_ANTHROPIC_API_KEY",
+  }.freeze
   PACK_ASSETS = {
     javascripts: %w[folio_pack_ai],
     stylesheets: %w[folio_pack_ai],
@@ -112,7 +116,20 @@ module Folio::Ai
     end
 
     def known_provider?(provider)
+      return false if provider.blank?
+
       provider_models.key?(provider.to_sym)
+    end
+
+    def eligible_provider?(provider)
+      return false unless known_provider?(provider)
+
+      env_key = provider_api_key_env_key(provider)
+      env_key.blank? || ENV[env_key].present?
+    end
+
+    def eligible_provider_models
+      provider_models.select { |provider, _model| eligible_provider?(provider) }
     end
 
     def provider_adapter(provider:, model: default_model(provider), api_key: nil)
@@ -159,14 +176,20 @@ module Folio::Ai
     end
 
     def provider_api_key(provider)
-      case provider.to_sym
-      when :openai
-        ENV.fetch("FOLIO_AI_OPENAI_API_KEY") { raise ArgumentError, "FOLIO_AI_OPENAI_API_KEY is not configured" }
-      when :anthropic
-        ENV.fetch("FOLIO_AI_ANTHROPIC_API_KEY") { raise ArgumentError, "FOLIO_AI_ANTHROPIC_API_KEY is not configured" }
-      else
+      env_key = provider_api_key_env_key(provider)
+      if env_key.blank?
+        return nil if known_provider?(provider)
+
         raise Folio::Ai::UnknownProviderError, "Unknown AI provider: #{provider}"
       end
+
+      ENV.fetch(env_key) { raise ArgumentError, "#{env_key} is not configured" }
+    end
+
+    def provider_api_key_env_key(provider)
+      return if provider.blank?
+
+      PROVIDER_API_KEY_ENV_KEYS[provider.to_sym]
     end
 
     def track(event, payload = {})

@@ -25,6 +25,7 @@ cs:
           regenerate_label: Uložit vlastní instrukce
         site_settings_component:
           intro: Nastavte AI návrhy pro tento web a registrovaná pole. Pole je v editaci dostupné pouze tehdy, když je web zapnutý, pole je zapnuté a výchozí prompt není prázdný.
+          no_eligible_providers: Před zapnutím AI návrhů pro tento web nastavte alespoň jednoho dostupného AI providera.
           enabled_label: Povolit AI návrhy pro tento web
           default_provider: Výchozí provider
           default_model: Výchozí model
@@ -47,6 +48,8 @@ cs:
             other: "Limit: %{count} znaků"
           providers:
             openai: OpenAI
+            anthropic: Anthropic
+            demo: Demo
         errors:
           feature_disabled: AI návrhy jsou vypnuté.
           global_disabled: AI návrhy jsou vypnuté.
@@ -61,6 +64,7 @@ cs:
           provider_timeout: AI provider neodpověděl včas. Zkuste to prosím znovu.
           provider_rate_limited: AI provider hlásí rate limit. Zkuste to prosím později.
           provider_model_unavailable: Vybraný AI model už není dostupný. Opravte nastavení AI modelu pro tento web.
+          provider_unavailable: Pro tento web není nastavený žádný dostupný AI provider.
           provider_error: AI provider selhal. Zkuste to prosím znovu.
           response_invalid: AI provider vrátil neplatnou odpověď.
           cost_limit_exceeded: AI kontext je příliš velký. Zkraťte obsah nebo upravte context builder.

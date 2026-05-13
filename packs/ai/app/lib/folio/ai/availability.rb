@@ -26,6 +26,7 @@ class Folio::Ai::Availability
     return unavailable(:field_disabled, field:) unless site.ai_field_enabled_for?(integration_key:, field_key:)
     return unavailable(:prompt_missing, field:) if default_prompt.blank?
     return unavailable(:host_ineligible, field:) unless host_eligible
+    return unavailable(:provider_unavailable, field:) unless provider_available?
 
     Result.new(available: true, reason: nil, field:)
   end
@@ -43,6 +44,18 @@ class Folio::Ai::Availability
 
     def default_prompt
       site.ai_prompt_for(integration_key:, field_key:)
+    end
+
+    def provider_available?
+      Folio::Ai.eligible_provider?(provider_config.provider)
+    rescue Folio::Ai::UnknownProviderError, ArgumentError
+      false
+    end
+
+    def provider_config
+      @provider_config ||= Folio::Ai::ProviderConfig.new(site:,
+                                                         integration_key:,
+                                                         field_key:).call
     end
 
     def unavailable(reason, field: nil)

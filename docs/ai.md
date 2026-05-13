@@ -148,6 +148,9 @@ Set provider credentials with `FOLIO_AI_OPENAI_API_KEY` and/or
 `FOLIO_AI_ANTHROPIC_API_KEY`.
 `FOLIO_AI_DISABLED` is a global kill switch and makes `Folio::Ai.enabled?`
 false even when configuration enables the feature.
+Console settings and editor controls only expose eligible providers. OpenAI and
+Anthropic are eligible when their `FOLIO_AI_*_API_KEY` is present; custom
+providers configured in `provider_models` are eligible by default.
 
 Set extra model select options with comma-separated provider ENV values such as
 `FOLIO_AI_OPENAI_MODELS="gpt-5.5,gpt-5.5-pro"` or
@@ -527,6 +530,8 @@ provider APIs. Options come from the provider default model,
 `FOLIO_AI_<PROVIDER>_MODELS`, configured `provider_model_options`, and any saved
 selected model that is no longer listed. Configured `provider_model_options`
 also supply optional labels and cost tiers.
+When no provider is eligible, Console site settings keep AI disabled and hide
+provider/model/prompt settings.
 
 If generation fails because the selected model is unavailable and
 `model_fallback_enabled?` is true, Folio retries once with the provider default

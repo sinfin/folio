@@ -27,6 +27,8 @@ class Folio::Ai::SuggestionGeneratorTest < ActiveSupport::TestCase
   end
 
   setup do
+    @original_openai_api_key = ENV["FOLIO_AI_OPENAI_API_KEY"]
+    ENV["FOLIO_AI_OPENAI_API_KEY"] = "secret"
     Folio::Ai.reset_registry!
     Folio::Ai.register_integration(key: :articles,
                                    record_class_name: "Folio::Page",
@@ -40,6 +42,11 @@ class Folio::Ai::SuggestionGeneratorTest < ActiveSupport::TestCase
   end
 
   teardown do
+    if @original_openai_api_key
+      ENV["FOLIO_AI_OPENAI_API_KEY"] = @original_openai_api_key
+    else
+      ENV.delete("FOLIO_AI_OPENAI_API_KEY")
+    end
     Folio::Ai.reset_registry!
   end
 
@@ -145,7 +152,7 @@ class Folio::Ai::SuggestionGeneratorTest < ActiveSupport::TestCase
     ActiveSupport::Notifications.unsubscribe(subscriber) if subscriber
   end
 
-  test "returns provider error when provider API key is missing" do
+  test "returns provider unavailable when provider API key is missing" do
     original_value = ENV.delete("FOLIO_AI_OPENAI_API_KEY")
 
     result = with_ai_enabled do
@@ -153,7 +160,7 @@ class Folio::Ai::SuggestionGeneratorTest < ActiveSupport::TestCase
     end
 
     assert_not result.success?
-    assert_equal :provider_error, result.error_code
+    assert_equal :provider_unavailable, result.error_code
   ensure
     ENV["FOLIO_AI_OPENAI_API_KEY"] = original_value if original_value
   end
