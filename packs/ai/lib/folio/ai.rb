@@ -57,7 +57,7 @@ module Folio::Ai
     end
 
     def reset_configuration!
-      self.enabled = false
+      self.enabled = true
       self.default_provider = :openai
       self.provider_models = DEFAULT_PROVIDER_MODELS
       self.provider_model_options = {}

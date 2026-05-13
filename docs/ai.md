@@ -22,7 +22,7 @@ Folio.enabled_packs = [:ai]
 ```ruby
 # config/initializers/folio_ai.rb
 Folio::Ai.configure do |config|
-  config.enabled = ENV["FOLIO_AI_ENABLED"].present?
+  config.enabled = true
   config.default_provider = :openai
   config.provider_models = {
     openai: "gpt-5.5",
@@ -104,7 +104,7 @@ Configure runtime behavior through `Folio::Ai.configure`:
 
 ```ruby
 Folio::Ai.configure do |config|
-  config.enabled = ENV["FOLIO_AI_ENABLED"].present?
+  config.enabled = true
   config.default_provider = :openai
   config.provider_models = {
     openai: "gpt-5.5",
