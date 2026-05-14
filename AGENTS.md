@@ -23,6 +23,7 @@ If no existing skill fits, suggest updating this `AGENTS.md` or creating a new
 |-------|---------------------|
 | **folio-view-component** | Build or change ViewComponents (generator, BEM, Slim/Sass, Stimulus data attrs, tests); frontend in `app/components` |
 | **folio-pack** | Optional pack boundaries and namespaces; files under `packs/<name>`; route mappings to pack-owned controllers/components |
+| **folio-rails-code-structure** | Ruby/Rails code structure: thin model/controller/concern entrypoints, focused classes under `lib/`, avoid helper-method clusters; excludes jobs |
 | **folio-testing** | Ruby/Rails tests, test helpers, stubs/mocks, factories/fixtures, avoid ENV mutation; `test/**`, `packs/**/test/**` |
 | **folio-slim** | Slim template formatting: multi-line attributes, multiple `class` attrs, avoid inline Ruby, template length; `.slim` files |
 | **folio-scss** | SCSS/Sass styling: BEM nesting with `&`, colocated component stylesheets, scoping, don't style child components; `.sass`/`.scss` files |
