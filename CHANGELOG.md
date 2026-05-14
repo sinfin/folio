@@ -5,8 +5,11 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- **`Folio::File.default_file_order` scope** — exposes the canonical newest-first ordering (`created_at DESC, id DESC`) used by console file listings and pickers, including a deterministic `id` tiebreaker for stable pagination.
+
 ### Changed
 
+- **Default file search results are sorted newest first** — search results in `Folio::Console::FileControllerBase#index` and `Folio::Console::Api::FileControllerBase#index_json` now apply `created_at DESC, id DESC` after `filter_by_params`, so the newest uploads appear first regardless of which filter combination is active.
 - **`ImageObject` `creditText`**: now uses `Folio::File#credit_text`, deduplicating matching `author` / `attribution_source` (e.g. `"Reuters / Reuters"` → `"Reuters"`) and falling back to `file_list_source` when both are
   blank.
 
