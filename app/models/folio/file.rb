@@ -373,6 +373,13 @@ class Folio::File < Folio::ApplicationRecord
     end
   end
 
+  # Combined credit string used for JSON-LD creditText, RSS media:credit, etc.
+  # Joins author and attribution_source (deduplicated) and falls back to
+  # file_list_source when both are blank.
+  def credit_text
+    [author.presence, attribution_source.presence].compact_blank.uniq.join(" / ").presence || file_list_source.presence
+  end
+
   def to_label
     file_name.presence || self.class.model_name.human
   end
