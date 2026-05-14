@@ -82,6 +82,8 @@ window.Folio.S3Upload.createDropzone = ({
         file.file_name = result.file_name
         file.s3_path = result.s3_path
         file.s3_url = result.s3_url
+        file.upload_headers = result.upload_headers || {}
+        file.upload_method = result.upload_method || 'PUT'
 
         if (onThumbnail && file.dataURL && !file.thumbnail_notified) {
           file.thumbnail_notified = true
@@ -98,7 +100,7 @@ window.Folio.S3Upload.createDropzone = ({
       window.Folio.S3Upload.newUpload({ file })
         .then(handleResult)
         .catch((err) => {
-          done('Failed to get an S3 signed upload URL', err)
+          done('Failed to get a signed upload URL', err)
         })
     },
 
@@ -144,6 +146,8 @@ window.Folio.S3Upload.createDropzone = ({
 
     processing: function (file) {
       this.options.url = file.s3_url
+      this.options.method = file.upload_method || 'PUT'
+      this.options.headers = file.upload_headers || {}
     },
 
     sending: function (file, xhr) {

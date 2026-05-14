@@ -3,6 +3,7 @@
 module Folio::S3::Client
   LOCAL_TEST_PATH = "/tmp/folio_tmp_user_photo_uploads"
   S3_TEST_PATH = "test_files"
+  DIRECT_FILE_TOKEN_EXPIRES_IN = 1.hour
 
   def s3_client
     @s3_client ||= Aws::S3::Client.new(
@@ -33,7 +34,7 @@ module Folio::S3::Client
 
   def test_aware_presign_url(s3_path:, method_name: :get_object)
     if use_local_file_system?
-      "https://dummy-s3-bucket.com/#{s3_path}"
+      direct_file_storage_url(s3_path:, method_name:)
     else
       s3_presigner.presigned_url(method_name, bucket: s3_bucket, key: test_aware_s3_path(s3_path))
     end
@@ -83,7 +84,11 @@ module Folio::S3::Client
   def test_aware_s3_upload(s3_path:, file:, acl: "private")
     if use_local_file_system?
       FileUtils.mkdir_p(File.dirname(test_aware_s3_path(s3_path)))
-      FileUtils.cp(file.path, test_aware_s3_path(s3_path))
+      file.rewind if file.respond_to?(:rewind)
+
+      File.open(test_aware_s3_path(s3_path), "wb") do |f|
+        IO.copy_stream(file, f)
+      end
     else
       s3_client.put_object(
         bucket: s3_bucket,
@@ -118,6 +123,14 @@ module Folio::S3::Client
     Dragonfly.app.datastore.root_path
   end
 
+  def verified_direct_file_s3_path(token:, method_name:)
+    payload = direct_file_message_verifier.verified(token)
+    fail ActiveSupport::MessageVerifier::InvalidSignature unless payload.is_a?(Hash)
+    fail ActiveSupport::MessageVerifier::InvalidSignature unless payload["method_name"] == method_name.to_s
+
+    payload["s3_path"]
+  end
+
   # Fetch S3 HEAD metadata via Dragonfly's Fog storage layer.
   # Returns Excon response (use extract_s3_etag to read ETag).
   def s3_dragonfly_head_object(file_uid)
@@ -138,16 +151,76 @@ module Folio::S3::Client
 
   private
     def use_local_file_system?
-      @use_local_file_system ||= Dragonfly.app.datastore.is_a?(Dragonfly::FileDataStore)
+      Dragonfly.app.datastore.is_a?(Dragonfly::FileDataStore)
     end
 
     def test_aware_s3_path(s3_path)
-      return s3_path unless Rails.env.test?
-
       if use_local_file_system?
-        "#{LOCAL_TEST_PATH}/#{s3_path}"
-      else
+        direct_file_upload_path(s3_path)
+      elsif Rails.env.test?
         "#{S3_TEST_PATH}/#{s3_path}"
+      else
+        s3_path
       end
+    end
+
+    def direct_file_storage_url(s3_path:, method_name:)
+      route_name = method_name.to_sym == :put_object ? :upload_folio_api_s3_path : :download_folio_api_s3_path
+
+      Folio::Engine.routes.url_helpers.public_send(
+        route_name,
+        s3_path:,
+        token: direct_file_upload_token(s3_path:, method_name:)
+      )
+    end
+
+    def direct_file_upload_token(s3_path:, method_name:)
+      direct_file_message_verifier.generate(
+        {
+          s3_path:,
+          method_name: method_name.to_s,
+        },
+        expires_in: DIRECT_FILE_TOKEN_EXPIRES_IN
+      )
+    end
+
+    def direct_file_message_verifier
+      Rails.application.message_verifier(:folio_direct_file_upload)
+    end
+
+    def direct_file_upload_path(s3_path)
+      normalized_path = normalized_direct_file_upload_path(s3_path)
+      root = Pathname.new(direct_file_upload_root_path).expand_path
+      path = root.join(normalized_path).cleanpath
+
+      unless path.to_s.start_with?("#{root}/")
+        fail ArgumentError, "Invalid direct upload path"
+      end
+
+      path.to_s
+    end
+
+    def normalized_direct_file_upload_path(s3_path)
+      path = Pathname.new(s3_path.to_s)
+      clean_path = path.cleanpath.to_s
+
+      if s3_path.blank? ||
+         path.absolute? ||
+         clean_path == "." ||
+         clean_path == ".." ||
+         clean_path.start_with?("../")
+        fail ArgumentError, "Invalid direct upload path"
+      end
+
+      clean_path
+    end
+
+    def direct_file_upload_root_path
+      Rails.application.config.folio_direct_file_upload_root_path ||
+        if Rails.env.test?
+          LOCAL_TEST_PATH
+        else
+          Rails.root.join("tmp/folio_file_uploads/#{Rails.env}")
+        end
     end
 end

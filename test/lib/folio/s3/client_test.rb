@@ -30,7 +30,16 @@ class Folio::S3::ClientTest < ActiveSupport::TestCase
 
     @instance.stub(:use_local_file_system?, true) do
       url = @instance.test_aware_presign_url(s3_path:)
-      assert_equal "https://dummy-s3-bucket.com/#{s3_path}", url
+      assert_match %r{\A/folio/api/s3/download\?}, url
+      assert_includes url, "s3_path=soubory%2F1.png"
+      assert_includes url, "token="
+    end
+
+    @instance.stub(:use_local_file_system?, true) do
+      url = @instance.test_aware_presign_url(s3_path:, method_name: :put_object)
+      assert_match %r{\A/folio/api/s3/upload\?}, url
+      assert_includes url, "s3_path=soubory%2F1.png"
+      assert_includes url, "token="
     end
 
     @instance.stub(:use_local_file_system?, false) do
@@ -61,6 +70,14 @@ class Folio::S3::ClientTest < ActiveSupport::TestCase
       end
       expected = s3_url_without_path + s3_path
       assert url.starts_with?(expected), "#{url} should start with #{expected}"
+    end
+  end
+
+  test "local file system path rejects traversal" do
+    @instance.stub(:use_local_file_system?, true) do
+      assert_raises(ArgumentError) do
+        @instance.send(:test_aware_s3_path, "../foo")
+      end
     end
   end
 

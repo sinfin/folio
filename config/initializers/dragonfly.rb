@@ -163,21 +163,28 @@ Dragonfly.app.configure do
 
   url_format "/media/:job/:sha/:name"
 
-  if Rails.env.test? && ENV["USE_S3_STORAGE_FOR_TESTS"].to_i == 0
+  case Rails.application.config.folio_dragonfly_datastore.to_sym
+  when :file
     datastore :file,
-              root_path: Rails.root.join("public/system/dragonfly/#{Rails.env}/files"),
-              server_root: Rails.root.join("public")
+              root_path: Rails.application.config.folio_dragonfly_file_root_path ||
+                         Rails.root.join("public/system/dragonfly/#{Rails.env}/files"),
+              server_root: Rails.application.config.folio_dragonfly_file_server_root ||
+                           Rails.root.join("public")
 
-  elsif (Rails.env.test? || Rails.env.development?) && !File.exist?(Rails.root.join(".env"))
-    puts "\nMissing .env file, not setting up dragonfly correctly.\n\n"
+  when :s3
+    if (Rails.env.test? || Rails.env.development?) && !File.exist?(Rails.root.join(".env"))
+      puts "\nMissing .env file, not setting up dragonfly correctly.\n\n"
+    else
+      datastore :s3,
+                bucket_name: ENV.fetch("S3_BUCKET_NAME"),
+                access_key_id: ENV.fetch("AWS_ACCESS_KEY_ID"),
+                secret_access_key: ENV.fetch("AWS_SECRET_ACCESS_KEY"),
+                url_scheme: ENV.fetch("S3_SCHEME"),
+                region: ENV.fetch("S3_REGION"),
+                root_path: "#{ENV.fetch('PROJECT_NAME')}/#{ENV.fetch('DRAGONFLY_RAILS_ENV') { Rails.env }}/files",
+                fog_storage_options: { path_style: true, aws_session_token: ENV.fetch("AWS_SESSION_TOKEN", nil) }.compact
+    end
   else
-    datastore :s3,
-              bucket_name: ENV.fetch("S3_BUCKET_NAME"),
-              access_key_id: ENV.fetch("AWS_ACCESS_KEY_ID"),
-              secret_access_key: ENV.fetch("AWS_SECRET_ACCESS_KEY"),
-              url_scheme: ENV.fetch("S3_SCHEME"),
-              region: ENV.fetch("S3_REGION"),
-              root_path: "#{ENV.fetch('PROJECT_NAME')}/#{ENV.fetch('DRAGONFLY_RAILS_ENV') { Rails.env }}/files",
-              fog_storage_options: { path_style: true, aws_session_token: ENV.fetch("AWS_SESSION_TOKEN", nil) }.compact
+    fail ArgumentError, "Unsupported folio_dragonfly_datastore: #{Rails.application.config.folio_dragonfly_datastore.inspect}"
   end
 end

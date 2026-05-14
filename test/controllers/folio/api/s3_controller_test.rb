@@ -3,6 +3,45 @@
 require "test_helper"
 
 class Folio::Api::S3ControllerTest < Folio::BaseControllerTest
+  test "local direct file upload endpoint stores temporary upload" do
+    post before_folio_api_s3_path, params: { file_name: "Intricate fílě name.jpg" }
+    assert_response :success
+
+    json = response.parsed_body
+    s3_path = json.fetch("s3_path")
+    local_path = "#{Folio::S3::Client::LOCAL_TEST_PATH}/#{s3_path}"
+
+    FileUtils.rm_f(local_path)
+
+    put json.fetch("s3_url"),
+        params: "uploaded content",
+        headers: json.fetch("upload_headers").merge("CONTENT_TYPE" => "application/octet-stream")
+
+    assert_response :no_content
+    assert_equal "uploaded content", File.binread(local_path)
+  ensure
+    FileUtils.rm_f(local_path) if local_path
+  end
+
+  test "local direct file download endpoint returns temporary upload" do
+    s3_path = "tmp_folio_file_uploads/controller-download-test.txt"
+    local_path = "#{Folio::S3::Client::LOCAL_TEST_PATH}/#{s3_path}"
+
+    FileUtils.mkdir_p(File.dirname(local_path))
+    File.binwrite(local_path, "download content")
+
+    url = Class.new do
+      include Folio::S3::Client
+    end.new.test_aware_presign_url(s3_path:)
+
+    get url
+
+    assert_response :success
+    assert_equal "download content", response.body
+  ensure
+    FileUtils.rm_f(local_path) if local_path
+  end
+
   [Folio::File::Document, Folio::File::Image, Folio::PrivateAttachment].each do |klass|
     test "#{klass} - before" do
       # #before returns settings for S3 file upload
@@ -12,6 +51,8 @@ class Folio::Api::S3ControllerTest < Folio::BaseControllerTest
       json = response.parsed_body
       assert json["s3_url"]
       assert json["s3_path"]
+      assert_equal "PUT", json["upload_method"]
+      assert json["upload_headers"]["X-CSRF-Token"]
       assert_equal "intricate-file-name.jpg", json["file_name"]
     end
 

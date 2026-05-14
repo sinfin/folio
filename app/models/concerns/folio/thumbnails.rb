@@ -50,10 +50,10 @@ module Folio::Thumbnails
     webp_url = hash[:webp_url]
 
     if hash[:private]
-      url = Folio::S3.url_rewrite(Dragonfly.app.datastore.url_for(hash[:uid], expires: 1.hour.from_now))
+      url = Folio::S3.dragonfly_url_for(hash[:uid], expires: 1.hour.from_now)
 
       if hash[:webp_url]
-        webp_url = Folio::S3.url_rewrite(Dragonfly.app.datastore.url_for(hash[:webp_uid], expires: 1.hour.from_now))
+        webp_url = Folio::S3.dragonfly_url_for(hash[:webp_uid], expires: 1.hour.from_now)
       end
     else
       if url
@@ -197,7 +197,7 @@ module Folio::Thumbnails
   end
 
   def development_safe_file(logger = nil)
-    if persisted? && Rails.env.development? && ENV["DRAGONFLY_PRODUCTION_S3_URL_BASE"]
+    if persisted? && Rails.env.development? && ENV["DRAGONFLY_PRODUCTION_S3_URL_BASE"] && Folio::S3.s3_datastore?
       logger ||= Rails.logger
       datastore = file.app.datastore
       content, _meta = datastore.read(file_uid)

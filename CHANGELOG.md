@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- support `config.folio_dragonfly_datastore = :file` with same direct upload flow as S3 and datastore-aware thumbnail URLs
+
 ### Changed
 
 ### Fixed

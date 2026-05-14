@@ -138,8 +138,9 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
               })
 
               return {
-                method: 'PUT',
-                url: response.s3_url
+                method: response.upload_method || 'PUT',
+                url: response.s3_url,
+                headers: response.upload_headers || {}
               }
             })
             .catch((error) => {
