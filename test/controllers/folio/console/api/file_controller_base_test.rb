@@ -130,6 +130,8 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
         assert_response :success
         assert_equal expected_ids, actual_ids
       end
+    end
+
     test "#{klass} - pagination preserves explicit request_path after picker upload refresh" do
       create_list(klass.model_name.singular, Folio::Console::FileControllerBase::PAGY_ITEMS + 1)
 
