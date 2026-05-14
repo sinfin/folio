@@ -15,7 +15,8 @@ cs:
           loading_text: Připravuji ...
           generic_error_text: AI návrhy se nepodařilo vygenerovat. Zkuste to prosím znovu.
           request_timeout_text: AI návrhy trvají příliš dlouho. Zkuste to prosím znovu.
-          missing_context_text: Napište nejdříve tělo článku, aby mohl AI asistent generovat relevantní obsah.
+          missing_context_text: Doplňte nejdříve obsah, aby mohl AI asistent generovat relevantní návrhy.
+          missing_context_article_text: Napište nejdříve tělo článku, aby mohl AI asistent generovat relevantní obsah.
           copy_label: Kopírovat návrh
           copy_button_label: ⧉
           accept_label: Přijmout návrh
@@ -57,9 +58,11 @@ cs:
           field_not_registered: AI návrhy nejsou pro toto pole nakonfigurované.
           field_disabled: AI návrhy jsou pro toto pole vypnuté.
           prompt_missing: AI návrhy nejsou pro toto pole nakonfigurované.
-          host_ineligible: Napište nejdříve tělo článku, aby mohl AI asistent generovat relevantní obsah.
+          host_ineligible: Doplňte nejdříve obsah, aby mohl AI asistent generovat relevantní návrhy.
+          host_ineligible_article: Napište nejdříve tělo článku, aby mohl AI asistent generovat relevantní obsah.
           record_not_ready: Před použitím AI návrhů záznam uložte.
-          missing_context: Napište nejdříve tělo článku, aby mohl AI asistent generovat relevantní obsah.
+          missing_context: Doplňte nejdříve obsah, aby mohl AI asistent generovat relevantní návrhy.
+          missing_context_article: Napište nejdříve tělo článku, aby mohl AI asistent generovat relevantní obsah.
           invalid_context: AI návrhy nemohou použít aktuální obsah.
           provider_timeout: AI provider neodpověděl včas. Zkuste to prosím znovu.
           provider_rate_limited: AI provider hlásí rate limit. Zkuste to prosím později.

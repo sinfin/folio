@@ -3,6 +3,10 @@
 require "test_helper"
 
 class Folio::Ai::Console::TextSuggestionsComponentTest < Folio::Console::ComponentTest
+  teardown do
+    Folio::Ai.reset_registry!
+  end
+
   test "renders suggestions with component controller actions" do
     render_inline(Folio::Ai::Console::TextSuggestionsComponent.new(result: success_result,
                                                                   component_id: "ai_title",
@@ -39,6 +43,32 @@ class Folio::Ai::Console::TextSuggestionsComponentTest < Folio::Console::Compone
                     text: I18n.t("folio.ai.console.errors.host_ineligible"))
     assert_text I18n.t("folio.ai.console.errors.host_ineligible")
     assert_no_selector(".f-ai-c-text-suggestions__suggestion")
+  end
+
+  test "renders generic missing context copy when custom integration key points to non-article table" do
+    Folio::Ai.register_integration(key: :articles,
+                                   record_class_name: "Folio::Page",
+                                   fields: [field])
+
+    render_inline(Folio::Ai::Console::TextSuggestionsComponent.new(result: error_result,
+                                                                  component_id: "ai_title",
+                                                                  field_label: "Title",
+                                                                  integration_key: "articles"))
+
+    assert_text I18n.t("folio.ai.console.errors.host_ineligible")
+    assert_no_text I18n.t("folio.ai.console.errors.host_ineligible_article")
+  end
+
+  test "renders article missing context copy when record table name contains articles" do
+    Folio::Ai.register_integration(record_class_name: "Dummy::Blog::Article",
+                                   fields: [field])
+
+    render_inline(Folio::Ai::Console::TextSuggestionsComponent.new(result: error_result,
+                                                                  component_id: "ai_title",
+                                                                  field_label: "Title",
+                                                                  integration_key: "dummy_blog_articles"))
+
+    assert_text I18n.t("folio.ai.console.errors.host_ineligible_article")
   end
 
   test "renders suggestions when successful result has warnings" do

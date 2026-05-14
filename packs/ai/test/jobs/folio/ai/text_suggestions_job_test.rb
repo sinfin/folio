@@ -66,7 +66,7 @@ class Folio::Ai::TextSuggestionsJobTest < ActiveJob::TestCase
   test "broadcasts host_ineligible in rendered component html" do
     message = perform_text_suggestions_job(params: job_params(host_eligible: false))
 
-    assert_includes message[:payload]["data"]["html"], I18n.t("folio.ai.console.errors.host_ineligible")
+    assert_includes message[:payload]["data"]["html"], I18n.t("folio.ai.console.errors.host_ineligible_article")
   end
 
   test "uses fallback form snapshot context when model hooks are missing" do

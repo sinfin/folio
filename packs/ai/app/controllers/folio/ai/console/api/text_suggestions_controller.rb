@@ -22,6 +22,12 @@ class Folio::Ai::Console::Api::TextSuggestionsController < Folio::Console::Api::
       else
         instructions
       end
+
+      if (error_code = immediate_error_code)
+        return render_component_json(text_suggestions_component(result: error_result(error_code,
+                                                                                     instructions: effective_instructions)))
+      end
+
       request_id = SecureRandom.urlsafe_base64(18)
 
       Folio::Ai::TextSuggestionsJob.perform_later(request_id:,
@@ -30,18 +36,19 @@ class Folio::Ai::Console::Api::TextSuggestionsController < Folio::Console::Api::
                                                   site_id: ai_site.id,
                                                   params: job_params(instructions: effective_instructions))
 
-      render_component_json(text_suggestions_component(instructions: effective_instructions),
+      render_component_json(text_suggestions_component(result: loading_result(instructions: effective_instructions),
+                                                       loading: true),
                             meta: { request_id: })
     end
 
-    def text_suggestions_component(instructions:)
-      Folio::Ai::Console::TextSuggestionsComponent.new(result: loading_result(instructions:),
+    def text_suggestions_component(result:, loading: false)
+      Folio::Ai::Console::TextSuggestionsComponent.new(result:,
                                                        component_id: component_id,
                                                        field_label: field_label,
                                                        integration_key: ai_params[:integration_key],
                                                        field_key: ai_params[:field_key],
                                                        show_meta: show_meta?,
-                                                       loading: true)
+                                                       loading:)
     end
 
     def loading_result(instructions:)
@@ -50,6 +57,20 @@ class Folio::Ai::Console::Api::TextSuggestionsController < Folio::Console::Api::
                                                  field: registry_field,
                                                  user_instruction: loading_instruction(instructions),
                                                  warnings: [])
+    end
+
+    def error_result(error_code, instructions:)
+      Folio::Ai::SuggestionGenerator::Result.new(success: false,
+                                                 suggestions: [],
+                                                 error_code:,
+                                                 field: registry_field,
+                                                 user_instruction: loading_instruction(instructions),
+                                                 warnings: [])
+    end
+
+    def immediate_error_code
+      return :record_not_ready unless record
+      :host_ineligible unless host_eligible?
     end
 
     def loading_instruction(instructions)
@@ -183,11 +204,16 @@ class Folio::Ai::Console::Api::TextSuggestionsController < Folio::Console::Api::
     end
 
     def host_eligible?
-      return false unless record&.persisted?
-      return true unless record.respond_to?(:folio_ai_suggestions_eligible?)
+      return @host_eligible if defined?(@host_eligible)
 
-      record.folio_ai_suggestions_eligible?(field_key: ai_params[:field_key].to_s,
-                                            current_form_snapshot:)
+      @host_eligible = if !record&.persisted?
+        false
+      elsif record.respond_to?(:folio_ai_suggestions_eligible?)
+        record.folio_ai_suggestions_eligible?(field_key: ai_params[:field_key].to_s,
+                                              current_form_snapshot:)
+      else
+        true
+      end
     end
 
     def provider_adapter_class_name

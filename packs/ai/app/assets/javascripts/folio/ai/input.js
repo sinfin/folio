@@ -194,11 +194,7 @@
 
             if (this.pendingTextSuggestionsRequestId) {
               this.setStatus(STATUS_WAITING_FOR_SUGGESTIONS)
-              return
             }
-
-            this.handleError(new Error(this.genericErrorTextValue))
-            this.finishLoading()
           })
           .catch((error) => {
             if (this.staleRequest(requestId)) return

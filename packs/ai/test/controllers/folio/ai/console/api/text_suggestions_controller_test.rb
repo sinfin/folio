@@ -69,26 +69,48 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
     assert_not_includes response_component_html, "Alternative demo summary"
   end
 
-  test "treats client class mismatch as record not ready" do
-    page = create(:folio_page, site: @site)
+  test "renders record not ready directly for client class mismatch" do
+    folio_page = create(:folio_page, site: @site)
 
     with_ai_config(enabled: true) do
-      assert_enqueued_jobs 1, only: Folio::Ai::TextSuggestionsJob do
+      assert_no_enqueued_jobs only: Folio::Ai::TextSuggestionsJob do
         post text_suggestions_console_api_ai_text_suggestions_path,
-             params: request_params(record: page,
+             params: request_params(record: folio_page,
                                     field_key: :title),
              as: :json
       end
     end
 
-    job_params = enqueued_text_suggestions_job_arguments[:params].with_indifferent_access
-    error_code = job_params[:error_code]
-    error_code = error_code[:value] if error_code.is_a?(Hash)
+    page = Capybara.string(response_component_html)
 
     assert_response :success
-    assert_equal "record_not_ready", error_code.to_s
-    assert_not job_params.key?(:context)
-    assert_not job_params.key?(:provider_adapter_class_name)
+    assert_nil response.parsed_body.dig("meta", "request_id")
+    assert page.has_css?(".f-ai-c-text-suggestions__status:not([hidden])",
+                         text: I18n.t("folio.ai.console.errors.record_not_ready"))
+    assert page.has_no_css?(".f-ai-c-text-suggestions__suggestion--loading")
+    assert page.has_no_css?("[data-f-ai-c-text-suggestions-target='suggestion']")
+  end
+
+  test "renders host ineligible directly without enqueueing text suggestions job" do
+    @article.update_columns(title: "",
+                            perex: "")
+
+    with_ai_config(enabled: true) do
+      assert_no_enqueued_jobs only: Folio::Ai::TextSuggestionsJob do
+        post text_suggestions_console_api_ai_text_suggestions_path,
+             params: request_params(field_key: :title),
+             as: :json
+      end
+    end
+
+    page = Capybara.string(response_component_html)
+
+    assert_response :success
+    assert_nil response.parsed_body.dig("meta", "request_id")
+    assert page.has_css?(".f-ai-c-text-suggestions__status:not([hidden])",
+                         text: I18n.t("folio.ai.console.errors.host_ineligible_article"))
+    assert page.has_no_css?(".f-ai-c-text-suggestions__suggestion--loading")
+    assert page.has_no_css?("[data-f-ai-c-text-suggestions-target='suggestion']")
   end
 
   test "requires message bus client id" do

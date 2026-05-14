@@ -15,7 +15,8 @@ en:
           loading_text: Preparing ...
           generic_error_text: AI suggestions could not be generated. Please try again.
           request_timeout_text: AI suggestions are taking too long. Please try again.
-          missing_context_text: Please add article content first so the AI assistant can generate relevant suggestions.
+          missing_context_text: Please add content first so the AI assistant can generate relevant suggestions.
+          missing_context_article_text: Please add article content first so the AI assistant can generate relevant suggestions.
           copy_label: Copy suggestion
           copy_button_label: ⧉
           accept_label: Accept suggestion
@@ -56,9 +57,11 @@ en:
           field_not_registered: AI suggestions are not configured for this field.
           field_disabled: AI suggestions are disabled for this field.
           prompt_missing: AI suggestions are not configured for this field.
-          host_ineligible: Please add article content first so the AI assistant can generate relevant suggestions.
+          host_ineligible: Please add content first so the AI assistant can generate relevant suggestions.
+          host_ineligible_article: Please add article content first so the AI assistant can generate relevant suggestions.
           record_not_ready: Save the record before using AI suggestions.
-          missing_context: Please add article content first so the AI assistant can generate relevant suggestions.
+          missing_context: Please add content first so the AI assistant can generate relevant suggestions.
+          missing_context_article: Please add article content first so the AI assistant can generate relevant suggestions.
           invalid_context: AI suggestions cannot use the current content.
           provider_timeout: AI provider timed out. Please try again.
           provider_rate_limited: AI provider rate limit was reached. Please try again later.

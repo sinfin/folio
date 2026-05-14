@@ -3,6 +3,7 @@
 class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::ApplicationComponent
   CONTROLLER_NAME = "f-ai-c-text-suggestions"
   LOADING_SUGGESTION_COUNT = 3
+  MISSING_CONTEXT_ERROR_CODES = %i[host_ineligible missing_context].freeze
 
   def initialize(result:,
                  component_id:,
@@ -173,8 +174,28 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
     end
 
     def error_message
-      I18n.t("folio.ai.console.errors.#{public_error_code}",
+      I18n.t(error_translation_key,
              default: text_suggestions_label(:generic_error_text))
+    end
+
+    def error_translation_key
+      code = public_error_code
+      code = "#{code}_article" if article_missing_context_error?
+
+      "folio.ai.console.errors.#{code}"
+    end
+
+    def article_missing_context_error?
+      MISSING_CONTEXT_ERROR_CODES.include?(public_error_code.to_s.to_sym) &&
+        record_table_name.to_s.include?("articles")
+    end
+
+    def record_table_name
+      return @record_table_name if defined?(@record_table_name)
+
+      @record_table_name = Folio::Ai.registry.integration(@integration_key)&.record_class&.table_name
+    rescue ArgumentError
+      @record_table_name = nil
     end
 
     def public_error_code

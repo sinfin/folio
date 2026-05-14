@@ -253,9 +253,11 @@ A field-level AI action is rendered only when all gates pass:
 8. The record is persisted.
 9. Any optional model eligibility hook allows suggestions.
 
-Direct API requests still enqueue the same job. Availability and provider
-failures are rendered into the MessageBus result with public messages such as
-`prompt_missing`, `record_not_ready`, `host_ineligible`, `provider_timeout`,
+Direct API requests still use the same component rendering pipeline. Missing or
+unauthorized records render `record_not_ready` immediately, and records blocked
+by the host eligibility hook render `host_ineligible` immediately. Other
+availability and provider failures are rendered into the MessageBus result with
+public messages such as `prompt_missing`, `provider_timeout`,
 `provider_rate_limited`, `provider_model_unavailable`, `response_invalid`,
 `cost_limit_exceeded`, or `rate_limited`.
 
@@ -329,9 +331,10 @@ defining model methods. The default behavior is:
 - provider adapter falls through to the configured Folio provider
 - site resolves from `folio_ai_site`, then `site`, then `Folio::Current.site`
 
-If no authorized persisted record is found, the controller still returns loading
-HTML and enqueues a `record_not_ready` result so the panel receives a localized
-error over MessageBus.
+If no authorized persisted record is found, the controller renders the same
+panel with a localized `record_not_ready` status immediately instead of
+enqueueing a background job. If the record is found but the host eligibility
+hook rejects it, the controller likewise renders `host_ineligible` immediately.
 
 Host applications can override the defaults with model methods when they need
 product-specific context, stricter eligibility, a custom provider adapter, or a
@@ -421,15 +424,18 @@ The controller:
 6. Persists editor instructions synchronously for the instructions endpoint when
    a record was found.
 7. Sanitizes the optional current form snapshot.
-8. Resolves model-provided context, eligibility, field label, AI site, and any
-   serializable provider adapter class.
-9. Generates a request id.
-10. Enqueues `Folio::Ai::TextSuggestionsJob`.
-11. Renders `Folio::Ai::Console::TextSuggestionsComponent` in a loading state.
-12. Wraps the loading HTML with `render_component_json`.
+8. Resolves model eligibility and renders `record_not_ready` or
+   `host_ineligible` immediately when the record cannot generate suggestions.
+9. Resolves model-provided context, field label, AI site, and any serializable
+   provider adapter class.
+10. Generates a request id.
+11. Enqueues `Folio::Ai::TextSuggestionsJob`.
+12. Renders `Folio::Ai::Console::TextSuggestionsComponent` in a loading state.
+13. Wraps the loading HTML with `render_component_json`.
 
-The initial JSON response therefore has a string `data` key containing loading
-HTML, and a `meta.request_id` value used to match the MessageBus result:
+For queued requests, the initial JSON response has a string `data` key
+containing loading HTML, and a `meta.request_id` value used to match the
+MessageBus result:
 
 ```json
 {
@@ -442,6 +448,10 @@ HTML, and a `meta.request_id` value used to match the MessageBus result:
 
 The API does not wait for the provider and does not return raw suggestion JSON
 to the browser.
+
+Immediate `record_not_ready` and `host_ineligible` responses omit
+`meta.request_id`; the browser treats the returned component HTML as the final
+panel state and does not wait for MessageBus.
 
 The prepared context and request metadata are passed directly as ActiveJob
 arguments. Folio does not persist them separately; host queue backends such as
