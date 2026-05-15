@@ -48,7 +48,6 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   end
 
   def collection_actions
-    return nil # TODO components
     return @collection_actions unless @collection_actions.nil?
 
     @collection_actions = if !model[:merge] && model[:collection_actions].present?
