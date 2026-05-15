@@ -313,6 +313,8 @@ class Folio::Audited::Auditor
 
     def get_atoms_attributes_for_reconstruction(record:, audit:)
       h = {}
+      return h unless record.class.respond_to?(:atom_keys)
+
       atoms_array = []
 
       record.class.atom_keys.each do |key|
@@ -437,6 +439,8 @@ class Folio::Audited::Auditor
     end
 
     def reconstruct_atoms(record:, audit:)
+      return unless record.class.respond_to?(:atom_keys)
+
       record.assign_attributes(get_atoms_attributes_for_reconstruction(record:, audit:))
 
       record.class.atom_keys.each do |key|
