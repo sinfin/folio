@@ -25,7 +25,7 @@ Folio::Ai.configure do |config|
   config.enabled = true
   config.default_provider = :openai
   config.provider_models = {
-    openai: "gpt-5.5",
+    openai: "gpt-5.4-mini",
     anthropic: "claude-opus-4-7",
   }
   config.provider_request_storage = false
@@ -112,12 +112,13 @@ Folio::Ai.configure do |config|
   config.enabled = true
   config.default_provider = :openai
   config.provider_models = {
-    openai: "gpt-5.5",
+    openai: "gpt-5.4-mini",
     anthropic: "claude-opus-4-7",
   }
   config.provider_model_options = {
     openai: {
-      "gpt-5.5" => { label: "GPT-5.5", cost_tier: "premium", default: true },
+      "gpt-5.4-mini" => { label: "GPT-5.4 mini" },
+      "gpt-5.5" => { label: "GPT-5.5", cost_tier: "premium" },
     },
   }
   config.model_fallback_enabled = true
@@ -134,8 +135,9 @@ Important defaults:
 
 - `enabled` is `true`
 - `default_provider` is `:openai`
-- provider defaults are `gpt-5.5` and `claude-opus-4-7`
-- `provider_model_options` is `{}`
+- provider defaults are `gpt-5.4-mini` and `claude-opus-4-7`
+- `provider_model_options` includes built-in OpenAI options for `gpt-5.4-mini`
+  and `gpt-5.5`
 - `model_fallback_enabled` is `true`
 - `provider_request_storage` is `false`
 - `provider_request_timeout` is `30` seconds
@@ -153,7 +155,7 @@ Anthropic are eligible when their `FOLIO_AI_*_API_KEY` is present; custom
 providers configured in `provider_models` are eligible by default.
 
 Set extra model select options with comma-separated provider ENV values such as
-`FOLIO_AI_OPENAI_MODELS="gpt-5.5,gpt-5.5-pro"` or
+`FOLIO_AI_OPENAI_MODELS="gpt-5.4-nano,gpt-5.5-pro"` or
 `FOLIO_AI_ANTHROPIC_MODELS="claude-opus-4-7,claude-sonnet-4-7"`.
 
 OpenAI requests use the Responses API and include `store: false` unless the
@@ -215,17 +217,17 @@ The settings are stored on `folio_sites.ai_settings`:
 {
   "enabled": true,
   "default_provider": "openai",
-  "default_model": "gpt-5.5",
+  "default_model": "gpt-5.4-mini",
   "integrations": {
     "articles": {
       "default_provider": "openai",
-      "default_model": "gpt-5.5",
+      "default_model": "gpt-5.4-mini",
       "fields": {
         "title": {
           "enabled": true,
           "prompt": "Write a concise title.",
           "provider": "openai",
-          "model": "gpt-5.5"
+          "model": "gpt-5.4-mini"
         }
       }
     }

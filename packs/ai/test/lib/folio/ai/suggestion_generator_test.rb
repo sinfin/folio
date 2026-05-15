@@ -59,7 +59,7 @@ class Folio::Ai::SuggestionGeneratorTest < ActiveSupport::TestCase
     assert result.success?
     assert_equal ["Generated title"], result.suggestions.map(&:text)
     assert_equal :openai, result.provider
-    assert_equal "gpt-5.5", result.model
+    assert_equal "gpt-5.4-mini", result.model
     assert_equal "Make it concise.", result.user_instruction
     assert_equal 1, adapter.calls.length
     assert_includes adapter.calls.first[:prompt], "Make it concise."
@@ -129,17 +129,17 @@ class Folio::Ai::SuggestionGeneratorTest < ActiveSupport::TestCase
     end
 
     assert result.success?
-    assert_equal ["retired-model", "gpt-5.5"], requested_models
-    assert_equal "gpt-5.5", result.model
+    assert_equal ["retired-model", "gpt-5.4-mini"], requested_models
+    assert_equal "gpt-5.4-mini", result.model
     assert_equal :model_fallback, result.warnings.first[:code]
     assert_equal "retired-model", result.warnings.first[:requested_model]
-    assert_equal "gpt-5.5", result.warnings.first[:fallback_model]
+    assert_equal "gpt-5.4-mini", result.warnings.first[:fallback_model]
 
     fallback_event = events.find { |event| event.name == "folio.ai.provider_model_fallback" }
     success_event = events.find { |event| event.name == "folio.ai.suggestion_generation_succeeded" }
 
     assert_equal "retired-model", fallback_event.payload[:requested_model]
-    assert_equal "gpt-5.5", fallback_event.payload[:fallback_model]
+    assert_equal "gpt-5.4-mini", fallback_event.payload[:fallback_model]
     assert_equal "retired-model", success_event.payload[:requested_model]
   ensure
     ActiveSupport::Notifications.unsubscribe(subscriber) if subscriber

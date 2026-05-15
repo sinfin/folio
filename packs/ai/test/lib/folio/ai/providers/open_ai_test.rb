@@ -106,7 +106,7 @@ class Folio::Ai::Providers::OpenAiTest < ActiveSupport::TestCase
     provider = Folio::Ai::Providers::OpenAi.new(api_key: ENV.fetch("FOLIO_AI_OPENAI_API_KEY",
                                                                     "recorded-openai-key"),
                                                 model: ENV.fetch("FOLIO_AI_OPENAI_MODEL",
-                                                                 Folio::Ai::DEFAULT_OPENAI_MODEL),
+                                                                 Folio::Ai::PREMIUM_OPENAI_MODEL),
                                                 timeout: 60)
     field = Folio::Ai::Field.new(key: :title, character_limit: 80)
     prompt = <<~TEXT.squish

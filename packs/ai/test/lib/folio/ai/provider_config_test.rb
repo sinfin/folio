@@ -79,7 +79,7 @@ class Folio::Ai::ProviderConfigTest < ActiveSupport::TestCase
                                            field_key: :title).call
 
     assert_equal :openai, result.provider
-    assert_equal "gpt-5.5", result.model
+    assert_equal "gpt-5.4-mini", result.model
   end
 
   test "rejects unknown provider" do

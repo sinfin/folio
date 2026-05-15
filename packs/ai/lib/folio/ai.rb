@@ -1,11 +1,18 @@
 # frozen_string_literal: true
 
 module Folio::Ai
-  DEFAULT_OPENAI_MODEL = "gpt-5.5"
+  DEFAULT_OPENAI_MODEL = "gpt-5.4-mini"
+  PREMIUM_OPENAI_MODEL = "gpt-5.5"
   DEFAULT_ANTHROPIC_MODEL = "claude-opus-4-7"
   DEFAULT_PROVIDER_MODELS = {
     openai: DEFAULT_OPENAI_MODEL,
     anthropic: DEFAULT_ANTHROPIC_MODEL,
+  }.freeze
+  DEFAULT_PROVIDER_MODEL_OPTIONS = {
+    openai: {
+      DEFAULT_OPENAI_MODEL => { label: "GPT-5.4 mini" }.freeze,
+      PREMIUM_OPENAI_MODEL => { label: "GPT-5.5", cost_tier: "premium" }.freeze,
+    }.freeze,
   }.freeze
   PROVIDER_API_KEY_ENV_KEYS = {
     openai: "FOLIO_AI_OPENAI_API_KEY",
@@ -64,7 +71,7 @@ module Folio::Ai
       self.enabled = true
       self.default_provider = :openai
       self.provider_models = DEFAULT_PROVIDER_MODELS
-      self.provider_model_options = {}
+      self.provider_model_options = DEFAULT_PROVIDER_MODEL_OPTIONS.deep_dup
       self.model_catalog_cache_ttl = 1.hour
       self.model_fallback_enabled = true
       self.provider_request_storage = false

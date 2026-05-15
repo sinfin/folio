@@ -3,7 +3,7 @@
 require "test_helper"
 
 class Folio::Ai::ModelCatalogTest < ActiveSupport::TestCase
-  test "uses configured default without fetching provider models" do
+  test "uses code default options without fetching provider models" do
     stub_request(:get, "https://api.openai.com/v1/models")
       .to_return(body: {
         data: [{ id: "gpt-live", created: 1 }],
@@ -12,13 +12,13 @@ class Folio::Ai::ModelCatalogTest < ActiveSupport::TestCase
     catalog = Folio::Ai::ModelCatalog.new(provider: :openai, api_key: "secret")
 
     with_provider_models_env_values({}) do
-      with_ai_config(provider_models: { openai: "gpt-5.5" }) do
-        result = catalog.result(selected: "site-model")
+      result = catalog.result(selected: "site-model")
 
-        assert_not result.verified?
-        assert_equal ["gpt-5.5", "site-model"], result.models.map(&:id)
-        assert result.models.last.available?
-      end
+      assert_not result.verified?
+      assert_equal ["gpt-5.4-mini", "gpt-5.5", "site-model"], result.models.map(&:id)
+      assert_predicate result.models.first, :default?
+      assert_not_predicate result.models.second, :default?
+      assert result.models.last.available?
     end
 
     assert_not_requested :get, "https://api.openai.com/v1/models"
@@ -28,11 +28,10 @@ class Folio::Ai::ModelCatalogTest < ActiveSupport::TestCase
     catalog = Folio::Ai::ModelCatalog.new(provider: :openai, api_key: "secret")
 
     with_provider_models_env_values(openai: "gpt-5.5-pro, gpt-5.5-mini") do
-      with_ai_config(provider_models: { openai: "gpt-5.5" }) do
-        result = catalog.result
+      result = catalog.result
 
-        assert_equal %w[gpt-5.5 gpt-5.5-pro gpt-5.5-mini], result.models.map(&:id)
-      end
+      assert_equal %w[gpt-5.4-mini gpt-5.5-pro gpt-5.5-mini gpt-5.5],
+                   result.models.map(&:id)
     end
   end
 
@@ -40,11 +39,9 @@ class Folio::Ai::ModelCatalogTest < ActiveSupport::TestCase
     catalog = Folio::Ai::ModelCatalog.new(provider: :openai, api_key: "secret")
 
     with_provider_models_env_values(openai: " gpt-5.5 , , gpt-5.5-pro, gpt-5.5-pro ") do
-      with_ai_config(provider_models: { openai: "gpt-5.5" }) do
-        result = catalog.result
+      result = catalog.result
 
-        assert_equal %w[gpt-5.5 gpt-5.5-pro], result.models.map(&:id)
-      end
+      assert_equal %w[gpt-5.4-mini gpt-5.5 gpt-5.5-pro], result.models.map(&:id)
     end
   end
 

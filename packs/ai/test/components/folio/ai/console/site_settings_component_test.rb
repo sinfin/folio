@@ -158,6 +158,7 @@ class Folio::Ai::Console::SiteSettingsComponentTest < Folio::Console::ComponentT
 
     render_component(site, provider_models_env_values: { openai: "gpt-5.5-pro" })
 
+    assert_selector("select[name$='[ai_settings][default_model]'] option[value='gpt-5.4-mini']")
     assert_selector("select[name$='[ai_settings][default_model]'] option[value='gpt-5.5']")
     assert_selector("select[name$='[ai_settings][default_model]'] option[value='gpt-5.5-pro']")
   end

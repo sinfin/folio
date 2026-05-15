@@ -4,8 +4,15 @@ require "test_helper"
 
 class Folio::AiTest < ActiveSupport::TestCase
   test "uses configured default provider models" do
-    assert_equal "gpt-5.5", Folio::Ai.default_model(:openai)
+    assert_equal "gpt-5.4-mini", Folio::Ai.default_model(:openai)
     assert_equal "claude-opus-4-7", Folio::Ai.default_model(:anthropic)
+  end
+
+  test "keeps premium OpenAI model in built-in model options" do
+    options = Folio::Ai.provider_model_options.fetch(:openai)
+
+    assert_equal({ label: "GPT-5.4 mini" }, options.fetch("gpt-5.4-mini"))
+    assert_equal({ label: "GPT-5.5", cost_tier: "premium" }, options.fetch("gpt-5.5"))
   end
 
   test "normalizes provider model config keys" do
