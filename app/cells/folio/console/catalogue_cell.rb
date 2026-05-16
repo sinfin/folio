@@ -588,6 +588,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
         class_name: "f-c-catalogue__collection-actions-bar-button f-c-catalogue__collection-actions-bar-button--#{action}}",
         label: t(".actions.#{action}"),
         variant: :secondary,
+        data: {},
       }
 
       if %i[destroy discard undiscard].include?(action)
