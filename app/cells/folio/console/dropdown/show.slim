@@ -9,8 +9,7 @@
             span.dropdown-divider__title = link[:title]
           .dropdown-divider__line
       - else
-        == cell('folio/console/ui/with_icon',
-                link[:title],
-                href: link[:url],
-                class: 'dropdown-item',
-                icon: link[:icon])
+        == render_view_component(Folio::Console::Ui::WithIconComponent.new(link[:title],
+                                                                            href: link[:url],
+                                                                            html_class: 'dropdown-item',
+                                                                            icon: link[:icon]))

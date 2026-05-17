@@ -9,9 +9,8 @@
           = t('.original')
 
         h2.h4.col.my-4.f-c-merges-form__title-with-icon
-          == cell('folio/console/ui/with_icon',
-                  t('.duplicate'),
-                  icon: :chevron_left)
+          == render_view_component(Folio::Console::Ui::WithIconComponent.new(t('.duplicate'),
+                                                                              icon: :chevron_left))
 
       .f-c-merges-form__rows
         - model.structure.each do |row|
