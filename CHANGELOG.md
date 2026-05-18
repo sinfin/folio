@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 - **Default file search results are sorted newest first** — search results in `Folio::Console::FileControllerBase#index` and `Folio::Console::Api::FileControllerBase#index_json` now apply `created_at DESC, id DESC` after `filter_by_params`, so the newest uploads appear first regardless of which filter combination is active.
 - **`ImageObject` `creditText`**: now uses `Folio::File#credit_text`, deduplicating matching `author` / `attribution_source` (e.g. `"Reuters / Reuters"` → `"Reuters"`) and falling back to `file_list_source` when both are
   blank.
+- **`stimulus_lightbox_item`**: when called with a `Folio::FilePlacement::Base`, the helper now respects placement-level overrides — caption uses `description_with_fallback` (placement description, then file description) and author uses `file.attribution_source` with fallback to `file.author`. Previously file-level metadata was used regardless of placement overrides, so a placement caption set by an editor was silently ignored by the lightbox while still being shown in the visible figcaption (rendered by `Folio::Console::Ui::ImageComponent` and downstream consumers via `description_with_fallback`). When called with a standalone `Folio::File` the behavior is unchanged. A new `author:` keyword argument was added symmetric to the existing `title:` — both take precedence over the defaults if you need to force specific values.
 
 ### Fixed
 
