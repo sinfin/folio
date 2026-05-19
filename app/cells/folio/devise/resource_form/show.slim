@@ -49,7 +49,7 @@
 
     - if show_subscribed_to_newsletter?(f)
       = f.input :subscribed_to_newsletter,
-                label: t(".subscribed_to_newsletter_label")
+                label: model[:subscribed_to_newsletter_label].presence || t(".subscribed_to_newsletter_label")
 
     - @f = f
     = render(:_disclaimer)
