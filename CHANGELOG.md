@@ -18,6 +18,7 @@ Left form column scrolls again in audit/revision mode (`pointer-events: auto` on
 - keep `index_for_picker` pagination links targeting the picker frame after uploads refresh pagy
 - refresh CSRF headers before JS API requests
 - console/layout/sidebar/search label overflow
+- use white-space: normal in tiptap nodes
 
 ## [7.6.4] - 2026-04-28
 
