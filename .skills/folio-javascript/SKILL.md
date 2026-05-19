@@ -101,6 +101,8 @@ window.MyApp.Analytics = { track (event) { /* ... */ } }
 
 Namespace under `window.Folio.*` for engine code, `window.FolioConsole.*` for console-specific engine code, and `window.<AppName>.*` for host app code.
 
+Do not introduce random top-level `const`, `let`, `function`, or class declarations in component JavaScript. Component files are loaded into the shared asset scope, so helper state and constants must live inside the Stimulus controller or the owning namespace object. For Stimulus constants, prefer static getters/methods on the controller class or instance helper methods over file-scope globals.
+
 ## Debounce and throttle
 
 For rapidly firing callbacks (scroll, resize, input, mousemove), **always** debounce or throttle:
