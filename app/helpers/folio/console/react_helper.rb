@@ -223,6 +223,135 @@ module Folio::Console::ReactHelper
     end
   end
 
+  def stimulus_ordered_multiselect(f,
+                                   relation_name,
+                                   scope: nil,
+                                   order_scope: :ordered,
+                                   sortable: true,
+                                   createable: false,
+                                   show_usage: true,
+                                   required: nil,
+                                   create_url: nil,
+                                   update_url: nil,
+                                   delete_url: nil)
+    class_name = "f-input-ordered-multiselect"
+    class_name += " f-input-ordered-multiselect--not-sortable" unless sortable
+    class_name += " f-input-ordered-multiselect--no-usage" unless show_usage
+
+    klass = f.object.class
+    reflection = klass.reflections[relation_name.to_s]
+    through = reflection.options[:through]
+
+    if through.nil?
+      raise StandardError, "Only supported for :through relations"
+    end
+
+    through_klass = reflection.class_name.constantize
+    param_base = "#{f.object_name}[#{through}_attributes]"
+
+    items = []
+    removed_items = []
+
+    f.object.send(through).each do |record|
+      through_record = through_klass.find(record.send(reflection.foreign_key))
+      hash = {
+        id: record.id,
+        label: through_record.to_console_label,
+        value: through_record.id,
+        _destroy: record.marked_for_destruction?,
+        usage_labels: through_record.respond_to?(:usage_labels_for_warning) ? through_record.usage_labels_for_warning : [],
+      }
+
+      if hash[:_destroy]
+        removed_items << hash if hash[:id]
+      else
+        items << hash
+      end
+    end
+
+    url = Folio::Engine.routes.url_helpers.url_for([
+      :react_select,
+      :console,
+      :api,
+      :autocomplete,
+      {
+        class_names: through_klass.to_s,
+        scope: scope,
+        order_scope: order_scope,
+        only_path: true
+      }
+    ])
+
+    current_record_label = f.object.respond_to?(:to_console_label) ? f.object.to_console_label : f.object.try(:title) || ""
+
+    data = {
+      "controller" => "f-input-ordered-multiselect",
+      "f-input-ordered-multiselect-items-value" => items.to_json,
+      "f-input-ordered-multiselect-removed-items-value" => removed_items.to_json,
+      "f-input-ordered-multiselect-url-value" => url,
+      "f-input-ordered-multiselect-param-base-value" => param_base,
+      "f-input-ordered-multiselect-foreign-key-value" => reflection.foreign_key,
+      "f-input-ordered-multiselect-sortable-value" => sortable ? "true" : "false",
+      "f-input-ordered-multiselect-createable-value" => createable ? "true" : "false",
+      "f-input-ordered-multiselect-show-usage-value" => show_usage ? "true" : "false",
+      "f-input-ordered-multiselect-current-record-label-value" => current_record_label,
+    }
+
+    if createable
+      create_path = create_url || Folio::Engine.routes.url_helpers.url_for([
+        :react_select_create,
+        :console,
+        :api,
+        :autocomplete,
+        { class_name: through_klass.to_s, only_path: true }
+      ])
+
+      update_path = update_url || Folio::Engine.routes.url_helpers.url_for([
+        :react_select_update,
+        :console,
+        :api,
+        :autocomplete,
+        { class_name: through_klass.to_s, only_path: true }
+      ])
+
+      delete_path = delete_url || Folio::Engine.routes.url_helpers.url_for([
+        :react_select_destroy,
+        :console,
+        :api,
+        :autocomplete,
+        { class_name: through_klass.to_s, only_path: true }
+      ])
+
+      data["f-input-ordered-multiselect-create-url-value"] = create_path
+      data["f-input-ordered-multiselect-update-url-value"] = update_path
+      data["f-input-ordered-multiselect-delete-url-value"] = delete_path
+    end
+
+    form_group_class_name = if f.object.errors[relation_name].present?
+      "form-group form-group-invalid"
+    else
+      "form-group"
+    end
+
+    content_tag(:div, class: form_group_class_name) do
+      concat(f.label(relation_name, required: required))
+      concat(
+        content_tag(:div, data: data, class: "#{class_name} form-control") do
+          concat(content_tag(:div, nil,
+            class: "f-input-ordered-multiselect__list",
+            "data-f-input-ordered-multiselect-target" => "list"))
+          concat(content_tag(:select, nil,
+            class: "f-input-ordered-multiselect__select",
+            "data-f-input-ordered-multiselect-target" => "select",
+            multiple: false))
+          concat(content_tag(:div, nil,
+            "data-f-input-ordered-multiselect-target" => "hiddenContainer"))
+        end
+      )
+      concat(f.full_error(relation_name, class: "invalid-feedback d-block"))
+    end
+  end
+
   REACT_NOTE_PARENT_CLASS_NAME = "f-c-r-notes-fields-app-parent"
   REACT_NOTE_TOOLTIP_PARENT_CLASS_NAME = "f-c-r-notes-fields-app-tooltip-parent"
   REACT_NOTE_FORM_PARENT_CLASS_NAME = "f-c-r-notes-fields-app-form-parent"

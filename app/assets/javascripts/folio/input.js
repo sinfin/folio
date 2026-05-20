@@ -7,6 +7,7 @@
 //= require folio/input/date_time
 //= require folio/input/embed
 //= require folio/input/multiselect
+//= require folio/input/ordered_multiselect
 //= require folio/input/numeral
 //= require folio/input/phone
 //= require folio/input/redactor
