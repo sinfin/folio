@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- **Tiptap custom nodes**: Suppress empty `.f-tiptap-node` wrappers when a custom node component returns `render? == false`, preventing leftover spacing for hidden nodes.
 - **Console revision view**: Atoms preview iframe scrolls again in audit/revision mode when the editor uses horizontal layout (`pointer-events: auto` on `.f-c-simple-form-with-atoms__iframe` under `.f-c-layout-body--with-audit`). The read-only preview inside the iframe is unchanged (`.f-c-atoms-previews--non-interactive`).
 Left form column scrolls again in audit/revision mode (`pointer-events: auto` on `.f-c-simple-form-with-atoms__form-scroll`, with `pointer-events: none` re-applied on `.f-c-simple-form-with-atoms__form-container` to keep form fields non-interactive).
 - **friendly_id**: `strip_and_downcase_slug` now only normalizes the slug on new records or when the slug column was explicitly changed. Legacy records with mixed-case slugs are no longer silently downcased on every save, which previously broke `friendly_id` lookups (case-sensitive) on cached client-side URLs after the first save.

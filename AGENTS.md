@@ -47,7 +47,7 @@ After editing any code files, automatically format and lint them using the appro
 
 ## Rails Best Practices
 
-- Use TDD (write tests first)
+- Use TDD for code changes: add or update the focused test first, run it to confirm it fails for the expected reason, implement the smallest change to pass it, then rerun the focused test and relevant verification.
 - Use early returns to reduce nesting
 - Keep methods focused and under ~20 lines
 - Use namespaces for entire functionality (all related models, controllers, components together)
