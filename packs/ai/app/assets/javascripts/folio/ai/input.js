@@ -22,7 +22,7 @@
 
   const registerAiInputController = () => {
     window.Folio.Stimulus.register(CONTROLLER_NAME, class extends window.Stimulus.Controller {
-      static targets = ['input', 'button', 'customHtml', 'undo']
+      static targets = ['input', 'button', 'customHtml', 'undo', 'instructions']
 
       static values = {
         url: String,
@@ -242,9 +242,39 @@
       }
 
       handleHtml (html) {
+        const instructionsState = this.currentInstructionsState()
+
         this.customHtmlTarget.innerHTML = html
+        this.restoreInstructionsState(instructionsState)
         this.element.classList.add(INPUT_OPEN_CLASS)
         this.syncControls()
+      }
+
+      currentInstructionsState () {
+        const instructions = this.instructionsElement
+        if (!instructions) return null
+
+        return {
+          value: instructions.value,
+          focused: document.activeElement === instructions,
+          selectionStart: instructions.selectionStart,
+          selectionEnd: instructions.selectionEnd,
+          selectionDirection: instructions.selectionDirection
+        }
+      }
+
+      restoreInstructionsState (state) {
+        if (!state) return
+
+        const instructions = this.instructionsElement
+        if (!instructions) return
+
+        instructions.value = state.value
+
+        if (state.focused) {
+          instructions.focus()
+          instructions.setSelectionRange(state.selectionStart, state.selectionEnd, state.selectionDirection)
+        }
       }
 
       handleError (error) {
@@ -495,6 +525,10 @@
         if (!this.hasCustomHtmlTarget) return null
 
         return this.customHtmlTarget.querySelector(`.${PANEL_CLASS_NAME}`)
+      }
+
+      get instructionsElement () {
+        return this.hasInstructionsTarget ? this.instructionsTarget : null
       }
 
       get usesCurrentFormSnapshot () {

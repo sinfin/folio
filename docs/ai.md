@@ -581,6 +581,7 @@ bootstrap.
 - stores `meta.request_id` from the loading response
 - waits for a matching `Folio::Ai::TextSuggestionsJob` MessageBus payload
 - replaces the loading component with the final rendered component HTML
+- preserves in-progress instructions textarea edits while replacing panel HTML
 - writes accepted suggestions into the input
 - dispatches `input`, `change`, and `folioConsoleCustomChange` with autosave
   suppressed for accepted suggestions

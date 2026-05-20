@@ -29,6 +29,7 @@ class Folio::Ai::Console::TextSuggestionsComponentTest < Folio::Console::Compone
     assert_selector("[data-f-ai-c-text-suggestions-key-param='1']")
     assert_selector(".f-ai-c-text-suggestions__suggestion-meta", text: "Neutral")
     assert_selector("textarea[data-f-ai-c-text-suggestions-target='instructions']", text: "Shorten it.")
+    assert_selector("textarea[data-f-ai-input-target='instructions']", text: "Shorten it.")
     assert_no_selector("template[data-f-ai-c-text-suggestions-target='loadingSuggestionsTemplate']",
                        visible: :all)
   end
@@ -85,6 +86,7 @@ class Folio::Ai::Console::TextSuggestionsComponentTest < Folio::Console::Compone
                     text: warning)
     assert_selector("[data-action*='f-ai-c-text-suggestions#accept']", text: "Generated text")
     assert_selector("textarea[data-f-ai-c-text-suggestions-target='instructions']", text: "Shorten it.")
+    assert_selector("textarea[data-f-ai-input-target='instructions']", text: "Shorten it.")
   end
 
   test "renders loading state with pseudo suggestions" do
@@ -104,6 +106,7 @@ class Folio::Ai::Console::TextSuggestionsComponentTest < Folio::Console::Compone
     assert_selector(".f-ai-c-text-suggestions__status svg", visible: :hidden)
     assert_no_selector("[data-f-ai-c-text-suggestions-target='suggestion']")
     assert_selector("textarea[data-f-ai-c-text-suggestions-target='instructions']")
+    assert_selector("textarea[data-f-ai-input-target='instructions']")
     assert_no_selector("template[data-f-ai-c-text-suggestions-target='loadingSuggestionsTemplate']",
                        visible: :all)
   end

@@ -84,6 +84,16 @@ button data=stimulus_action(click: "submit")
 a data=stimulus_action({ click: "open" }, { id: item_id })   / action + params
 ```
 
+Prefer Stimulus targets over selectors for controller-owned elements. When an
+element is read or controlled by multiple Stimulus controllers, add a target for
+each relevant controller instead of querying by `querySelector` from another
+controller:
+
+```ruby
+stimulus_merge(stimulus_target("instructions"),
+               stimulus_data(controller: "f-ai-input", target: "instructions"))
+```
+
 When action/target/value/param data is complex enough to wrap, extract it to a
 private component method and keep Slim concise:
 

@@ -66,7 +66,8 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
 
     def instructions_data
       stimulus_merge(stimulus_controller("f-input-autosize", inline: true),
-                     stimulus_target("instructions"))
+                     stimulus_target("instructions"),
+                     stimulus_data(controller: "f-ai-input", target: "instructions"))
     end
 
     def regenerate_data
