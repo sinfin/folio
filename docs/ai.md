@@ -582,12 +582,14 @@ bootstrap.
 - waits for a matching `Folio::Ai::TextSuggestionsJob` MessageBus payload
 - replaces the loading component with the final rendered component HTML
 - writes accepted suggestions into the input
-- dispatches `input`, `change`, and `folioConsoleCustomChange`
+- dispatches `input`, `change`, and `folioConsoleCustomChange` with autosave
+  suppressed for accepted suggestions
 - restores the opening snapshot on undo
 - clears selected-card state when the user manually edits the field
 
-Accepting a suggestion changes only the form field. The record is saved only
-when the editor submits the form.
+Accepting a suggestion changes only the form field. Selecting a suggestion does
+not trigger Console autosave; the record is saved only when the editor submits
+the form.
 
 ### Suggestions component
 

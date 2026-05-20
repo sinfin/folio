@@ -110,7 +110,7 @@
         const text = event.detail && typeof event.detail.text !== 'undefined' ? event.detail.text : ''
         if (!this.input) return
 
-        this.writeInputValue(text)
+        this.writeInputValue(text, { folioAutosave: false })
         this.element.dataset.fAiInputSelectedText = text
         this.element.dataset.fAiInputUndoVisible = 'true'
         if (this.hasUndoTarget) this.undoTarget.hidden = false
@@ -123,7 +123,7 @@
         if (snapshot === null) return
         if (!this.input) return
 
-        this.writeInputValue(snapshot)
+        this.writeInputValue(snapshot, { folioAutosave: false })
         delete this.element.dataset.fAiInputSelectedText
         this.element.dataset.fAiInputUndoVisible = 'false'
         this.hideUndoButton()
@@ -428,13 +428,20 @@
         }
       }
 
-      writeInputValue (value) {
+      writeInputValue (value, { folioAutosave = true } = {}) {
         if (!this.input) return
 
         this.input.value = value
-        this.input.dispatchEvent(new Event('input', { bubbles: true }))
-        this.input.dispatchEvent(new Event('change', { bubbles: true }))
-        this.input.dispatchEvent(new CustomEvent('folioConsoleCustomChange', { bubbles: true }))
+        this.dispatchInputEvent('input', { folioAutosave })
+        this.dispatchInputEvent('change', { folioAutosave })
+        this.dispatchInputEvent('folioConsoleCustomChange', { folioAutosave })
+      }
+
+      dispatchInputEvent (type, { folioAutosave }) {
+        this.input.dispatchEvent(new CustomEvent(type, {
+          bubbles: true,
+          detail: { folioAutosave }
+        }))
       }
 
       dispatchSuggestionStale () {
