@@ -35,5 +35,7 @@ div class=wrap_class
     span.folio-loader.f-newsletter-subscriptions-form__loader
 
   - if submitted
-    .f-newsletter-subscriptions-form__message
+    .f-newsletter-subscriptions-form__message [
+      class=("f-newsletter-subscriptions-form__message--top-left" if options[:message_top_left])
+    ]
       = message

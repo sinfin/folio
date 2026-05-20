@@ -38,11 +38,12 @@ class Folio::NewsletterSubscriptions::FormCell < Folio::ApplicationCell
   def wrap_class
     base = "f-newsletter-subscriptions-form"
     base += " f-newsletter-subscriptions-form--submitted" if submitted
+    base += " f-newsletter-subscriptions-form--in-content" if options[:message_top_left]
     base
   end
 
   def remember_option_keys
-    [:placeholder, :submit_text, :message, :button_class, :input_label]
+    [:placeholder, :submit_text, :message, :button_class, :input_label, :message_top_left]
   end
 
   def input(f)
