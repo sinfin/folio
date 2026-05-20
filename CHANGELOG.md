@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- **Extensible server-rendered alerts**: `Folio::Console::Ui::AlertComponent` now accepts `stimulus_controllers:` (array of extra Stimulus controller identifiers to mount alongside `f-c-ui-alert`) and `data:` (extra data attributes merged onto the root element). `Folio::Console::Ui::FlashComponent` reads the parallel `alert_stimulus_controllers` / `alert_data` keys from the Rails flash hash and forwards them to the rendered alert. Host apps can now attach custom Stimulus controllers (e.g. background-job progress trackers) directly to flashes set by `redirect_to … flash: { … }` without monkey-patching the components.
 - **`Folio::File.default_file_order` scope** — exposes the canonical newest-first ordering (`created_at DESC, id DESC`) used by console file listings and pickers, including a deterministic `id` tiebreaker for stable pagination.
 
 ### Changed

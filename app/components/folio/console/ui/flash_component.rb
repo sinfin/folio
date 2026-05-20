@@ -10,14 +10,21 @@ class Folio::Console::Ui::FlashComponent < Folio::Console::ApplicationComponent
     loader: :loader,
   }
 
+  RESERVED_FLASH_KEYS = %w[timedout autohide alert_stimulus_controllers alert_data].freeze
+
   def initialize(flash:)
-    @autohide = flash.present? && (flash["autohide"] || flash[:autohide]) ? true : false
-    @flash = if flash.present?
-      flash.filter { |key, _value| key != "timedout" && key != "autohide" }
+    flash_hash = flash.present? ? flash : nil
+
+    @autohide = flash_hash && (flash_hash["autohide"] || flash_hash[:autohide]) ? true : false
+    @alert_stimulus_controllers = flash_hash ? Array.wrap(flash_hash["alert_stimulus_controllers"] || flash_hash[:alert_stimulus_controllers]) : []
+    @alert_data = flash_hash ? (flash_hash["alert_data"] || flash_hash[:alert_data] || {}) : {}
+
+    @flash = if flash_hash
+      flash_hash.filter { |key, _value| !RESERVED_FLASH_KEYS.include?(key.to_s) }
     else
       flash
     end
   end
 
-  attr_reader :autohide
+  attr_reader :autohide, :alert_stimulus_controllers, :alert_data
 end

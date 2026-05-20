@@ -34,4 +34,21 @@ class Folio::Console::Ui::FlashComponentTest < Folio::Console::ComponentTest
 
     assert_equal false, component.autohide
   end
+
+  def test_alert_stimulus_controllers_extracted_from_flash
+    component = Folio::Console::Ui::FlashComponent.new(flash: { "notice" => "foo",
+                                                                "alert_stimulus_controllers" => ["x-progress"],
+                                                                "alert_data" => { "x-progress-session-id-value" => "abc" } })
+
+    assert_equal ["x-progress"], component.alert_stimulus_controllers
+    assert_equal({ "x-progress-session-id-value" => "abc" }, component.alert_data)
+    assert_equal({ "notice" => "foo" }, component.instance_variable_get(:@flash))
+  end
+
+  def test_alert_stimulus_controllers_default_empty
+    component = Folio::Console::Ui::FlashComponent.new(flash: { "notice" => "foo" })
+
+    assert_equal [], component.alert_stimulus_controllers
+    assert_equal({}, component.alert_data)
+  end
 end
