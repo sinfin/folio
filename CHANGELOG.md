@@ -2,12 +2,12 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+
 ### Added
+
 - **Console sidebar `:separator` support**: Sites can now include `:separator` in `console_sidebar_prepended_links` (and `before_menu`/`before_site` variants) to insert visual dividers inside custom sidebar sections.
-
-### Added
-
 - **`Folio::File.default_file_order` scope** — exposes the canonical newest-first ordering (`created_at DESC, id DESC`) used by console file listings and pickers, including a deterministic `id` tiebreaker for stable pagination.
+- **MessageBus cross-page continuity**: any page can pass `?folio_mb_last_id=<id>` in its URL and `folio/message_bus.js` will subscribe from exactly that id (no bootstrap drop). Intended for flows that `POST` an action enqueueing a background job and then `redirect_to` another page that needs to receive the job's MessageBus updates — snapshot `window.Folio.MessageBus.lastId` before the redirect and append it as the URL param. The default behavior (no param → `lastId = -2` + bootstrap drop of the first message) is unchanged.
 
 ### Changed
 
