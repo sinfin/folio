@@ -1,7 +1,12 @@
 .bundle/
 .byebug_history
+.DS_Store
 log/*.log
 pkg/
+tmp/.DS_Store
+tmp/ai-screenshots*/
+tmp/ai-upravy/
+tmp/bundler-home-packwerk/
 test/dummy/db/*.sqlite3
 test/dummy/db/*.sqlite3-journal
 test/dummy/log/*.log

@@ -1,0 +1,55 @@
+$f-ai-input-accent: #9637D3 !default
+
+.f-ai-input
+  position: relative
+
+  .form-label
+    max-width: calc(100% - #{px-to-rem(120px)})
+
+  &__controls
+    font-size: $font-size-sm
+    position: absolute
+    top: 0
+    right: 0
+    display: flex
+    gap: px-to-rem(4px)
+
+  &__custom-html
+    width: 100%
+
+  &__button,
+  &__undo
+    align-items: center
+    background: none
+    border: 0
+    cursor: pointer
+    display: flex
+    font-weight: $font-weight-normal
+    font: inherit
+    gap: px-to-rem(4px)
+    line-height: 1
+    min-height: px-to-rem(16px)
+    padding: 0
+    white-space: nowrap
+
+  &__button
+    --folio-loader-foreground: #{$f-ai-input-accent}
+    --folio-loader-foreground-transparent: #{rgba($f-ai-input-accent, 0.2)}
+    color: $f-ai-input-accent
+    position: relative
+
+  &__button-loader
+    right: auto
+    display: none
+
+  &[data-f-ai-input-status-value="initial-loading"] &__button-loader
+    display: block
+
+  &[data-f-ai-input-status-value="initial-loading"] &__button &__icon
+    visibility: hidden
+
+  &__undo &__icon
+    color: $danger
+
+  &[data-f-ai-input-status-value="initial-loading"] &__button
+    cursor: wait

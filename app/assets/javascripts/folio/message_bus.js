@@ -22,21 +22,12 @@ window.MessageBus.start()
 //
 window.MessageBus.callbackInterval = 500
 
-// -2 will recieve last message + all new messages
-//   -> we want the last message to receive last id in case we go offline before first messages arrives
-window.Folio.MessageBus.onlyGetMessageIdForFirstMessage = true
-// disable after 5 seconds in the rare case of no messages in redis
-setTimeout(() => { window.Folio.MessageBus.onlyGetMessageIdForFirstMessage = false }, 5000)
-
-window.Folio.MessageBus.lastId = -2
+// -1 receives new messages only and gets an initial /__status message with
+// the current channel id, which message-bus handles internally.
+window.Folio.MessageBus.lastId = -1
 
 window.Folio.MessageBus.handleMessage = (msg, globalMsgId, msgId) => {
   window.Folio.MessageBus.lastId = msgId
-
-  if (window.Folio.MessageBus.onlyGetMessageIdForFirstMessage) {
-    window.Folio.MessageBus.onlyGetMessageIdForFirstMessage = false
-    return
-  }
 
   const data = JSON.parse(msg)
 

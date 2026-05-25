@@ -12,13 +12,26 @@ Structured agent workflows live in **`.skills/<name>/SKILL.md`** (YAML frontmatt
 
 When a task matches a skill’s description, **read that `SKILL.md` and follow it**. Host applications may use the same `.skills/` layout for their own workflows.
 
+When the user corrects an agent about Folio conventions, check whether the
+guidance belongs in an existing `.skills/*/SKILL.md` file. Prefer the relevant
+skill when the correction applies to a specific workflow. Before editing a
+skill, ask the user whether to update that specific skill with the correction.
+If no existing skill fits, suggest updating this `AGENTS.md` or creating a new
+`.skills/<name>/SKILL.md`.
+
 | Skill | Triggers (examples) |
 |-------|---------------------|
 | **folio-view-component** | Build or change ViewComponents (generator, BEM, Slim/Sass, Stimulus data attrs, tests); frontend in `app/components` |
+| **folio-pack** | Optional pack boundaries and namespaces; files under `packs/<name>`; route mappings to pack-owned controllers/components |
+| **folio-rails-code-structure** | Ruby/Rails code structure: thin model/controller/concern entrypoints, focused classes under `lib/`, avoid helper-method clusters; excludes jobs |
+| **folio-testing** | Ruby/Rails tests, test helpers, stubs/mocks, factories/fixtures, avoid ENV mutation; `test/**`, `packs/**/test/**` |
 | **folio-slim** | Slim template formatting: multi-line attributes, multiple `class` attrs, avoid inline Ruby, template length; `.slim` files |
 | **folio-scss** | SCSS/Sass styling: BEM nesting with `&`, colocated component stylesheets, scoping, don't style child components; `.sass`/`.scss` files |
 | **folio-javascript** | JavaScript conventions: ES6+, StandardJS, `Folio.Api`, flash events, debounce/throttle, DOM APIs; `.js` files |
+| **folio-component-json-api** | `render_component_json` HTML-over-wire APIs: JSON body with string `data` (component HTML), `Folio.Api.apiGet`/`apiPost` and `response.data`, integration tests with `as: :json` |
+| **folio-icons** | Add icons from Figma to `data/icons`, `currentColor` fills/strokes, `bin/icons`, sprite and `folio_icons.yaml`, restart server |
 | **folio-stimulus** | Stimulus controllers: registration, StimulusHelper data attributes, values/targets/actions, `inline: true`; uses **folio-javascript** |
+| **folio-simple-form-inputs** | SimpleForm inputs/extensions: `app/inputs`, overrides/prepends, `register_stimulus`, `input_controls`, `custom_html`, standalone input JS/Sass |
 | **folio-tiptap-node** | Create or edit custom Tiptap block-editor nodes; `rails g folio:tiptap:node`; node structure, icons, groups, paste config; uses **folio-view-component** |
 | **folio-view-component-migration-from-cells** | Replace Trailblazer `*Cell` with `*Component`; `cell(` → `render`; uses **folio-view-component** |
 | **folio-file-editing** | File hygiene: trailing whitespace, single trailing newline, no BOM, LF line endings; applies to every file edit |

@@ -142,7 +142,7 @@ Folio can automatically extract full **EXIF & IPTC** metadata from uploaded imag
 
 **Fill missing metadata:** `rake folio:file:fill_missing_metadata`
 
-📋 **[See full Image Metadata Extraction feature specification →](../features/image_metadata_extraction.md)**
+📋 **[See full Image Metadata Extraction feature specification →](./plans/image_metadata_extraction_plan.md)**
 
 ---
 

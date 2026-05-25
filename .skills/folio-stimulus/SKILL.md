@@ -53,6 +53,13 @@ See `AGENTS.md` (View Components) for the full BEM derivation rules.
 
 `Folio::StimulusHelper` (`app/helpers/folio/stimulus_helper.rb`) is included in `Folio::ApplicationComponent` and descendants.
 
+Use these helpers for Stimulus-owned data attributes in component templates.
+Avoid hand-writing controller-specific attributes such as `data-action`,
+`data-*-target`, `data-*-value`, `data-*-param`, `data-*-class`, or
+`data-*-outlet` when `stimulus_controller`, `stimulus_data`,
+`stimulus_action`, `stimulus_target`, `stimulus_classes`, or
+`stimulus_outlets` can express them.
+
 ### Root element — `stimulus_controller`
 
 Call on the **root element's** `data` hash. This sets `@stimulus_controller_name` for child helpers.
@@ -75,6 +82,23 @@ After the root sets `@stimulus_controller_name`, children use short-form helpers
 input data=stimulus_target("input")
 button data=stimulus_action(click: "submit")
 a data=stimulus_action({ click: "open" }, { id: item_id })   / action + params
+```
+
+Prefer Stimulus targets over selectors for controller-owned elements. When an
+element is read or controlled by multiple Stimulus controllers, add a target for
+each relevant controller instead of querying by `querySelector` from another
+controller:
+
+```ruby
+stimulus_merge(stimulus_target("instructions"),
+               stimulus_data(controller: "f-ai-input", target: "instructions"))
+```
+
+When action/target/value/param data is complex enough to wrap, extract it to a
+private component method and keep Slim concise:
+
+```slim
+button data=suggestion_data(suggestion)
 ```
 
 ### Multiple controllers — `stimulus_merge_data`
@@ -109,14 +133,14 @@ All utility helpers use `inline: true` internally — they are designed to be me
 
 ## Events
 
-- **Prefer `data-action`** over `addEventListener` / `removeEventListener`. Stimulus actions are declarative, automatically cleaned up on `disconnect`, and self-documenting in the markup.
+- **Prefer `stimulus_action` in markup** over `addEventListener` / `removeEventListener`. Stimulus actions are declarative, automatically cleaned up on `disconnect`, and self-documenting in the markup.
 - **Global events** (window resize, scroll, keydown, etc.) — use `@window` or `@document` descriptors instead of manual listeners:
 
   ```slim
   div data=stimulus_action("resize@window": "onResize", "keydown@window": "onKeydown")
   ```
 
-- **Controller-to-controller communication** — use `this.dispatch('eventName', { detail })` which bubbles by default. Parent controllers listen via `data-action="child-controller:event-name->parent#handler"`.
+- **Controller-to-controller communication** — use `this.dispatch('eventName', { detail })` which bubbles by default. Parent controllers listen via `stimulus_action("child-controller:event-name": "handler")`.
 - Use `connect()` / `disconnect()` for setup/teardown — no global `$(document).on`.
 
 ## Pitfalls
