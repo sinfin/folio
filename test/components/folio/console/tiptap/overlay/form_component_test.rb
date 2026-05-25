@@ -5,7 +5,7 @@ require "test_helper"
 class Folio::Console::Tiptap::Overlay::FormComponentTest < Folio::Console::ComponentTest
   class NestedCard < Folio::Tiptap::Node
     tiptap_node nested: true,
-                 structure: {
+                structure: {
                    title: :string,
                    content: :text,
                  }

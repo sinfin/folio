@@ -5,7 +5,7 @@ require "test_helper"
 class Folio::Tiptap::ModelTest < ActiveSupport::TestCase
   class NestedCard < Folio::Tiptap::Node
     tiptap_node nested: true,
-                 structure: {
+                structure: {
                    title: :string,
                    cover: :image,
                    reports: :documents,

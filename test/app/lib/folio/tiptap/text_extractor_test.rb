@@ -9,7 +9,7 @@ class Folio::Tiptap::TextExtractorTest < ActiveSupport::TestCase
 
   class NestedCard < Folio::Tiptap::Node
     tiptap_node nested: true,
-                 structure: {
+                structure: {
                    title: :string,
                    text: :text,
                    content: :rich_text,

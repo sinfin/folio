@@ -27,7 +27,7 @@ class Folio::Tiptap::NodeBuilderTest < ActiveSupport::TestCase
 
   class NestedCard < Folio::Tiptap::Node
     tiptap_node nested: true,
-                 structure: {
+                structure: {
                    title: :string,
                    content: :rich_text,
                    cover: :image,

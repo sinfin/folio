@@ -11,7 +11,7 @@ class Folio::Tiptap::ConfigTest < ActiveSupport::TestCase
 
   class NestedNode < Folio::Tiptap::Node
     tiptap_node nested: true,
-                 structure: {
+                structure: {
                    title: :string,
                  }
   end

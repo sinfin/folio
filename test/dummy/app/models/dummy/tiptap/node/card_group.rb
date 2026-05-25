@@ -5,7 +5,7 @@ class Dummy::Tiptap::Node::CardGroup < Folio::Tiptap::Node
     BACKGROUNDS = %w[white blue].freeze
 
     tiptap_node nested: true,
-                 structure: {
+                structure: {
                    title: :string,
                    text: :text,
                    content: :rich_text,

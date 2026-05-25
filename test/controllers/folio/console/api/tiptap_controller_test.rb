@@ -16,7 +16,7 @@ class Folio::Console::Api::TiptapControllerTest < Folio::Console::BaseController
 
   class NestedCard < Folio::Tiptap::Node
     tiptap_node nested: true,
-                 structure: {
+                structure: {
                    title: :string,
                  }
 
