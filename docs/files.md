@@ -53,6 +53,38 @@ Manual editing of file or placement models is only recommended for advanced use 
 
 ### Audio / Video Media
 
+#### Video Playback Providers
+
+`Folio::File::Video` exposes a provider-neutral playback contract so host applications do not need to read provider-specific `remote_services_data` directly.
+
+Public playback methods:
+
+| Method | Purpose |
+|--------|---------|
+| `video_playback_provider_key` | Active provider key, e.g. `direct_file`, `cloudflare_stream`, or `cra_media_cloud` |
+| `video_playback_ready?` | Whether the video is playable on the public site |
+| `video_playback_sources` | HTML5 player sources (`src`, `type`, optional `label`) |
+| `video_playback_embed_url` | Provider iframe/player URL when available |
+| `video_playback_poster_url` | Poster/thumbnail URL |
+| `video_processing_state` | Normalized state: `pending`, `processing`, `ready`, `failed` |
+| `video_processing_error_message` | Safe processing error text for UI |
+| `video_seo_metadata` | Provider-aware SEO metadata for JSON-LD and video sitemaps |
+
+Default configuration:
+
+```ruby
+Rails.application.config.folio_files_video_default_processing_provider = :direct_file
+Rails.application.config.folio_files_video_playback_provider_classes = {
+  "direct_file" => "Folio::Video::Providers::DirectFile",
+  "cloudflare_stream" => "Folio::Video::Providers::CloudflareStream",
+  "cra_media_cloud" => "Folio::Video::Providers::CraMediaCloud",
+}
+```
+
+The direct-file provider is intended as a simple fallback and must not expose a permanent public URL of the original uploaded file in SEO metadata or public serializers. External processing providers should receive source files through short-lived server-generated URLs and expose only their stable playback outputs.
+
+Cloudflare Stream can be enabled by including `Folio::CloudflareStream::FileProcessing` in the host application's video override and configuring `folio_cloudflare_stream_account_id` and `folio_cloudflare_stream_api_token`.
+
 #### Video Subtitles
 
 Folio supports automatic subtitle generation for video files using AI transcription services. Subtitles are stored in VTT format and can be manually edited in the admin console.
