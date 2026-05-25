@@ -2,6 +2,21 @@
 cs:
   activemodel:
     attributes:
+      dummy/tiptap/node/card_group:
+        cards: Karty
+        intro: Úvod
+        title: Titulek
+      dummy/tiptap/node/card_group/card:
+        background: Pozadí
+        background/blue: Modré
+        background/white: Bílé
+        button_url_json: Tlačítko
+        content: Formátovaný text
+        cover: Obrázek
+        text: Text
+        title: Titulek
       dummy/tiptap/node/embed:
     models:
+      dummy/tiptap/node/card_group: Skupina karet
+      dummy/tiptap/node/card_group/card: Vnořená karta
       dummy/tiptap/node/embed: Embed
