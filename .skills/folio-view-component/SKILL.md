@@ -69,6 +69,9 @@ Full conventions in **[`.skills/folio-stimulus/SKILL.md`](../folio-stimulus/SKIL
 - `StimulusHelper` is included via `Folio::ApplicationComponent` (and app `ApplicationComponent` if it inherits Folio).
 - Root `data` hash: **`stimulus_controller`** (sets `@stimulus_controller_name`); **`stimulus_merge_data`** for multiple controllers.
 - Children: **`stimulus_target`** / **`stimulus_action`** — only after the root sets `@stimulus_controller_name`. **Do not** use `inline: true` on the primary controller.
+- Keep Slim concise: complex `data` hashes, Stimulus params, and multi-action
+  helper calls belong in private component methods such as
+  `data=suggestion_data(suggestion)`.
 - JS file beside the component; register with **`window.Folio.Stimulus.register(...)`**; wire into the asset manifest.
 
 ## Rendering
