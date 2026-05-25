@@ -26,6 +26,10 @@ class Folio::Devise::ResourceFormCell < Folio::Devise::ApplicationCell
     end
   end
 
+  def subscribed_to_newsletter_label
+    model[:subscribed_to_newsletter_label].presence || t(".subscribed_to_newsletter_label")
+  end
+
   def show_address?(f)
     return false if model[:hide_address]
     return true if f.object.primary_address.blank?
