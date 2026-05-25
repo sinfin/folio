@@ -47,13 +47,13 @@
 
     = render(:_bottom)
 
-    - if show_subscribed_to_newsletter?(f)
-      = f.input :subscribed_to_newsletter,
-                label: subscribed_to_newsletter_label
-
     - @f = f
     = render(:_disclaimer)
     - @f = nil
+
+    - if show_subscribed_to_newsletter?(f)
+      = f.input :subscribed_to_newsletter,
+                label: subscribed_to_newsletter_label
 
     = submit_button(f, t('.submit'))
 
