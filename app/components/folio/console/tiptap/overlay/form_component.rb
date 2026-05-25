@@ -19,7 +19,7 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
 
     def render_input(f:, key:, attr_config:)
       case attr_config[:type]
-      when :string, :text, :integer, :url_json, :rich_text
+      when :string, :text, :integer, :url_json, :rich_text, :color
         send("render_input_#{attr_config[:type]}", f:, key:, attr_config:)
       when :folio_attachment
         if attr_config[:has_many]
@@ -108,6 +108,12 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
     def render_input_rich_text(f:, key:, attr_config:)
       f.input key,
               as: :tiptap,
+              hint: hint_for(attr_config)
+    end
+
+    def render_input_color(f:, key:, attr_config:)
+      f.input key,
+              as: :color,
               hint: hint_for(attr_config)
     end
 

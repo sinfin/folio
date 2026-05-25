@@ -25,6 +25,8 @@ class Folio::Tiptap::Node
 
         if attr_type && attr_type.in?(%i[rich_text url_json]) && value.is_a?(Hash)
           data[key.to_s] = value.to_json
+        elsif attr_type == :color
+          data[key.to_s] = value if Folio::Tiptap::Color.valid?(value)
         else
           data[key.to_s] = value
         end
