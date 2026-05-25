@@ -42,70 +42,106 @@ class Folio::Tiptap::Content
   end
 
   private
-    def sanitize_href(string)
-      Folio::HtmlSanitization::Sanitizer.sanitize_href(string)
+    def sanitize_folio_tiptap_node(data)
+      {
+        "type" => data["type"],
+        "attrs" => sanitize_tiptap_node_attrs(data["attrs"]),
+      }
     end
 
-    def sanitize_folio_tiptap_node(data)
-      @embed_keys ||= {}
+    def sanitize_tiptap_node_attrs(attrs, expected_class: nil)
+      return traverse_and_scrub(attrs) unless attrs.is_a?(Hash)
 
-      if @embed_keys[data["attrs"]["type"]].nil?
-        node_klass = data["attrs"]["type"].safe_constantize
+      node_klass = attrs["type"].safe_constantize
+      return traverse_and_scrub(attrs) if expected_class && node_klass != expected_class
 
-        if node_klass && node_klass < Folio::Tiptap::Node
-          node_klass_embed_keys = node_klass.structure.filter_map do |key, config|
-            if config[:type] == :embed
-              key.to_s
-            end
-          end
+      {
+        "type" => attrs["type"],
+        "version" => attrs["version"].is_a?(Integer) ? attrs["version"] : 1,
+        "data" => sanitize_tiptap_node_data(attrs["data"], node_klass),
+      }
+    end
 
-          @embed_keys[data["attrs"]["type"]] = node_klass_embed_keys.presence
-        end
+    def sanitize_tiptap_node_data(data, node_klass)
+      return {} unless data.is_a?(Hash)
 
-        @embed_keys[data["attrs"]["type"]] ||= false
+      data.to_h do |key, value|
+        [key, sanitize_tiptap_node_value(value, tiptap_node_attr_config(node_klass, key))]
       end
+    end
 
-      if @embed_keys[data["attrs"]["type"]]
-        mapped_data = data["attrs"]["data"].map do |key, value|
-          if @embed_keys[data["attrs"]["type"]].include?(key)
-            [key, Folio::Embed.sanitize_value(value)]
-          else
-            [key, traverse_and_scrub(value)]
-          end
-        end
-
-        {
-          "type" => data["type"],
-          "attrs" => {
-            "type" => data["attrs"]["type"],
-            "version" => data["version"].is_a?(Integer) ? data["version"] : 1,
-            "data" => mapped_data.to_h,
-          }
-        }
+    def sanitize_tiptap_node_value(value, config)
+      case config&.dig(:type)
+      when :embed
+        Folio::Embed.sanitize_value(value)
+      when :url_json
+        sanitize_url_json_value(value)
+      when :rich_text
+        sanitize_rich_text_value(value)
+      when :nested_nodes
+        sanitize_nested_nodes_value(value, config[:node_class])
       else
-        # regular scrub
-        data.transform_values { |v| traverse_and_scrub(v) }
+        traverse_and_scrub(value)
       end
+    end
+
+    def sanitize_nested_nodes_value(value, node_class)
+      return traverse_and_scrub(value) unless value.is_a?(Array)
+
+      value.map do |attrs|
+        sanitize_tiptap_node_attrs(attrs, expected_class: node_class)
+      end
+    end
+
+    def sanitize_rich_text_value(value)
+      return traverse_and_scrub(value) unless value.is_a?(String)
+
+      parsed = JSON.parse(value) rescue nil
+      return traverse_and_scrub(value) unless parsed
+
+      traverse_and_scrub(parsed).to_json
+    end
+
+    def sanitize_url_json_value(value)
+      from_string = value.is_a?(String)
+      parsed = if from_string
+        JSON.parse(value) rescue nil
+      elsif value.is_a?(Hash)
+        value
+      end
+
+      return traverse_and_scrub(value) unless parsed.is_a?(Hash)
+
+      sanitized = parsed.slice(*Folio::Tiptap::ALLOWED_URL_JSON_KEYS).transform_values do |url_value|
+        traverse_and_scrub(url_value)
+      end
+
+      sanitized["href"] = sanitize_href(sanitized["href"]) if sanitized["href"]
+      sanitized.compact!
+
+      from_string ? sanitized.to_json : sanitized
     end
 
     def sanitize_link_hash(data)
-      mapped = data.map do |k, v|
-        if k == "attrs"
-          mapped_link = v.map do |link_key, link_value|
-            if link_key == "href"
-              [link_key, sanitize_href(link_value)]
-            else
-              [link_key, traverse_and_scrub(link_value)]
-            end
-          end
-
-          [k, mapped_link.to_h]
+      data.to_h do |key, value|
+        if key == "attrs"
+          [key, sanitize_link_attrs(value)]
         else
-          [k, traverse_and_scrub(v)]
+          [key, traverse_and_scrub(value)]
         end
       end
+    end
 
-      mapped.to_h
+    def sanitize_link_attrs(attrs)
+      return traverse_and_scrub(attrs) unless attrs.is_a?(Hash)
+
+      attrs.to_h do |key, value|
+        if key == "href"
+          [key, sanitize_href(value)]
+        else
+          [key, traverse_and_scrub(value)]
+        end
+      end
     end
 
     def traverse_and_scrub(data)
@@ -114,12 +150,11 @@ class Folio::Tiptap::Content
           return sanitize_folio_tiptap_node(data)
         end
 
-        # Handle link marks with href sanitization
         if data["type"] == "link" && data["attrs"].is_a?(Hash) && data["attrs"]["href"]
           return sanitize_link_hash(data)
         end
 
-        data.transform_values { |v| traverse_and_scrub(v) }
+        data.transform_values { |value| traverse_and_scrub(value) }
       elsif data.is_a?(Array)
         data.map { |item| traverse_and_scrub(item) }
       elsif data.is_a?(String)
@@ -137,5 +172,15 @@ class Folio::Tiptap::Content
       end
 
       scrubbed
+    end
+
+    def sanitize_href(string)
+      Folio::HtmlSanitization::Sanitizer.sanitize_href(string)
+    end
+
+    def tiptap_node_attr_config(node_klass, key)
+      return unless node_klass && node_klass < Folio::Tiptap::Node
+
+      node_klass.structure[key.to_sym]
     end
 end

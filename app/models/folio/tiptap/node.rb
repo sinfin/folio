@@ -61,6 +61,12 @@ class Folio::Tiptap::Node
     1
   end
 
+  def nested_node_instances
+    self.class.structure.flat_map do |key, config|
+      config[:type] == :nested_nodes ? public_send(key) : []
+    end
+  end
+
   def read_attribute_for_validation(attribute)
     return nil if attribute.to_s.include?("[")
 
@@ -168,7 +174,9 @@ class Folio::Tiptap::Node
     elsif content.is_a?(Hash)
       if content["type"] == "folioTiptapNode"
         begin
-          nodes << new_from_attributes(content["attrs"])
+          node = new_from_attributes(content["attrs"])
+          nodes << node
+          nodes.concat(node.nested_node_instances)
         rescue ArgumentError => e
           Rails.logger.error("Folio::Tiptap::Node.instances_from_tiptap_content: #{e.message}")
         end
