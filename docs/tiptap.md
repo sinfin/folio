@@ -194,11 +194,112 @@ All compact definitions are internally converted to hash format:
 - `{ type: :rich_text }`: JSON-stored rich text content
 - `{ type: :url_json }`: URL with metadata
 - `{ type: :embed }`: Embed data with automatic normalization and validation
+- `{ type: :nested_nodes, node_class: MyNestedNode }`: Ordered, repeatable nested Folio Tiptap node attrs
 - `{ type: :collection, collection: [...] }`: Collection to pick from
 - `{ type: :folio_attachment, file_type: "Folio::File::Image", has_many: false, ... }`: File attachments
 - `{ type: :relation, class_name: "Model", has_many: false }`: Model relationships
 
 **Note**: The compact syntax is still fully supported and recommended for most use cases. The hash format is primarily used internally and for advanced customization.
+
+### Nested Nodes
+
+Nested nodes let a single top-level `folioTiptapNode` own an ordered list of repeatable child structures. They are useful for card groups, timelines, feature lists, and similar "molecule" blocks where editors configure the whole group in one overlay.
+
+Nested nodes are Rails-side attrs, not ProseMirror child nodes. The editor still stores one atomic top-level `folioTiptapNode`; nested rows are serialized inside the parent node's `attrs.data`.
+
+```rb
+class MyApp::Tiptap::Node::Cards < Folio::Tiptap::Node
+  class Card < Folio::Tiptap::Node
+    tiptap_node nested: true,
+                structure: {
+                   title: :string,
+                   text: :rich_text,
+                   cover: :image,
+                 }
+
+    validates :title,
+              presence: true
+  end
+
+  LAYOUTS = %w[one_per_row two_per_row three_per_row]
+
+  tiptap_node structure: {
+    layout: LAYOUTS,
+    cards: {
+      type: :nested_nodes,
+      node_class: Card,
+    },
+  }
+end
+```
+
+The `nested_nodes` config is intentionally strict. Only this shape is supported:
+
+```rb
+cards: {
+  type: :nested_nodes,
+  node_class: Card,
+}
+```
+
+The `node_class` must inherit from `Folio::Tiptap::Node`, declare `tiptap_node nested: true`, and define its own structure. A nested node class cannot declare another `type: :nested_nodes` field, so deep nesting is rejected.
+
+Nested classes are not top-level editor blocks:
+
+- they are excluded from automatic Tiptap node discovery
+- explicit top-level registration raises an error
+- they do not need a standalone ViewComponent
+
+Stored JSON keeps nested nodes as attrs inside parent `data`:
+
+```json
+{
+  "type": "folioTiptapNode",
+  "attrs": {
+    "version": 1,
+    "type": "MyApp::Tiptap::Node::Cards",
+    "data": {
+      "layout": "two_per_row",
+      "cards": [
+        {
+          "version": 1,
+          "type": "MyApp::Tiptap::Node::Cards::Card",
+          "data": {
+            "title": "First card",
+            "text": "{\"type\":\"doc\",\"content\":[]}",
+            "cover_placement_attributes": {
+              "file_id": 123,
+              "alt": "Image alt"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+```
+
+In the parent component, nested rows are normal node objects:
+
+```rb
+@node.cards.each do |card|
+  card.title
+  card.text
+  card.cover
+  card.cover_placement
+end
+```
+
+The console overlay renders `type: :nested_nodes` as repeatable nested rows with add, remove, duplicate, and move up/down controls. Submitted params use stable UI keys and nested node attrs:
+
+```text
+tiptap_node_attrs[data][cards][item_0][type]
+tiptap_node_attrs[data][cards][item_0][version]
+tiptap_node_attrs[data][cards][item_0][data][title]
+tiptap_node_attrs[data][cards][item_0][data][cover_placement_attributes][file_id]
+```
+
+Validation runs on the parent and each nested node. Field-level errors remain on the nested object for form rendering, and the parent also aggregates paths such as `cards[0].title` for summaries and debugging.
 
 #### Example: Both Syntaxes
 
