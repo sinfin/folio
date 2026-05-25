@@ -39,6 +39,8 @@ class Folio::Tiptap::NodeBuilder
           setup_structure_for_integer(key:)
         when :embed
           setup_structure_for_embed(key:)
+        when :nested_nodes
+          setup_structure_for_nested_nodes(key:, attr_config:)
         else
           fail ArgumentError, "Unsupported type #{attr_config[:type]} in tiptap_node definition"
         end
@@ -196,6 +198,47 @@ class Folio::Tiptap::NodeBuilder
 
       # Track embed keys for later sanitization config setup
       @embed_keys << key
+    end
+
+    def setup_structure_for_nested_nodes(key:, attr_config:)
+      if @klass.nested?
+        fail ArgumentError, "Nested Tiptap nodes cannot declare nested_nodes"
+      end
+
+      node_class = nested_node_class(key:, attr_config:)
+      attr_config[:node_class] = node_class
+
+      @klass.attribute key, default: -> { [] }
+
+      @klass.define_method "#{key}=" do |value|
+        raw_items = if value.blank?
+          []
+        elsif value.is_a?(ActionController::Parameters)
+          value.to_unsafe_h.values
+        elsif value.is_a?(Hash)
+          value.values
+        elsif value.is_a?(Array)
+          value
+        else
+          fail ArgumentError, "Expected a Hash or Array for #{key}, got #{value.class.name}"
+        end
+
+        nodes = raw_items.filter_map do |raw_item|
+          raw_attrs = raw_item.is_a?(ActionController::Parameters) ? raw_item.to_unsafe_h : raw_item
+
+          if raw_attrs.blank?
+            nil
+          elsif raw_attrs.is_a?(Hash)
+            Folio::Tiptap::Node.new_from_attributes(raw_attrs,
+                                                    allow_nested: true,
+                                                    expected_class: node_class)
+          else
+            fail ArgumentError, "Expected nested node attributes for #{key}, got #{raw_attrs.class.name}"
+          end
+        end
+
+        super(nodes)
+      end
     end
 
     def setup_structure_for_folio_attachment(key:, attr_config:)
@@ -559,6 +602,29 @@ class Folio::Tiptap::NodeBuilder
       end
 
       result
+    end
+
+    def nested_node_class(key:, attr_config:)
+      unless attr_config.keys.sort == %i[node_class type]
+        fail ArgumentError, "Expected nested_nodes config for #{key} to be exactly { type: :nested_nodes, node_class: ... }"
+      end
+
+      node_class = attr_config[:node_class]
+      node_class = node_class.safe_constantize if node_class.is_a?(String)
+
+      unless node_class.is_a?(Class) && node_class < Folio::Tiptap::Node
+        fail ArgumentError, "Expected nested_nodes node_class for #{key} to inherit from Folio::Tiptap::Node"
+      end
+
+      unless node_class.nested?
+        fail ArgumentError, "Expected nested_nodes node_class for #{key} to declare tiptap_node nested: true"
+      end
+
+      unless node_class.respond_to?(:structure)
+        fail ArgumentError, "Expected nested_nodes node_class for #{key} to define structure"
+      end
+
+      node_class
     end
 
     # Structure of allowed keys and their value types in tiptap_config hash, hashes cannot include keys not listed here.

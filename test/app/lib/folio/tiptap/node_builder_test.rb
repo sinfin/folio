@@ -25,6 +25,28 @@ class Folio::Tiptap::NodeBuilderTest < ActiveSupport::TestCase
               presence: true
   end
 
+  class NestedCard < Folio::Tiptap::Node
+    tiptap_node nested: true,
+                 structure: {
+                   title: :string,
+                   content: :rich_text,
+                   cover: :image,
+                 }
+
+    validates :title,
+              presence: true
+  end
+
+  class CardGroup < Folio::Tiptap::Node
+    tiptap_node structure: {
+      title: :string,
+      cards: {
+        type: :nested_nodes,
+        node_class: NestedCard,
+      },
+    }
+  end
+
   test "convert_structure_to_hashes" do
     assert_equal({ type: :string }, Node.structure[:title])
 
@@ -76,6 +98,72 @@ class Folio::Tiptap::NodeBuilderTest < ActiveSupport::TestCase
     }, Node.structure[:related_pages])
 
     assert_equal({ type: :embed }, Node.structure[:folio_embed_data])
+  end
+
+  test "nested node declaration marks class as nested" do
+    assert NestedCard.nested?
+    assert_not Node.nested?
+  end
+
+  test "nested_nodes structure validates and normalizes node_class" do
+    assert_equal({
+      type: :nested_nodes,
+      node_class: NestedCard,
+    }, CardGroup.structure[:cards])
+  end
+
+  test "nested_nodes rejects invalid node_class" do
+    assert_raises(ArgumentError) do
+      Class.new(Folio::Tiptap::Node) do
+        tiptap_node structure: {
+          cards: {
+            type: :nested_nodes,
+            node_class: String,
+          },
+        }
+      end
+    end
+  end
+
+  test "nested_nodes rejects extra config keys" do
+    assert_raises(ArgumentError) do
+      Class.new(Folio::Tiptap::Node) do
+        tiptap_node structure: {
+          cards: {
+            type: :nested_nodes,
+            node_class: NestedCard,
+            default: [],
+          },
+        }
+      end
+    end
+  end
+
+  test "nested_nodes rejects non nested tiptap node_class" do
+    assert_raises(ArgumentError) do
+      Class.new(Folio::Tiptap::Node) do
+        tiptap_node structure: {
+          cards: {
+            type: :nested_nodes,
+            node_class: Node,
+          },
+        }
+      end
+    end
+  end
+
+  test "nested node classes cannot declare nested_nodes" do
+    assert_raises(ArgumentError) do
+      Class.new(Folio::Tiptap::Node) do
+        tiptap_node nested: true,
+                     structure: {
+                       cards: {
+                         type: :nested_nodes,
+                         node_class: NestedCard,
+                       },
+                     }
+      end
+    end
   end
 
   test "boolean_from_collection uses boolean type and stores true/false not strings" do
