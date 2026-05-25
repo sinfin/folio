@@ -145,6 +145,7 @@
 //= require folio/console/single_file_select/single_file_select
 //= require folio/console/site_user_links/fields_component
 //= require folio/console/state/state
+//= require folio/console/tiptap/overlay/form/nested_nodes_component
 //= require folio/console/tiptap/overlay/form_component
 //= require folio/console/tiptap/overlay_component
 //= require folio/console/tiptap/simple_form_wrap/autosave_info_component
