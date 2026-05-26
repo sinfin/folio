@@ -23,4 +23,33 @@ class Folio::SimpleFormOverridesTest < ActionView::TestCase
       assert_equal "povinné pro publikování", page.find(".form-group._required_for_publishing .form-label__required")["data-f-tooltip-title-value"]
     end
   end
+
+  test "character counter string input marks wrapper" do
+    html = simple_form_for "", method: :get, url: "/" do |f|
+      concat(f.input :title, character_counter: true, wrapper_html: { class: "custom-form-group" })
+    end
+
+    page = Capybara.string(html)
+    wrapper = page.find(".form-group._title")
+    input = wrapper.find("input[name='title']")
+
+    assert_includes wrapper["class"].split, "custom-form-group"
+    assert_includes wrapper["class"].split, "form-group--with-character-counter"
+    assert_includes input["data-controller"].split, "f-input-character-counter"
+    assert_equal "f-input-character-counter#onInput", input["data-action"]
+  end
+
+  test "character counter text input marks wrapper and max value" do
+    html = simple_form_for "", method: :get, url: "/" do |f|
+      concat(f.input :intro, as: :text, character_counter: 160)
+    end
+
+    page = Capybara.string(html)
+    wrapper = page.find(".form-group._intro")
+    input = wrapper.find("textarea[name='intro']")
+
+    assert_includes wrapper["class"].split, "form-group--with-character-counter"
+    assert_includes input["data-controller"].split, "f-input-character-counter"
+    assert_equal "160", input["data-f-input-character-counter-max-value"]
+  end
 end

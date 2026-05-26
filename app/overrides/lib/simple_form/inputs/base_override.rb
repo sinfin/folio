@@ -75,6 +75,17 @@ SimpleForm::Inputs::Base.class_eval do
     end
   end
 
+  def register_character_counter
+    register_stimulus("f-input-character-counter",
+                      values: options[:character_counter].is_a?(Numeric) ? { max: options[:character_counter] } : {})
+    input_html_options["data-action"] = "f-input-character-counter#onInput"
+
+    options[:wrapper_html] ||= {}
+    options[:wrapper_html][:class] = Array(options[:wrapper_html][:class])
+    options[:wrapper_html][:class] << "form-group--with-character-counter"
+    options[:wrapper_html][:class].uniq!
+  end
+
   def required_class
     if required_field?
       if options[:required].is_a?(String) || options[:required].is_a?(Symbol)
