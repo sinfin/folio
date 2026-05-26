@@ -41,6 +41,7 @@ class Folio::CloudflareStream::CreateMediaJobTest < ActiveJob::TestCase
 
     video.reload
     assert_equal "cloudflare_stream", video.remote_services_data["service"]
+    assert_equal false, video.remote_services_data["require_signed_urls"]
     assert_equal "stream-1", video.remote_services_data["uid"]
     assert_equal false, video.remote_services_data["ready_to_stream"]
     assert_equal "processing", video.remote_services_data["processing_state"]
@@ -72,6 +73,7 @@ class Folio::CloudflareStream::CreateMediaJobTest < ActiveJob::TestCase
 
     assert_equal ["fullmoonzine.cz", "www.fullmoonzine.cz"], api.copy_args[:allowed_origins]
     assert_equal true, api.copy_args[:require_signed_urls]
+    assert_equal true, video.reload.remote_services_data["require_signed_urls"]
   ensure
     Rails.application.config.folio_cloudflare_stream_allowed_origins = original_allowed_origins
     Rails.application.config.folio_cloudflare_stream_require_signed_urls = original_require_signed_urls

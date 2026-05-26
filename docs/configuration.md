@@ -33,6 +33,7 @@ This chapter lists the most important configuration options for the Folio Rails 
 | `config.folio_cloudflare_stream_allowed_origins` | `ENV["CLOUDFLARE_STREAM_ALLOWED_ORIGINS"]` | Comma-separated Stream embed origins for new videos |
 | `config.folio_cloudflare_stream_require_signed_urls` | `ENV["CLOUDFLARE_STREAM_REQUIRE_SIGNED_URLS"]` | Whether new Stream videos require signed playback URLs |
 | `config.folio_cloudflare_stream_source_url_expires_in` | `2.hours` | Expiration window for short-lived source URLs passed to Stream |
+| `config.folio_cloudflare_stream_signed_url_token_expires_in` | `ENV["CLOUDFLARE_STREAM_SIGNED_URL_TOKEN_EXPIRES_IN"]` or `1.hour` | Expiration window for Stream signed playback tokens |
 | `config.folio_cloudflare_stream_poll_interval` | `30.seconds` | Delay between Stream processing status checks |
 | `config.folio_cloudflare_stream_max_poll_attempts` | `240` | Maximum Stream polling attempts before marking processing failed |
 
@@ -66,6 +67,7 @@ CLOUDFLARE_STREAM_CUSTOMER_SUBDOMAIN=customer-code.cloudflarestream.com
 CLOUDFLARE_STREAM_API_TOKEN=find-me-in-vault
 CLOUDFLARE_STREAM_ALLOWED_ORIGINS=www.example.com,example.com
 CLOUDFLARE_STREAM_REQUIRE_SIGNED_URLS=false
+CLOUDFLARE_STREAM_SIGNED_URL_TOKEN_EXPIRES_IN=3600
 ```
 
 The provider requires the account id and API token. The token should be scoped to
@@ -77,7 +79,9 @@ playback URLs.
 to Stream as `allowedOrigins` for new videos. Keep
 `CLOUDFLARE_STREAM_REQUIRE_SIGNED_URLS=false` for public SEO videos; host
 applications can override the per-video hook for protected content that should
-require signed playback.
+require signed playback. Signed playback URLs are minted through the Stream
+token API and use `CLOUDFLARE_STREAM_SIGNED_URL_TOKEN_EXPIRES_IN` as their
+token lifetime.
 
 ---
 

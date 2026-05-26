@@ -93,11 +93,12 @@ CLOUDFLARE_STREAM_CUSTOMER_SUBDOMAIN=customer-code.cloudflarestream.com
 CLOUDFLARE_STREAM_API_TOKEN=find-me-in-vault
 CLOUDFLARE_STREAM_ALLOWED_ORIGINS=www.example.com,example.com
 CLOUDFLARE_STREAM_REQUIRE_SIGNED_URLS=false
+CLOUDFLARE_STREAM_SIGNED_URL_TOKEN_EXPIRES_IN=3600
 ```
 
 Only `CLOUDFLARE_STREAM_ACCOUNT_ID` and `CLOUDFLARE_STREAM_API_TOKEN` are required by the provider. `CLOUDFLARE_STREAM_CUSTOMER_SUBDOMAIN` is optional operational context for manually checking playback URLs; Cloudflare Stream API responses already include the customer subdomain in `thumbnail`, `preview`, HLS and DASH URLs.
 
-`CLOUDFLARE_STREAM_ALLOWED_ORIGINS` restricts where new Stream videos can be embedded. Leave it blank to allow any origin. `CLOUDFLARE_STREAM_REQUIRE_SIGNED_URLS` defaults to `false`; public SEO videos should stay unsigned, while host applications can opt protected videos into signed playback by overriding the per-file hook.
+`CLOUDFLARE_STREAM_ALLOWED_ORIGINS` restricts where new Stream videos can be embedded. Leave it blank to allow any origin. `CLOUDFLARE_STREAM_REQUIRE_SIGNED_URLS` defaults to `false`; public SEO videos should stay unsigned, while host applications can opt protected videos into signed playback by overriding the per-file hook. Signed playback tokens use `CLOUDFLARE_STREAM_SIGNED_URL_TOKEN_EXPIRES_IN` as their lifetime.
 
 The API token must be scoped to the target account with Stream Write permission. The provider uploads via Cloudflare Stream `/stream/copy` using the `input` field and stores only stable provider playback outputs. The source URL must be publicly routable and support both `HTTP HEAD` and `HTTP GET` range requests. It must not expose a permanent public URL of the original Folio storage file.
 

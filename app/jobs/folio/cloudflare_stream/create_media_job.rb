@@ -8,6 +8,8 @@ class Folio::CloudflareStream::CreateMediaJob < Folio::ApplicationJob
   unique :until_and_while_executing
 
   def perform(media_file)
+    require_signed_urls = media_file.cloudflare_stream_require_signed_urls?
+
     response = Folio::CloudflareStream::Api.new.copy(
       url: media_file.cloudflare_stream_source_url,
       allowed_origins: media_file.cloudflare_stream_allowed_origins,
@@ -15,11 +17,12 @@ class Folio::CloudflareStream::CreateMediaJob < Folio::ApplicationJob
         name: media_file.file_name.to_s,
         folio_file_id: media_file.id.to_s,
       },
-      require_signed_urls: media_file.cloudflare_stream_require_signed_urls?,
+      require_signed_urls:,
     )
 
     updates = remote_services_data_from(response)
     updates["processing_state"] = updates["ready_to_stream"] ? "ready" : "processing"
+    updates["require_signed_urls"] = require_signed_urls
     media_file.update!(remote_services_data: media_file.remote_services_data.merge(updates))
 
     if updates["ready_to_stream"]

@@ -9,7 +9,13 @@ module Folio::File::Video::Playback
   end
 
   def video_playback_provider
-    video_playback_provider_class_for(video_playback_provider_key).new(self)
+    key = video_playback_provider_key
+    if @video_playback_provider.blank? || @video_playback_provider_key != key
+      @video_playback_provider_key = key
+      @video_playback_provider = video_playback_provider_class_for(key).new(self)
+    end
+
+    @video_playback_provider
   end
 
   def video_playback_ready?

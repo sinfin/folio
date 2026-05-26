@@ -17,6 +17,7 @@ class Folio::CloudflareStream::CheckProgressJob < Folio::ApplicationJob
       "preview" => response["preview"],
       "duration" => response["duration"],
       "iframe_url" => iframe_url_from(response),
+      "require_signed_urls" => response["requireSignedURLs"],
       "error_message" => error_message_from(response),
     }.compact
   end

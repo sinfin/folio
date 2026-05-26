@@ -157,6 +157,7 @@ module Folio
     config.folio_cloudflare_stream_allowed_origins = ENV["CLOUDFLARE_STREAM_ALLOWED_ORIGINS"].to_s.split(",").map(&:strip).compact_blank
     config.folio_cloudflare_stream_require_signed_urls = ActiveModel::Type::Boolean.new.cast(ENV["CLOUDFLARE_STREAM_REQUIRE_SIGNED_URLS"]) || false
     config.folio_cloudflare_stream_source_url_expires_in = 2.hours
+    config.folio_cloudflare_stream_signed_url_token_expires_in = (ENV["CLOUDFLARE_STREAM_SIGNED_URL_TOKEN_EXPIRES_IN"].presence || 1.hour.to_i).to_i.seconds
     config.folio_cloudflare_stream_poll_interval = 30.seconds
     config.folio_cloudflare_stream_max_poll_attempts = 240
 
