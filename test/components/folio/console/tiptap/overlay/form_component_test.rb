@@ -58,6 +58,19 @@ class Folio::Console::Tiptap::Overlay::FormComponentTest < Folio::Console::Compo
     end
   end
 
+  test "renders prebuilt nested node inputs for blank collection" do
+    with_controller_class(Folio::Console::PagesController) do
+      with_request_url "/console/pages/new" do
+        render_inline(Folio::Console::Tiptap::Overlay::FormComponent.new(node: CardGroup.new))
+
+        assert_selector("fieldset .f-nested-fields")
+        assert_selector('[name="tiptap_node_attrs[data][cards][item_0][type]"][value="Folio::Console::Tiptap::Overlay::FormComponentTest::NestedCard"]',
+                        visible: :all)
+        assert_selector('[name="tiptap_node_attrs[data][cards][item_0][data][title]"]')
+      end
+    end
+  end
+
   test "renders nested node field errors" do
     with_controller_class(Folio::Console::PagesController) do
       with_request_url "/console/pages/new" do

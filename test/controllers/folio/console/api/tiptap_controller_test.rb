@@ -98,6 +98,18 @@ class Folio::Console::Api::TiptapControllerTest < Folio::Console::BaseController
     assert page.has_css?(".f-c-tiptap-overlay-form")
   end
 
+  test "edit_node prebuilds blank nested node row" do
+    post edit_node_console_api_tiptap_path(format: :json), params: {
+      tiptap_node_attrs: { type: "Folio::Console::Api::TiptapControllerTest::CardGroup" },
+    }
+    assert_response :ok
+
+    page = Capybara.string(response.parsed_body["data"])
+    assert page.has_css?('[name="tiptap_node_attrs[data][cards][item_0][type]"][value="Folio::Console::Api::TiptapControllerTest::NestedCard"]',
+                         visible: :all)
+    assert page.has_css?('[name="tiptap_node_attrs[data][cards][item_0][data][title]"]')
+  end
+
   test "save_node" do
     post save_node_console_api_tiptap_path(format: :json), params: {
       tiptap_node_attrs: {
@@ -135,6 +147,23 @@ class Folio::Console::Api::TiptapControllerTest < Folio::Console::BaseController
         "data" => { "title" => "foo" },
       },
     } }, hash["data"])
+  end
+
+  test "save_node requires at least one nested node" do
+    post save_node_console_api_tiptap_path(format: :json), params: {
+      tiptap_node_attrs: {
+        type: "Folio::Console::Api::TiptapControllerTest::CardGroup",
+      },
+    }
+    assert_response :ok
+
+    hash = response.parsed_body
+    assert_nil hash["meta"]
+
+    page = Capybara.string(hash["data"])
+    assert page.has_css?('.f-c-ui-validation-box__button[data-error-field="cards"]',
+                         visible: :all)
+    assert page.has_css?('[name="tiptap_node_attrs[data][cards][item_0][data][title]"]')
   end
 
   test "save_node with nested nodes" do

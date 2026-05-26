@@ -205,8 +205,10 @@ class Folio::Tiptap::NodeBuilder
         fail ArgumentError, "Nested Tiptap nodes cannot declare nested_nodes"
       end
 
+      validate_nested_nodes_config!(key:, attr_config:)
       node_class = nested_node_class(key:, attr_config:)
       attr_config[:node_class] = node_class
+      attr_config[:prebuild] = attr_config.fetch(:prebuild, true)
 
       @klass.attribute key, default: -> { [] }
 
@@ -604,11 +606,22 @@ class Folio::Tiptap::NodeBuilder
       result
     end
 
-    def nested_node_class(key:, attr_config:)
-      unless attr_config.keys.sort == %i[node_class type]
-        fail ArgumentError, "Expected nested_nodes config for #{key} to be exactly { type: :nested_nodes, node_class: ... }"
+    def validate_nested_nodes_config!(key:, attr_config:)
+      required_keys = %i[type node_class]
+      allowed_keys = required_keys + %i[prebuild]
+      invalid_keys = attr_config.keys - allowed_keys
+      missing_keys = required_keys - attr_config.keys
+
+      if invalid_keys.present? || missing_keys.present?
+        fail ArgumentError, "Expected nested_nodes config for #{key} to include only :type, :node_class and optional :prebuild"
       end
 
+      if attr_config.key?(:prebuild) && ![true, false].include?(attr_config[:prebuild])
+        fail ArgumentError, "Expected nested_nodes prebuild for #{key} to be true or false"
+      end
+    end
+
+    def nested_node_class(key:, attr_config:)
       node_class = attr_config[:node_class]
       node_class = node_class.safe_constantize if node_class.is_a?(String)
 

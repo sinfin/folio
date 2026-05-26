@@ -197,7 +197,14 @@ class Folio::Tiptap::Node
       self.class.structure.each do |key, config|
         next unless config[:type] == :nested_nodes
 
-        Array(public_send(key)).each_with_index do |nested_node, index|
+        nested_nodes = Array(public_send(key))
+
+        if nested_nodes.empty?
+          errors.add(key, :blank)
+          next
+        end
+
+        nested_nodes.each_with_index do |nested_node, index|
           next if nested_node.valid?
 
           nested_node.errors.each do |error|

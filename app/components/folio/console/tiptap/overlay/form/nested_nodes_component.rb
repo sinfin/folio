@@ -20,6 +20,7 @@ class Folio::Console::Tiptap::Overlay::Form::NestedNodesComponent < Folio::Conso
     def nested_fields_component
       Folio::NestedFieldsComponent.new(f: @f,
                                        key: @key,
+                                       collection: nested_nodes_collection,
                                        add: add_button,
                                        class_name: "f-c-tiptap-overlay-form-nested-nodes__nested-fields",
                                        virtual: {
@@ -66,6 +67,17 @@ class Folio::Console::Tiptap::Overlay::Form::NestedNodesComponent < Folio::Conso
 
     def node_class
       @attr_config[:node_class]
+    end
+
+    def nested_nodes_collection
+      collection = @f.object.public_send(@key)
+      return collection if collection.present? || !prebuild?
+
+      [node_class.new]
+    end
+
+    def prebuild?
+      @attr_config.fetch(:prebuild, true)
     end
 
     def label

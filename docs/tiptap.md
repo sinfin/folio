@@ -239,10 +239,13 @@ The `nested_nodes` config is intentionally strict. Only this shape is supported:
 cards: {
   type: :nested_nodes,
   node_class: Card,
+  prebuild: false, # optional, defaults to true
 }
 ```
 
 The `node_class` must inherit from `Folio::Tiptap::Node`, declare `tiptap_node nested: true`, and define its own structure. A nested node class cannot declare another `type: :nested_nodes` field, so deep nesting is rejected.
+
+When `prebuild` is omitted, the console overlay renders one blank nested row for an empty collection. Use `prebuild: false` only when the editor should explicitly click Add before entering the first row.
 
 Nested classes are not top-level editor blocks:
 
@@ -299,7 +302,7 @@ tiptap_node_attrs[data][cards][item_0][data][title]
 tiptap_node_attrs[data][cards][item_0][data][cover_placement_attributes][file_id]
 ```
 
-Validation runs on the parent and each nested node. Field-level errors remain on the nested object for form rendering, and the parent also aggregates paths such as `cards[0].title` for summaries and debugging.
+Validation requires every `type: :nested_nodes` field to contain at least one nested node. Validation also runs on each nested node. Field-level errors remain on the nested object for form rendering, and the parent also aggregates paths such as `cards[0].title` for summaries and debugging.
 
 #### Example: Both Syntaxes
 

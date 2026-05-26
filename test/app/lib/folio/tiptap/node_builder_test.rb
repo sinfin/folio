@@ -109,7 +109,38 @@ class Folio::Tiptap::NodeBuilderTest < ActiveSupport::TestCase
     assert_equal({
       type: :nested_nodes,
       node_class: NestedCard,
+      prebuild: true,
     }, CardGroup.structure[:cards])
+  end
+
+  test "nested_nodes accepts prebuild false" do
+    klass = Class.new(Folio::Tiptap::Node) do
+      tiptap_node structure: {
+        cards: {
+          type: :nested_nodes,
+          node_class: NestedCard,
+          prebuild: false,
+        },
+      }
+    end
+
+    assert_equal false, klass.structure[:cards][:prebuild]
+  end
+
+  test "nested_nodes rejects non boolean prebuild" do
+    error = assert_raises(ArgumentError) do
+      Class.new(Folio::Tiptap::Node) do
+        tiptap_node structure: {
+          cards: {
+            type: :nested_nodes,
+            node_class: NestedCard,
+            prebuild: "no",
+          },
+        }
+      end
+    end
+
+    assert_match(/prebuild/, error.message)
   end
 
   test "nested_nodes rejects invalid node_class" do
@@ -164,6 +195,29 @@ class Folio::Tiptap::NodeBuilderTest < ActiveSupport::TestCase
                      }
       end
     end
+  end
+
+  test "nested_nodes validation requires at least one nested node" do
+    node = CardGroup.new(title: "Cards")
+
+    assert_not node.valid?
+    assert_includes node.errors.attribute_names, :cards
+  end
+
+  test "nested_nodes validation aggregates nested node errors" do
+    node = CardGroup.new(cards: [
+      {
+        "type" => "Folio::Tiptap::NodeBuilderTest::NestedCard",
+        "version" => 1,
+        "data" => {
+          "title" => "",
+        },
+      },
+    ])
+
+    assert_not node.valid?
+    assert_includes node.errors.attribute_names, :"cards[0].title"
+    assert_not_includes node.errors.attribute_names, :cards
   end
 
   test "boolean_from_collection uses boolean type and stores true/false not strings" do
