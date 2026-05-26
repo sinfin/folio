@@ -101,6 +101,21 @@ Only `CLOUDFLARE_STREAM_ACCOUNT_ID` and `CLOUDFLARE_STREAM_API_TOKEN` are requir
 
 The API token must be scoped to the target account with Stream Write permission. The provider uploads via Cloudflare Stream `/stream/copy` using the `input` field and stores only stable provider playback outputs. The source URL must be publicly routable and support both `HTTP HEAD` and `HTTP GET` range requests. It must not expose a permanent public URL of the original Folio storage file.
 
+Cloudflare Stream provider features:
+
+| Feature | Status | Notes |
+|---------|--------|-------|
+| Upload from URL | Supported | Uses `/stream/copy` with `input` set to a short-lived source URL. |
+| Processing polling | Supported | Stores normalized processing state and schedules follow-up checks until ready, failed, or timed out. |
+| Playback metadata | Supported | Stores Stream `uid`, HLS/DASH playback URLs, thumbnail, preview, and iframe player URL. |
+| Public player contract | Supported | Exposes provider data through `video_playback_*` and `video_seo_metadata`, not through direct reads of provider JSON. |
+| Embed origin restrictions | Supported | Sends configured `allowedOrigins` for newly created Stream videos. |
+| Signed playback URLs | Supported per file | Defaults to unsigned; host applications can override `cloudflare_stream_require_signed_urls?` for protected videos. |
+| Remote deletion | Supported | Deletes the Stream video when a processed file with a Stream `uid` is destroyed. |
+| Browser direct creator uploads | Not implemented | Keep using Folio storage as the canonical source. Direct creator uploads would require a separate browser-to-Stream flow. |
+
+Provider switching is non-destructive. Existing videos keep their stored provider playback metadata until the host application explicitly reprocesses or migrates that file.
+
 #### Video Subtitles
 
 Folio supports automatic subtitle generation for video files using AI transcription services. Subtitles are stored in VTT format and can be manually edited in the admin console.
