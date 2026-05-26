@@ -74,6 +74,36 @@ class Folio::CloudflareStream::ApiTest < ActiveSupport::TestCase
     assert_equal "video-1", result["uid"]
   end
 
+  test "signed_url_token posts token restrictions and returns token" do
+    expires_at = Time.zone.parse("2026-05-26 12:00:00")
+    stub = stub_request(:post, "https://api.cloudflare.com/client/v4/accounts/account-1/stream/video-1/token")
+           .with(
+             headers: {
+               "Authorization" => "Bearer token-1",
+               "Content-Type" => "application/json",
+             },
+             body: {
+               exp: expires_at.to_i,
+             }.to_json,
+           )
+           .to_return(
+             status: 200,
+             body: {
+               success: true,
+               result: {
+                 token: "signed-token-1",
+               },
+             }.to_json,
+             headers: { "Content-Type" => "application/json" },
+           )
+
+    api = Folio::CloudflareStream::Api.new(account_id: "account-1", api_token: "token-1")
+    token = api.signed_url_token("video-1", expires_at:)
+
+    assert_requested stub
+    assert_equal "signed-token-1", token
+  end
+
   test "raises readable error on failed response" do
     stub_request(:get, "https://api.cloudflare.com/client/v4/accounts/account-1/stream/video-1")
       .to_return(

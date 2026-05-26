@@ -36,6 +36,14 @@ class Folio::CloudflareStream::Api
     request(:delete, "stream/#{identifier}")
   end
 
+  def signed_url_token(identifier, expires_at:)
+    response = request(:post, "stream/#{identifier}/token", body: {
+      exp: expires_at.to_i,
+    })
+
+    response.fetch("token")
+  end
+
   private
     def request(method, path, body: nil)
       uri = URI.parse("#{@base_url}/accounts/#{@account_id}/#{path}")
