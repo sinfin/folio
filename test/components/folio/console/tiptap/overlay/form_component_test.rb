@@ -43,7 +43,7 @@ class Folio::Console::Tiptap::Overlay::FormComponentTest < Folio::Console::Compo
 
         render_inline(Folio::Console::Tiptap::Overlay::FormComponent.new(node:))
 
-        assert_selector('fieldset[data-nested-node-key="cards"]')
+        assert_selector("fieldset .f-nested-fields")
         assert_selector('[name="tiptap_node_attrs[data][cards][item_0][type]"][value="Folio::Console::Tiptap::Overlay::FormComponentTest::NestedCard"]',
                         visible: :all)
         assert_selector('[name="tiptap_node_attrs[data][cards][item_0][version]"][value="1"]',
@@ -51,8 +51,9 @@ class Folio::Console::Tiptap::Overlay::FormComponentTest < Folio::Console::Compo
         assert_selector('[name="tiptap_node_attrs[data][cards][item_0][data][title]"][value="First card"]')
         assert_selector('textarea[name="tiptap_node_attrs[data][cards][item_0][data][content]"]',
                         text: "Body")
-        assert_selector('button[data-action*="f-c-tiptap-overlay-form-nested-nodes#addNestedNode"]')
-        assert_selector('template[data-nested-node-key="cards"]', visible: :all)
+        assert_selector('.f-nested-fields__control--duplicate[data-action*="onDuplicateClick"]')
+        assert_selector(".f-nested-fields__template", visible: :all)
+        assert_includes(rendered_content, 'name="tiptap_node_attrs[data][cards][f-nested-fields-template-cards][data][title]"')
       end
     end
   end

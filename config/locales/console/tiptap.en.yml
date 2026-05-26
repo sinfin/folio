@@ -35,7 +35,7 @@ en:
               move_down: Move down
               move_up: Move up
               remove: Remove
-              title: "%{model} #%{number}"
+              title: "%{model}"
 
           form_component:
             submit: Done

@@ -1,10 +1,6 @@
-fieldset.f-c-tiptap-overlay-form-nested-nodes.form-group data=data
+fieldset.f-c-tiptap-overlay-form-nested-nodes.form-group
   .f-c-tiptap-overlay-form-nested-nodes__header
     legend.f-c-tiptap-overlay-form-nested-nodes__label = label
 
-    = add_button
-
-  .f-c-tiptap-overlay-form-nested-nodes__items data=stimulus_target("items")
-    = safe_join(nested_node_items)
-
-  = nested_node_template
+  = render(nested_fields_component) do |nested_fields|
+    = nested_node_item(nested_fields)

@@ -35,7 +35,7 @@ cs:
               move_down: Posunout dolů
               move_up: Posunout nahoru
               remove: Odebrat
-              title: "%{model} #%{number}"
+              title: "%{model}"
 
           form_component:
             submit: Hotovo
