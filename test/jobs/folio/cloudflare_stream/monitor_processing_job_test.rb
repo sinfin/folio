@@ -4,7 +4,7 @@ require "test_helper"
 
 class Folio::CloudflareStream::MonitorProcessingJobTest < ActiveJob::TestCase
   test "schedules progress checks for stale processing Stream videos" do
-    video = create_video(
+    create_video(
       "uid" => "stream-1",
       "processing_state" => "processing",
       "last_progress_check_at" => 10.minutes.ago.iso8601,
