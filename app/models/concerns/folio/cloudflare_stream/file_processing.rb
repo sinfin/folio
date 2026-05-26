@@ -25,6 +25,14 @@ module Folio::CloudflareStream::FileProcessing
     Folio::S3.url_rewrite(url)
   end
 
+  def cloudflare_stream_allowed_origins
+    Rails.application.config.folio_cloudflare_stream_allowed_origins
+  end
+
+  def cloudflare_stream_require_signed_urls?
+    Rails.application.config.folio_cloudflare_stream_require_signed_urls
+  end
+
   def destroy_attached_file
     return if remote_services_data["uid"].blank?
 
