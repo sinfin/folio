@@ -194,7 +194,7 @@ All compact definitions are internally converted to hash format:
 - `{ type: :rich_text }`: JSON-stored rich text content
 - `{ type: :url_json }`: URL with metadata
 - `{ type: :embed }`: Embed data with automatic normalization and validation
-- `{ type: :nested_nodes, node_class: MyNestedNode }`: Ordered, repeatable nested Folio Tiptap node attrs
+- `{ type: :nested_nodes, node_class: MyNestedNode, prebuild: false }`: Ordered, repeatable nested Folio Tiptap node attrs. `prebuild` is optional and defaults to `true`.
 - `{ type: :collection, collection: [...] }`: Collection to pick from
 - `{ type: :folio_attachment, file_type: "Folio::File::Image", has_many: false, ... }`: File attachments
 - `{ type: :relation, class_name: "Model", has_many: false }`: Model relationships
@@ -303,6 +303,12 @@ tiptap_node_attrs[data][cards][item_0][data][cover_placement_attributes][file_id
 ```
 
 Validation requires every `type: :nested_nodes` field to contain at least one nested node. Validation also runs on each nested node. Field-level errors remain on the nested object for form rendering, and the parent also aggregates paths such as `cards[0].title` for summaries and debugging.
+
+Nested nodes participate in the same model-level processing as top-level custom nodes:
+
+- sanitization follows the declared nested node structure, including `:rich_text`, `:url_json`, and `:embed` fields
+- `Folio::Tiptap.extract_text` includes textual attributes from nested nodes
+- `Folio::Tiptap::Node.instances_from_tiptap_content` returns both top-level nodes and nested node instances, so nested file attachments are included in Tiptap placement tracking
 
 #### Example: Both Syntaxes
 
@@ -544,10 +550,21 @@ node.assign_attributes_from_param_attrs({
     url_data: {                         # URL JSON filtered to allowed keys
       href: "https://example.com",
       title: "Link Title"
+    },
+    cards: {                            # Form params use stable UI keys
+      item_0: {
+        type: "MyApp::Tiptap::Node::Cards::Card",
+        version: 1,
+        data: {
+          title: "Nested title"
+        }
+      }
     }
   }
 })
 ```
+
+Nested node params may be a stable-keyed hash, as rendered by the console overlay, or an array. In both cases they are assigned to the node as an ordered array and serialized back to `attrs.data.cards` as an array.
 
 The method handles:
 - **Type safety**: Validates the node class exists and inherits from `Folio::Tiptap::Node`
@@ -555,6 +572,7 @@ The method handles:
 - **Type casting**: Converts string IDs to integers, parses JSON strings
 - **File attachments**: Handles placement attributes for file relationships
 - **URL validation**: Filters URL JSON to only allowed keys and/or parses JSON strings
+- **Nested nodes**: Accepts stable-keyed hash params or arrays, instantiates the declared nested `node_class`, and rejects nested node classes as top-level node types
 
 ### Paste Configuration
 
