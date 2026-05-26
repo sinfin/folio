@@ -160,6 +160,7 @@ module Folio
     config.folio_cloudflare_stream_signed_url_token_expires_in = (ENV["CLOUDFLARE_STREAM_SIGNED_URL_TOKEN_EXPIRES_IN"].presence || 1.hour.to_i).to_i.seconds
     config.folio_cloudflare_stream_poll_interval = 30.seconds
     config.folio_cloudflare_stream_max_poll_attempts = 240
+    config.folio_cloudflare_stream_monitor_stale_after = (ENV["CLOUDFLARE_STREAM_MONITOR_STALE_AFTER"].presence || 5.minutes.to_i).to_i.seconds
 
     config.folio_component_generator_parent_component_class_name_proc = -> (class_name) do
       if class_name.starts_with?("Folio::Console::")

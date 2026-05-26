@@ -94,11 +94,12 @@ CLOUDFLARE_STREAM_API_TOKEN=find-me-in-vault
 CLOUDFLARE_STREAM_ALLOWED_ORIGINS=www.example.com,example.com
 CLOUDFLARE_STREAM_REQUIRE_SIGNED_URLS=false
 CLOUDFLARE_STREAM_SIGNED_URL_TOKEN_EXPIRES_IN=3600
+CLOUDFLARE_STREAM_MONITOR_STALE_AFTER=300
 ```
 
 Only `CLOUDFLARE_STREAM_ACCOUNT_ID` and `CLOUDFLARE_STREAM_API_TOKEN` are required by the provider. `CLOUDFLARE_STREAM_CUSTOMER_SUBDOMAIN` is optional operational context for manually checking playback URLs; Cloudflare Stream API responses already include the customer subdomain in `thumbnail`, `preview`, HLS and DASH URLs.
 
-`CLOUDFLARE_STREAM_ALLOWED_ORIGINS` restricts where new Stream videos can be embedded. Leave it blank to allow any origin. `CLOUDFLARE_STREAM_REQUIRE_SIGNED_URLS` defaults to `false`; public SEO videos should stay unsigned, while host applications can opt protected videos into signed playback by overriding the per-file hook. Signed playback tokens use `CLOUDFLARE_STREAM_SIGNED_URL_TOKEN_EXPIRES_IN` as their lifetime.
+`CLOUDFLARE_STREAM_ALLOWED_ORIGINS` restricts where new Stream videos can be embedded. Leave it blank to allow any origin. `CLOUDFLARE_STREAM_REQUIRE_SIGNED_URLS` defaults to `false`; public SEO videos should stay unsigned, while host applications can opt protected videos into signed playback by overriding the per-file hook. Signed playback tokens use `CLOUDFLARE_STREAM_SIGNED_URL_TOKEN_EXPIRES_IN` as their lifetime. `CLOUDFLARE_STREAM_MONITOR_STALE_AFTER` controls the optional monitor backstop for lost progress polling jobs.
 
 The API token must be scoped to the target account with Stream Write permission. The provider uploads via Cloudflare Stream `/stream/copy` using the `input` field and stores only stable provider playback outputs. The source URL must be publicly routable and support both `HTTP HEAD` and `HTTP GET` range requests. It must not expose a permanent public URL of the original Folio storage file.
 
@@ -107,7 +108,8 @@ Cloudflare Stream provider features:
 | Feature | Status | Notes |
 |---------|--------|-------|
 | Upload from URL | Supported | Uses `/stream/copy` with `input` set to a short-lived source URL. |
-| Processing polling | Supported | Stores normalized processing state and schedules follow-up checks until ready, failed, or timed out. |
+| Processing polling | Supported | Stores normalized processing state, records the last progress check time, and schedules follow-up checks until ready, failed, or timed out. |
+| Processing monitor | Supported | Optional `Folio::CloudflareStream::MonitorProcessingJob` backstop re-enqueues stale progress checks from host application cron. |
 | Playback metadata | Supported | Stores Stream `uid`, HLS/DASH playback URLs, thumbnail, preview, and iframe player URL. |
 | Public player contract | Supported | Exposes provider data through `video_playback_*` and `video_seo_metadata`, not through direct reads of provider JSON. |
 | Embed origin restrictions | Supported | Sends configured `allowedOrigins` for newly created Stream videos. |

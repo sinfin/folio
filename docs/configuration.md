@@ -36,6 +36,7 @@ This chapter lists the most important configuration options for the Folio Rails 
 | `config.folio_cloudflare_stream_signed_url_token_expires_in` | `ENV["CLOUDFLARE_STREAM_SIGNED_URL_TOKEN_EXPIRES_IN"]` or `1.hour` | Expiration window for Stream signed playback tokens |
 | `config.folio_cloudflare_stream_poll_interval` | `30.seconds` | Delay between Stream processing status checks |
 | `config.folio_cloudflare_stream_max_poll_attempts` | `240` | Maximum Stream polling attempts before marking processing failed |
+| `config.folio_cloudflare_stream_monitor_stale_after` | `ENV["CLOUDFLARE_STREAM_MONITOR_STALE_AFTER"]` or `5.minutes` | Age after which the monitor cron re-schedules a lost Stream progress check |
 
 *This is only a subset—see `lib/folio/engine.rb` for the full list.*
 
@@ -68,6 +69,7 @@ CLOUDFLARE_STREAM_API_TOKEN=find-me-in-vault
 CLOUDFLARE_STREAM_ALLOWED_ORIGINS=www.example.com,example.com
 CLOUDFLARE_STREAM_REQUIRE_SIGNED_URLS=false
 CLOUDFLARE_STREAM_SIGNED_URL_TOKEN_EXPIRES_IN=3600
+CLOUDFLARE_STREAM_MONITOR_STALE_AFTER=300
 ```
 
 The provider requires the account id and API token. The token should be scoped to
@@ -82,6 +84,11 @@ applications can override the per-video hook for protected content that should
 require signed playback. Signed playback URLs are minted through the Stream
 token API and use `CLOUDFLARE_STREAM_SIGNED_URL_TOKEN_EXPIRES_IN` as their
 token lifetime.
+
+If the host application schedules `Folio::CloudflareStream::MonitorProcessingJob`,
+`CLOUDFLARE_STREAM_MONITOR_STALE_AFTER` controls how old the last progress check
+must be before Folio treats the polling chain as lost and enqueues a new
+`CheckProgressJob`.
 
 ---
 

@@ -55,6 +55,25 @@ class Folio::CloudflareStream::CheckProgressJobTest < ActiveJob::TestCase
     assert_equal "processing", video.reload.remote_services_data["processing_state"]
   end
 
+  test "stores last progress check time when video is still processing" do
+    video = build_video
+    checked_at = Time.zone.parse("2026-05-26 10:00:00")
+
+    api = RecordingApi.new({
+      "uid" => "stream-1",
+      "readyToStream" => false,
+      "status" => { "state" => "downloading" },
+    })
+
+    travel_to checked_at do
+      Folio::CloudflareStream::Api.stub(:new, api) do
+        Folio::CloudflareStream::CheckProgressJob.perform_now(video, encoding_generation: 123)
+      end
+    end
+
+    assert_equal checked_at.iso8601, video.reload.remote_services_data["last_progress_check_at"]
+  end
+
   test "marks video failed when Cloudflare reports error" do
     video = build_video
 
