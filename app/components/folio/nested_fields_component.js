@@ -56,6 +56,8 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
     this.fieldsWrapTarget.appendChild(field)
     this.redoPositions()
     this.dispatchRequiredEvents('added', { field })
+
+    this.focusAndScrollIntoView(field)
   }
 
   dispatchRequiredEvents (name, data = {}) {
@@ -167,6 +169,20 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
     fields.after(clone)
     this.redoPositions()
     this.dispatchRequiredEvents('duplicated', { field: clone, sourceField: fields })
+
+    this.focusAndScrollIntoView(clone)
+  }
+
+  focusAndScrollIntoView (target) {
+    window.setTimeout(() => {
+      const input = target.querySelector('.form-control')
+
+      if (input) {
+        input.focus()
+      }
+
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }, 0)
   }
 
   copyFormValues (source, clone) {

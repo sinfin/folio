@@ -28,15 +28,6 @@ en:
             outdated_continue: Discard changes and continue with the current version
 
         overlay:
-          form:
-            nested_nodes_component:
-              add: Add %{model}
-              duplicate: Duplicate
-              move_down: Move down
-              move_up: Move up
-              remove: Remove
-              title: "%{model}"
-
           form_component:
             submit: Done
 

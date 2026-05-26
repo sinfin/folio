@@ -9,6 +9,7 @@ div[
   ]
 
   .f-nested-fields__fields-wrap[
+    class=@fields_wrap_class_name
     data=stimulus_data(target: 'fieldsWrap', action: { sortupdate: 'onSortUpdate' })
   ]
     - if virtual?

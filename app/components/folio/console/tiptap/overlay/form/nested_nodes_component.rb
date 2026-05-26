@@ -9,12 +9,10 @@ class Folio::Console::Tiptap::Overlay::Form::NestedNodesComponent < Folio::Conso
 
   private
     def add_button
-      render(Folio::Console::Ui::ButtonComponent.new(
-        icon: :plus,
-        label: t(".add", model: node_class.model_name.human),
-        variant: :success,
-        size: :sm,
-      ))
+      render(Folio::Console::Ui::ButtonComponent.new(icon: :plus,
+                                                     label: t("folio.console.actions.add"),
+                                                     class_name: "f-c-tiptap-overlay-form-nested-nodes__add-button",
+                                                     variant: :success))
     end
 
     def nested_fields_component
@@ -23,6 +21,7 @@ class Folio::Console::Tiptap::Overlay::Form::NestedNodesComponent < Folio::Conso
                                        collection: nested_nodes_collection,
                                        add: add_button,
                                        class_name: "f-c-tiptap-overlay-form-nested-nodes__nested-fields",
+                                       fields_wrap_class_name: "f-c-tiptap-overlay-form-nested-nodes__nested-fields-fields-wrap",
                                        virtual: {
                                          new_object: node_class.new,
                                          fields_key: :data,
@@ -48,7 +47,7 @@ class Folio::Console::Tiptap::Overlay::Form::NestedNodesComponent < Folio::Conso
     def nested_node_item_header(nested_node)
       content_tag(:div, class: "f-c-tiptap-overlay-form-nested-nodes__item-header") do
         content_tag(:h4,
-                    t(".title", model: nested_node.class.model_name.human),
+                    nested_node.class.model_name.human,
                     class: "f-c-tiptap-overlay-form-nested-nodes__item-title")
       end
     end

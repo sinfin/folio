@@ -13,6 +13,7 @@ class Folio::NestedFieldsComponent < Folio::ApplicationComponent
                  position: true,
                  fully_draggable: false,
                  class_name: nil,
+                 fields_wrap_class_name: nil,
                  application_namespace: nil,
                  add_icon: nil,
                  add_label: nil,
@@ -30,6 +31,7 @@ class Folio::NestedFieldsComponent < Folio::ApplicationComponent
     @position = position
     @fully_draggable = fully_draggable
     @class_name = class_name
+    @fields_wrap_class_name = fields_wrap_class_name
     @application_namespace = application_namespace
     @add_icon = add_icon
     @add_label = add_label
@@ -227,7 +229,7 @@ class Folio::NestedFieldsComponent < Folio::ApplicationComponent
       return unless @duplicate
 
       content_tag(:div,
-                  folio_icon(:content_copy, height: 24),
+                  folio_icon(:content_copy, height: 24, class_name: "f-nested-fields__duplicate-icon"),
                   class: "f-nested-fields__control f-nested-fields__control--duplicate",
                   data: stimulus_action(click: "onDuplicateClick"))
     end

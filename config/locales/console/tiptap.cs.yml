@@ -28,15 +28,6 @@ cs:
             outdated_continue: Zahodit změny a pokračovat v aktuální verzi
 
         overlay:
-          form:
-            nested_nodes_component:
-              add: Přidat %{model}
-              duplicate: Duplikovat
-              move_down: Posunout dolů
-              move_up: Posunout nahoru
-              remove: Odebrat
-              title: "%{model}"
-
           form_component:
             submit: Hotovo
 
