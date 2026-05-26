@@ -142,6 +142,7 @@ module Folio::Console::ReactHelper
                                 order_scope: :ordered,
                                 sortable: true,
                                 required: nil,
+                                label: nil,
                                 menu_placement: :bottom)
     class_name = "folio-react-wrap folio-react-wrap--ordered-multiselect"
 
@@ -201,7 +202,11 @@ module Folio::Console::ReactHelper
     end
 
     content_tag(:div, class: form_group_class_name) do
-      concat(f.label(relation_name, required: required))
+      unless label == false
+        label_text = label == true ? nil : label
+        concat(f.label(relation_name, label_text, required: required))
+      end
+
       concat(
         content_tag(
           :div,
