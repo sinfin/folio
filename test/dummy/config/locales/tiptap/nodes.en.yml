@@ -18,5 +18,5 @@ en:
       dummy/tiptap/node/embed:
     models:
       dummy/tiptap/node/card_group: Card group
-      dummy/tiptap/node/card_group/card: Nested card
+      dummy/tiptap/node/card_group/card: Card
       dummy/tiptap/node/embed: Embed

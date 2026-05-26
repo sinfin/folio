@@ -18,5 +18,5 @@ cs:
       dummy/tiptap/node/embed:
     models:
       dummy/tiptap/node/card_group: Skupina karet
-      dummy/tiptap/node/card_group/card: Vnořená karta
+      dummy/tiptap/node/card_group/card: Karta
       dummy/tiptap/node/embed: Embed
