@@ -8,10 +8,10 @@ class Folio::CloudflareStream::ApiTest < ActiveSupport::TestCase
            .with(
              headers: {
                "Authorization" => "Bearer token-1",
-               "Content-Type" => "application/json",
+             "Content-Type" => "application/json",
              },
              body: {
-               url: "https://s3.example.com/source.mp4?X-Amz-Expires=3600",
+               input: "https://s3.example.com/source.mp4?X-Amz-Expires=3600",
                meta: { name: "FUL-49 clip" },
              }.to_json,
            )
@@ -35,6 +35,43 @@ class Folio::CloudflareStream::ApiTest < ActiveSupport::TestCase
     assert_requested stub
     assert_equal "video-1", result["uid"]
     assert_equal false, result["readyToStream"]
+  end
+
+  test "copy posts playback restrictions when provided" do
+    stub = stub_request(:post, "https://api.cloudflare.com/client/v4/accounts/account-1/stream/copy")
+           .with(
+             headers: {
+               "Authorization" => "Bearer token-1",
+               "Content-Type" => "application/json",
+             },
+             body: {
+               input: "https://s3.example.com/source.mp4?X-Amz-Expires=3600",
+               meta: { name: "Restricted clip" },
+               allowedOrigins: ["fullmoonzine.cz", "www.fullmoonzine.cz"],
+               requireSignedURLs: true,
+             }.to_json,
+           )
+           .to_return(
+             status: 200,
+             body: {
+               success: true,
+               result: {
+                 uid: "video-1",
+                 readyToStream: false,
+                 status: { state: "downloading" },
+               },
+             }.to_json,
+             headers: { "Content-Type" => "application/json" },
+           )
+
+    api = Folio::CloudflareStream::Api.new(account_id: "account-1", api_token: "token-1")
+    result = api.copy(url: "https://s3.example.com/source.mp4?X-Amz-Expires=3600",
+                      meta: { name: "Restricted clip" },
+                      allowed_origins: ["fullmoonzine.cz", "www.fullmoonzine.cz"],
+                      require_signed_urls: true)
+
+    assert_requested stub
+    assert_equal "video-1", result["uid"]
   end
 
   test "raises readable error on failed response" do

@@ -17,8 +17,15 @@ class Folio::CloudflareStream::Api
     raise Error, "Missing Cloudflare Stream API token" if @api_token.blank?
   end
 
-  def copy(url:, meta: {})
-    request(:post, "stream/copy", body: { url:, meta: }.compact)
+  def copy(url:, meta: {}, allowed_origins: [], require_signed_urls: false)
+    body = {
+      input: url,
+      meta: meta,
+      allowedOrigins: Array(allowed_origins).compact_blank.presence,
+      requireSignedURLs: require_signed_urls ? true : nil,
+    }.compact
+
+    request(:post, "stream/copy", body:)
   end
 
   def video(identifier)

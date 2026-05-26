@@ -10,10 +10,12 @@ class Folio::CloudflareStream::CreateMediaJob < Folio::ApplicationJob
   def perform(media_file)
     response = Folio::CloudflareStream::Api.new.copy(
       url: media_file.cloudflare_stream_source_url,
+      allowed_origins: media_file.cloudflare_stream_allowed_origins,
       meta: {
-        name: media_file.file_name,
-        folio_file_id: media_file.id,
+        name: media_file.file_name.to_s,
+        folio_file_id: media_file.id.to_s,
       },
+      require_signed_urls: media_file.cloudflare_stream_require_signed_urls?,
     )
 
     updates = remote_services_data_from(response)

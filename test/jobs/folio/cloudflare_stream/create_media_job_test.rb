@@ -31,10 +31,12 @@ class Folio::CloudflareStream::CreateMediaJobTest < ActiveJob::TestCase
 
     assert_equal({
       url: "https://s3.example.com/source.mp4?X-Amz-Expires=3600",
+      allowed_origins: [],
       meta: {
         name: "blank.mp4",
-        folio_file_id: video.id,
+        folio_file_id: video.id.to_s,
       },
+      require_signed_urls: false,
     }, api.copy_args)
 
     video.reload
@@ -45,6 +47,34 @@ class Folio::CloudflareStream::CreateMediaJobTest < ActiveJob::TestCase
     assert_equal "https://customer-code.cloudflarestream.com/stream-1/manifest/video.m3u8",
                  video.remote_services_data.dig("playback", "hls")
     assert_not_includes video.remote_services_data.to_json, "X-Amz-Expires"
+  end
+
+  test "copies source URL with configured playback restrictions" do
+    video = build_video
+    api = RecordingApi.new({
+      "uid" => "stream-1",
+      "readyToStream" => false,
+      "status" => { "state" => "downloading" },
+    })
+
+    original_allowed_origins = Rails.application.config.folio_cloudflare_stream_allowed_origins
+    original_require_signed_urls = Rails.application.config.folio_cloudflare_stream_require_signed_urls
+    Rails.application.config.folio_cloudflare_stream_allowed_origins = ["fullmoonzine.cz", "www.fullmoonzine.cz"]
+    Rails.application.config.folio_cloudflare_stream_require_signed_urls = true
+
+    video.stub(:cloudflare_stream_source_url, "https://s3.example.com/source.mp4?X-Amz-Expires=3600") do
+      Folio::CloudflareStream::Api.stub(:new, api) do
+        assert_enqueued_jobs 1, only: Folio::CloudflareStream::CheckProgressJob do
+          Folio::CloudflareStream::CreateMediaJob.perform_now(video)
+        end
+      end
+    end
+
+    assert_equal ["fullmoonzine.cz", "www.fullmoonzine.cz"], api.copy_args[:allowed_origins]
+    assert_equal true, api.copy_args[:require_signed_urls]
+  ensure
+    Rails.application.config.folio_cloudflare_stream_allowed_origins = original_allowed_origins
+    Rails.application.config.folio_cloudflare_stream_require_signed_urls = original_require_signed_urls
   end
 
   test "marks ready immediately when Cloudflare already reports readyToStream" do
