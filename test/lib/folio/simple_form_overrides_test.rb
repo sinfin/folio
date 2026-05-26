@@ -36,7 +36,8 @@ class Folio::SimpleFormOverridesTest < ActionView::TestCase
     assert_includes wrapper["class"].split, "custom-form-group"
     assert_includes wrapper["class"].split, "form-group--with-character-counter"
     assert_includes input["data-controller"].split, "f-input-character-counter"
-    assert_equal "f-input-character-counter#onInput", input["data-action"]
+    assert_includes input["data-action"].split, "input->f-input-character-counter#onInput"
+    assert_includes input["data-action"].split, "change->f-input-character-counter#onInput"
   end
 
   test "character counter text input marks wrapper and max value" do
