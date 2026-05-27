@@ -42,6 +42,18 @@ a href="#section"
 span.badge data-count=@count
 ```
 
+If an attribute value becomes complex or multi-line, move it to a private
+component method so the template stays concise:
+
+```slim
+/ Bad
+button data=stimulus_action({ click: "accept", keydown: "acceptFromKeyboard" },
+                            { text: suggestion.text, key: suggestion.key })
+
+/ Good
+button data=suggestion_data(suggestion)
+```
+
 ## Multiple `class` attributes
 
 Use **separate `class` attributes** instead of string concatenation or array joining:
@@ -111,6 +123,11 @@ button hidden=@hidden
 ```
 
 Use `==` only when rendering a trusted `html_safe` string where no safe alternative exists.
+
+## I18n keys
+
+Prefer relative I18n keys starting with `.` in views and component templates.
+Do not flag relative keys as issues; they are intentional and preferred.
 
 ## Keep templates short
 

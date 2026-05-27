@@ -4,6 +4,8 @@ class Folio::Devise::ApplicationCell < Folio::ApplicationCell
   include SimpleForm::ActionViewExtensions::FormHelper
 
   def title(label = nil)
+    return nil if model && model[:hide_default_title]
+
     content_tag(model && model[:modal] ? :div : :h1,
                 label.presence || t(".title"),
                 class: "h1 f-devise__title")
