@@ -166,6 +166,10 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
         this.uppyComplete(result)
       })
 
+      this.uppy.on('cancel-all', () => {
+        this.dispatch('cancel-all')
+      })
+
       this.uppy.on('error', (error) => {
         console.error('[Uppy] System error:', error)
         this.showError(window.Folio.i18n(this.constructor.ERROR_MESSAGES, 'systemError'))
@@ -195,6 +199,8 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
     if (!this.inlineValue && result.failed.length === 0) {
       this.uppy.getPlugin('Dashboard').closeModal()
     }
+
+    this.dispatch('complete', { detail: { result } })
   }
 
   uppyUploadSuccess (file) {
