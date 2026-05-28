@@ -2,12 +2,12 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+
 ### Added
+
 - **Console sidebar `:separator` support**: Sites can now include `:separator` in `console_sidebar_prepended_links` (and `before_menu`/`before_site` variants) to insert visual dividers inside custom sidebar sections.
-
-### Added
-
 - **`Folio::File.default_file_order` scope** — exposes the canonical newest-first ordering (`created_at DESC, id DESC`) used by console file listings and pickers, including a deterministic `id` tiebreaker for stable pagination.
+- **MessageBus cross-page continuity**: any page can pass `?folio_mb_last_id=<id>` in its URL and `folio/message_bus.js` will subscribe from exactly that id (no bootstrap drop). Intended for flows that `POST` an action enqueueing a background job and then `redirect_to` another page that needs to receive the job's MessageBus updates — snapshot `window.Folio.MessageBus.lastId` before the redirect and append it as the URL param. The default behavior (no param → `lastId = -2` + bootstrap drop of the first message) is unchanged.
 
 ### Changed
 
@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - **Tiptap custom nodes**: Suppress empty `.f-tiptap-node` wrappers when a custom node component returns `render? == false`, preventing leftover spacing for hidden nodes.
+- **Console flash autohide on server-rendered alerts**: `Folio::Console::Ui::FlashComponent` and `AlertComponent` now honor the `autohide` flag set on Rails flash (`flash: { notice: "...", autohide: true }`). The Stimulus controller `f-c-ui-alert` reads a new `autohide` value and closes the alert after 5s. Previously `autohide` was silently filtered out during the Cells → ViewComponent refactor and only the JS-side `Ui.Alert.create` honored it; flashes set by a controller `redirect_to` stayed visible until manually dismissed. JS `Ui.Alert.create` now delegates autohide to the same Stimulus controller (single code path).
 - **Console revision view**: Atoms preview iframe scrolls again in audit/revision mode when the editor uses horizontal layout (`pointer-events: auto` on `.f-c-simple-form-with-atoms__iframe` under `.f-c-layout-body--with-audit`). The read-only preview inside the iframe is unchanged (`.f-c-atoms-previews--non-interactive`).
 Left form column scrolls again in audit/revision mode (`pointer-events: auto` on `.f-c-simple-form-with-atoms__form-scroll`, with `pointer-events: none` re-applied on `.f-c-simple-form-with-atoms__form-container` to keep form fields non-interactive).
 - **friendly_id**: `strip_and_downcase_slug` now only normalizes the slug on new records or when the slug column was explicitly changed. Legacy records with mixed-case slugs are no longer silently downcased on every save, which previously broke `friendly_id` lookups (case-sensitive) on cached client-side URLs after the first save.
