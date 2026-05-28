@@ -7,7 +7,7 @@ window.Folio.Confirm.I18n = {
     default: 'Opravdu?',
     delete: 'Smazat?',
     remove: 'Odebrat?',
-    batchUploadInFlight: 'Některé fotky se ještě nahrávají nebo zpracovávají. Pokud uložíš teď, změny se nepoužijí na fotky, které ještě nejsou hotové. Uložit i tak?'
+    batchUploadInFlight: 'Některé fotky se ještě nahrávají nebo zpracovávají. Pokud uložíte teď, změny se nepoužijí na fotky, které ještě nejsou hotové. Uložit i tak?'
   },
   en: {
     default: 'Are you sure?',
