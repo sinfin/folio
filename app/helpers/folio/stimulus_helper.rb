@@ -94,11 +94,16 @@ module Folio::StimulusHelper
     stimulus_controller(LIGHTBOX_CONTROLLER, inline: true)
   end
 
-  def stimulus_lightbox_item(placement_or_file, title: nil, cloned: false, index: nil)
-    file = if placement_or_file.is_a?(Folio::FilePlacement::Base)
-      placement_or_file.file
+  def stimulus_lightbox_item(placement_or_file, title: nil, author: nil, cloned: false, index: nil)
+    if placement_or_file.is_a?(Folio::FilePlacement::Base)
+      placement = placement_or_file
+      file = placement.file
+      default_caption = placement.description_with_fallback
+      default_author = file.try(:attribution_source).presence || file.try(:author).presence
     else
-      placement_or_file
+      file = placement_or_file
+      default_caption = file.try(:description).presence
+      default_author = file.try(:author).presence
     end
 
     thumb = file.thumb(Folio::LIGHTBOX_IMAGE_SIZE)
@@ -111,8 +116,8 @@ module Folio::StimulusHelper
         "src" => thumb.webp_url || thumb.url,
         "w" => thumb.width,
         "h" => thumb.height,
-        "author" => file.try(:author).presence || "",
-        "caption" => title || file.try(:description).presence || "",
+        "author" => author || default_author || "",
+        "caption" => title || default_caption || "",
       }.to_json
     }.compact
   end
