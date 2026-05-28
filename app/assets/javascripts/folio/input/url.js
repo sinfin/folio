@@ -35,15 +35,23 @@ window.Folio.Input.Url.initFormGroup = (formGroup, opts = {}) => {
   formGroup.setAttribute('data-f-c-input-form-group-default-custom-url-value', opts.defaultCustomUrl ? 'true' : 'false')
   formGroup.setAttribute('data-action', 'f-c-input-form-group-url:edit->f-c-input-form-group-url#edit f-c-input-form-group-url:remove->f-c-input-form-group-url#remove')
 
-  formGroup.insertAdjacentHTML('beforeend', `
+  const customHtml = `
     <div class="form-group__custom-html">
       <div class="f-c-input-form-group-url__inner">
         <div class="f-c-input-form-group-url__loader-wrap">
           <div class="folio-loader folio-loader--small f-c-input-form-group-url__loader"></div>
         </div>
         <div class="f-c-input-form-group-url__control-bar-wrap"></div>
+      </div>
     </div>
-  `)
+  `
+  const hint = Array.from(formGroup.children).find((child) => child.classList.contains('form-text'))
+
+  if (hint) {
+    hint.insertAdjacentHTML('beforebegin', customHtml)
+  } else {
+    formGroup.insertAdjacentHTML('beforeend', customHtml)
+  }
 
   formGroup.dataset.controller = 'f-c-input-form-group-url'
 }
