@@ -283,10 +283,11 @@ class Folio::Tiptap::NodeBuilder
 
           ary.each do |raw_value|
             value = raw_value.with_indifferent_access
+            file_id = Integer(value[:file_id], exception: false)
 
-            if value[:file_id] && value[:_destroy] != "1"
+            if file_id&.positive? && value[:_destroy] != "1"
               whitelisted << {
-                "file_id" => value[:file_id].to_i,
+                "file_id" => file_id,
                 "title" => value[:title].presence,
                 "alt" => value[:alt].presence,
                 "description" => value[:description].presence,
@@ -375,18 +376,23 @@ class Folio::Tiptap::NodeBuilder
 
         # Override setter to enforce structure and whitelist keys
         @klass.define_method "#{key}_placement_attributes=" do |raw_value|
-          value = raw_value.with_indifferent_access
-
-          if value[:file_id] && value[:_destroy] != "1"
-            super({
-              "file_id" => value[:file_id].to_i,
-              "title" => value[:title].presence,
-              "alt" => value[:alt].presence,
-              "description" => value[:description].presence,
-              "folio_embed_data" => Folio::Embed.normalize_value(value[:folio_embed_data])
-            }.compact)
-          else
+          if raw_value.blank?
             super(nil)
+          else
+            value = raw_value.with_indifferent_access
+            file_id = Integer(value[:file_id], exception: false)
+
+            if file_id&.positive? && value[:_destroy] != "1"
+              super({
+                "file_id" => file_id,
+                "title" => value[:title].presence,
+                "alt" => value[:alt].presence,
+                "description" => value[:description].presence,
+                "folio_embed_data" => Folio::Embed.normalize_value(value[:folio_embed_data])
+              }.compact)
+            else
+              super(nil)
+            end
           end
         end
 

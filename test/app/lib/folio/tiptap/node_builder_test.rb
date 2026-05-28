@@ -324,6 +324,41 @@ class Folio::Tiptap::NodeBuilderTest < ActiveSupport::TestCase
     assert_equal "My Link", node.button_url_json["title"]
   end
 
+  test "single attachment ignores blank and zero file ids" do
+    node = Node.new
+
+    node.cover_placement_attributes = {
+      "file_id" => "",
+      "description" => "Blank file id",
+      "alt" => "Blank file id",
+    }
+
+    assert_nil node.cover_placement_attributes
+    assert_nil node.cover_placement
+
+    node.cover_placement_attributes = {
+      "file_id" => "0",
+      "description" => "Zero file id",
+      "alt" => "Zero file id",
+    }
+
+    assert_nil node.cover_placement_attributes
+    assert_nil node.cover_placement
+  end
+
+  test "multiple attachments ignore blank and zero file ids" do
+    node = Node.new
+
+    node.report_placements_attributes = {
+      "0" => { "file_id" => "", "alt" => "Blank file id" },
+      "1" => { "file_id" => "0", "alt" => "Zero file id" },
+      "2" => { "file_id" => "invalid", "alt" => "Invalid file id" },
+    }
+
+    assert_equal [], node.report_placements_attributes
+    assert_equal [], node.report_placements
+  end
+
   test "embed attribute gets normalized correctly" do
     # Test with hash input
     node = Node.new(folio_embed_data: {
