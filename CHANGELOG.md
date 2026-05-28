@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - **Tiptap nested nodes** — repeatable nested custom node rows with console overlay form components, virtual nested fields support, and a dummy card group example for testing.
+- **Tiptap `url_json` fields** — node attribute configs can set `disable_label` to hide the link label field in the console URL picker while keeping the remaining URL controls available.
 - **`Folio::File.default_file_order` scope** — exposes the canonical newest-first ordering (`created_at DESC, id DESC`) used by console file listings and pickers, including a deterministic `id` tiebreaker for stable pagination.
 
 ### Changed
@@ -17,6 +18,9 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - **Tiptap custom nodes**: Suppress empty `.f-tiptap-node` wrappers when a custom node component returns `render? == false`, preventing leftover spacing for hidden nodes.
+- **Tiptap `url_json` fields**: `record_id` values are now normalized and persisted as integers, including nested nodes sanitized through Tiptap content.
+- **Tiptap attachment fields**: Blank, zero, and invalid `file_id` values are ignored for single and multiple attachment attributes instead of persisting placeholder placements.
+- **URL inputs**: `url_json` custom link controls now render before SimpleForm hints, including dynamically initialized URL inputs, so `.form-text` appears after the visible control.
 - **Console revision view**: Atoms preview iframe scrolls again in audit/revision mode when the editor uses horizontal layout (`pointer-events: auto` on `.f-c-simple-form-with-atoms__iframe` under `.f-c-layout-body--with-audit`). The read-only preview inside the iframe is unchanged (`.f-c-atoms-previews--non-interactive`).
 Left form column scrolls again in audit/revision mode (`pointer-events: auto` on `.f-c-simple-form-with-atoms__form-scroll`, with `pointer-events: none` re-applied on `.f-c-simple-form-with-atoms__form-container` to keep form fields non-interactive).
 - **friendly_id**: `strip_and_downcase_slug` now only normalizes the slug on new records or when the slug column was explicitly changed. Legacy records with mixed-case slugs are no longer silently downcased on every save, which previously broke `friendly_id` lookups (case-sensitive) on cached client-side URLs after the first save.
