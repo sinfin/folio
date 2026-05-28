@@ -9,6 +9,7 @@ class Folio::Tiptap::NodeBuilderTest < ActiveSupport::TestCase
       text: :text,
       content: :rich_text,
       button_url_json: :url_json,
+      button_url_json_without_label: { type: :url_json, disable_label: true },
       position: :integer,
       folio_embed_data: :embed,
       background: %w[gray blue],
@@ -53,6 +54,8 @@ class Folio::Tiptap::NodeBuilderTest < ActiveSupport::TestCase
     assert_equal({ type: :integer }, Node.structure[:position])
 
     assert_equal({ type: :url_json }, Node.structure[:button_url_json])
+
+    assert_equal({ type: :url_json, disable_label: true }, Node.structure[:button_url_json_without_label])
 
     assert_equal({
       type: :folio_attachment,

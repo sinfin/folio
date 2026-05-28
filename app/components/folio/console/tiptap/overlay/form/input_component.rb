@@ -73,6 +73,7 @@ class Folio::Console::Tiptap::Overlay::Form::InputComponent < Folio::Console::Ap
     def render_input_url_json
       @f.input @key,
                as: :url_json,
+               disable_label: @attr_config[:disable_label],
                hint:
     end
 

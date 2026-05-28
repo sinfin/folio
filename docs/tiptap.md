@@ -192,7 +192,7 @@ All compact definitions are internally converted to hash format:
 - `{ type: :string }`, `{ type: :text }`: Basic text attributes (support `default` and `hint`, see [Placeholder and hint](#placeholder-and-hint-console-overlay-form))
 - `{ type: :integer }`: Integer attributes with automatic type conversion and validation
 - `{ type: :rich_text }`: JSON-stored rich text content
-- `{ type: :url_json }`: URL with metadata
+- `{ type: :url_json }`: URL with metadata. Add `disable_label: true` to hide the modal label field when the node has its own label/title attribute.
 - `{ type: :embed }`: Embed data with automatic normalization and validation
 - `{ type: :nested_nodes, node_class: MyNestedNode, prebuild: false }`: Ordered, repeatable nested Folio Tiptap node attrs. `prebuild` is optional and defaults to `true`.
 - `{ type: :collection, collection: [...] }`: Collection to pick from

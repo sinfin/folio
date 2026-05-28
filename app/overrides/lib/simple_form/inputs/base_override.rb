@@ -132,6 +132,7 @@ SimpleForm::Inputs::Base.class_eval do
                         json:,
                         disabled: !!(options && options[:disabled]),
                         absolute_urls: (options && options[:absolute_urls]) || false,
+                        disable_label: (options && options[:disable_label]) || false,
                         default_custom_url: (options && options[:default_custom_url]) || false,
                       },
                       action: {

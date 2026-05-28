@@ -6,6 +6,7 @@ class Folio::Console::Tiptap::Overlay::Form::InputComponentTest < Folio::Console
   class Node < Folio::Tiptap::Node
     tiptap_node structure: {
       title: :string,
+      url: { type: :url_json, disable_label: true },
     }
   end
 
@@ -22,5 +23,21 @@ class Folio::Console::Tiptap::Overlay::Form::InputComponentTest < Folio::Console
     end
 
     assert_selector('[name="tiptap_node_attrs[data][title]"][value="Hello"]')
+  end
+
+  test "renders url_json input with disabled modal label" do
+    node = Node.new(url: { href: "/foo" })
+    view = vc_test_controller.view_context
+
+    view.simple_form_for(node, url: "/", as: "tiptap_node_attrs[data]") do |f|
+      render_inline(Folio::Console::Tiptap::Overlay::Form::InputComponent.new(
+        f:,
+        key: :url,
+        attr_config: Node.structure[:url],
+      ))
+    end
+
+    assert_selector('[data-f-c-input-form-group-url-disable-label-value="true"]')
+    assert_selector("input[name='tiptap_node_attrs[data][url]'][value='{\"href\":\"/foo\"}']", visible: false)
   end
 end
