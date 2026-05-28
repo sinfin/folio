@@ -6,13 +6,27 @@ class Dummy::Tiptap::Node::CardGroup < Folio::Tiptap::Node
 
     tiptap_node nested: true,
                 structure: {
-                   title: :string,
-                   text: :text,
-                   content: :rich_text,
-                   button_url_json: :url_json,
-                   background: BACKGROUNDS,
-                   cover: :image,
-                 }
+                  title: :string,
+                  text: :text,
+                  content: :rich_text,
+                  button_url_json: :url_json,
+                  background: BACKGROUNDS,
+                  cover: :image,
+                },
+                form_layout: { rows: [
+                  {
+                    columns: [
+                      :cover,
+                      { rows: [
+                        :title,
+                        :text,
+                      ] }
+                    ]
+                  },
+                  :content,
+                  :button_url_json,
+                  :background,
+                ] }
 
     validates :title,
               presence: true

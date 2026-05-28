@@ -201,6 +201,73 @@ All compact definitions are internally converted to hash format:
 
 **Note**: The compact syntax is still fully supported and recommended for most use cases. The hash format is primarily used internally and for advanced customization.
 
+### Console Overlay Form Layout
+
+The console overlay form uses `form_layout: :aside_attachments` by default. This places fields declared before the first single attachment above the two-column area, single attachments in a narrow left column, and the remaining fields in the right column. This is useful for card-like nested nodes with an image and text metadata.
+
+```rb
+class MyApp::Tiptap::Node::Contents::Carousel < Folio::Tiptap::Node
+  class Item < Folio::Tiptap::Node
+    tiptap_node nested: true,
+                structure: {
+                  url: {
+                    type: :url_json,
+                    disable_label: true,
+                  },
+                  cover: :image,
+                  badge_label: :string,
+                  title: :string,
+                }
+  end
+
+  tiptap_node structure: {
+    items: {
+      type: :nested_nodes,
+      node_class: Item,
+    },
+  }
+end
+```
+
+Use `form_layout: nil` to keep the old flat structure-order form:
+
+```rb
+class MyApp::Tiptap::Node::Contents::Quote < Folio::Tiptap::Node
+  tiptap_node structure: {
+    text: :text,
+    author: :string,
+  }, form_layout: nil
+end
+```
+
+For custom layouts, use direct field names inside `rows` and `columns`. Custom layouts must include every structure field exactly once.
+
+```rb
+class MyApp::Tiptap::Node::Contents::Card < Folio::Tiptap::Node
+  tiptap_node structure: {
+    url: { type: :url_json, disable_label: true },
+    cover: :image,
+    badge_label: :string,
+    title: :string,
+  }, form_layout: {
+    rows: [
+      :url,
+      {
+        columns: [
+          :cover,
+          {
+            rows: [
+              :badge_label,
+              :title,
+            ],
+          },
+        ],
+      },
+    ],
+  }
+end
+```
+
 ### Nested Nodes
 
 Nested nodes let a single top-level `folioTiptapNode` own an ordered list of repeatable child structures. They are useful for card groups, timelines, feature lists, and similar "molecule" blocks where editors configure the whole group in one overlay.
@@ -339,13 +406,13 @@ class MyApp::ExampleNode < Folio::Tiptap::Node
     button_url: { type: :url_json },
     folio_embed_data: { type: :embed },
     background: { type: :collection, collection: %w[gray blue red] },
-    cover: { 
+    cover: {
       type: :folio_attachment,
       file_type: "Folio::File::Image",
       placement_class_name: "Folio::FilePlacement::Cover",
       has_many: false
     },
-    documents: { 
+    documents: {
       type: :folio_attachment,
       file_type: "Folio::File::Document",
       placement_class_name: "Folio::FilePlacement::Document",

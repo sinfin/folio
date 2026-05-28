@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
 class Folio::Tiptap::NodeBuilder
-  def initialize(klass:, structure:, tiptap_config: nil)
+  def initialize(klass:, structure:, tiptap_config: nil, form_layout: :aside_attachments)
     @klass = klass
     @structure = convert_structure_to_hashes(structure)
     @tiptap_config = get_tiptap_config(tiptap_config)
+    @form_layout = Folio::Tiptap::FormLayoutBuilder.call(klass: @klass,
+                                                          structure: @structure,
+                                                          form_layout:)
     @embed_keys = []
   end
 
@@ -12,6 +15,7 @@ class Folio::Tiptap::NodeBuilder
     build_structure!
     setup_html_sanitization_config!
     handle_config!
+    handle_form_layout!
   end
 
   private
@@ -728,6 +732,14 @@ class Folio::Tiptap::NodeBuilder
 
       @klass.define_singleton_method :tiptap_config do
         class_variable_get(:@@tiptap_config)
+      end
+    end
+
+    def handle_form_layout!
+      @klass.class_variable_set(:@@form_layout, @form_layout)
+
+      @klass.define_singleton_method :form_layout do
+        class_variable_get(:@@form_layout)
       end
     end
 

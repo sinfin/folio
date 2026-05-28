@@ -54,13 +54,8 @@ class Folio::Console::Tiptap::Overlay::Form::NestedNodesComponent < Folio::Conso
 
     def nested_node_item_fields(nested_f, nested_node)
       content_tag(:div, class: "f-c-tiptap-overlay-form-nested-nodes__item-fields") do
-        safe_join(nested_node.class.structure.map do |nested_key, nested_attr_config|
-          render(Folio::Console::Tiptap::Overlay::Form::InputComponent.new(
-            f: nested_f,
-            key: nested_key,
-            attr_config: nested_attr_config,
-          ))
-        end)
+        render(Folio::Console::Tiptap::Overlay::Form::LayoutComponent.new(f: nested_f,
+                                                                          node: nested_node))
       end
     end
 

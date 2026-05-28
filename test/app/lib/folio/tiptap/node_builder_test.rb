@@ -103,6 +103,52 @@ class Folio::Tiptap::NodeBuilderTest < ActiveSupport::TestCase
     assert_equal({ type: :embed }, Node.structure[:folio_embed_data])
   end
 
+  test "form_layout defaults to aside_attachments" do
+    assert_equal :aside_attachments, Node.form_layout
+  end
+
+  test "form_layout accepts explicit nil for flat layout" do
+    klass = Class.new(Folio::Tiptap::Node) do
+      tiptap_node structure: {
+        title: :string,
+      }, form_layout: nil
+    end
+
+    assert_nil klass.form_layout
+  end
+
+  test "form_layout accepts rows and columns with direct field names" do
+    klass = Class.new(Folio::Tiptap::Node) do
+      tiptap_node structure: {
+        title: :string,
+        cover: :image,
+        body: :text,
+      }, form_layout: {
+        rows: [
+          "title",
+          {
+            columns: [
+              :cover,
+              { rows: [:body] },
+            ],
+          },
+        ],
+      }
+    end
+
+    assert_equal({
+      rows: [
+        :title,
+        {
+          columns: [
+            :cover,
+            { rows: [:body] },
+          ],
+        },
+      ],
+    }, klass.form_layout)
+  end
+
   test "nested node declaration marks class as nested" do
     assert NestedCard.nested?
     assert_not Node.nested?
