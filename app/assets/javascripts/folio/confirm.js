@@ -7,13 +7,13 @@ window.Folio.Confirm.I18n = {
     default: 'Opravdu?',
     delete: 'Smazat?',
     remove: 'Odebrat?',
-    batchUploadInFlight: 'Některé fotky se ještě nahrávají nebo zpracovávají. Pokud uložíte teď, změny se nepoužijí na fotky, které ještě nejsou hotové. Uložit i tak?'
+    batchUploadInFlight: 'Některé soubory se ještě nahrávají nebo zpracovávají. Pokud uložíte teď, změny se nepoužijí na soubory, které ještě nejsou hotové. Uložit i tak?'
   },
   en: {
     default: 'Are you sure?',
     delete: 'Delete?',
     remove: 'Remove?',
-    batchUploadInFlight: "Some photos are still uploading or processing. If you save now, the changes won't apply to photos that aren't finished yet. Save anyway?"
+    batchUploadInFlight: "Some files are still uploading or processing. If you save now, the changes won't apply to files that aren't finished yet. Save anyway?"
   }
 }
 
