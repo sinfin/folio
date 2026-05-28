@@ -117,6 +117,7 @@ class Folio::Tiptap::Content
       end
 
       sanitized["href"] = sanitize_href(sanitized["href"]) if sanitized["href"]
+      sanitized["record_id"] = Integer(sanitized["record_id"], exception: false) if sanitized.key?("record_id")
       sanitized.compact!
 
       from_string ? sanitized.to_json : sanitized

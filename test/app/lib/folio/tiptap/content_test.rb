@@ -473,6 +473,8 @@ class Folio::Tiptap::ContentTest < ActiveSupport::TestCase
                     "button_url_json" => {
                       "href" => "javascript:alert('xss')",
                       "label" => unsafe_html_input,
+                      "record_id" => "123",
+                      "record_type" => "Folio::Page",
                     },
                     "folio_embed_data" => {
                       "active" => true,
@@ -495,6 +497,7 @@ class Folio::Tiptap::ContentTest < ActiveSupport::TestCase
     assert_includes card_data["content"], expected_scrubbed_text
     assert_nil card_data["button_url_json"]["href"]
     assert_equal expected_scrubbed_text, card_data["button_url_json"]["label"]
+    assert_equal 123, card_data["button_url_json"]["record_id"]
     assert_equal unsafe_html_input, card_data["folio_embed_data"]["html"]
   end
 

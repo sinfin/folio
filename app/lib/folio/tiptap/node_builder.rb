@@ -163,9 +163,15 @@ class Folio::Tiptap::NodeBuilder
           fail ArgumentError, "Expected a String or Hash for #{key}, got #{value.class.name}"
         end
 
-        whitelisted = transformed_value.slice(*::Folio::Tiptap::ALLOWED_URL_JSON_KEYS).transform_values do |v|
-          v.is_a?(String) ? v.strip.presence : nil
-        end.compact
+        whitelisted = transformed_value.slice(*::Folio::Tiptap::ALLOWED_URL_JSON_KEYS).filter_map do |url_key, url_value|
+          normalized = if url_key == "record_id"
+            Integer(url_value, exception: false)
+          elsif url_value.is_a?(String)
+            url_value.strip.presence
+          end
+
+          [url_key, normalized] if normalized
+        end.to_h
 
         # Sanitize href values to prevent dangerous URLs
         if whitelisted["href"].present?

@@ -63,6 +63,23 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
     assert_equal({ "href" => "https://example.com", "label" => "Example" }, node.button_url_json)
   end
 
+  test "url_json normalizes record id as integer" do
+    node = Node.new(title: "foo",
+                    button_url_json: {
+                      href: "/foo",
+                      label: "Example",
+                      record_id: "123",
+                      record_type: "Folio::Page",
+                    }.to_json)
+
+    assert_equal 123, node.button_url_json["record_id"]
+    assert_equal "Folio::Page", node.button_url_json["record_type"]
+
+    serialized_url_json = JSON.parse(node.to_tiptap_node_hash["attrs"]["data"]["button_url_json"])
+    assert_equal 123, serialized_url_json["record_id"]
+    assert_equal "Folio::Page", serialized_url_json["record_type"]
+  end
+
   test "attachments" do
     cover = create(:folio_file_image)
     reports = create_list(:folio_file_document, 2)
