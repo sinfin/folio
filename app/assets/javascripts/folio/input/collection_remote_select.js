@@ -1,7 +1,18 @@
+//= require folio/i18n
+
 window.Folio = window.Folio || {}
 window.Folio.Input = window.Folio.Input || {}
 
 window.Folio.Input.CollectionRemoteSelect = {}
+window.Folio.Input.CollectionRemoteSelect.AUTOCOMPLETE_QUERY_MIN_LENGTH = 3
+window.Folio.Input.CollectionRemoteSelect.i18n = {
+  cs: {
+    inputTooShort: `Zadejte alespoň ${window.Folio.Input.CollectionRemoteSelect.AUTOCOMPLETE_QUERY_MIN_LENGTH} znaky.`
+  },
+  en: {
+    inputTooShort: `Type at least ${window.Folio.Input.CollectionRemoteSelect.AUTOCOMPLETE_QUERY_MIN_LENGTH} characters.`
+  }
+}
 
 window.Folio.Input.CollectionRemoteSelect.setValue = (input, value) => {
   const $input = window.jQuery(input)
@@ -17,7 +28,13 @@ window.Folio.Input.CollectionRemoteSelect.bind = (input, { includeBlank, url }) 
 
   $input.select2({
     width: '100%',
-    language: document.documentElement.lang,
+    language: [
+      {
+        inputTooShort: () => window.Folio.i18n(window.Folio.Input.CollectionRemoteSelect.i18n, 'inputTooShort')
+      },
+      document.documentElement.lang
+    ],
+    minimumInputLength: window.Folio.Input.CollectionRemoteSelect.AUTOCOMPLETE_QUERY_MIN_LENGTH,
     allowClear: true,
     placeholder: { id: '', text: includeBlank },
     dropdownCssClass: $input.data('dropdown-class') || '',
@@ -25,7 +42,6 @@ window.Folio.Input.CollectionRemoteSelect.bind = (input, { includeBlank, url }) 
       url: url || $input.data('url'),
       dataType: 'JSON',
       delay: 250,
-      minimumInputLength: 0,
       cache: false,
       data: (params) => {
         const data = {
