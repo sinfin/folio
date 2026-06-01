@@ -69,6 +69,50 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
     assert_not_includes response_component_html, "Alternative demo summary"
   end
 
+  test "filters current form snapshot before enqueueing job" do
+    snapshot = {
+      "dummy_blog_article[title]" => "Unsaved title",
+      "dummy_blog_article[perex]" => "Unsaved perex",
+      "dummy_blog_article[slug]" => "private-slug",
+      "dummy_blog_article[atoms_attributes][0][data][content]" => "Atom body",
+      "dummy_blog_article[atoms_attributes][0][type]" => "Dummy::Atom::Contents::Text",
+      "dummy_blog_article[atoms_attributes][1][_destroy]" => "1",
+      "dummy_blog_article[atoms_attributes][1][data][content]" => "Destroyed atom",
+      "dummy_blog_article[image_or_embed_placements_attributes][0][title]" => "Image title",
+      "dummy_blog_article[image_or_embed_placements_attributes][0][file_id]" => "123",
+      "dummy_blog_article[image_or_embed_placements_attributes][1][_destroy]" => "true",
+      "dummy_blog_article[image_or_embed_placements_attributes][1][description]" => "Destroyed image",
+      "dummy_blog_article[topic_article_links_attributes][0][dummy_blog_topic_id]" => "1",
+      "authenticity_token" => "secret",
+    }
+
+    with_ai_config(enabled: true) do
+      assert_enqueued_jobs 1, only: Folio::Ai::TextSuggestionsJob do
+        post text_suggestions_console_api_ai_text_suggestions_path,
+             params: request_params(field_key: :title,
+                                    current_form_snapshot_json: snapshot.to_json),
+             as: :json
+      end
+    end
+
+    current_form_snapshot = enqueued_text_suggestions_job_arguments.dig(:params,
+                                                                        :context,
+                                                                        :current_form_snapshot)
+
+    assert_equal "Unsaved title", current_form_snapshot["dummy_blog_article[title]"]
+    assert_equal "Unsaved perex", current_form_snapshot["dummy_blog_article[perex]"]
+    assert_equal "Atom body", current_form_snapshot["dummy_blog_article[atoms_attributes][0][data][content]"]
+    assert_equal "Image title",
+                 current_form_snapshot["dummy_blog_article[image_or_embed_placements_attributes][0][title]"]
+    assert_not_includes current_form_snapshot, "dummy_blog_article[slug]"
+    assert_not_includes current_form_snapshot, "dummy_blog_article[atoms_attributes][0][type]"
+    assert_not_includes current_form_snapshot, "dummy_blog_article[atoms_attributes][1][data][content]"
+    assert_not_includes current_form_snapshot, "dummy_blog_article[image_or_embed_placements_attributes][0][file_id]"
+    assert_not_includes current_form_snapshot, "dummy_blog_article[image_or_embed_placements_attributes][1][description]"
+    assert_not_includes current_form_snapshot, "dummy_blog_article[topic_article_links_attributes][0][dummy_blog_topic_id]"
+    assert_not_includes current_form_snapshot, "authenticity_token"
+  end
+
   test "renders record not ready directly for client class mismatch" do
     folio_page = create(:folio_page, site: @site)
 

@@ -42,6 +42,37 @@ class Folio::AiTest < ActiveSupport::TestCase
     assert_equal :default, Folio::Ai.text_suggestions_queue
   end
 
+  test "uses default current form snapshot field roots" do
+    assert_equal %w[
+      title
+      perex
+      description
+      meta_title
+      meta_description
+      og_title
+      og_description
+      content
+      body
+    ], Folio::Ai.current_form_snapshot_field_roots
+  end
+
+  test "uses default current form snapshot file placement text keys" do
+    assert_equal %w[
+      title
+      alt
+      description
+      folio_embed_data
+    ], Folio::Ai.current_form_snapshot_file_placement_text_keys
+  end
+
+  test "normalizes configured current form snapshot keys" do
+    with_ai_config(current_form_snapshot_field_roots: [" title ", :summary, "", nil],
+                   current_form_snapshot_file_placement_text_keys: [" alt ", :caption, "", nil]) do
+      assert_equal %w[title summary], Folio::Ai.current_form_snapshot_field_roots
+      assert_equal %w[alt caption], Folio::Ai.current_form_snapshot_file_placement_text_keys
+    end
+  end
+
   test "normalizes configured text suggestions queue" do
     with_ai_config(text_suggestions_queue: "critical") do
       assert_equal :critical, Folio::Ai.text_suggestions_queue

@@ -22,6 +22,23 @@ module Folio::Ai
     javascripts: %w[folio_pack_ai],
     stylesheets: %w[folio_pack_ai],
   }.freeze
+  DEFAULT_CURRENT_FORM_SNAPSHOT_FIELD_ROOTS = %w[
+    title
+    perex
+    description
+    meta_title
+    meta_description
+    og_title
+    og_description
+    content
+    body
+  ].freeze
+  DEFAULT_CURRENT_FORM_SNAPSHOT_FILE_PLACEMENT_TEXT_KEYS = %w[
+    title
+    alt
+    description
+    folio_embed_data
+  ].freeze
 
   Error = Class.new(StandardError)
   UnknownProviderError = Class.new(Error)
@@ -80,10 +97,20 @@ module Folio::Ai
       self.max_prompt_chars = 80_000
       self.rate_limit = nil
       self.text_suggestions_queue = :default
+      self.current_form_snapshot_field_roots = DEFAULT_CURRENT_FORM_SNAPSHOT_FIELD_ROOTS
+      self.current_form_snapshot_file_placement_text_keys = DEFAULT_CURRENT_FORM_SNAPSHOT_FILE_PLACEMENT_TEXT_KEYS
     end
 
     def provider_models=(value)
       @provider_models = (value || {}).to_h
+    end
+
+    def current_form_snapshot_field_roots
+      @current_form_snapshot_field_roots || DEFAULT_CURRENT_FORM_SNAPSHOT_FIELD_ROOTS
+    end
+
+    def current_form_snapshot_file_placement_text_keys
+      @current_form_snapshot_file_placement_text_keys || DEFAULT_CURRENT_FORM_SNAPSHOT_FILE_PLACEMENT_TEXT_KEYS
     end
 
     def registry
@@ -240,6 +267,14 @@ module Folio::Ai
       values[provider.to_sym] || values[provider.to_s]
     end
 
+    def current_form_snapshot_field_roots=(value)
+      @current_form_snapshot_field_roots = normalize_config_key_list(value)
+    end
+
+    def current_form_snapshot_file_placement_text_keys=(value)
+      @current_form_snapshot_file_placement_text_keys = normalize_config_key_list(value)
+    end
+
     def track(event, payload = {})
       ActiveSupport::Notifications.instrument("folio.ai.#{event}",
                                               sanitized_tracking_payload(payload))
@@ -255,6 +290,10 @@ module Folio::Ai
       def positive_config_value(value, fallback)
         value = value.to_i
         value.positive? ? value : fallback
+      end
+
+      def normalize_config_key_list(value)
+        Array(value).filter_map { |item| item.to_s.strip.presence }.uniq
       end
   end
 end

@@ -248,7 +248,9 @@ class Folio::Ai::Console::Api::TextSuggestionsController < Folio::Console::Api::
     end
 
     def current_form_snapshot
-      @current_form_snapshot ||= sanitize_current_form_snapshot(raw_current_form_snapshot)
+      @current_form_snapshot ||= Folio::Ai::CurrentFormSnapshot.call(snapshot: raw_current_form_snapshot,
+                                                                     record_class:,
+                                                                     limit: CURRENT_FORM_SNAPSHOT_FIELD_LIMIT)
     end
 
     def message_bus_client_id
@@ -263,33 +265,6 @@ class Folio::Ai::Console::Api::TextSuggestionsController < Folio::Console::Api::
       JSON.parse(ai_params[:current_form_snapshot_json])
     rescue JSON::ParserError
       {}
-    end
-
-    def sanitize_current_form_snapshot(snapshot)
-      snapshot = snapshot.to_unsafe_h if snapshot.respond_to?(:to_unsafe_h)
-      return {} unless snapshot.is_a?(Hash)
-
-      snapshot.first(CURRENT_FORM_SNAPSHOT_FIELD_LIMIT).each_with_object({}) do |(key, value), sanitized|
-        sanitized_value = sanitize_current_form_snapshot_value(value)
-        sanitized[key.to_s] = sanitized_value unless sanitized_value.nil?
-      end
-    end
-
-    def sanitize_current_form_snapshot_value(value)
-      if value.is_a?(Array)
-        value.filter_map { |item| sanitize_current_form_snapshot_scalar(item) }
-      else
-        sanitize_current_form_snapshot_scalar(value)
-      end
-    end
-
-    def sanitize_current_form_snapshot_scalar(value)
-      case value
-      when String
-        value
-      when Numeric, TrueClass, FalseClass
-        value.to_s
-      end
     end
 
     def ai_params

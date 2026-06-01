@@ -90,7 +90,8 @@ Folio.enabled_packs = [:ai]
 ```
 
 The default is `[]`. When the pack is disabled, its runtime code, migrations,
-views, locales, and pack assets are not part of the enabled Folio feature set.
+views, locales, pack assets, and Console AI API routes are not part of the
+enabled Folio feature set.
 `Folio::Ai.enabled` is a separate runtime feature flag inside the loaded pack and
 defaults to true.
 
@@ -145,6 +146,10 @@ Important defaults:
 - `text_suggestions_queue` is `:default`
 - `max_prompt_chars` is `80_000`
 - `rate_limit` is `nil`
+- `current_form_snapshot_field_roots` controls generic top-level form roots
+  allowed into current-form AI context
+- `current_form_snapshot_file_placement_text_keys` controls file-placement
+  text leaves allowed into current-form AI context
 
 Set provider credentials with `FOLIO_AI_OPENAI_API_KEY` and/or
 `FOLIO_AI_ANTHROPIC_API_KEY`.
@@ -318,9 +323,28 @@ or host-ineligible records.
 - `:persisted_record` sends no form snapshot and expects the model context to
   use saved server state
 
-The snapshot ignores file inputs. Repeated field names are sent as arrays. The
-controller keeps string values, stringifies numbers and booleans, and limits the
-snapshot to 200 fields before passing it as the text suggestion job argument.
+The browser snapshot ignores file inputs and otherwise sends successful form
+controls without client-side field filtering. Repeated field names are sent as
+arrays. The controller filters the payload server-side with
+`Folio::Ai::CurrentFormSnapshot`, keeps only string/numeric/boolean scalar
+values, stringifies numbers and booleans, and limits the snapshot to 200 fields
+before passing it as the text suggestion job argument.
+
+The server-side snapshot filter keeps only text-bearing context:
+
+- configured top-level roots from `Folio::Ai.current_form_snapshot_field_roots`
+- all fields declared by `record_class.folio_tiptap_fields`, converted with
+  `Folio::Tiptap::PlainText.from_value`
+- atom `data` leaves under roots derived from `record_class.atom_keys`
+- configured file placement text leaves from
+  `Folio::Ai.current_form_snapshot_file_placement_text_keys`, both for normal
+  placement roots derived from `record_class.folio_attachment_keys` and for
+  placement attributes nested inside atoms
+
+Nested atom or file placement records marked with `_destroy` values of `1`,
+`"1"`, `true`, or `"true"` are omitted. Unknown roots, IDs, file IDs, positions,
+types, submit controls, authenticity tokens, slugs, and unrelated nested
+associations are dropped.
 
 ## Model Contract
 
@@ -378,7 +402,8 @@ Because generation runs in a background job, `folio_ai_provider_adapter` is only
 serialized as a class name. The job instantiates that class with `.new`, so
 custom adapters should be instantiable without record-local state.
 
-For TipTap content, prefer the reusable plain-text helper:
+For persisted TipTap content in custom context builders, prefer the reusable
+plain-text helper:
 
 ```ruby
 Folio::Tiptap::PlainText.from_value(record.tiptap_content)
@@ -386,7 +411,8 @@ Folio::Tiptap::PlainText.from_value(record.tiptap_content)
 
 ## API Flow
 
-The shared route is mounted in the Folio Console API:
+When the AI pack is enabled, the shared route is mounted in the Folio Console
+API:
 
 ```text
 POST /console/api/ai_text_suggestions/text_suggestions
@@ -394,7 +420,8 @@ POST /console/api/ai_text_suggestions/instructions
 ```
 
 Both actions are handled by
-`Folio::Ai::Console::Api::TextSuggestionsController`.
+`Folio::Ai::Console::Api::TextSuggestionsController`. The routes are not mounted
+when `Folio.pack_enabled?(:ai)` is false.
 
 The request contains the record class, record id, integration key, field key,
 component id, display options, suggestion count, the MessageBus client id, and
@@ -425,7 +452,7 @@ The controller:
 5. Rejects records from another site.
 6. Persists editor instructions synchronously for the instructions endpoint when
    a record was found.
-7. Sanitizes the optional current form snapshot.
+7. Filters the optional current form snapshot.
 8. Resolves model eligibility and renders `record_not_ready` or
    `host_ineligible` immediately when the record cannot generate suggestions.
 9. Resolves model-provided context, field label, AI site, and any serializable

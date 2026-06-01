@@ -49,7 +49,8 @@ record.
    ```
 
    The AI pack is disabled by default. OpenAI request storage remains disabled
-   unless the host app explicitly opts in.
+   unless the host app explicitly opts in. Console AI API routes are mounted
+   only when `Folio.pack_enabled?(:ai)`.
 
 3. Register an integration in a host-app initializer after Rails initialization:
 
@@ -74,23 +75,36 @@ record.
    or a missing `ai:` option renders the normal input.
 5. `ai: true` uses `current_state_policy: :current_form_snapshot` by default.
    Use `:persisted_record` when generation should use saved server state.
-6. Keep custom inputs, composite components, rich-text wrappers, or unusual
+6. Keep current-form filtering server-side. The Stimulus controller should keep
+   sending all non-file successful form controls; `Folio::Ai::CurrentFormSnapshot`
+   filters before the AI context is built.
+7. Do not add per-integration context field configuration for the reusable pack
+   snapshot. Use pack configuration for the generic top-level text roots and
+   file-placement text keys.
+8. Current-form snapshots keep only text-bearing context:
+   configured top-level roots; all `record_class.folio_tiptap_fields` converted
+   with `Folio::Tiptap::PlainText.from_value`; atom `data` leaves under
+   `record_class.atom_keys`; and configured file-placement text leaves under
+   `record_class.folio_attachment_keys`, including placement attributes nested
+   inside atoms. Drop records marked with `_destroy` values of `1`, `"1"`,
+   `true`, or `"true"`.
+9. Keep custom inputs, composite components, rich-text wrappers, or unusual
    placement on explicit host-app wiring until their input ownership and undo
    contract is reviewed.
-7. Model methods are optional extension points. Without them, Folio uses
+10. Model methods are optional extension points. Without them, Folio uses
    `{ current_form_snapshot: }` as context, requires a persisted record, falls
    through to the configured provider adapter, and resolves site from
    `folio_ai_site`, `site`, or `Folio::Current.site`.
-8. Build context from safe plain text. For TipTap content prefer
+11. Build context from safe plain text. For TipTap content prefer
    `Folio::Tiptap::PlainText.from_value(...)` or an existing stored plain-text
    projection before falling back to JSON traversal.
-9. Configure provider models and optional cost labels through
+12. Configure provider models and optional cost labels through
    `Folio::Ai.provider_models` and `Folio::Ai.provider_model_options`. Let Folio
    use live provider catalogs when API credentials are present and keep fallback
    enabled for unavailable saved models.
-10. Add Console site prompts for each site and field. Editor controls must stay
+13. Add Console site prompts for each site and field. Editor controls must stay
    hidden until the field has a non-blank site prompt and the record is eligible.
-11. Cover visible and hidden gates, HTML API success and errors, context
+14. Cover visible and hidden gates, HTML API success and errors, context
    serialization, instruction persistence, timeout/rate-limit handling, model
    fallback warnings, and the full panel lifecycle in tests.
 
