@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+### Added
+- **Console sidebar `:separator` support**: Sites can now include `:separator` in `console_sidebar_prepended_links` (and `before_menu`/`before_site` variants) to insert visual dividers inside custom sidebar sections.
+- **Console index filters `as: :date` support**: Filter definitions can now render a single date field, with optional `placeholder` and `prefix`, alongside the existing `:date_range` input.
 
 ### Added
 
