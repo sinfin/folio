@@ -190,7 +190,7 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
 
   focusAndScrollIntoView (target) {
     window.setTimeout(() => {
-      const input = target.querySelector('.form-control')
+      const input = this.focusableFormControl(target)
 
       if (input) {
         input.focus()
@@ -198,6 +198,12 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
 
       target.scrollIntoView({ behavior: 'smooth', block: 'center' })
     }, 0)
+  }
+
+  focusableFormControl (target) {
+    return Array.from(target.querySelectorAll('.form-control')).find((input) => {
+      return !input.hidden && !input.disabled && !input.closest('[hidden]') && !input.closest('.f-c-files-picker')
+    })
   }
 
   copyFormValues (source, clone) {
