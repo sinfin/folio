@@ -14,6 +14,39 @@ window.Folio.Input.CollectionRemoteSelect.i18n = {
   }
 }
 
+window.Folio.Input.CollectionRemoteSelect.BlankOrMinimumInputLength = function (decorated, $element, options) {
+  this.minimumInputLength = options.get('minimumInputLength')
+
+  decorated.call(this, $element, options)
+}
+
+window.Folio.Input.CollectionRemoteSelect.BlankOrMinimumInputLength.prototype.query = function (decorated, params, callback) {
+  params.term = params.term || ''
+
+  if (params.term.length > 0 && params.term.length < this.minimumInputLength) {
+    this.trigger('results:message', {
+      message: 'inputTooShort',
+      args: {
+        minimum: this.minimumInputLength,
+        input: params.term,
+        params
+      }
+    })
+
+    return
+  }
+
+  decorated.call(this, params, callback)
+}
+
+window.Folio.Input.CollectionRemoteSelect.dataAdapter = () => {
+  const amd = window.jQuery.fn.select2.amd
+  const Utils = amd.require('select2/utils')
+  const AjaxData = amd.require('select2/data/ajax')
+
+  return Utils.Decorate(AjaxData, window.Folio.Input.CollectionRemoteSelect.BlankOrMinimumInputLength)
+}
+
 window.Folio.Input.CollectionRemoteSelect.setValue = (input, value) => {
   const $input = window.jQuery(input)
   $input.val(value).trigger('change')
@@ -35,6 +68,7 @@ window.Folio.Input.CollectionRemoteSelect.bind = (input, { includeBlank, url }) 
       document.documentElement.lang
     ],
     minimumInputLength: window.Folio.Input.CollectionRemoteSelect.AUTOCOMPLETE_QUERY_MIN_LENGTH,
+    dataAdapter: window.Folio.Input.CollectionRemoteSelect.dataAdapter(),
     allowClear: true,
     placeholder: { id: '', text: includeBlank },
     dropdownCssClass: $input.data('dropdown-class') || '',

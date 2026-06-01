@@ -189,6 +189,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
     q = params[:q]
     p_order = params[:order_scope]
     p_without = params[:without]
+    p_page = params[:page]&.to_i || 1
 
     if klass && klass < ActiveRecord::Base && klass.respond_to?(:by_label_query)
       scope = klass.accessible_by(Folio::Current.ability)
@@ -219,11 +220,21 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
         else
           scope = scope.unscope(:order).send(p_order)
         end
-      elsif q.blank? && p_order.blank? && scope.respond_to?(:ordered)
-        if has_type_ordering
-          scope = scope.ordered
+      elsif q.blank? && p_order.blank?
+        if scope.respond_to?(:ordered)
+          if has_type_ordering
+            scope = scope.ordered
+          else
+            scope = scope.unscope(:order).ordered
+          end
         else
-          scope = scope.unscope(:order).ordered
+          primary_key_order = { klass.primary_key => :desc }
+
+          if has_type_ordering
+            scope = scope.order(primary_key_order)
+          else
+            scope = scope.unscope(:order).order(primary_key_order)
+          end
         end
       end
 
@@ -231,7 +242,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
         scope = scope.includes(*klass.folio_console_select2_includes)
       end
 
-      pagination, records = pagy(scope, items: AUTOCOMPLETE_PAGY_ITEMS)
+      pagination, records = pagy(scope, page: p_page, items: q.blank? ? 10 : AUTOCOMPLETE_PAGY_ITEMS)
       records = sort_exact_match_first(records, q) if q.present?
 
       render_select2_options(records,
