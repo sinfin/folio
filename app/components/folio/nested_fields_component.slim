@@ -71,33 +71,34 @@ div[
       - elsif @add != :hidden
         == @add
 
-      template.f-nested-fields__template[
-        hidden=true
-        data=stimulus_target('template')
+  - if template?
+    template.f-nested-fields__template[
+      hidden=true
+      data=stimulus_target('template')
+    ]
+      .f-nested-fields__fields[
+        class="f-nested-fields__fields--dynamic"
+        data=stimulus_target('fields')
+        data-nested-fields-row-key=template_row_key
       ]
-        .f-nested-fields__fields[
-          class="f-nested-fields__fields--dynamic"
-          data=stimulus_target('fields')
-          data-nested-fields-row-key=template_row_key
-        ]
-          = @f.simple_fields_for fields_name(template_row_key),
-                                 new_object,
-                                 fields_options(template_row_key) do |ff|
-            ruby:
-              @g = ff
-              @row_key = template_row_key if virtual?
-              @row_index = 0 if virtual?
-              supports_position = supports_position?(@g.object)
+        = @f.simple_fields_for fields_name(template_row_key),
+                               new_object,
+                               fields_options(template_row_key) do |ff|
+          ruby:
+            @g = ff
+            @row_key = template_row_key if virtual?
+            @row_index = 0 if virtual?
+            supports_position = supports_position?(@g.object)
 
-            .f-nested-fields__fields-content
-              = content
+          .f-nested-fields__fields-content
+            = content
 
-            - unless virtual?
-              = @g.hidden_field :id, class: "f-nested-fields__id-input"
+          - unless virtual?
+            = @g.hidden_field :id, class: "f-nested-fields__id-input"
 
-            = controls(supports_position)
+          = controls(supports_position)
 
-            - if supports_position && @fully_draggable
-              .f-nested-fields__sortable-backdrop
+          - if supports_position && @fully_draggable
+            .f-nested-fields__sortable-backdrop
 
-            - remove_instance_variable(:@__vc_content)
+          - remove_instance_variable(:@__vc_content)

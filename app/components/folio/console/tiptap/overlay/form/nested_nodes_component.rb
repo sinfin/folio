@@ -20,6 +20,8 @@ class Folio::Console::Tiptap::Overlay::Form::NestedNodesComponent < Folio::Conso
                                        key: @key,
                                        collection: nested_nodes_collection,
                                        add: add_button,
+                                       add_more: true,
+                                       control_tooltips: true,
                                        class_name: "f-c-tiptap-overlay-form-nested-nodes__nested-fields",
                                        fields_wrap_class_name: "f-c-tiptap-overlay-form-nested-nodes__nested-fields-fields-wrap",
                                        virtual: {

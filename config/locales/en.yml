@@ -15,6 +15,11 @@ en:
   folio:
     nested_fields_component:
       add: Add
+      add_more: Add more
+      destroy: Remove
+      duplicate: Duplicate
+      move_down: Move down
+      move_up: Move up
 
     root_breadcrumb: Homepage
     file:

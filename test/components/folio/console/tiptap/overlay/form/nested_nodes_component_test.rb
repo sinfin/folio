@@ -37,6 +37,7 @@ class Folio::Console::Tiptap::Overlay::Form::NestedNodesComponentTest < Folio::C
     assert_selector('[name="tiptap_node_attrs[data][cards][item_0][type]"][value="Folio::Console::Tiptap::Overlay::Form::NestedNodesComponentTest::NestedCard"]',
                     visible: :all)
     assert_selector('[name="tiptap_node_attrs[data][cards][item_0][data][title]"]')
+    assert_selector('.f-nested-fields__fields[data-nested-fields-row-key="item_0"] .f-nested-fields__control--add-more[data-action*="onAddMoreClick"]')
   end
 
   test "does not prebuild nested node row when disabled" do
@@ -45,6 +46,7 @@ class Folio::Console::Tiptap::Overlay::Form::NestedNodesComponentTest < Folio::C
 
     assert_no_selector('.f-nested-fields__fields[data-nested-fields-row-key="item_0"]', visible: :all)
     assert_selector(".f-nested-fields__template", visible: :all)
+    assert_equal 1, rendered_content.scan("f-nested-fields__control--add-more").size
     assert_includes(rendered_content, 'name="tiptap_node_attrs[data][cards][f-nested-fields-template-cards][data][title]"')
   end
 
@@ -69,11 +71,18 @@ class Folio::Console::Tiptap::Overlay::Form::NestedNodesComponentTest < Folio::C
     assert_selector('[name="tiptap_node_attrs[data][cards][item_0][type]"][value="Folio::Console::Tiptap::Overlay::Form::NestedNodesComponentTest::NestedCard"]',
                     visible: :all)
     assert_selector('[name="tiptap_node_attrs[data][cards][item_0][data][title]"][value="First card"]')
+    assert_selector('.f-nested-fields__fields[data-nested-fields-row-key="item_0"] .f-nested-fields__control--add-more[data-action*="onAddMoreClick"]')
+    assert_selector(".f-nested-fields__control--destroy + .f-nested-fields__control--add-more + .f-nested-fields__control--duplicate")
     assert_selector('.f-nested-fields__control--duplicate[data-action*="onDuplicateClick"]')
     assert_selector('.f-nested-fields__control--destroy[data-action*="onDestroyClick"]')
+    assert_selector('.f-nested-fields__control--destroy[data-controller*="f-tooltip"]')
+    assert_selector('.f-nested-fields__control--add-more[data-controller*="f-tooltip"]')
+    assert_selector('.f-nested-fields__control--duplicate[data-controller*="f-tooltip"]')
+    assert_selector('.f-nested-fields__control--arrow[data-action*="onPositionUpClick"][data-controller*="f-tooltip"]')
+    assert_selector('.f-nested-fields__control--arrow[data-action*="onPositionDownClick"][data-controller*="f-tooltip"]')
+    assert_no_selector('.f-nested-fields__control--sortable-handle[data-controller*="f-tooltip"]')
     assert_selector(".f-nested-fields__template", visible: :all)
     assert_includes(rendered_content, 'name="tiptap_node_attrs[data][cards][f-nested-fields-template-cards][data][title]"')
-    assert_no_selector('[data-controller*="f-tooltip"]')
     assert_no_selector('[data-action*="addNestedNode"]')
   end
 

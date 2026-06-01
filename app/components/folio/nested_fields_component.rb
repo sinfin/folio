@@ -9,6 +9,7 @@ class Folio::NestedFieldsComponent < Folio::ApplicationComponent
                  key:,
                  collection: nil,
                  add: true,
+                 add_more: false,
                  destroy: true,
                  position: true,
                  fully_draggable: false,
@@ -21,12 +22,14 @@ class Folio::NestedFieldsComponent < Folio::ApplicationComponent
                  destroy_icon_height: 24,
                  destroy_label: nil,
                  virtual: nil,
-                 duplicate: false)
+                 duplicate: false,
+                 control_tooltips: nil)
     @f = f
     @key = key
     @virtual = virtual
     @collection = collection || default_collection
     @add = add
+    @add_more = add_more
     @destroy = destroy
     @position = position
     @fully_draggable = fully_draggable
@@ -39,6 +42,7 @@ class Folio::NestedFieldsComponent < Folio::ApplicationComponent
     @destroy_icon_height = destroy_icon_height
     @destroy_label = destroy_label
     @duplicate = duplicate
+    @control_tooltips = control_tooltips
   end
 
   def data
@@ -97,16 +101,23 @@ class Folio::NestedFieldsComponent < Folio::ApplicationComponent
   end
 
   def controls(supports_position, destroyed: false)
-    return if @destroy.blank? && !supports_position && !@duplicate
+    return if @destroy.blank? && !supports_position && !@duplicate && !add_more?
 
     content_tag(:div, class: "f-nested-fields__controls") do
       safe_join([
         destroy_control(destroyed:),
+        add_more_control,
         duplicate_control,
         position_hidden_field(supports_position),
-        position_control(:arrow_up, "onPositionUpClick", supports_position),
+        position_control(icon: :arrow_up,
+                         action: "onPositionUpClick",
+                         supports_position:,
+                         tooltip: t(".move_up")),
         sortable_handle_control(supports_position),
-        position_control(:arrow_down, "onPositionDownClick", supports_position),
+        position_control(icon: :arrow_down,
+                         action: "onPositionDownClick",
+                         supports_position:,
+                         tooltip: t(".move_down")),
       ].compact)
     end
   end
@@ -160,6 +171,24 @@ class Folio::NestedFieldsComponent < Folio::ApplicationComponent
   end
 
   private
+    def template?
+      @add.present? || add_more?
+    end
+
+    def add_more?
+      @add_more == true
+    end
+
+    def add_more_control
+      return unless add_more?
+
+      content_tag(:div,
+                  folio_icon(:plus, height: 24),
+                  class: "f-nested-fields__control f-nested-fields__control--add-more",
+                  data: control_data(action: "onAddMoreClick",
+                                     tooltip: t(".add_more")))
+    end
+
     def default_collection
       collection = @f.object.send(@key)
       return collection if virtual?
@@ -181,7 +210,8 @@ class Folio::NestedFieldsComponent < Folio::ApplicationComponent
         content_tag(:div,
                     destroy_control_content,
                     class: "f-nested-fields__control f-nested-fields__control--destroy",
-                    data: stimulus_action(click: "onDestroyClick")),
+                    data: control_data(action: "onDestroyClick",
+                                       tooltip: t(".destroy"))),
       ].compact)
     end
 
@@ -216,13 +246,14 @@ class Folio::NestedFieldsComponent < Folio::ApplicationComponent
       @g.hidden_field :position, class: "f-nested-fields__position-input"
     end
 
-    def position_control(icon, action, supports_position)
+    def position_control(icon:, action:, supports_position:, tooltip:)
       return unless supports_position
 
       content_tag(:div,
                   folio_icon(icon, height: 24),
                   class: "f-nested-fields__control f-nested-fields__control--arrow",
-                  data: stimulus_action(click: action))
+                  data: control_data(action:,
+                                     tooltip:))
     end
 
     def duplicate_control
@@ -231,7 +262,15 @@ class Folio::NestedFieldsComponent < Folio::ApplicationComponent
       content_tag(:div,
                   folio_icon(:content_copy, height: 24, class_name: "f-nested-fields__duplicate-icon"),
                   class: "f-nested-fields__control f-nested-fields__control--duplicate",
-                  data: stimulus_action(click: "onDuplicateClick"))
+                  data: control_data(action: "onDuplicateClick",
+                                     tooltip: t(".duplicate")))
+    end
+
+    def control_data(action:, tooltip:)
+      return stimulus_action(click: action) if @control_tooltips.blank?
+
+      stimulus_merge_data(stimulus_action(click: action),
+                          stimulus_tooltip(tooltip, placement: :left))
     end
 
     def sortable_handle_control(supports_position)

@@ -60,6 +60,21 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
     this.focusAndScrollIntoView(field)
   }
 
+  onAddMoreClick (e) {
+    e.preventDefault()
+    const fields = e.target.closest('.f-nested-fields__fields')
+
+    if (!fields) return
+
+    const field = this.nodeFromTemplate()
+
+    fields.insertAdjacentElement('afterend', field)
+    this.redoPositions()
+    this.dispatchRequiredEvents('added', { field })
+
+    this.focusAndScrollIntoView(field)
+  }
+
   dispatchRequiredEvents (name, data = {}) {
     const detail = this.dispatchNestedFieldsEvent(name, data)
 
