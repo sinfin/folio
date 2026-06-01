@@ -9,6 +9,12 @@ class Folio::Ai::TextSuggestionsJobTest < ActiveJob::TestCase
     end
   end
 
+  class SecretLeakingProviderAdapter
+    def generate_suggestions(prompt:, field:, suggestion_count:)
+      raise RuntimeError, "SECRET_PROMPT_BODY"
+    end
+  end
+
   class CapturingProviderAdapter
     attr_reader :calls
 
@@ -107,6 +113,25 @@ class Folio::Ai::TextSuggestionsJobTest < ActiveJob::TestCase
     message = perform_text_suggestions_job(params: job_params(provider_adapter_class_name: RaisingProviderAdapter.name))
 
     assert_includes message[:payload]["data"]["html"], I18n.t("folio.ai.console.errors.provider_timeout")
+  end
+
+  test "logs unexpected failures without exception messages" do
+    logged_messages = []
+    logger = Object.new
+    logger.define_singleton_method(:warn) { |message| logged_messages << message }
+
+    Rails.stub(:logger, logger) do
+      message = perform_text_suggestions_job(params: job_params(provider_adapter_class_name: SecretLeakingProviderAdapter.name))
+
+      assert_includes message[:payload]["data"]["html"], I18n.t("folio.ai.console.errors.provider_error")
+    end
+
+    assert_equal 1, logged_messages.length
+    assert_includes logged_messages.first, "error_class=RuntimeError"
+    assert_includes logged_messages.first, "request_id=request-hash"
+    assert_includes logged_messages.first, "integration_key=dummy_blog_articles"
+    assert_includes logged_messages.first, "field_key=title"
+    assert_not_includes logged_messages.first, "SECRET_PROMPT_BODY"
   end
 
   test "does not mutate Folio current state" do

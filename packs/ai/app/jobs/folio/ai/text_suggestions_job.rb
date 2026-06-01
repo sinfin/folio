@@ -18,7 +18,7 @@ class Folio::Ai::TextSuggestionsJob < Folio::ApplicationJob
       broadcast_result(suggestion_result)
     end
   rescue StandardError => e
-    Rails.logger.warn("[Folio::Ai] Text suggestions job failed: #{e.class}: #{e.message}")
+    log_failure(e)
     broadcast_result(error_result(:provider_error)) if can_broadcast_failure?
   end
 
@@ -34,6 +34,16 @@ class Folio::Ai::TextSuggestionsJob < Folio::ApplicationJob
 
     def can_broadcast_failure?
       request_id.present? && message_bus_client_id.present?
+    end
+
+    def log_failure(error)
+      Rails.logger.warn(
+        "[Folio::Ai] Text suggestions job failed: " \
+        "error_class=#{error.class.name} " \
+        "request_id=#{request_id} " \
+        "integration_key=#{request_params[:integration_key]} " \
+        "field_key=#{request_params[:field_key]}"
+      )
     end
 
     def suggestion_result

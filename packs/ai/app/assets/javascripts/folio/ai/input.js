@@ -309,14 +309,25 @@
       }
 
       showClientError (message) {
+        const errorMessage = message || this.genericErrorTextValue
         const textSuggestions = this.textSuggestionsElement
-        if (!this.shouldDispatchClientError || !textSuggestions) return
+
+        if (!this.shouldDispatchClientError || !textSuggestions) {
+          this.alertInitialClientError(errorMessage)
+          return
+        }
 
         this.dispatch('clientError', {
           target: textSuggestions,
           bubbles: true,
-          detail: { message }
+          detail: { message: errorMessage }
         })
+      }
+
+      alertInitialClientError (message) {
+        if (this.statusValue !== STATUS_INITIAL_LOADING) return
+
+        window.alert(message)
       }
 
       applyBufferedMessageBusMessage () {
@@ -409,6 +420,7 @@
         this.pendingTextSuggestionsRequestId = null
         this.awaitingTextSuggestionsResult = false
         this.setStatus(STATUS_IDLE)
+        if (!this.isOpen) this.element.classList.remove(INPUT_OPEN_CLASS)
         this.syncControls()
       }
 
