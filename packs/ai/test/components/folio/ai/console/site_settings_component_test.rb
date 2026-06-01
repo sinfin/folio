@@ -110,13 +110,15 @@ class Folio::Ai::Console::SiteSettingsComponentTest < Folio::Console::ComponentT
   def test_render_disables_settings_without_eligible_providers
     site = build(:folio_site, ai_settings: { enabled: true })
 
-    render_component(site, provider_api_key_env_values: {})
+    I18n.with_locale(:en) do
+      render_component(site, provider_api_key_env_values: {})
+    end
 
     assert_selector(".f-ai-c-site-settings__intro.alert-danger",
-                    text: I18n.t("folio.ai.console.site_settings_component.no_eligible_providers"))
-    assert_selector("input[name$='[ai_settings][enabled]'][value='0']", visible: :all)
-    assert_selector("input[name$='[ai_settings][enabled]'][disabled]", visible: :all)
-    assert_no_selector("select[name$='[ai_settings][default_provider]']")
+                    text: "Configure AI provider credentials before editing AI suggestions settings for this site.")
+    assert_no_selector(".f-ai-c-site-settings input", visible: :all)
+    assert_no_selector(".f-ai-c-site-settings select", visible: :all)
+    assert_no_selector(".f-ai-c-site-settings textarea", visible: :all)
     assert_no_selector(".f-ai-c-site-settings__integration")
   end
 

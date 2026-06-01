@@ -115,10 +115,6 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
       "#{@form.object_name}_ai_settings_#{path.join("_")}".parameterize(separator: "_")
     end
 
-    def hidden_disabled_enabled_field
-      helpers.hidden_field_tag(field_name(:enabled), "0")
-    end
-
     def site_setting(key)
       @site.ai_settings_data[key.to_s]
     end

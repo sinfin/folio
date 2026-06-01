@@ -177,6 +177,17 @@ class Folio::Ai::CurrentFormSnapshotTest < ActiveSupport::TestCase
     assert_equal ["First", "Second"], filtered_snapshot(snapshot)["folio_page[title]"]
   end
 
+  test "returns empty hash for non hash snapshots" do
+    [
+      [],
+      ["bad"],
+      "bad",
+      1,
+    ].each do |snapshot|
+      assert_equal({}, filtered_snapshot(snapshot))
+    end
+  end
+
   private
     def filtered_snapshot(snapshot, record_class: Folio::Page)
       Folio::Ai::CurrentFormSnapshot.call(snapshot:,

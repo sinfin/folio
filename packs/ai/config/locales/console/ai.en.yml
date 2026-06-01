@@ -26,7 +26,7 @@ en:
           regenerate_label: Save custom instructions
         site_settings_component:
           intro: Configure AI suggestions per site and registered field. A field is available in editor forms only when the site is enabled, the field is enabled, and its default prompt is not blank.
-          no_eligible_providers: Configure at least one eligible AI provider before enabling AI suggestions for this site.
+          no_eligible_providers: Configure AI provider credentials before editing AI suggestions settings for this site.
           enabled_label: Enable AI suggestions for this site
           default_provider: Default provider
           default_model: Default model

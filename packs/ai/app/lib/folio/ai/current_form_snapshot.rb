@@ -40,9 +40,9 @@ class Folio::Ai::CurrentFormSnapshot
     def normalized_snapshot
       return {} if snapshot.blank?
 
-      value = snapshot.respond_to?(:to_unsafe_h) ? snapshot.to_unsafe_h : snapshot.to_h
-      value.is_a?(Hash) ? value : {}
-    rescue NoMethodError
+      return snapshot.to_unsafe_h if snapshot.respond_to?(:to_unsafe_h)
+      return snapshot if snapshot.is_a?(Hash)
+
       {}
     end
 

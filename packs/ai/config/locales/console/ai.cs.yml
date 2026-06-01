@@ -26,7 +26,7 @@ cs:
           regenerate_label: Uložit vlastní instrukce
         site_settings_component:
           intro: Nastavte AI návrhy pro tento web a registrovaná pole. Pole je v editaci dostupné pouze tehdy, když je web zapnutý, pole je zapnuté a výchozí prompt není prázdný.
-          no_eligible_providers: Před zapnutím AI návrhů pro tento web nastavte alespoň jednoho dostupného AI providera.
+          no_eligible_providers: Před úpravou AI návrhů pro tento web nastavte přihlašovací údaje k AI provideru.
           enabled_label: Povolit AI návrhy pro tento web
           default_provider: Výchozí provider
           default_model: Výchozí model

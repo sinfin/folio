@@ -93,7 +93,7 @@
         const wrap = this.element.closest('.f-ai-input')
         if (!wrap) return
 
-        const input = wrap.querySelector('input[data-f-ai-input-target="input"]')
+        const input = wrap.querySelector('[data-f-ai-input-target="input"]')
         if (!input) return
 
         const value = input.value

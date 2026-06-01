@@ -113,6 +113,22 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
     assert_not_includes current_form_snapshot, "authenticity_token"
   end
 
+  test "ignores non hash current form snapshot json before enqueueing job" do
+    with_ai_config(enabled: true) do
+      assert_enqueued_jobs 1, only: Folio::Ai::TextSuggestionsJob do
+        post text_suggestions_console_api_ai_text_suggestions_path,
+             params: request_params(field_key: :title,
+                                    current_form_snapshot_json: ["bad"].to_json),
+             as: :json
+      end
+    end
+
+    assert_response :success
+    context = enqueued_text_suggestions_job_arguments.dig(:params, :context)
+
+    assert_equal({}, context.fetch(:current_form_snapshot, {}))
+  end
+
   test "renders record not ready directly for client class mismatch" do
     folio_page = create(:folio_page, site: @site)
 

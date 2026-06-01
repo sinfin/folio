@@ -90,9 +90,3 @@
   - else
     .f-ai-c-site-settings__intro.alert.alert-danger
       = t(".no_eligible_providers")
-
-    = hidden_disabled_enabled_field
-    = boolean_input(:enabled,
-                    label: t(".enabled_label"),
-                    checked: false,
-                    disabled: true)
