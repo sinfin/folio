@@ -585,7 +585,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
 
     def collection_action_for(action)
       opts = {
-        class_name: "f-c-catalogue__collection-actions-bar-button f-c-catalogue__collection-actions-bar-button--#{action}}",
+        class_name: "f-c-catalogue__collection-actions-bar-button f-c-catalogue__collection-actions-bar-button--#{action}",
         label: t(".actions.#{action}"),
         variant: :secondary,
         data: {},
