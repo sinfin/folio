@@ -72,10 +72,25 @@ class Folio::Users::SessionsControllerTest < ActionDispatch::IntegrationTest
     end
 
     def do_omniauth_callback(auth)
+      if Rails.application.config.folio_users_omniauth_providers.include?(:facebook)
+        do_facebook_omniauth_callback(auth)
+      else
+        do_google_omniauth_callback(auth)
+      end
+    end
+
+    def do_facebook_omniauth_callback(auth)
       OmniAuth.config.test_mode = true
       OmniAuth.config.mock_auth[:facebook] = omniauth_authentication_openstruct(auth.email, auth.nickname)
 
       get user_facebook_omniauth_callback_url, headers: { "omniauth.auth" => OmniAuth.config.mock_auth[:facebook] }
+    end
+
+    def do_google_omniauth_callback(auth)
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.mock_auth[:google_oauth2] = omniauth_authentication_openstruct(auth.email, auth.nickname)
+
+      get user_google_oauth2_omniauth_callback_url, headers: { "omniauth.auth" => OmniAuth.config.mock_auth[:google_oauth2] }
     end
   end
 end
