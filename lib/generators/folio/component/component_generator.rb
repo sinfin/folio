@@ -8,9 +8,9 @@ class Folio::ComponentGenerator < Rails::Generators::NamedBase
   source_root File.expand_path("templates", __dir__)
 
   def component
-    template "component.rb.tt", "app/components/#{component_name}_component.rb"
-    template "component.slim.tt", "app/components/#{component_name}_component.slim"
-    template "component_test.rb.tt", "test/components/#{component_name}_component_test.rb"
+    template "component.rb.tt", "#{pack_path_prefix}app/components/#{component_name}_component.rb"
+    template "component.slim.tt", "#{pack_path_prefix}app/components/#{component_name}_component.slim"
+    template "component_test.rb.tt", "#{pack_path_prefix}test/components/#{component_name}_component_test.rb"
   end
 
   private

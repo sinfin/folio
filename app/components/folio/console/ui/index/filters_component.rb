@@ -81,6 +81,8 @@ class Folio::Console::Ui::Index::FiltersComponent < Folio::Console::ApplicationC
         boolean_input(f, key)
       elsif data[:as] == :date_range
         date_range_input(f, key)
+      elsif data[:as] == :date
+        date_input(f, key, placeholder: data[:placeholder], prefix: data[:prefix])
       elsif data[:as] == :hidden
         hidden_input(f, key)
       elsif data[:as] == :text
@@ -118,6 +120,30 @@ class Folio::Console::Ui::Index::FiltersComponent < Folio::Console::ApplicationC
 
         select2_select(f, key, data, url:)
       end
+    end
+
+    def date_input(f, key, placeholder: nil, prefix: nil)
+      field = f.input key, label: false,
+                           input_html: {
+                             type: controller.params[key].present? ? "date" : "text",
+                             class: "f-c-ui-index-filters__date-input",
+                             value: controller.params[key],
+                             autocomplete: "off",
+                             placeholder: placeholder || "#{label_for_key(key)}...",
+                             data: { folio_date_placeholder: true },
+                             onfocus: "this.type='date'",
+                             onblur: "if(!this.value){this.type='text'}",
+                           },
+                           wrapper: :input_group,
+                           wrapper_html: { class: "f-c-ui-index-filters__date-input-wrap input-group--#{controller.params[key].present? ? "filled" : "empty"}" },
+                           clear_button: controller.params[key].present?
+
+      return field if prefix.blank?
+
+      label = content_tag(:span, prefix, class: "f-c-ui-index-filters__date-prefix")
+      content_tag(:div,
+                  safe_join([label, field]),
+                  class: "d-flex align-items-center gap-2")
     end
 
     def date_range_input(f, key)
@@ -234,6 +260,8 @@ class Folio::Console::Ui::Index::FiltersComponent < Folio::Console::ApplicationC
           config[:width]
         end
       elsif config[:as] == :numeric_range
+        "auto"
+      elsif config[:as] == :date
         "auto"
       elsif filtered && config[:as] == :date_range
         "250px"

@@ -9,3 +9,8 @@ window.Folio.Stimulus.APPLICATION = window.Folio.Stimulus.APPLICATION || window.
 window.Folio.Stimulus.register = window.Folio.Stimulus.register || ((name, klass) => {
   window.Folio.Stimulus.APPLICATION.register(name, klass)
 })
+
+document.dispatchEvent(new CustomEvent('folio:stimulus-ready', {
+  bubbles: true,
+  detail: { stimulus: window.Folio.Stimulus }
+}))
