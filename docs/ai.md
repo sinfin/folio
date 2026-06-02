@@ -330,20 +330,20 @@ arrays. The controller filters the payload server-side with
 values, stringifies numbers and booleans, and limits the snapshot to 200 fields
 before passing it as the text suggestion job argument.
 
-The server-side snapshot filter keeps only text-bearing context:
+The server-side snapshot filter keeps only the context roots that are useful for
+prompt generation:
 
 - configured top-level roots from `Folio::Ai.current_form_snapshot_field_roots`
 - all fields declared by `record_class.folio_tiptap_fields`, converted with
   `Folio::Tiptap::PlainText.from_value`
-- atom `data` leaves under roots derived from `record_class.atom_keys`
+- all atom payload leaves under roots derived from `record_class.atom_keys`
 - configured file placement text leaves from
-  `Folio::Ai.current_form_snapshot_file_placement_text_keys`, both for normal
-  placement roots derived from `record_class.folio_attachment_keys` and for
-  placement attributes nested inside atoms
+  `Folio::Ai.current_form_snapshot_file_placement_text_keys` for normal
+  placement roots derived from `record_class.folio_attachment_keys`
 
 Nested atom or file placement records marked with `_destroy` values of `1`,
-`"1"`, `true`, or `"true"` are omitted. Unknown roots, IDs, file IDs, positions,
-types, submit controls, authenticity tokens, slugs, and unrelated nested
+`"1"`, `true`, or `"true"` are omitted. Unknown roots, non-atom IDs, non-atom
+file IDs, submit controls, authenticity tokens, slugs, and unrelated nested
 associations are dropped.
 
 ## Model Contract

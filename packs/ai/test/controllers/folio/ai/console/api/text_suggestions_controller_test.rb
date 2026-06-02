@@ -75,7 +75,9 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
       "dummy_blog_article[perex]" => "Unsaved perex",
       "dummy_blog_article[slug]" => "private-slug",
       "dummy_blog_article[atoms_attributes][0][data][content]" => "Atom body",
+      "dummy_blog_article[atoms_attributes][0][content]" => "Direct atom body",
       "dummy_blog_article[atoms_attributes][0][type]" => "Dummy::Atom::Contents::Text",
+      "dummy_blog_article[atoms_attributes][0][cover_placement_attributes][file_id]" => "456",
       "dummy_blog_article[atoms_attributes][1][_destroy]" => "1",
       "dummy_blog_article[atoms_attributes][1][data][content]" => "Destroyed atom",
       "dummy_blog_article[image_or_embed_placements_attributes][0][title]" => "Image title",
@@ -102,10 +104,12 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
     assert_equal "Unsaved title", current_form_snapshot["dummy_blog_article[title]"]
     assert_equal "Unsaved perex", current_form_snapshot["dummy_blog_article[perex]"]
     assert_equal "Atom body", current_form_snapshot["dummy_blog_article[atoms_attributes][0][data][content]"]
+    assert_equal "Direct atom body", current_form_snapshot["dummy_blog_article[atoms_attributes][0][content]"]
+    assert_equal "Dummy::Atom::Contents::Text", current_form_snapshot["dummy_blog_article[atoms_attributes][0][type]"]
+    assert_equal "456", current_form_snapshot["dummy_blog_article[atoms_attributes][0][cover_placement_attributes][file_id]"]
     assert_equal "Image title",
                  current_form_snapshot["dummy_blog_article[image_or_embed_placements_attributes][0][title]"]
     assert_not_includes current_form_snapshot, "dummy_blog_article[slug]"
-    assert_not_includes current_form_snapshot, "dummy_blog_article[atoms_attributes][0][type]"
     assert_not_includes current_form_snapshot, "dummy_blog_article[atoms_attributes][1][data][content]"
     assert_not_includes current_form_snapshot, "dummy_blog_article[image_or_embed_placements_attributes][0][file_id]"
     assert_not_includes current_form_snapshot, "dummy_blog_article[image_or_embed_placements_attributes][1][description]"

@@ -56,9 +56,8 @@ class Folio::Ai::CurrentFormSnapshot
     def allowed_path?(path)
       field_path?(path) ||
         tiptap_path?(path) ||
-        atom_data_path?(path) ||
-        file_placement_text_path?(path) ||
-        atom_file_placement_text_path?(path)
+        atom_path?(path) ||
+        file_placement_text_path?(path)
     end
 
     def field_path?(path)
@@ -69,26 +68,14 @@ class Folio::Ai::CurrentFormSnapshot
       path.one? && tiptap_roots.include?(path.first)
     end
 
-    def atom_data_path?(path)
+    def atom_path?(path)
       atom_attribute_roots.include?(path.first) &&
-        path.length >= 4 &&
-        path.third == "data"
+        path.length >= 3
     end
 
     def file_placement_text_path?(path)
       file_placement_attribute_roots.include?(path.first) &&
         file_placement_text_keys.include?(path.last)
-    end
-
-    def atom_file_placement_text_path?(path)
-      atom_attribute_roots.include?(path.first) &&
-        file_placement_text_keys.include?(path.last) &&
-        path[2...-1].any? { |part| file_placement_attribute_root_name?(part) }
-    end
-
-    def file_placement_attribute_root_name?(part)
-      part.end_with?("_placement_attributes") ||
-        part.end_with?("_placements_attributes")
     end
 
     def destroyed_path?(path)

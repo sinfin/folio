@@ -53,22 +53,28 @@ class Folio::Ai::CurrentFormSnapshotTest < ActiveSupport::TestCase
     end
   end
 
-  test "keeps atom data leaves and drops atom metadata" do
+  test "keeps all atom payload leaves" do
     snapshot = {
       "folio_page[atoms_attributes][0][data][content]" => "Atom body",
       "folio_page[atoms_attributes][0][data][label]" => "Atom label",
+      "folio_page[atoms_attributes][0][content]" => "Direct atom body",
+      "folio_page[atoms_attributes][0][embed_code]" => "<iframe></iframe>",
       "folio_page[atoms_attributes][0][id]" => "10",
       "folio_page[atoms_attributes][0][type]" => "Dummy::Atom::Contents::Text",
       "folio_page[atoms_attributes][0][position]" => "1",
+      "folio_page[atoms_attributes][0][article][id]" => "20",
     }
 
     result = filtered_snapshot(snapshot)
 
     assert_equal "Atom body", result["folio_page[atoms_attributes][0][data][content]"]
     assert_equal "Atom label", result["folio_page[atoms_attributes][0][data][label]"]
-    assert_not_includes result, "folio_page[atoms_attributes][0][id]"
-    assert_not_includes result, "folio_page[atoms_attributes][0][type]"
-    assert_not_includes result, "folio_page[atoms_attributes][0][position]"
+    assert_equal "Direct atom body", result["folio_page[atoms_attributes][0][content]"]
+    assert_equal "<iframe></iframe>", result["folio_page[atoms_attributes][0][embed_code]"]
+    assert_equal "10", result["folio_page[atoms_attributes][0][id]"]
+    assert_equal "Dummy::Atom::Contents::Text", result["folio_page[atoms_attributes][0][type]"]
+    assert_equal "1", result["folio_page[atoms_attributes][0][position]"]
+    assert_equal "20", result["folio_page[atoms_attributes][0][article][id]"]
   end
 
   test "keeps localized atom data leaves from record atom keys" do
@@ -123,7 +129,7 @@ class Folio::Ai::CurrentFormSnapshotTest < ActiveSupport::TestCase
     end
   end
 
-  test "keeps file placement text leaves inside atoms" do
+  test "keeps all file placement leaves inside atoms" do
     snapshot = {
       "folio_page[atoms_attributes][0][cover_placement_attributes][title]" => "Atom cover",
       "folio_page[atoms_attributes][0][cover_placement_attributes][file_id]" => "1",
@@ -136,8 +142,8 @@ class Folio::Ai::CurrentFormSnapshotTest < ActiveSupport::TestCase
     assert_equal "Atom cover", result["folio_page[atoms_attributes][0][cover_placement_attributes][title]"]
     assert_equal "Atom image description",
                  result["folio_page[atoms_attributes][0][image_placements_attributes][0][description]"]
-    assert_not_includes result, "folio_page[atoms_attributes][0][cover_placement_attributes][file_id]"
-    assert_not_includes result, "folio_page[atoms_attributes][0][image_placements_attributes][0][id]"
+    assert_equal "1", result["folio_page[atoms_attributes][0][cover_placement_attributes][file_id]"]
+    assert_equal "2", result["folio_page[atoms_attributes][0][image_placements_attributes][0][id]"]
   end
 
   test "omits nested records marked for destruction" do
