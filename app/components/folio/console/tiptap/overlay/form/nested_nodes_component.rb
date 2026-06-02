@@ -40,17 +40,8 @@ class Folio::Console::Tiptap::Overlay::Form::NestedNodesComponent < Folio::Conso
         safe_join([
           tag.input(type: "hidden", name: nested_node_input_name(row_key, :type), value: nested_node.class.name),
           tag.input(type: "hidden", name: nested_node_input_name(row_key, :version), value: nested_node.version),
-          nested_node_item_header(nested_node),
           nested_node_item_fields(nested_f, nested_node),
         ])
-      end
-    end
-
-    def nested_node_item_header(nested_node)
-      content_tag(:div, class: "f-c-tiptap-overlay-form-nested-nodes__item-header") do
-        content_tag(:h4,
-                    nested_node.class.model_name.human,
-                    class: "f-c-tiptap-overlay-form-nested-nodes__item-title")
       end
     end
 
