@@ -21,6 +21,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- **Console remote selects**: Select2 autocomplete now shows paginated blank-query options and localized minimum-input guidance for short non-blank queries instead of a normal no-results state.
 - **Tiptap custom nodes**: Suppress empty `.f-tiptap-node` wrappers when a custom node component returns `render? == false`, preventing leftover spacing for hidden nodes.
 - **Console flash autohide on server-rendered alerts**: `Folio::Console::Ui::FlashComponent` and `AlertComponent` now honor the `autohide` flag set on Rails flash (`flash: { notice: "...", autohide: true }`). The Stimulus controller `f-c-ui-alert` reads a new `autohide` value and closes the alert after 5s. Previously `autohide` was silently filtered out during the Cells → ViewComponent refactor and only the JS-side `Ui.Alert.create` honored it; flashes set by a controller `redirect_to` stayed visible until manually dismissed. JS `Ui.Alert.create` now delegates autohide to the same Stimulus controller (single code path).
 - **Console revision view**: Atoms preview iframe scrolls again in audit/revision mode when the editor uses horizontal layout (`pointer-events: auto` on `.f-c-simple-form-with-atoms__iframe` under `.f-c-layout-body--with-audit`). The read-only preview inside the iframe is unchanged (`.f-c-atoms-previews--non-interactive`).

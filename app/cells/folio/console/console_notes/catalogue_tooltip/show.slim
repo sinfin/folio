@@ -24,7 +24,7 @@ div[
           input.f-c-console-notes-catalogue-tooltip__note-input[
             type="checkbox"
             data-id=note.id
-            data-url=url_for([:toggle_closed_at, :console, :api, note])
+            data-url=url_for([:toggle_closed_at, :console, :api, note, format: :json])
             checked=note.closed_at?
           ]
 
