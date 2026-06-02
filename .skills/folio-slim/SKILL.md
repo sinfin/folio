@@ -124,6 +124,11 @@ button hidden=@hidden
 
 Use `==` only when rendering a trusted `html_safe` string where no safe alternative exists.
 
+## I18n keys
+
+Prefer relative I18n keys starting with `.` in views and component templates.
+Do not flag relative keys as issues; they are intentional and preferred.
+
 ## Keep templates short
 
 If a template exceeds ~50 lines or has deeply nested conditionals, split into **child ViewComponents** or **slots**. The template should be mostly structure; logic belongs in component methods.

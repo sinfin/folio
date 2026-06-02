@@ -76,6 +76,72 @@ class Folio::FileTest < ActiveSupport::TestCase
     assert_equal [file2], Folio::File.by_file_name("foo-bar")
   end
 
+  test "ordered sorts by newest created_at with id tiebreaker" do
+    created_at = Time.zone.parse("2026-04-29 10:00:00")
+    older = create(:folio_file_image, created_at: created_at - 1.hour)
+    lower_id = create(:folio_file_image, created_at:)
+    higher_id = create(:folio_file_image, created_at:)
+
+    records = Folio::File::Image.where(id: [older.id, lower_id.id, higher_id.id]).ordered
+
+    assert_equal [higher_id, lower_id, older], records.to_a
+  end
+
+  test "default_file_order replaces previous order" do
+    created_at = Time.zone.parse("2026-04-29 10:30:00")
+    older = create(:folio_file_image, created_at: created_at - 1.hour)
+    lower_id = create(:folio_file_image, created_at:)
+    higher_id = create(:folio_file_image, created_at:)
+
+    records = Folio::File::Image.where(id: [older.id, lower_id.id, higher_id.id])
+                                .order(id: :asc)
+                                .default_file_order
+
+    assert_equal [higher_id, lower_id, older], records.to_a
+  end
+
+  test "by_query can be ordered newest first for images and videos" do
+    created_at = Time.zone.parse("2026-04-29 11:00:00")
+    older_image = create(:folio_file_image, slug: "cs279-query-image-older", created_at: created_at - 1.hour)
+    newer_image = create(:folio_file_image, slug: "cs279-query-image-newer", created_at:)
+    older_video = create(:folio_file_video, slug: "cs279-query-video-older", created_at: created_at - 1.hour)
+    newer_video = create(:folio_file_video, slug: "cs279-query-video-newer", created_at:)
+
+    image_records = Folio::File::Image.by_query("cs279-query-image")
+                                      .where(id: [older_image.id, newer_image.id])
+                                      .ordered
+    video_records = Folio::File::Video.by_query("cs279-query-video")
+                                      .where(id: [older_video.id, newer_video.id])
+                                      .ordered
+
+    assert_equal [newer_image, older_image], image_records.to_a
+    assert_equal [newer_video, older_video], video_records.to_a
+  end
+
+  test "ordered pagination is stable across pages with identical created_at" do
+    created_at = Time.zone.parse("2026-04-29 09:00:00")
+    files = Array.new(4) { create(:folio_file_image, created_at:) }
+    ids = files.map(&:id)
+
+    scope = Folio::File::Image.where(id: ids).ordered
+
+    page1 = scope.limit(2).offset(0).to_a
+    page2 = scope.limit(2).offset(2).to_a
+
+    assert_equal 2, page1.size
+    assert_equal 2, page2.size
+    assert_empty (page1 & page2), "no record should appear on both pages"
+    assert_equal ids.sort, (page1 + page2).map(&:id).sort, "every record should appear exactly once"
+    assert_equal ids.sort.reverse, (page1 + page2).map(&:id), "pagination order must follow id DESC tiebreaker"
+  end
+
+  test "created_at column is NOT NULL on folio_files" do
+    column = Folio::File.columns_hash["created_at"]
+
+    assert column, "folio_files.created_at must exist"
+    assert_not column.null
+  end
+
   test "have 4 basic states" do
     file = Folio::File.new
     assert_equal [:unprocessed, :processing, :ready, :processing_failed], file.class.all_state_names

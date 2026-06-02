@@ -103,6 +103,62 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       assert_includes reload_url, "page=2", "reload_url should preserve page"
     end
 
+    if %w[image video].include?(klass.human_type)
+      test "#{klass} - index with by_file_name sorts newest first" do
+        created_at = Time.zone.parse("2026-04-29 14:00:00")
+        query = "cs279api#{klass.human_type}"
+        older = create(klass.model_name.singular,
+                       site: @site,
+                       file_name: query,
+                       created_at: created_at - 1.hour)
+        lower_id = create(klass.model_name.singular,
+                          site: @site,
+                          file_name: "#{query}-lower",
+                          created_at:)
+        higher_id = create(klass.model_name.singular,
+                           site: @site,
+                           file_name: "#{query}-higher",
+                           created_at:)
+        expected_ids = [higher_id.id, lower_id.id, older.id]
+
+        get url_for([:console, :api, klass, format: :json]), params: { by_file_name: query }
+
+        actual_ids = response.parsed_body["data"]
+                             .map { |record| record["id"].to_i }
+                             .select { |id| expected_ids.include?(id) }
+
+        assert_response :success
+        assert_equal expected_ids, actual_ids
+      end
+    end
+
+    test "#{klass} - pagination preserves explicit request_path after picker upload refresh" do
+      create_list(klass.model_name.singular, Folio::Console::FileControllerBase::PAGY_ITEMS + 1)
+
+      request_path = url_for([:console, klass, action: :index_for_picker, only_path: true])
+
+      get url_for([:pagination, :console, :api, klass, format: :json]), params: {
+        page: 1,
+        request_path:
+      }
+      assert_response(:ok)
+
+      html = Nokogiri::HTML(response.parsed_body["data"])
+      pagy_el = html.at_css(".f-c-ui-pagy")
+      assert pagy_el, "Pagy component should be present"
+
+      reload_url = pagy_el["data-f-c-ui-pagy-reload-url-value"]
+      reload_params = Rack::Utils.parse_query(URI.parse(reload_url).query)
+
+      assert_equal request_path, reload_params["request_path"]
+
+      page_link = html.at_css(".f-c-ui-pagy a[href*='page=2']")
+      assert page_link, "Pagy component should render page links"
+      assert_includes page_link["href"], request_path
+      assert_not_includes page_link["href"], "/console/api/"
+      assert_not_includes page_link["href"], "request_path"
+    end
+
     test "#{klass} - batch_bar" do
       get url_for([:batch_bar, :console, :api, klass, format: :json])
       assert_response(:ok)

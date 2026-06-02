@@ -219,6 +219,11 @@ $f-tiptap__media-min-width--desktop: 708px !default;
     }
   }
 
+  .node-folioTiptapNode,
+  .f-tiptap-node {
+    white-space: normal;
+  }
+
   .f-tiptap-avoid-external-layout {
     --f-tiptap-root__padding-x: 0;
   }

@@ -79,11 +79,13 @@ module Folio::Console::Api::FileControllerBase
   def pagination
     @pagy, _records = pagy(folio_console_records, items: Folio::Console::FileControllerBase::PAGY_ITEMS)
 
-    pagination_params = filter_params.to_h.merge("page" => params[:page])
+    request_path = pagination_request_path
+    pagination_params = filter_params.to_h.merge("page" => params[:page],
+                                                 "request_path" => request_path)
 
     @pagy_options = {
       reload_url: url_for([:pagination, :console, :api, @klass, pagination_params]),
-      request_path: pagination_request_path
+      request_path:
     }
 
     if %w[image video].include?(@klass.human_type)
@@ -412,10 +414,16 @@ module Folio::Console::Api::FileControllerBase
     end
 
     def index_json
-      pagination, records = pagy(folio_console_records.ordered, items: 60)
+      pagination, records = pagy(index_json_records, items: 60)
       meta = meta_from_pagy(pagination).merge(human_type: @klass.human_type)
 
       json_from_records(records, Folio::Console::FileSerializer, meta:)
+    end
+
+    def index_json_records
+      return folio_console_records if @sorted_by_param
+
+      folio_console_records.default_file_order
     end
 
     def index_cache_key
@@ -431,19 +439,16 @@ module Folio::Console::Api::FileControllerBase
     end
 
     def pagination_request_path
+      if params[:request_path].present? && console_file_request_path?(params[:request_path])
+        return params[:request_path]
+      end
+
       if request.referrer.present?
         begin
           uri = URI.parse(request.referrer)
           referrer_path = uri.path
 
-          # Check if referrer is a console file path (index, index_for_modal, or index_for_picker)
-          # Match patterns like:
-          # - /console/file/images
-          # - /console/file/images/index_for_modal
-          # - /console/file/images/index_for_picker
-          file_path_pattern = %r{/console/file/#{@klass.model_name.element.pluralize}(?:/(?:index_for_modal|index_for_picker))?$}
-
-          return referrer_path if referrer_path.match?(file_path_pattern)
+          return referrer_path if console_file_request_path?(referrer_path)
         rescue URI::InvalidURIError
           # Fallback if referrer can't be parsed
         end
@@ -451,6 +456,17 @@ module Folio::Console::Api::FileControllerBase
 
       # Fallback to default
       url_for([:console, @klass, only_path: true])
+    end
+
+    def console_file_request_path?(path)
+      return false unless path.is_a?(String)
+      return false unless path.start_with?("/") && !path.start_with?("//")
+
+      # Match paths like:
+      # - /console/file/images
+      # - /console/file/images/index_for_modal
+      # - /console/file/images/index_for_picker
+      path.match?(%r{/console/file/#{@klass.model_name.element.pluralize}(?:/(?:index_for_modal|index_for_picker))?\z})
     end
 
     def set_safe_file_ids

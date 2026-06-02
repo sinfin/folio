@@ -1,16 +1,21 @@
 ---
 name: folio-icons
 description: >-
-  Add or update icons in the Folio engine icon set: export from Figma, place
-  SVG in data/icons, normalize fills/strokes to currentColor, run bin/icons,
-  restart Rails so sprite and YAML metadata load.
+  Add or update icons in the Folio engine or a Folio host app icon set: export
+  from Figma, place SVG in the icon source directory, normalize fills/strokes
+  to currentColor, run bin/icons, restart Rails so sprite and YAML metadata
+  load.
 ---
 
-# Folio icon set (engine)
+# Folio icon sets
 
 Use this when adding or replacing SVGs in the shared Folio UI icon set inside
-this gem (not a host app’s own `bin/icons` unless that app follows the same
-layout).
+this gem, or in a Folio application that ships its own icon pipeline.
+
+The Folio engine paths below are the default reference. Host applications often
+have their own `bin/icons`, source icon directory, generated sprite, and metadata
+paths, but the add-normalize-generate-restart flow is the same. In a host app,
+read that app's `bin/icons` first and use the paths it configures.
 
 ## Steps
 
@@ -29,9 +34,11 @@ layout).
    - Keep structural values such as `fill="none"` on the root `<svg>` unless
      you deliberately want a filled canvas.
 
-4. **Run** `bin/icons` from the Folio engine repository root. It regenerates
+4. **Run** `bin/icons` from the project root that owns the icon set. In the
+   Folio engine repository, it regenerates
    `app/assets/images/folio_svg_sprite.svg` and `data/folio_icons.yaml` (do not
-   edit the YAML by hand).
+   edit the YAML by hand). In a host application, use that app's `bin/icons` and
+   generated paths instead.
 
    If the script exits asking for `npm install`, ensure
    `test/dummy/node_modules/.bin/svg-sprite` exists (install npm dependencies
@@ -50,6 +57,8 @@ layout).
 
 ## Host apps
 
-Applications generated from Folio may ship their own `bin/icons`, asset
-filenames, and `data/` paths. This skill describes the **Folio engine** layout
-only.
+Applications using Folio commonly ship their own `bin/icons`. Treat the local
+app as the owner of its icon set: add the SVG to the app's configured icon
+source directory, normalize themeable fills/strokes to `currentColor`, run the
+app's `bin/icons`, and verify the generated app sprite/metadata. Do not assume
+the engine filenames or `data/` paths when working in a host app.

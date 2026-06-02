@@ -98,7 +98,8 @@ class Folio::File < Folio::ApplicationRecord
   validate :validate_attribution_and_texts_if_needed
 
   # Scopes
-  scope :ordered, -> { order(created_at: :desc) }
+  scope :ordered, -> { order(created_at: :desc, id: :desc) }
+  scope :default_file_order, -> { reorder(arel_table[:created_at].desc, arel_table[:id].desc) }
 
   scope :by_placement, -> (placement_title) { order(created_at: :desc) }
 
@@ -370,6 +371,13 @@ class Folio::File < Folio::ApplicationRecord
       rescue StandardError
       end
     end
+  end
+
+  # Combined credit string used for JSON-LD creditText, RSS media:credit, etc.
+  # Joins author and attribution_source (deduplicated) and falls back to
+  # file_list_source when both are blank.
+  def credit_text
+    [author.presence, attribution_source.presence].compact_blank.uniq.join(" / ").presence || file_list_source.presence
   end
 
   def to_label

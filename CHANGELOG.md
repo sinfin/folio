@@ -2,12 +2,30 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+### Added
+- **Console sidebar `:separator` support**: Sites can now include `:separator` in `console_sidebar_prepended_links` (and `before_menu`/`before_site` variants) to insert visual dividers inside custom sidebar sections.
 
 ### Added
 
+- **`Folio::File.default_file_order` scope** — exposes the canonical newest-first ordering (`created_at DESC, id DESC`) used by console file listings and pickers, including a deterministic `id` tiebreaker for stable pagination.
+
 ### Changed
 
+- **Default file search results are sorted newest first** — search results in `Folio::Console::FileControllerBase#index` and `Folio::Console::Api::FileControllerBase#index_json` now apply `created_at DESC, id DESC` after `filter_by_params`, so the newest uploads appear first regardless of which filter combination is active.
+- **`ImageObject` `creditText`**: now uses `Folio::File#credit_text`, deduplicating matching `author` / `attribution_source` (e.g. `"Reuters / Reuters"` → `"Reuters"`) and falling back to `file_list_source` when both are
+  blank.
+
 ### Fixed
+
+- **Console remote selects**: Select2 autocomplete now shows paginated blank-query options and localized minimum-input guidance for short non-blank queries instead of a normal no-results state.
+- **Tiptap custom nodes**: Suppress empty `.f-tiptap-node` wrappers when a custom node component returns `render? == false`, preventing leftover spacing for hidden nodes.
+- **Console revision view**: Atoms preview iframe scrolls again in audit/revision mode when the editor uses horizontal layout (`pointer-events: auto` on `.f-c-simple-form-with-atoms__iframe` under `.f-c-layout-body--with-audit`). The read-only preview inside the iframe is unchanged (`.f-c-atoms-previews--non-interactive`).
+Left form column scrolls again in audit/revision mode (`pointer-events: auto` on `.f-c-simple-form-with-atoms__form-scroll`, with `pointer-events: none` re-applied on `.f-c-simple-form-with-atoms__form-container` to keep form fields non-interactive).
+- **friendly_id**: `strip_and_downcase_slug` now only normalizes the slug on new records or when the slug column was explicitly changed. Legacy records with mixed-case slugs are no longer silently downcased on every save, which previously broke `friendly_id` lookups (case-sensitive) on cached client-side URLs after the first save.
+- keep `index_for_picker` pagination links targeting the picker frame after uploads refresh pagy
+- refresh CSRF headers before JS API requests
+- console/layout/sidebar/search label overflow
+- use white-space: normal in tiptap nodes
 
 ## [7.6.4] - 2026-04-28
 
