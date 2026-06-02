@@ -22,6 +22,12 @@ class Folio::Console::Api::TiptapControllerTest < Folio::Console::BaseController
 
     validates :title,
               presence: true
+
+    def self.human_attribute_name(attribute, options = {})
+      return "Nested card title" if attribute.to_s == "title"
+
+      super
+    end
   end
 
   class CardGroup < Folio::Tiptap::Node
@@ -187,6 +193,8 @@ class Folio::Console::Api::TiptapControllerTest < Folio::Console::BaseController
     assert_nil hash["meta"]
 
     page = Capybara.string(hash["data"])
+    assert page.has_css?(".f-c-ui-validation-box", text: "Nested card title")
+    assert page.has_no_css?(".f-c-ui-validation-box", text: "Cards[0] title")
     assert page.has_css?('[name="tiptap_node_attrs[data][cards][item_0][data][title]"].is-invalid')
 
     post save_node_console_api_tiptap_path(format: :json), params: {

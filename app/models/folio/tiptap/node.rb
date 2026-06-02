@@ -209,7 +209,7 @@ class Folio::Tiptap::Node
           next if nested_node.valid?
 
           nested_node.errors.each do |error|
-            errors.add(:"#{key}[#{index}].#{error.attribute}", error.type, **error.options)
+            errors.import(error, attribute: :"#{key}[#{index}].#{error.attribute}")
           end
         end
       end
