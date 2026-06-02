@@ -58,12 +58,10 @@ window.FolioConsole.Ui.Alert.create = (data) => {
   alert.dataset.controller = 'f-c-ui-alert'
 
   if (data.autohide !== false) {
-    const autohideDelay = typeof data.autohide === 'number' ? data.autohide : 5000
-
-    setTimeout(() => {
-      const close = alert.querySelector('.f-c-ui-alert__close')
-      if (close) close.click()
-    }, autohideDelay)
+    alert.dataset.fCUiAlertAutohideValue = 'true'
+    if (typeof data.autohide === 'number') {
+      alert.dataset.fCUiAlertAutohideDelayValue = String(data.autohide)
+    }
   }
 
   if (data.data) {
@@ -78,8 +76,33 @@ window.FolioConsole.Ui.Alert.create = (data) => {
 }
 
 window.Folio.Stimulus.register('f-c-ui-alert', class extends window.Stimulus.Controller {
+  static values = {
+    autohide: Boolean,
+    autohideDelay: { type: Number, default: 5000 }
+  }
+
+  connect () {
+    if (this.autohideValue) {
+      this.autohideTimeout = setTimeout(() => {
+        const btn = this.element.querySelector('.f-c-ui-alert__close')
+        if (btn) btn.click()
+      }, this.autohideDelayValue)
+    }
+  }
+
+  disconnect () {
+    if (this.autohideTimeout) {
+      clearTimeout(this.autohideTimeout)
+      this.autohideTimeout = null
+    }
+  }
+
   close (e) {
     e.preventDefault()
+    if (this.autohideTimeout) {
+      clearTimeout(this.autohideTimeout)
+      this.autohideTimeout = null
+    }
     this.element.parentNode.removeChild(this.element)
   }
 })

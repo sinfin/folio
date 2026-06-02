@@ -8,13 +8,13 @@ class Folio::Console::CatalogueGenerator < Rails::Generators::NamedBase
   source_root File.expand_path("../templates", __FILE__)
 
   def index
-    template "index.slim.tt", "app/views/folio/console/#{base_path}/index.slim"
+    template "index.slim.tt", "#{pack_path_prefix}app/views/folio/console/#{base_path}/index.slim"
   end
 
   def cell
-    template "cell.rb.tt", "app/cells/folio/console/#{base_path}/catalogue_cell.rb"
-    template "cell.slim.tt", "app/cells/folio/console/#{base_path}/catalogue/show.slim"
-    template "cell_test.rb.tt", "test/cells/folio/console/#{base_path}/catalogue_cell_test.rb"
+    template "cell.rb.tt", "#{pack_path_prefix}app/cells/folio/console/#{base_path}/catalogue_cell.rb"
+    template "cell.slim.tt", "#{pack_path_prefix}app/cells/folio/console/#{base_path}/catalogue/show.slim"
+    template "cell_test.rb.tt", "#{pack_path_prefix}test/cells/folio/console/#{base_path}/catalogue_cell_test.rb"
   end
 
   private

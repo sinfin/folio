@@ -16,6 +16,9 @@ meta[
 - if !Rails.env.test? || ENV['TEST_WITH_ASSETS'].present?
   = stylesheet_link_tag stylesheet, media: 'all'
 
+  - Folio.enabled_pack_assets(:stylesheets).each do |pack_stylesheet|
+    = stylesheet_link_tag pack_stylesheet, media: 'all'
+
   - unless ENV['REACT_DEV']
     = stylesheet_link_tag 'folio/console/react', media: 'all'
 
@@ -35,3 +38,6 @@ meta[
 
     - if !Rails.env.test? || ENV['TEST_WITH_ASSETS'].present?
       = javascript_include_tag 'folio/console/base'
+
+      - Folio.enabled_pack_assets(:javascripts).each do |pack_javascript|
+        = javascript_include_tag pack_javascript
