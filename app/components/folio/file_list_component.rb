@@ -36,12 +36,15 @@ class Folio::FileListComponent < Folio::ApplicationComponent
                         values: {
                           file_type: @file_klass.to_s,
                           reload_pagy: @reload_pagy,
+                          uploading: false,
                         },
                         action: {
                           "f-file-list/message" => "onMessage",
                           "f-uppy:upload-success": "uppyUploadSuccess",
                           "f-c-files-display-toggle:table-view-change": "tableViewChange",
-                          "f-uppy:upload": "folioUploadsStarted"
+                          "f-uppy:upload": "folioUploadsStarted",
+                          "f-uppy:complete": "folioUploadsFinished",
+                          "f-uppy:cancel-all": "folioUploadsFinished",
                         })
   end
 
