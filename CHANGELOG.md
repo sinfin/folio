@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [7.7.0] - 2026-06-02
+
 ### Added
 
 - [packwerk](https://github.com/Shopify/packwerk) for functionality packs - see [docs/packs.md](docs/packs.md)
