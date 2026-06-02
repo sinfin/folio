@@ -218,7 +218,7 @@ GEM
       erubi (~> 1.4)
       parser (>= 2.4)
       smart_properties
-    bigdecimal (4.0.1)
+    bigdecimal (4.1.2)
     bindata (2.5.1)
     binding_of_caller (1.0.1)
       debug_inspector (>= 1.2.0)
@@ -784,8 +784,9 @@ GEM
     vcr (6.3.1)
       base64
     version_gem (1.1.9)
-    view_component (4.1.0)
-      activesupport (>= 7.1.0, < 8.2)
+    view_component (4.9.0)
+      actionview (>= 7.1.0)
+      activesupport (>= 7.1.0)
       concurrent-ruby (~> 1)
     warden (1.2.9)
       rack (>= 2.0.9)
