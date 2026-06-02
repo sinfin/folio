@@ -2,12 +2,13 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+
 ### Added
+
 - **Console sidebar `:separator` support**: Sites can now include `:separator` in `console_sidebar_prepended_links` (and `before_menu`/`before_site` variants) to insert visual dividers inside custom sidebar sections.
-
-### Added
-
 - **`Folio::File.default_file_order` scope** — exposes the canonical newest-first ordering (`created_at DESC, id DESC`) used by console file listings and pickers, including a deterministic `id` tiebreaker for stable pagination.
+- [packwerk](https://github.com/Shopify/packwerk) for functionality packs - see [docs/packs.md](docs/packs.md)
+- AI pack - text suggestions for inputs with `ai: true`, site and user per-field prompts - see [docs/ai.md](docs/ai.md)
 
 ### Changed
 
