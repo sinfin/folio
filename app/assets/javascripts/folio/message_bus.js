@@ -38,15 +38,12 @@ if (!folioMbHasExplicitLastId) {
   setTimeout(() => { window.Folio.MessageBus.onlyGetMessageIdForFirstMessage = false }, 5000)
 }
 
-window.Folio.MessageBus.lastId = folioMbHasExplicitLastId ? folioMbLastIdParsed : -2
+// -1 receives new messages only and gets an initial /__status message with
+// the current channel id, which message-bus handles internally.
+window.Folio.MessageBus.lastId = folioMbHasExplicitLastId ? folioMbLastIdParsed : -1
 
 window.Folio.MessageBus.handleMessage = (msg, globalMsgId, msgId) => {
   window.Folio.MessageBus.lastId = msgId
-
-  if (window.Folio.MessageBus.onlyGetMessageIdForFirstMessage) {
-    window.Folio.MessageBus.onlyGetMessageIdForFirstMessage = false
-    return
-  }
 
   const data = JSON.parse(msg)
 

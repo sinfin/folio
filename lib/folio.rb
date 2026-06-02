@@ -50,6 +50,11 @@ require "dragonfly/s3_data_store"
 require "dragonfly_libvips"
 
 module Folio
+  DEFAULT_ENABLED_PACKS = [].freeze
+
+  mattr_accessor :enabled_packs
+  self.enabled_packs = DEFAULT_ENABLED_PACKS.dup
+
   LANGUAGES = {
     cs: "CZ",
     sk: "SK",
@@ -58,7 +63,7 @@ module Folio
     es: "ES",
     en: "GB",
     en_US: "US"
-  }
+  }.freeze
 
   EMAIL_REGEXP = URI::MailTo::EMAIL_REGEXP # Devise.email_regexp
   OG_IMAGE_DIMENSIONS = "1200x630#"
@@ -67,6 +72,36 @@ module Folio
   MESSAGE_BUS_CHANNEL = "folio_messagebus_channel"
 
   LIGHTBOX_IMAGE_SIZE = "2560x2048>"
+
+  def self.configure
+    yield self
+  end
+
+  def self.pack_enabled?(name)
+    enabled_packs.include?(name.to_sym)
+  end
+
+  def self.enabled_pack_assets(type)
+    enabled_packs.flat_map { |pack_name| pack_assets(pack_name, type) }
+  end
+
+  def self.pack_assets(pack_name, type)
+    pack_module = pack_module(pack_name)
+    return [] unless pack_module&.respond_to?(:pack_assets)
+
+    Array(pack_module.pack_assets[type.to_sym]).map(&:to_s)
+  end
+
+  def self.pack_module(pack_name)
+    "Folio::#{pack_name.to_s.camelize}".safe_constantize
+  end
+
+  def self.load_enabled_packs!
+    enabled_packs.each do |pack_name|
+      pack_path = File.expand_path("../packs/#{pack_name}/lib/folio/#{pack_name}", __dir__)
+      require pack_path if File.exist?("#{pack_path}.rb")
+    end
+  end
 
   def self.table_name_prefix
     "folio_"
@@ -80,3 +115,5 @@ module Folio
     1.hour
   end
 end
+
+Folio.load_enabled_packs!

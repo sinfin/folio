@@ -2,8 +2,17 @@
 
 begin
   require "bundler/setup"
-rescue LoadError
-  puts "You must `gem install bundler` and `bundle install` to run rake tasks"
+rescue LoadError => e
+  abort <<~MESSAGE
+    Bundler setup failed:
+    #{e.class}: #{e.message}
+
+    Run rake tasks through Bundler, for example:
+      bundle exec rake app:packwerk:validate
+
+    If dependencies are missing, run:
+      bundle install
+  MESSAGE
 end
 
 require "rdoc/task"
