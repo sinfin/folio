@@ -48,7 +48,9 @@ Move cell JS/Sass into the **component colocated** paths; update **`//= require`
 
 ## Tests
 
-Replace **`Cell::TestCase`** with **`Folio::ComponentTest`** / **`Folio::Console::ComponentTest`**; assert rendered output; one **`render_inline`** per test. Full rules: folio-view-component.
+Replace **`Cell::TestCase`** with **`Folio::ComponentTest`** /
+**`Folio::Console::ComponentTest`**. Full rules:
+[`.skills/folio-testing/SKILL.md`](../folio-testing/SKILL.md).
 
 ## Cleanup & host apps
 

@@ -28,6 +28,8 @@ description: >-
 
 **JavaScript behavior:** follow [`.skills/folio-javascript/SKILL.md`](../folio-javascript/SKILL.md) for ES6+ conventions, `Folio.Api`, and flash events. For Stimulus controllers, see [`.skills/folio-stimulus/SKILL.md`](../folio-stimulus/SKILL.md). For migrating legacy jQuery/IIFE scripts, see [`.skills/folio-stimulus-migration-from-legacy-js/SKILL.md`](../folio-stimulus-migration-from-legacy-js/SKILL.md).
 
+**Testing:** follow [`.skills/folio-testing/SKILL.md`](../folio-testing/SKILL.md) for behavior-facing component tests, one render per test, and JavaScript behavior coverage.
+
 ## Generators
 
 - **Always** create new components with the Folio generator — do not copy-paste empty classes by hand.
@@ -81,9 +83,8 @@ Full conventions in **[`.skills/folio-stimulus/SKILL.md`](../folio-stimulus/SKIL
 
 ## Testing
 
+- Follow [`.skills/folio-testing/SKILL.md`](../folio-testing/SKILL.md).
 - Subclass **`Folio::ComponentTest`** or **`Folio::Console::ComponentTest`** (`test/test_helper_base.rb`).
-- Assert on **rendered output** (`render_inline`, `assert_selector`, `rendered_content`) — not isolated calls to private methods.
-- **One `render_inline` per test**; extra cases → separate tests.
 - Path: **`test/components/.../name_component_test.rb`**.
 
 ## Quality gates

@@ -117,6 +117,12 @@ this.onResize = window.Folio.debounce(() => { this.handleResize() }, 200)
 
 Source: `app/assets/javascripts/folio/debounce.js`, `app/assets/javascripts/folio/throttle.js`.
 
+## Testing
+
+Testing strategy lives in [`.skills/folio-testing/SKILL.md`](../folio-testing/SKILL.md).
+For JavaScript behavior, use rendered DOM, component, integration/system, or
+actual JavaScript behavior tests; do not rely on asset source-string assertions.
+
 ## Reference
 
 - `app/assets/javascripts/folio/api.js` — API fetch wrappers
