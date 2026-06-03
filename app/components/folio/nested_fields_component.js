@@ -169,6 +169,8 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
 
   onDuplicateClick (e) {
     e.preventDefault()
+    this.hideControlTooltip(e.currentTarget)
+
     const fields = e.target.closest('.f-nested-fields__fields')
 
     this.duplicateFields(fields)
@@ -204,6 +206,12 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
     return Array.from(target.querySelectorAll('.form-control')).find((input) => {
       return !input.hidden && !input.disabled && !input.closest('[hidden]') && !input.closest('.f-c-files-picker')
     })
+  }
+
+  hideControlTooltip (control) {
+    if (!control) return
+
+    control.dispatchEvent(new window.MouseEvent('mouseleave'))
   }
 
   copyFormValues (source, clone) {
