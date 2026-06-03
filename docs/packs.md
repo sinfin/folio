@@ -130,3 +130,29 @@ The AI pack is disabled by default. Host applications opt in with
 Host applications own field registration, concrete form placement, model
 context methods, prompt copy, rollout decisions and domain-specific aggregate
 actions.
+
+## Video Provider Packs
+
+Video playback/processing has a small root contract on `Folio::File::Video`.
+External processing providers are optional packs:
+
+- `packs/cloudflare_stream` owns `Folio::CloudflareStream::*`.
+- `packs/cra_media_cloud` owns `Folio::CraMediaCloud::*`.
+
+Host applications opt into only the provider they use:
+
+```ruby
+Folio.enabled_packs += [:cloudflare_stream]
+# or
+Folio.enabled_packs += [:cra_media_cloud]
+```
+
+Each provider pack registers its playback provider class in
+`config.folio_files_video_playback_provider_classes`. Root Folio only registers
+`direct_file`; it must not reference Cloudflare or CRA constants directly.
+
+If a host configures a provider key but does not enable the matching pack, video
+playback raises `Folio::Video::Providers::UnavailableProviderError` with an
+instruction to enable the pack or change the configured provider. This is
+intentional: projects using CRA Media Cloud should fail at the provider boundary
+with a clear setup fix instead of silently falling back to direct-file playback.

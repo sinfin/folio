@@ -2,7 +2,7 @@
 
 require "uri"
 
-class Folio::Video::Providers::CloudflareStream < Folio::Video::Providers::Base
+class Folio::CloudflareStream::VideoProvider < Folio::Video::Providers::Base
   def ready?
     data["ready_to_stream"] == true && playback.values.any?(&:present?)
   end
@@ -56,7 +56,7 @@ class Folio::Video::Providers::CloudflareStream < Folio::Video::Providers::Base
       signed_src = playback_url_for(src)
       return if signed_src.blank?
 
-      { src: signed_src, type:, label: }
+      { src: signed_src, type: type, label: label }
     end
 
     def status_state

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::Video::Providers::CraMediaCloud < Folio::Video::Providers::Base
+class Folio::CraMediaCloud::VideoProvider < Folio::Video::Providers::Base
   def ready?
     video.ready? && sources.any?
   end
@@ -53,7 +53,7 @@ class Folio::Video::Providers::CraMediaCloud < Folio::Video::Providers::Base
       return if src.blank?
 
       {
-        src:,
+        src: src,
         type: "video/mp4",
         label: "MP4",
       }

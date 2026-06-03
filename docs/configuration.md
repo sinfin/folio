@@ -28,17 +28,11 @@ This chapter lists the most important configuration options for the Folio Rails 
 | `config.folio_direct_s3_upload_allow_public` | `false` | Allow anonymous direct uploads to S3 |
 | `config.folio_atom_files_url` | lambda | Builds file URLs inside atoms |
 | `config.folio_cookie_consent_configuration` | hash | Settings for the cookie-consent banner |
-| `config.folio_cloudflare_stream_account_id` | `ENV["CLOUDFLARE_STREAM_ACCOUNT_ID"]` | Cloudflare Stream account id for video processing |
-| `config.folio_cloudflare_stream_api_token` | `ENV["CLOUDFLARE_STREAM_API_TOKEN"]` | Cloudflare Stream API token with Stream Write permission |
-| `config.folio_cloudflare_stream_allowed_origins` | `ENV["CLOUDFLARE_STREAM_ALLOWED_ORIGINS"]` | Comma-separated Stream embed origins for new videos |
-| `config.folio_cloudflare_stream_require_signed_urls` | `ENV["CLOUDFLARE_STREAM_REQUIRE_SIGNED_URLS"]` | Whether new Stream videos require signed playback URLs |
-| `config.folio_cloudflare_stream_source_url_expires_in` | `2.hours` | Expiration window for short-lived source URLs passed to Stream |
-| `config.folio_cloudflare_stream_signed_url_token_expires_in` | `ENV["CLOUDFLARE_STREAM_SIGNED_URL_TOKEN_EXPIRES_IN"]` or `1.hour` | Expiration window for Stream signed playback tokens |
-| `config.folio_cloudflare_stream_poll_interval` | `30.seconds` | Delay between Stream processing status checks |
-| `config.folio_cloudflare_stream_max_poll_attempts` | `240` | Maximum Stream polling attempts before marking processing failed |
-| `config.folio_cloudflare_stream_monitor_stale_after` | `ENV["CLOUDFLARE_STREAM_MONITOR_STALE_AFTER"]` or `5.minutes` | Age after which the monitor cron re-schedules a lost Stream progress check |
+| `config.folio_files_video_default_processing_provider` | `:direct_file` | Default provider key for new video processing |
+| `config.folio_files_video_playback_provider_classes` | direct-file mapping | Provider key to class-name registry; optional provider packs extend it |
 
-*This is only a subset—see `lib/folio/engine.rb` for the full list.*
+*This is only a subset—see `lib/folio/engine.rb` and enabled pack entry modules
+for the full list.*
 
 ---
 
@@ -60,7 +54,14 @@ After changing configuration, restart your Rails server.
 
 ### Cloudflare Stream
 
-For host applications using `Folio::CloudflareStream::FileProcessing`, configure:
+For host applications using `Folio::CloudflareStream::FileProcessing`, enable the
+pack before engine initializers run:
+
+```ruby
+Folio.enabled_packs += [:cloudflare_stream]
+```
+
+Then configure:
 
 ```sh
 CLOUDFLARE_STREAM_ACCOUNT_ID=todo-account-id
@@ -89,6 +90,20 @@ If the host application schedules `Folio::CloudflareStream::MonitorProcessingJob
 `CLOUDFLARE_STREAM_MONITOR_STALE_AFTER` controls how old the last progress check
 must be before Folio treats the polling chain as lost and enqueues a new
 `CheckProgressJob`.
+
+The Cloudflare Stream pack registers these config defaults when enabled:
+
+| Setting | Default | Purpose |
+|---------|---------|---------|
+| `config.folio_cloudflare_stream_account_id` | `ENV["CLOUDFLARE_STREAM_ACCOUNT_ID"]` | Cloudflare Stream account id for video processing |
+| `config.folio_cloudflare_stream_api_token` | `ENV["CLOUDFLARE_STREAM_API_TOKEN"]` | Cloudflare Stream API token with Stream Write permission |
+| `config.folio_cloudflare_stream_allowed_origins` | `ENV["CLOUDFLARE_STREAM_ALLOWED_ORIGINS"]` | Comma-separated Stream embed origins for new videos |
+| `config.folio_cloudflare_stream_require_signed_urls` | `false` | Whether new Stream videos require signed playback URLs |
+| `config.folio_cloudflare_stream_source_url_expires_in` | `2.hours` | Expiration window for short-lived source URLs passed to Stream |
+| `config.folio_cloudflare_stream_signed_url_token_expires_in` | `ENV["CLOUDFLARE_STREAM_SIGNED_URL_TOKEN_EXPIRES_IN"]` or `1.hour` | Expiration window for Stream signed playback tokens |
+| `config.folio_cloudflare_stream_poll_interval` | `30.seconds` | Delay between Stream processing status checks |
+| `config.folio_cloudflare_stream_max_poll_attempts` | `240` | Maximum Stream polling attempts before marking processing failed |
+| `config.folio_cloudflare_stream_monitor_stale_after` | `ENV["CLOUDFLARE_STREAM_MONITOR_STALE_AFTER"]` or `5.minutes` | Age after which the monitor cron re-schedules a lost Stream progress check |
 
 ---
 

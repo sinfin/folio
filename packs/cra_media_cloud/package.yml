@@ -1,0 +1,11 @@
+# CRA Media Cloud video processing provider pack.
+#
+# Provides CRA Media Cloud API integration, encoding jobs, file processing
+# concern and playback provider registration. Host applications using this
+# provider must enable this pack before configuring `cra_media_cloud`.
+
+enforce_dependencies: true
+
+dependencies:
+  - "../.."
+  - "."

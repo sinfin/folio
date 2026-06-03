@@ -63,7 +63,7 @@ class Folio::Console::Files::Show::EncodingInfoComponent < Folio::Console::Appli
   private
     def cra_file?
       # Check capability first (covers enqueued state before 'service' is written)
-      return true if @file.is_a?(Folio::CraMediaCloud::FileProcessing)
+      return true if @file.respond_to?(:encoder_processing_phases)
 
       # Fallback for plain Folio::File::Video without concern (legacy or plain video)
       @file.try(:processing_service) == "cra_media_cloud" ||

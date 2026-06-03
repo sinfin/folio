@@ -1,0 +1,11 @@
+# Cloudflare Stream video processing provider pack.
+#
+# Provides Cloudflare Stream API integration, processing jobs, file processing
+# concern and playback provider registration. Host applications must enable
+# this pack before configuring videos to use `cloudflare_stream`.
+
+enforce_dependencies: true
+
+dependencies:
+  - "../.."
+  - "."

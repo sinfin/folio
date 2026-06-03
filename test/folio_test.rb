@@ -11,8 +11,17 @@ class Folio::Test < ActiveSupport::TestCase
     assert_empty Folio::DEFAULT_ENABLED_PACKS
   end
 
-  test "dummy app opts into AI pack for tests" do
+  test "dummy app opts into optional packs for tests" do
     assert_includes Folio.enabled_packs, :ai
+    assert_includes Folio.enabled_packs, :cloudflare_stream
+    assert_includes Folio.enabled_packs, :cra_media_cloud
+  end
+
+  test "video provider packs register provider classes" do
+    provider_classes = Rails.application.config.folio_files_video_playback_provider_classes
+
+    assert_equal "Folio::CloudflareStream::VideoProvider", provider_classes["cloudflare_stream"]
+    assert_equal "Folio::CraMediaCloud::VideoProvider", provider_classes["cra_media_cloud"]
   end
 
   test "enabled pack assets return declared logical asset names" do

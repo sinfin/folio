@@ -3,8 +3,25 @@
 require "test_helper"
 
 class Folio::MediaFileProcessingBaseTest < ActiveSupport::TestCase
+  class TestCreateMediaJob < Folio::ApplicationJob
+    def perform(*)
+    end
+  end
+
   class TestVideoFile < Folio::File::Video
-    include Folio::CraMediaCloud::FileProcessing
+    include Folio::MediaFileProcessingBase
+
+    def full_media_job_class
+      TestCreateMediaJob
+    end
+
+    def check_media_processing_job_class
+      TestCreateMediaJob
+    end
+
+    def processed_by
+      "test_video_provider"
+    end
   end
 
   test "encoding_generation is set during process_attached_file" do
@@ -48,7 +65,7 @@ class Folio::MediaFileProcessingBaseTest < ActiveSupport::TestCase
 
     # Merge additional data (simulating what CreateMediaJob does)
     video.remote_services_data.merge!({
-      "service" => "cra_media_cloud",
+      "service" => "test_video_provider",
       "reference_id" => "REF123",
       "processing_state" => "full_media_processing"
     })
@@ -105,7 +122,7 @@ class Folio::MediaFileProcessingBaseTest < ActiveSupport::TestCase
 
     video.reload
     assert_equal 12345, video.encoding_generation
-    assert_equal "cra_media_cloud", video.remote_services_data["service"]
+    assert_equal "test_video_provider", video.remote_services_data["service"]
     assert_equal "enqueued", video.remote_services_data["processing_state"]
   end
 end

@@ -76,14 +76,32 @@ Default configuration:
 Rails.application.config.folio_files_video_default_processing_provider = :direct_file
 Rails.application.config.folio_files_video_playback_provider_classes = {
   "direct_file" => "Folio::Video::Providers::DirectFile",
-  "cloudflare_stream" => "Folio::Video::Providers::CloudflareStream",
-  "cra_media_cloud" => "Folio::Video::Providers::CraMediaCloud",
 }
 ```
 
 The direct-file provider is intended as a simple fallback and must not expose a permanent public URL of the original uploaded file in SEO metadata or public serializers. External processing providers should receive source files through short-lived server-generated URLs and expose only their stable playback outputs.
 
-Cloudflare Stream can be enabled by including `Folio::CloudflareStream::FileProcessing` in the host application's video override and configuring `folio_cloudflare_stream_account_id` and `folio_cloudflare_stream_api_token`.
+External providers live in optional packs and register their provider class when
+the pack is enabled:
+
+```ruby
+# Cloudflare Stream
+Folio.enabled_packs += [:cloudflare_stream]
+# registers "cloudflare_stream" => "Folio::CloudflareStream::VideoProvider"
+
+# CRA Media Cloud
+Folio.enabled_packs += [:cra_media_cloud]
+# registers "cra_media_cloud" => "Folio::CraMediaCloud::VideoProvider"
+```
+
+If a host application configures `cloudflare_stream` or `cra_media_cloud` without
+enabling the matching pack, playback raises a clear
+`Folio::Video::Providers::UnavailableProviderError`.
+
+Cloudflare Stream can be enabled by enabling `:cloudflare_stream`, including
+`Folio::CloudflareStream::FileProcessing` in the host application's video
+override and configuring `folio_cloudflare_stream_account_id` and
+`folio_cloudflare_stream_api_token`.
 
 Typical host application ENV:
 

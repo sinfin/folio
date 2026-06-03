@@ -149,18 +149,7 @@ module Folio
     config.folio_files_video_direct_url_expires_in = 1.hour
     config.folio_files_video_playback_provider_classes = {
       "direct_file" => "Folio::Video::Providers::DirectFile",
-      "cloudflare_stream" => "Folio::Video::Providers::CloudflareStream",
-      "cra_media_cloud" => "Folio::Video::Providers::CraMediaCloud",
     }
-    config.folio_cloudflare_stream_account_id = ENV["CLOUDFLARE_STREAM_ACCOUNT_ID"]
-    config.folio_cloudflare_stream_api_token = ENV["CLOUDFLARE_STREAM_API_TOKEN"]
-    config.folio_cloudflare_stream_allowed_origins = ENV["CLOUDFLARE_STREAM_ALLOWED_ORIGINS"].to_s.split(",").map(&:strip).compact_blank
-    config.folio_cloudflare_stream_require_signed_urls = ActiveModel::Type::Boolean.new.cast(ENV["CLOUDFLARE_STREAM_REQUIRE_SIGNED_URLS"]) || false
-    config.folio_cloudflare_stream_source_url_expires_in = 2.hours
-    config.folio_cloudflare_stream_signed_url_token_expires_in = (ENV["CLOUDFLARE_STREAM_SIGNED_URL_TOKEN_EXPIRES_IN"].presence || 1.hour.to_i).to_i.seconds
-    config.folio_cloudflare_stream_poll_interval = 30.seconds
-    config.folio_cloudflare_stream_max_poll_attempts = 240
-    config.folio_cloudflare_stream_monitor_stale_after = (ENV["CLOUDFLARE_STREAM_MONITOR_STALE_AFTER"].presence || 5.minutes.to_i).to_i.seconds
 
     config.folio_component_generator_parent_component_class_name_proc = -> (class_name) do
       if class_name.starts_with?("Folio::Console::")

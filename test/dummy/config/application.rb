@@ -7,7 +7,7 @@ require "rails/all"
 Bundler.require(*Rails.groups)
 require "folio"
 
-Folio.enabled_packs = [:ai] if Rails.env.development? || Rails.env.test?
+Folio.enabled_packs = %i[ai cloudflare_stream cra_media_cloud] if Rails.env.development? || Rails.env.test?
 
 module Dummy
   class Application < Rails::Application

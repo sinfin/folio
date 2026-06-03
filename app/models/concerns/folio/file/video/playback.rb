@@ -53,6 +53,18 @@ module Folio::File::Video::Playback
 
     def video_playback_provider_class_for(key)
       class_name = Rails.application.config.folio_files_video_playback_provider_classes[key.to_s]
-      class_name&.constantize || Folio::Video::Providers::Base
+      unless class_name
+        raise Folio::Video::Providers::UnknownProviderError,
+              "Unknown video playback provider '#{key}'. Configure " \
+              "`config.folio_files_video_playback_provider_classes` or use `direct_file`."
+      end
+
+      klass = class_name.safe_constantize
+      return klass if klass
+
+      raise Folio::Video::Providers::UnavailableProviderError,
+            "Video playback provider '#{key}' is configured as `#{class_name}`, " \
+            "but that constant is unavailable. Enable the matching Folio pack " \
+            "in `Folio.enabled_packs` or change `config.folio_files_video_default_processing_provider`."
     end
 end
