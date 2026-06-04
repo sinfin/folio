@@ -48,7 +48,7 @@ class Folio::CloudflareStream::CreateMediaJob < Folio::ApplicationJob
     broadcast_file_update(media_file)
   rescue Folio::CloudflareStream::Api::Error => e
     Rails.logger.error("[CloudflareStream::CreateMediaJob] API error for video ##{media_file.id}: #{e.message}")
-    mark_failed!(media_file, e.message)
+    record_api_error!(media_file, e.message)
     raise
   end
 
@@ -59,14 +59,13 @@ class Folio::CloudflareStream::CreateMediaJob < Folio::ApplicationJob
       )
     end
 
-    def mark_failed!(media_file, message)
-      Rails.logger.warn("[CloudflareStream::CreateMediaJob] Marking video ##{media_file.id} failed: #{message}")
+    def record_api_error!(media_file, message)
       media_file.update!(remote_services_data: media_file.remote_services_data.merge(
         "service" => "cloudflare_stream",
-        "processing_state" => "failed",
-        "error_message" => message,
+        "processing_state" => "processing",
+        "last_api_error" => message,
+        "last_api_error_at" => Time.current.iso8601,
       ))
-      media_file.processing_failed! if media_file.may_processing_failed?
       broadcast_file_update(media_file)
     end
 end

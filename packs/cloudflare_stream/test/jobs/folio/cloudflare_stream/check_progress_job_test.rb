@@ -98,6 +98,38 @@ class Folio::CloudflareStream::CheckProgressJobTest < ActiveJob::TestCase
     assert_equal "Unsupported format", video.remote_services_data["error_message"]
   end
 
+  test "keeps video processing on transient API error" do
+    video = build_video
+    api = FailingApi.new(Folio::CloudflareStream::Api::Error.new("rate limited", status_code: 429))
+
+    Folio::CloudflareStream::Api.stub(:new, api) do
+      assert_raises(Folio::CloudflareStream::Api::Error) do
+        Folio::CloudflareStream::CheckProgressJob.perform_now(video, encoding_generation: 123)
+      end
+    end
+
+    video.reload
+    assert_equal "processing", video.aasm_state
+    assert_equal "processing", video.remote_services_data["processing_state"]
+    assert_equal "rate limited", video.remote_services_data["last_api_error"]
+  end
+
+  test "marks video failed when Cloudflare video is not found" do
+    video = build_video
+    api = FailingApi.new(Folio::CloudflareStream::Api::Error.new("not found", status_code: 404))
+
+    Folio::CloudflareStream::Api.stub(:new, api) do
+      assert_no_enqueued_jobs only: Folio::CloudflareStream::CheckProgressJob do
+        Folio::CloudflareStream::CheckProgressJob.perform_now(video, encoding_generation: 123)
+      end
+    end
+
+    video.reload
+    assert_equal "processing_failed", video.aasm_state
+    assert_equal "failed", video.remote_services_data["processing_state"]
+    assert_equal "Cloudflare Stream video not found: not found", video.remote_services_data["error_message"]
+  end
+
   private
     def build_video
       video = TestVideoFile.new(site: get_any_site)
@@ -125,6 +157,16 @@ class Folio::CloudflareStream::CheckProgressJobTest < ActiveJob::TestCase
       def video(identifier)
         @video_identifier = identifier
         @video_response
+      end
+    end
+
+    class FailingApi
+      def initialize(error)
+        @error = error
+      end
+
+      def video(_identifier)
+        raise @error
       end
     end
 end

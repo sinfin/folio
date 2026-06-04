@@ -75,12 +75,18 @@ class Folio::CloudflareStream::CheckProgressJob < Folio::ApplicationJob
     broadcast_file_update(media_file)
   rescue Folio::CloudflareStream::Api::Error => e
     Rails.logger.error("[CloudflareStream::CheckProgressJob] API error for video ##{media_file.id}: #{e.message}")
-    mark_failed!(media_file, {
-      "error_message" => "Cloudflare Stream API error: #{e.message}",
-      "last_progress_check_at" => Time.current.iso8601,
-    })
+    if e.not_found?
+      mark_failed!(media_file, {
+        "error_message" => "Cloudflare Stream video not found: #{e.message}",
+        "last_progress_check_at" => Time.current.iso8601,
+      })
+    else
+      record_api_error!(media_file, e.message)
+      broadcast_file_update(media_file)
+      raise
+    end
+
     broadcast_file_update(media_file)
-    raise
   end
 
   private
@@ -117,6 +123,17 @@ class Folio::CloudflareStream::CheckProgressJob < Folio::ApplicationJob
         "processing_state" => "failed",
       ))
       media_file.processing_failed! if media_file.may_processing_failed?
+    end
+
+    def record_api_error!(media_file, message)
+      timestamp = Time.current.iso8601
+      media_file.update!(remote_services_data: media_file.remote_services_data.merge(
+        "service" => "cloudflare_stream",
+        "processing_state" => "processing",
+        "last_api_error" => message,
+        "last_api_error_at" => timestamp,
+        "last_progress_check_at" => timestamp,
+      ))
     end
 
     def keep_processing!(media_file, updates)

@@ -12,6 +12,11 @@ class Folio::CloudflareStream::DeleteMediaJob < Folio::ApplicationJob
 
     Folio::CloudflareStream::Api.new.delete(identifier)
   rescue Folio::CloudflareStream::Api::Error => e
-    Rails.logger.warn("[CloudflareStream::DeleteMediaJob] #{e.message}")
+    if e.not_found?
+      Rails.logger.info("[CloudflareStream::DeleteMediaJob] Stream video already deleted: #{e.message}")
+    else
+      Rails.logger.warn("[CloudflareStream::DeleteMediaJob] #{e.message}")
+      raise
+    end
   end
 end

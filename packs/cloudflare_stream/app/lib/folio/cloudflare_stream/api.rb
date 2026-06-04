@@ -4,7 +4,23 @@ require "net/http"
 require "uri"
 
 class Folio::CloudflareStream::Api
-  class Error < StandardError; end
+  class Error < StandardError
+    attr_reader :status_code
+
+    def initialize(message, status_code: nil)
+      @status_code = status_code
+
+      super(message)
+    end
+
+    def not_found?
+      status_code == 404
+    end
+
+    def retryable?
+      status_code.blank? || status_code == 408 || status_code == 429 || status_code >= 500
+    end
+  end
 
   API_BASE_URL = "https://api.cloudflare.com/client/v4"
 
@@ -52,7 +68,7 @@ class Folio::CloudflareStream::Api
       json = parse_json(response.body)
 
       unless response.is_a?(Net::HTTPSuccess) && json["success"] != false
-        raise Error, error_message(response, json)
+        raise Error.new(error_message(response, json), status_code: response.code.to_i)
       end
 
       json.fetch("result", json)
@@ -79,7 +95,12 @@ class Folio::CloudflareStream::Api
     end
 
     def http_for(uri)
-      Net::HTTP.new(uri.host, uri.port).tap { |http| http.use_ssl = uri.scheme == "https" }
+      Net::HTTP.new(uri.host, uri.port).tap do |http|
+        http.use_ssl = uri.scheme == "https"
+        http.open_timeout = Rails.application.config.folio_cloudflare_stream_api_open_timeout
+        http.read_timeout = Rails.application.config.folio_cloudflare_stream_api_read_timeout
+        http.write_timeout = Rails.application.config.folio_cloudflare_stream_api_write_timeout if http.respond_to?(:write_timeout=)
+      end
     end
 
     def parse_json(body)

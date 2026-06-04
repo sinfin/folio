@@ -24,14 +24,30 @@ class Folio::CloudflareStream::DeleteMediaJobTest < ActiveJob::TestCase
     assert_not api_called
   end
 
-  test "logs API errors without raising" do
-    api = FailingApi.new
+  test "logs not found API errors without raising" do
+    api = FailingApi.new(Folio::CloudflareStream::Api::Error.new("not found", status_code: 404))
     log_io = StringIO.new
     logger = ActiveSupport::Logger.new(log_io)
 
     Rails.stub(:logger, logger) do
       Folio::CloudflareStream::Api.stub(:new, api) do
         assert_nothing_raised do
+          Folio::CloudflareStream::DeleteMediaJob.perform_now("stream-1")
+        end
+      end
+    end
+
+    assert_includes log_io.string, "[CloudflareStream::DeleteMediaJob] Stream video already deleted: not found"
+  end
+
+  test "raises non-not-found API errors for retry" do
+    api = FailingApi.new(Folio::CloudflareStream::Api::Error.new("delete failed", status_code: 500))
+    log_io = StringIO.new
+    logger = ActiveSupport::Logger.new(log_io)
+
+    Rails.stub(:logger, logger) do
+      Folio::CloudflareStream::Api.stub(:new, api) do
+        assert_raises(Folio::CloudflareStream::Api::Error) do
           Folio::CloudflareStream::DeleteMediaJob.perform_now("stream-1")
         end
       end
@@ -50,8 +66,12 @@ class Folio::CloudflareStream::DeleteMediaJobTest < ActiveJob::TestCase
     end
 
     class FailingApi
+      def initialize(error)
+        @error = error
+      end
+
       def delete(_identifier)
-        raise Folio::CloudflareStream::Api::Error, "delete failed"
+        raise @error
       end
     end
 end

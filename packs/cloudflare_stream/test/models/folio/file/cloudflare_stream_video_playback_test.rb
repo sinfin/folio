@@ -52,6 +52,8 @@ class Folio::File::CloudflareStreamVideoPlaybackTest < ActiveSupport::TestCase
   end
 
   test "cloudflare provider signs playback URLs when required" do
+    Rails.cache.clear
+
     video = Folio::File::Video.new(
       file_name: "private.mp4",
       remote_services_data: {
@@ -90,6 +92,37 @@ class Folio::File::CloudflareStreamVideoPlaybackTest < ActiveSupport::TestCase
     assert_equal 1, api.calls.size
     assert_equal "abc123", api.calls.first[:identifier]
     assert api.calls.first[:expires_at].is_a?(Time)
+  end
+
+  test "cloudflare provider reuses signed playback token from cache" do
+    Rails.cache.clear
+
+    video = Folio::File::Video.new(
+      file_name: "private.mp4",
+      remote_services_data: {
+        "service" => "cloudflare_stream",
+        "uid" => "cached123",
+        "ready_to_stream" => true,
+        "require_signed_urls" => true,
+        "thumbnail" => "https://customer-code.cloudflarestream.com/cached123/thumbnails/thumbnail.jpg",
+        "playback" => {
+          "hls" => "https://customer-code.cloudflarestream.com/cached123/manifest/video.m3u8",
+        },
+      },
+    )
+
+    api = RecordingTokenApi.new("cached-token")
+
+    Folio::CloudflareStream::Api.stub(:new, api) do
+      assert_equal "https://customer-code.cloudflarestream.com/cached-token/iframe", video.video_playback_embed_url
+      video.remove_instance_variable(:@video_playback_provider)
+      assert_equal "https://customer-code.cloudflarestream.com/cached-token/thumbnails/thumbnail.jpg",
+                   video.video_playback_poster_url
+    end
+
+    assert_equal 1, api.calls.size
+  ensure
+    Rails.cache.clear
   end
 
   test "cloudflare provider omits signed playback URLs from SEO metadata" do

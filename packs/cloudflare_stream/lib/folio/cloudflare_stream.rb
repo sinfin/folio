@@ -28,6 +28,9 @@ module Folio::CloudflareStream
       )
       set_config_default(config, :folio_cloudflare_stream_poll_interval, 30.seconds)
       set_config_default(config, :folio_cloudflare_stream_max_poll_attempts, 240)
+      set_config_default(config, :folio_cloudflare_stream_api_open_timeout, 5)
+      set_config_default(config, :folio_cloudflare_stream_api_read_timeout, 30)
+      set_config_default(config, :folio_cloudflare_stream_api_write_timeout, 30)
       set_config_default(
         config,
         :folio_cloudflare_stream_monitor_stale_after,

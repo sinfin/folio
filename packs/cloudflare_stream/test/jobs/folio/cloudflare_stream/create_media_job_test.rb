@@ -104,6 +104,24 @@ class Folio::CloudflareStream::CreateMediaJobTest < ActiveJob::TestCase
     assert_equal "ready", video.remote_services_data["processing_state"]
   end
 
+  test "keeps video processing on transient API error" do
+    video = build_video
+    api = FailingApi.new
+
+    video.stub(:cloudflare_stream_source_url, "https://s3.example.com/source.mp4?X-Amz-Expires=3600") do
+      Folio::CloudflareStream::Api.stub(:new, api) do
+        assert_raises(Folio::CloudflareStream::Api::Error) do
+          Folio::CloudflareStream::CreateMediaJob.perform_now(video)
+        end
+      end
+    end
+
+    video.reload
+    assert_equal "processing", video.aasm_state
+    assert_equal "processing", video.remote_services_data["processing_state"]
+    assert_equal "rate limited", video.remote_services_data["last_api_error"]
+  end
+
   private
     def build_video
       video = TestVideoFile.new(site: get_any_site)
@@ -129,6 +147,12 @@ class Folio::CloudflareStream::CreateMediaJobTest < ActiveJob::TestCase
       def copy(**args)
         @copy_args = args
         @copy_response
+      end
+    end
+
+    class FailingApi
+      def copy(**)
+        raise Folio::CloudflareStream::Api::Error, "rate limited"
       end
     end
 end

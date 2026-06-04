@@ -3,6 +3,8 @@
 require "uri"
 
 class Folio::CloudflareStream::VideoProvider < Folio::Video::Providers::Base
+  SIGNED_URL_TOKEN_CACHE_SAFETY_MARGIN = 1.minute
+
   def ready?
     data["ready_to_stream"] == true && playback.values.any?(&:present?)
   end
@@ -99,13 +101,33 @@ class Folio::CloudflareStream::VideoProvider < Folio::Video::Providers::Base
       uid = data["uid"].presence
       return if uid.blank?
 
-      @signed_url_token ||= Folio::CloudflareStream::Api.new.signed_url_token(
-        uid,
-        expires_at: Time.current + Rails.application.config.folio_cloudflare_stream_signed_url_token_expires_in,
-      )
+      @signed_url_token ||= Rails.cache.read(signed_url_token_cache_key(uid)).presence ||
+                            fetch_and_cache_signed_url_token(uid)
     rescue Folio::CloudflareStream::Api::Error => e
       Rails.logger.warn("Cloudflare Stream signed playback token failed for video #{video.id}: #{e.message}")
       nil
+    end
+
+    def fetch_and_cache_signed_url_token(uid)
+      token = Folio::CloudflareStream::Api.new.signed_url_token(
+        uid,
+        expires_at: Time.current + signed_url_token_expires_in,
+      )
+      Rails.cache.write(signed_url_token_cache_key(uid), token, expires_in: signed_url_token_cache_expires_in) if token.present?
+      token
+    end
+
+    def signed_url_token_expires_in
+      Rails.application.config.folio_cloudflare_stream_signed_url_token_expires_in
+    end
+
+    def signed_url_token_cache_expires_in
+      seconds = signed_url_token_expires_in.to_i - SIGNED_URL_TOKEN_CACHE_SAFETY_MARGIN.to_i
+      [seconds, 1].max.seconds
+    end
+
+    def signed_url_token_cache_key(uid)
+      "folio/cloudflare_stream/signed_url_token/#{uid}/#{signed_url_token_expires_in.to_i}"
     end
 
     def replace_playback_identifier(url, replacement)

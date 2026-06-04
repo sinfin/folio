@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "zip"
+
 class Folio::File::BatchDownloadJob < Folio::ApplicationJob
   include Folio::S3::Client
 
