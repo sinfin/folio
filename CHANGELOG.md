@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- **Console file picker**: Single file pickers now render placement validation messages and expose an invalid BEM modifier for styling the picker border.
 - **AI current form snapshots**: Keep full atom payloads under `record_class.atom_keys` instead of only atom `data` leaves, so host apps using direct atom attributes can build prompt context from unsaved atom-backed forms.
 - **Tiptap `url_json` fields**: `record_id` values are now normalized and persisted as integers, including nested nodes sanitized through Tiptap content.
 - **Tiptap attachment fields**: Blank, zero, and invalid `file_id` values are ignored for single and multiple attachment attributes instead of persisting placeholder placements.
