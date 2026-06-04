@@ -1,0 +1,3 @@
+# Host application package used by Folio engine tests.
+
+enforce_dependencies: false

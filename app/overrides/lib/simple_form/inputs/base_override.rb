@@ -171,4 +171,8 @@ SimpleForm::Inputs::Base.class_eval do
       options[:input_controls] = @builder.template.render(Folio::Console::Ui::ClearButtonComponent.new)
     end
   end
+
+  def add_text_suggestions(input_type:)
+    # Extension point for optional packs that decorate SimpleForm text inputs.
+  end
 end

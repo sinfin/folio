@@ -7,6 +7,8 @@ require "rails/all"
 Bundler.require(*Rails.groups)
 require "folio"
 
+Folio.enabled_packs = [:ai] if Rails.env.development? || Rails.env.test?
+
 module Dummy
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
@@ -35,6 +37,30 @@ module Dummy
 
     config.folio_console_locale = I18n.default_locale
     config.time_zone = "Prague"
+
+    packs_root = root.join("packs")
+    if packs_root.exist?
+      Dir.glob(packs_root.join("*")).each do |pack_path|
+        pack_root = Pathname.new(pack_path)
+        next unless pack_root.directory?
+
+        pack_name = pack_root.basename.to_s
+
+        %w[app/models app/models/concerns app/components app/controllers app/helpers].each do |subdir|
+          path = pack_root.join(subdir)
+          next unless path.exist?
+
+          config.autoload_paths << path
+          config.eager_load_paths << path
+        end
+
+        migrate_path = pack_root.join("db/migrate")
+        config.paths["db/migrate"] << migrate_path if migrate_path.exist?
+
+        railtie_path = pack_root.join("lib/dummy/#{pack_name}.rb")
+        require railtie_path if railtie_path.exist?
+      end
+    end
 
     config.generators do |g|
       g.stylesheets false

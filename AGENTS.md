@@ -22,9 +22,10 @@ If no existing skill fits, suggest updating this `AGENTS.md` or creating a new
 | Skill | Triggers (examples) |
 |-------|---------------------|
 | **folio-view-component** | Build or change ViewComponents (generator, BEM, Slim/Sass, Stimulus data attrs, tests); frontend in `app/components` |
+| **code-review** | Review current local branch changes or explicit diffs; findings-first feedback for code review prompts |
 | **folio-pack** | Optional pack boundaries and namespaces; files under `packs/<name>`; route mappings to pack-owned controllers/components |
 | **folio-rails-code-structure** | Ruby/Rails code structure: thin model/controller/concern entrypoints, focused classes under `lib/`, avoid helper-method clusters; excludes jobs |
-| **folio-testing** | Ruby/Rails tests, test helpers, stubs/mocks, factories/fixtures, avoid ENV mutation; `test/**`, `packs/**/test/**` |
+| **folio-testing** | Folio/host-app test strategy, behavior-facing assertions, component/JS behavior tests, stubs/mocks, factories/fixtures; `test/**`, `packs/**/test/**` |
 | **folio-slim** | Slim template formatting: multi-line attributes, multiple `class` attrs, avoid inline Ruby, template length; `.slim` files |
 | **folio-scss** | SCSS/Sass styling: BEM nesting with `&`, colocated component stylesheets, scoping, don't style child components; `.sass`/`.scss` files |
 | **folio-javascript** | JavaScript conventions: ES6+, StandardJS, `Folio.Api`, flash events, debounce/throttle, DOM APIs; `.js` files |
@@ -96,9 +97,8 @@ Generators ensure:
   - Elements (E) and Modifiers (M) follow standard BEM: `__element` and `--modifier`
     - Example: `m-blog-post__button` (element), `m-blog-post__button--active` (modifier)
 - Stimulus: Use `stimulus_controller("controller-name", values: {...}, action: {...}, classes: [...])` helper for JavaScript behavior
-- Testing:
-  - Always test against rendered content, not instance methods
-  - One render per test (`render_inline` once per example); use separate tests for other variants instead of multiple renders in one test
+- Testing: Follow `.skills/folio-testing/SKILL.md` for rendered-output assertions
+  and one-render-per-test guidance.
 - Ruby code:
   - Most ViewComponent instance methods can be private
   - Prefer ViewComponents over partials

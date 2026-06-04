@@ -108,6 +108,9 @@ content_copy:
 content_save:
   width: 24
   height: 24
+creation:
+  width: 24
+  height: 24
 credit_card_scan_outline:
   width: 24
   height: 24

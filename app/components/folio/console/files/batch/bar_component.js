@@ -81,11 +81,26 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
   submitForm (e) {
     const { data } = e.detail
 
-    this.ajax({
-      url: `${this.baseApiUrlValue}/batch_update`,
-      apiMethod: 'apiPatch',
-      data: { ...data, file_ids: JSON.parse(this.fileIdsJsonValue) } // form inputs already included
-    })
+    const doSubmit = () => {
+      this.ajax({
+        url: `${this.baseApiUrlValue}/batch_update`,
+        apiMethod: 'apiPatch',
+        data: { ...data, file_ids: JSON.parse(this.fileIdsJsonValue) } // form inputs already included
+      })
+    }
+
+    if (this.uploadsInFlight()) {
+      window.Folio.Confirm.confirm(doSubmit, 'batchUploadInFlight')
+    } else {
+      doSubmit()
+    }
+  }
+
+  uploadsInFlight () {
+    // true while Uppy is still uploading (files in flight have no tile yet) or
+    // a tile has been uploaded to S3 but not yet persisted (no DB id). Saving now
+    // would silently skip those files from batch_update.
+    return !!document.querySelector('.f-file-list--uploading, .f-file-list-file--awaiting-id')
   }
 
   download () {

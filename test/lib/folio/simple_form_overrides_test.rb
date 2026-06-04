@@ -19,8 +19,10 @@ class Folio::SimpleFormOverridesTest < ActionView::TestCase
 
       assert page.has_css?(".form-label__required", count: 2)
 
-      assert_equal "povinné pro uložení", page.find(".form-group._required .form-label__required")["data-f-tooltip-title-value"]
-      assert_equal "povinné pro publikování", page.find(".form-group._required_for_publishing .form-label__required")["data-f-tooltip-title-value"]
+      assert_equal "povinné pro uložení",
+                   page.find(".form-group._required .form-label__required")["data-f-tooltip-title-value"]
+      assert_equal "povinné pro publikování",
+                   page.find(".form-group._required_for_publishing .form-label__required")["data-f-tooltip-title-value"]
     end
   end
 
