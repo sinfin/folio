@@ -171,9 +171,10 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
     e.preventDefault()
     this.hideControlTooltip(e.currentTarget)
 
-    const fields = e.target.closest('.f-nested-fields__fields')
-
-    this.duplicateFields(fields)
+    window.setTimeout(() => {
+      const fields = e.target.closest('.f-nested-fields__fields')
+      this.duplicateFields(fields)
+    }, 0)
   }
 
   duplicateFields (fields) {
@@ -204,7 +205,7 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
 
   focusableFormControl (target) {
     return Array.from(target.querySelectorAll('.form-control')).find((input) => {
-      return !input.hidden && !input.disabled && !input.closest('[hidden]') && !input.closest('.f-c-files-picker')
+      return !input.hidden && !input.disabled && !input.closest('[hidden]') && !input.closest('.f-c-files-picker') && !input.closest('.f-c-input-form-group-url')
     })
   }
 
