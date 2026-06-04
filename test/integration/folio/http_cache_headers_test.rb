@@ -207,6 +207,24 @@ class Folio::HttpCacheHeadersTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "Folio.expires_in follows cache header TTL settings" do
+    with_config(
+      folio_cache_headers_default_ttl: 15,
+    ) do
+      Folio.stub(:cache_ttl_multiplier, nil) do
+        assert_equal 15, Folio.expires_in.to_i
+      end
+
+      Folio.stub(:cache_ttl_multiplier, 2.0) do
+        assert_equal 30, Folio.expires_in.to_i
+      end
+
+      Folio.stub(:cache_ttl_multiplier, 0.0) do
+        assert_equal 0, Folio.expires_in.to_i
+      end
+    end
+  end
+
   test "emergency TTL multiplier does not affect behavior when set to 1" do
     with_config(
       folio_cache_headers_enabled: true,

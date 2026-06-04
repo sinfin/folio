@@ -19,7 +19,7 @@ module Folio
           end
 
           # Check emergency cache TTL multiplier from ENV
-          multiplier = ENV["FOLIO_CACHE_TTL_MULTIPLIER"]&.to_f
+          multiplier = Folio.cache_ttl_multiplier
           if multiplier == 0.0
             response.headers["Cache-Control"] = "no-store"
             log_cache_decision("no_store", "emergency_cache_disabled", multiplier: multiplier)
@@ -154,27 +154,8 @@ module Folio
           # Note: Log cookies are already skipped by should_skip_cookies_for_cache? in before_action
         end
 
-        def calculate_cache_ttl(record)
-          base_ttl = if Rails.application.config.respond_to?(:folio_cache_headers_default_ttl) && Rails.application.config.folio_cache_headers_default_ttl
-            Rails.application.config.folio_cache_headers_default_ttl.to_i
-          else
-            15
-          end
-
-          # Apply emergency multiplier from ENV if set
-          multiplier = ENV["FOLIO_CACHE_TTL_MULTIPLIER"]&.to_f
-          if multiplier && multiplier != 1.0 && multiplier > 0.0
-            base_ttl = (base_ttl * multiplier).round
-          end
-
-          # 404 pages use same TTL as regular pages to prevent attack vectors
-          # Other error pages (500+) use shorter TTL as they indicate server problems
-          status = response.status.to_i
-          if status >= 500
-            [base_ttl / 4, 15].max  # quarter of default TTL, minimum 15s for server errors
-          else
-            base_ttl  # 404 and 2xx use same TTL
-          end
+        def calculate_cache_ttl(_record)
+          Folio.cache_ttl(status: response.status.to_i)
         end
 
         def set_public_cache_headers(ttl)

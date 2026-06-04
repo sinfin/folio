@@ -111,8 +111,35 @@ module Folio
     site.layout_assets_stylesheets_path
   end
 
+  def self.cache_ttl(status: nil)
+    ttl = cache_headers_default_ttl
+    multiplier = cache_ttl_multiplier
+
+    return 0 if multiplier == 0.0
+
+    ttl = (ttl * multiplier).round if multiplier && multiplier != 1.0 && multiplier > 0.0
+
+    if status.to_i >= 500
+      [ttl / 4, 15].max
+    else
+      ttl
+    end
+  end
+
   def self.expires_in
-    1.hour
+    cache_ttl.seconds
+  end
+
+  def self.cache_headers_default_ttl
+    if Rails.application.config.respond_to?(:folio_cache_headers_default_ttl) && Rails.application.config.folio_cache_headers_default_ttl
+      Rails.application.config.folio_cache_headers_default_ttl.to_i
+    else
+      15
+    end
+  end
+
+  def self.cache_ttl_multiplier
+    ENV["FOLIO_CACHE_TTL_MULTIPLIER"]&.to_f
   end
 end
 
