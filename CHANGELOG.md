@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - **AI current form snapshots**: Keep full atom payloads under `record_class.atom_keys` instead of only atom `data` leaves, so host apps using direct atom attributes can build prompt context from unsaved atom-backed forms.
+- **Console publishable inputs**: Treat open-ended `Folio::Publishable::Within` date ranges as restricted when the present start or end date excludes the current time, so future `published_from` values no longer render as active when `published_until` is blank.
 
 ## [7.7.0] - 2026-06-02
 
