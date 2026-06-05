@@ -82,10 +82,12 @@
             template.f-c-simple-form-with-atoms__preview-error-template
               = render(Folio::Console::Atoms::Previews::ErrorComponent.new)
 
-        .f-c-simple-form-with-atoms__overlay-dismiss
+    / overlay is fixed to the viewport - keep it outside of the scroll wrap
+    / so that ancestors with overflow: hidden can never clip it
+    .f-c-simple-form-with-atoms__overlay-dismiss
 
-        .f-c-simple-form-with-atoms__overlay
-          = console_form_atoms(f, audited_audit_active:)
+    .f-c-simple-form-with-atoms__overlay
+      = console_form_atoms(f, audited_audit_active:)
 
     = form_footer(f, form_footer_options)
 
