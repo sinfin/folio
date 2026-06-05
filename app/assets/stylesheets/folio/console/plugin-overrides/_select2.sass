@@ -6,8 +6,11 @@
     min-width: 200px
 
   .select2-selection
+    --f-c-select2-selection-bg: #{$form-select-bg}
+
     &::before
       +form-clear-button-gradient
+      background: linear-gradient(90deg, transparent 0%, var(--f-c-select2-selection-bg) 100%)
 
     &::after
       content: ""
@@ -17,7 +20,7 @@
       width: 24px
       height: calc(100% - 2px)
       border-radius: $border-radius
-      background-color: $form-select-bg
+      background-color: var(--f-c-select2-selection-bg)
       background-image: escape-svg($form-select-indicator)
       background-repeat: no-repeat
       background-position: center center
@@ -70,6 +73,10 @@
 
     .select2-selection__placeholder
       color: inherit
+
+  &.select2-container--disabled
+    .select2-selection
+      --f-c-select2-selection-bg: #eee
 
   .select2-search--dropdown
     .select2-search__field

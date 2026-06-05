@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- **Console remote selects**: Match Select2 arrow and fade overlays to the disabled selection background so long values no longer show white patches.
 - **Input character counter**: Count exact plain-text length including repeated internal spaces and trailing spaces.
 - **Console validation box Tiptap focus**: Focus the visible Tiptap editor after scrolling to invalid Tiptap content and skip the hidden-input danger blink.
 - **AI current form snapshots**: Keep full atom payloads under `record_class.atom_keys` instead of only atom `data` leaves, so host apps using direct atom attributes can build prompt context from unsaved atom-backed forms.
