@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- **Console "page is being edited" warning**: The warning no longer lingers for users who already left and no longer requires a page reload to go away. Closing the tab or navigating away from the console now clears the user's `console_url` via `navigator.sendBeacon` on `pagehide` (new `console_url_clear` API endpoint; the clear is conditional server-side — it only applies when the stored `console_url` still matches the leaving page, so regular console navigation is unaffected; `pageshow` from back/forward cache re-pings to restore the lock). Previously the lock persisted until its 5 minute expiry, showing a false collision warning to other editors. Additionally, `console_url_ping` now responds with `other_user_at_url` and the warning bar's Stimulus controller removes the plain presence variant once the other user leaves — previously the server-rendered bar stayed visible until a full page reload even after the collision ended. Revision-based variants (takeover, outdated) are unaffected.
 - **Console remote selects**: Match Select2 arrow and fade overlays to the disabled selection background so long values no longer show white patches.
 - **Input character counter**: Count exact plain-text length including repeated internal spaces and trailing spaces.
 - **Console validation box Tiptap focus**: Focus the visible Tiptap editor after scrolling to invalid Tiptap content and skip the hidden-input danger blink.
