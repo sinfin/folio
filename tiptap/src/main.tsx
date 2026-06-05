@@ -154,6 +154,13 @@ window.addEventListener("message", (e) => {
     if (ed && typeof e.data.text === "string") {
       ed.chain().focus().insertContent(e.data.text).run();
     }
+  } else if (e.data.type === "f-input-tiptap:focus") {
+    const ed = window.Folio.Tiptap.editor as
+      | import("@tiptap/core").Editor
+      | undefined;
+    if (ed) {
+      ed.chain().focus().run();
+    }
   } else if (e.data.type === "f-input-tiptap:window-resize") {
     const node = document.querySelector(
       ".f-tiptap-iframe-content",
