@@ -348,10 +348,23 @@ class Folio::File < Folio::ApplicationRecord
     "#{hours.to_s.rjust(2, '0')}:#{minutes.to_s.rjust(2, '0')}:#{seconds.to_s.rjust(2, '0')}.#{centiseconds.to_s.rjust(2, '0')}"
   end
 
+  # Counter-cache based — cheap, called per row in file lists; may be stale.
+  # Overridable in host apps. Destroy paths use #live_indestructible_reason.
   def indestructible_reason
     return nil if file_placements_count == 0
     return nil if file_placements_count.nil?
     I18n.t("folio.file.cannot_destroy_file_with_placements")
+  end
+
+  # Accurate variant for destroy paths and the file detail — re-verifies the
+  # placements message with a live query so a stale counter cannot block
+  # deletion. Host-app reasons other than the placements message pass through.
+  def live_indestructible_reason
+    reason = indestructible_reason
+    placements_message = I18n.t("folio.file.cannot_destroy_file_with_placements")
+    return reason if reason.present? && reason != placements_message
+
+    placements_message if file_placements.exists?
   end
 
   def file_list_count
@@ -501,8 +514,7 @@ class Folio::File < Folio::ApplicationRecord
     end
 
     def check_usage_before_destroy
-      throw(:abort) if indestructible_reason.present?
-      throw(:abort) if file_placements.exists?
+      throw(:abort) if live_indestructible_reason.present?
     end
 
     def set_file_track_duration

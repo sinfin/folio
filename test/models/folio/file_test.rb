@@ -482,6 +482,30 @@ class Folio::FileTest < ActiveSupport::TestCase
     page.update!(published: true)
     assert video.reload.used_in_published_content?
   end
+
+  test "destroy succeeds with stale nonzero counter and no real placements" do
+    video = create(:folio_file_video)
+    video.update_column(:file_placements_count, 3) # simulate counter drift
+
+    assert video.destroy
+    assert_not Folio::File.exists?(video.id)
+  end
+
+  test "destroy aborts with a real placement even when counter says zero" do
+    video = create(:folio_file_video)
+    Folio::FilePlacement::VideoCover.create!(placement: nil, file: video)
+    video.update_column(:file_placements_count, 0)
+
+    assert_not video.reload.destroy
+    assert Folio::File.exists?(video.id)
+  end
+
+  test "live_indestructible_reason reflects real placements, not the counter" do
+    video = create(:folio_file_video)
+    video.update_column(:file_placements_count, 3)
+    assert video.indestructible_reason.present?      # counter-based (lists)
+    assert_nil video.live_indestructible_reason       # live (detail/destroy)
+  end
 end
 
 class Folio::FileUrlOrPathTest < ActiveSupport::TestCase
