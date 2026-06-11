@@ -50,6 +50,8 @@ en:
             orphaned: Deleted content
             published: Published
             unpublished: Unpublished
+            destroy_orphan: Remove record
+            destroy_orphan_confirm: Really remove the orphaned usage record?
             no_thumbnails_yet: No versions generated yet
 
           thumbnails_component:

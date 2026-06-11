@@ -50,6 +50,8 @@ cs:
             orphaned: Smazaný obsah
             published: Publikováno
             unpublished: Nepublikováno
+            destroy_orphan: Odstranit záznam
+            destroy_orphan_confirm: Opravdu odstranit osiřelý záznam použití?
 
           thumbnails_component:
             title: Verze a velikosti

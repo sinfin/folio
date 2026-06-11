@@ -32,6 +32,24 @@ class Folio::Console::Files::Show::FilePlacementsComponentTest < Folio::Console:
                     text: I18n.t("folio.console.files.show.file_placements_component.orphaned"))
   end
 
+  def test_render_destroy_button_for_orphaned_placement_only
+    video = create(:folio_file_video)
+    page = create(:folio_page, published: true)
+    orphaned = Folio::FilePlacement::VideoCover.create!(placement: nil, file: video)
+    Folio::FilePlacement::VideoCover.create!(placement: page, file: video)
+
+    render_inline(Folio::Console::Files::Show::FilePlacementsComponent.new(file: video))
+
+    assert_selector(".f-c-files-show-file-placements__destroy-cell a[data-method='delete']",
+                    text: I18n.t("folio.console.files.show.file_placements_component.destroy_orphan"),
+                    count: 1)
+    assert_selector(".f-c-files-show-file-placements__row--orphaned " \
+                    ".f-c-files-show-file-placements__destroy-cell " \
+                    "a[href$='/console/file_placements/#{orphaned.id}']")
+    assert_no_selector(".f-c-files-show-file-placements__row:not(.f-c-files-show-file-placements__row--orphaned) " \
+                       "a[data-method='delete']")
+  end
+
   def test_render_orphaned_placement_with_title_snapshot
     video = create(:folio_file_video)
     Folio::FilePlacement::VideoCover.create!(placement: nil,

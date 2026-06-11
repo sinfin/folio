@@ -33,6 +33,10 @@
               = l(file_placement.created_at, format: :console_short)
 
             td.f-c-files-show-file-placements__td.f-c-files-show-file-placements__destroy-cell
+              = link_to t('.destroy_orphan'),
+                        controller.folio.console_file_placement_path(file_placement),
+                        class: "btn btn-sm btn-danger",
+                        data: { method: :delete, confirm: t('.destroy_orphan_confirm') }
         - else
           - owner = row[:owner]
           - action = row[:action]
