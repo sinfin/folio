@@ -18,21 +18,22 @@ Gem::Specification.new do |s|
 
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
 
-  s.add_dependency 'rails', '~> 5.2.1'
+  s.add_dependency 'rails', '~> 5.2.8', '>= 5.2.8.1'
   s.add_dependency 'pg', '~> 1.2.3'
   s.add_dependency 'pg_search'
   s.add_dependency 'friendly_id', '~> 5.2.4'
   s.add_dependency 'ancestry', '3.0.7'
-  s.add_dependency 'carrierwave'
+  s.add_dependency 'carrierwave', '~> 2.2', '>= 2.2.7'
   s.add_dependency 'mini_magick'
   s.add_dependency 'sidekiq'
   s.add_dependency 'slim'
-  s.add_dependency 'simple_form'
+  s.add_dependency 'simple_form', '>= 5.0', '< 6'
   s.add_dependency 'cocoon'
   s.add_dependency 'devise'
   s.add_dependency 'devise_invitable'
   s.add_dependency 'cancancan', '~> 2.0'
   s.add_dependency 'sass-rails'
+  s.add_dependency 'sprockets', '~> 3.7'
   s.add_dependency 'coffee-rails'
   s.add_dependency 'pagy', '3.7.3'
   s.add_dependency 'responders'
@@ -41,7 +42,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'sitemap_generator'
   s.add_dependency 'whenever'
   s.add_dependency 'dotenv-rails'
-  s.add_dependency 'gibbon'
+  s.add_dependency 'gibbon', '>= 3.4.4'
   s.add_dependency 'invisible_captcha'
   s.add_dependency 'countries'
   s.add_dependency 'acts-as-taggable-on', '~> 6.0'
@@ -61,7 +62,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'material_icons'
   s.add_dependency 'discard'
 
-  s.add_dependency 'dragonfly', '1.2.0'
+  s.add_dependency 'dragonfly', '>= 1.4.0', '< 2'
   s.add_dependency 'dragonfly-s3_data_store'
   s.add_dependency 'mini_exiftool'
 
