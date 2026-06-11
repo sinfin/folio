@@ -11,7 +11,7 @@ gemspec
 # your gemspec. These might include edge Rails or gems from your path or
 # Git. Remember to move these dependencies to your gemspec before releasing
 # your gem to rubygems.org.
-gem 'mini_racer', platforms: :ruby
+gem 'mini_racer', '~> 0.6.3', platforms: :ruby
 
 group :test do
   gem 'minitest', '5.10.3'

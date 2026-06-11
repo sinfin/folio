@@ -18,19 +18,20 @@ Gem::Specification.new do |s|
 
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
 
-  s.add_dependency 'rails', '~> 5.2.1'
+  s.add_dependency 'rails', '~> 5.2.8', '>= 5.2.8.1'
   s.add_dependency 'pg', '~> 1'
   s.add_dependency 'pg_search'
   s.add_dependency 'friendly_id', '~> 5.2.4'
   s.add_dependency 'ancestry', '3.0.5'
-  s.add_dependency 'carrierwave', '1.3.1'
+  s.add_dependency 'carrierwave', '~> 2.2', '>= 2.2.7'
   s.add_dependency 'mini_magick'
   s.add_dependency 'slim'
-  s.add_dependency 'simple_form', '4.1.0'
+  s.add_dependency 'simple_form', '>= 5.0', '< 6'
   s.add_dependency 'cocoon'
   s.add_dependency 'devise'
   s.add_dependency 'cancancan', '~> 2.0'
   s.add_dependency 'sass-rails'
+  s.add_dependency 'sprockets', '~> 3.7'
   s.add_dependency 'coffee-rails', '4.2.2'
   s.add_dependency 'pagy', '1.3.2'
   s.add_dependency 'responders'
