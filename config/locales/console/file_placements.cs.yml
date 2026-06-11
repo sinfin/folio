@@ -3,6 +3,8 @@ cs:
   folio:
     console:
       file_placements:
+        destroyed: Záznam použití byl odstraněn.
+
         multi_picker_fields_component:
           add_embed: Přidat Embed (HTML kód)
           select/image: Vybrat obrázek

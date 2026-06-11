@@ -433,6 +433,110 @@ class Folio::FileTest < ActiveSupport::TestCase
     assert slug_idx, "Expected an index on folio_files.slug"
     assert slug_idx.unique, "Expected slug index to be unique"
   end
+
+  test "used_in_published_content? is false with no placements" do
+    video = create(:folio_file_video)
+    assert_not video.used_in_published_content?
+  end
+
+  test "used_in_published_content? ignores orphaned placements" do
+    video = create(:folio_file_video)
+    Folio::FilePlacement::VideoCover.create!(placement: nil, file: video)
+    assert_not video.used_in_published_content?
+  end
+
+  test "used_in_published_content? respects owner published?" do
+    video = create(:folio_file_video)
+    page = create(:folio_page, published: false)
+    Folio::FilePlacement::VideoCover.create!(placement: page, file: video)
+    assert_not video.reload.used_in_published_content?
+
+    page.update!(published: true)
+    assert video.reload.used_in_published_content?
+  end
+
+  test "used_in_published_content? respects future published_at" do
+    video = create(:folio_file_video)
+    page = create(:folio_page, published: true, published_at: 1.day.from_now)
+    Folio::FilePlacement::VideoCover.create!(placement: page, file: video)
+
+    assert_not video.reload.used_in_published_content?
+  end
+
+  test "used_in_published_content? counts owners without published? as published" do
+    video = create(:folio_file_video)
+    site = get_current_or_existing_site_or_create_from_factory
+    Folio::FilePlacement::VideoCover.create!(placement: site, file: video)
+    assert video.reload.used_in_published_content?
+  end
+
+  test "used_in_published_content? unwraps atoms to their placement" do
+    video = create(:folio_file_video)
+    page = create(:folio_page, published: false)
+    atom = Dummy::Atom::Contents::Text.new(placement: page, content: "<p>t</p>")
+    atom.save!(validate: false)
+    Folio::FilePlacement::VideoCover.create!(placement: atom, file: video)
+
+    assert_not video.reload.used_in_published_content?
+
+    page.update!(published: true)
+    assert video.reload.used_in_published_content?
+  end
+
+  test "destroy succeeds with stale nonzero counter and no real placements" do
+    video = create(:folio_file_video)
+    video.update_column(:file_placements_count, 3) # simulate counter drift
+
+    assert video.destroy
+    assert_not Folio::File.exists?(video.id)
+  end
+
+  test "destroy aborts with a real placement even when counter says zero" do
+    video = create(:folio_file_video)
+    Folio::FilePlacement::VideoCover.create!(placement: nil, file: video)
+    video.update_column(:file_placements_count, 0)
+
+    assert_not video.reload.destroy
+    assert Folio::File.exists?(video.id)
+  end
+
+  test "live_indestructible_reason reflects real placements, not the counter" do
+    video = create(:folio_file_video)
+    video.update_column(:file_placements_count, 3)
+    assert video.indestructible_reason.present?      # counter-based (lists)
+    assert_nil video.live_indestructible_reason       # live (detail/destroy)
+  end
+
+  test "destroy removes friendly_id slugs" do
+    video = create(:folio_file_video)
+    slug = video.slug
+    assert FriendlyId::Slug.where(sluggable_type: "Folio::File", sluggable_id: video.id).exists?
+
+    video.destroy!
+    assert_not FriendlyId::Slug.where(sluggable_type: "Folio::File", sluggable_id: video.id).exists?
+    assert_not FriendlyId::Slug.where(slug: slug, sluggable_type: "Folio::File").exists?
+  end
+
+  class CraVideoFile < Folio::File::Video
+    include Folio::CraMediaCloud::FileProcessing
+  end
+
+  test "destroy enqueues CRA media cleanup job for files with remote media" do
+    video = CraVideoFile.new(site: get_any_site)
+    video.file = Folio::Engine.root.join("test/fixtures/folio/blank.mp4")
+    video.dont_run_after_save_jobs = true
+
+    expect_method_called_on(object: video, method: :create_full_media) do
+      video.save!
+    end
+
+    video.update!(remote_services_data: { "remote_id" => "JOB123", "reference_id" => "REF456" })
+
+    assert_enqueued_with(job: Folio::CraMediaCloud::DeleteMediaJob,
+                         args: ["JOB123", { reference_id: "REF456" }]) do
+      video.destroy!
+    end
+  end
 end
 
 class Folio::FileUrlOrPathTest < ActiveSupport::TestCase

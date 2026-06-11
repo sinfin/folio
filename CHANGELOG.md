@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- **`Folio::File#used_in_published_content?`** — live check whether a file is used in at least one published piece of content (unwraps atoms to the parent record, respects owner `published?` incl. `published_at`). Intended for host apps that derive public visibility of standalone file pages from usage.
+- **Console file usage list** now shows orphaned placements (owner deleted) with the option to remove them, plus a published/unpublished badge for each usage. The usage section is expanded when deletion is blocked.
+- **`folio:files:recalculate_placement_counts`** and **`folio:files:report_videos_without_published_usage`** rake tasks.
+
 ### Fixed
 
 - **Console remote selects**: Match Select2 arrow and fade overlays to the disabled selection background so long values no longer show white patches.
@@ -10,6 +16,8 @@ All notable changes to this project will be documented in this file.
 - **Console validation box Tiptap focus**: Focus the visible Tiptap editor after scrolling to invalid Tiptap content and skip the hidden-input danger blink.
 - **AI current form snapshots**: Keep full atom payloads under `record_class.atom_keys` instead of only atom `data` leaves, so host apps using direct atom attributes can build prompt context from unsaved atom-backed forms.
 - **Console publishable inputs**: Treat open-ended `Folio::Publishable::Within` date ranges as restricted when the present start or end date excludes the current time, so future `published_from` values no longer render as active when `published_until` is blank.
+- A stale `file_placements_count` no longer blocks file deletion — the model destroy guard, console file detail and API destroy verify usage with a live query (`Folio::File#live_indestructible_reason`). File list views still use the cheap counter.
+- FriendlyId slug history cleanup and CRA media cleanup on file destroy are now covered by tests (both behaviors already existed).
 
 ## [7.7.0] - 2026-06-02
 

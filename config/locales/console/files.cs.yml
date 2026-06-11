@@ -44,8 +44,14 @@ cs:
             th/type: Typ použití
             th/placement_type: Typ záznamu
             th/placement_label: Záznam
+            th/published: Stav
             th/created_at: Vytvořeno
             in_atom: kapitola obsahu
+            orphaned: Smazaný obsah
+            published: Publikováno
+            unpublished: Nepublikováno
+            destroy_orphan: Odstranit záznam
+            destroy_orphan_confirm: Opravdu odstranit osiřelý záznam použití?
 
           thumbnails_component:
             title: Verze a velikosti
