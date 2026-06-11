@@ -96,7 +96,7 @@
             = render(Folio::Console::Files::Show::MetadataComponent.new(file: @file))
 
         = render(Folio::Console::Ui::CollapsibleComponent.new(title: t('.title/usage', count: @file.file_placements_count),
-                                                              collapsed: controller.action_name != "file_placements"))
+                                                              collapsed: controller.action_name != "file_placements" && live_indestructible_reason.nil?))
           = render(Folio::Console::Files::Show::FilePlacementsComponent.new(file: @file))
 
   - if @file.class.human_type == "image"

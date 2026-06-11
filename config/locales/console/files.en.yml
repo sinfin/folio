@@ -44,8 +44,12 @@ en:
             th/type: Usage type
             th/placement_type: Record type
             th/placement_label: Record
+            th/published: State
             th/created_at: Created at
             in_atom: content chapter
+            orphaned: Deleted content
+            published: Published
+            unpublished: Unpublished
             no_thumbnails_yet: No versions generated yet
 
           thumbnails_component:
