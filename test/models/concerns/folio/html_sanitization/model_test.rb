@@ -79,6 +79,22 @@ module Folio
                      "file_metadata - no sanitization should be applied as the value is safe already")
       end
 
+      test "preserves table markup in rich_text" do
+        # HTML produced by the Folio console redactor table plugin
+        table_html = "<figure contenteditable=\"false\" tabindex=\"-1\" data-redactor-type=\"table\" class=\"redactor-component\"><table><thead><tr><th>head</th></tr></thead><tbody><tr><td colspan=\"2\">cell</td></tr></tbody></table></figure>"
+
+        file = FileWithSanitizationConfig.new(attribution_source: table_html,
+                                              site: get_any_site)
+        file.valid?
+
+        assert_includes file.attribution_source, "<figure", "figure wrapper should be preserved for the redactor table plugin"
+        assert_includes file.attribution_source, "data-redactor-type=\"table\"", "redactor data attribute should be preserved"
+        assert_includes file.attribution_source, "<table>", "table tag should be preserved"
+        assert_includes file.attribution_source, "<thead>", "thead tag should be preserved"
+        assert_includes file.attribution_source, "<th>head</th>", "th tag and content should be preserved"
+        assert_includes file.attribution_source, "<td colspan=\"2\">cell</td>", "td tag with colspan should be preserved"
+      end
+
       test "sanitizes atom input" do
         atom = create_atom(Dummy::Atom::Contents::Text, content: unsafe_input)
         assert_equal input_sanitized_as_rich_text, atom.content

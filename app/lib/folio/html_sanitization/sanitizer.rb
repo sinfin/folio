@@ -111,10 +111,21 @@ module Folio
           end
         end
 
+        # Tags emitted by the console redactor table plugin
+        # (app/assets/javascripts/folio/console/redactor/_table.js).
+        # They are not part of Rails' default allow-list, so without them the
+        # sanitizer would strip every table on save.
+        RICH_TEXT_TABLE_TAGS = %w[figure table caption colgroup col thead tbody tfoot tr td th].freeze
+        RICH_TEXT_TABLE_ATTRIBUTES = %w[colspan rowspan contenteditable tabindex data-redactor-type].freeze
+
         def sanitize_value_as_rich_text(value:)
+          default_tags = Rails::HTML5::SafeListSanitizer.allowed_tags.to_a
+          custom_tags = default_tags | RICH_TEXT_TABLE_TAGS
+
           default_attributes = Rails::HTML5::SafeListSanitizer.allowed_attributes.to_a
-          custom_attributes = default_attributes | ["target", "rel"]
-          ActionController::Base.helpers.sanitize(value, attributes: custom_attributes)
+          custom_attributes = default_attributes | ["target", "rel"] | RICH_TEXT_TABLE_ATTRIBUTES
+
+          ActionController::Base.helpers.sanitize(value, tags: custom_tags, attributes: custom_attributes)
         end
 
         def sanitize_attribute_as_rich_text(attribute:, value:)
