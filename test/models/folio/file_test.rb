@@ -506,6 +506,16 @@ class Folio::FileTest < ActiveSupport::TestCase
     assert video.indestructible_reason.present?      # counter-based (lists)
     assert_nil video.live_indestructible_reason       # live (detail/destroy)
   end
+
+  test "destroy removes friendly_id slugs" do
+    video = create(:folio_file_video)
+    slug = video.slug
+    assert FriendlyId::Slug.where(sluggable_type: "Folio::File", sluggable_id: video.id).exists?
+
+    video.destroy!
+    assert_not FriendlyId::Slug.where(sluggable_type: "Folio::File", sluggable_id: video.id).exists?
+    assert_not FriendlyId::Slug.where(slug: slug, sluggable_type: "Folio::File").exists?
+  end
 end
 
 class Folio::FileUrlOrPathTest < ActiveSupport::TestCase
