@@ -17,6 +17,7 @@ html.f-c-layout-html.f-html--show-sensitive-content lang=I18n.locale
         = render(Folio::Console::Layout::HeaderComponent.new(breadcrumbs_on_rails: @breadcrumbs_on_rails))
 
         - if @show_current_user_console_url_bar
+          = render(Folio::Console::CurrentUsers::PresencePingComponent.new(record: controller.send(:folio_console_record)))
           = render(Folio::Console::CurrentUsers::ConsoleUrlBarComponent.new(show: @show_current_user_console_url_bar, record: controller.send(:folio_console_record)))
 
       - unless @hide_flash_messages

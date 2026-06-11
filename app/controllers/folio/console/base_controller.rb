@@ -591,8 +591,22 @@ class Folio::Console::BaseController < Folio::ApplicationController
       return if request.path.start_with?("/console/api")
       return if request.path.start_with?("/console/atoms")
 
-      Folio::Current.user.update_console_url!(request.url)
+      Folio::Current.user.update_console_url!(folio_console_presence_url)
     end
+
+    # Canonical URL used for "who is editing this record" presence. Derived from
+    # the record so the edit page (GET /…/edit) and a form re-rendered after a
+    # failed update (PATCH /…) resolve to the SAME presence URL — otherwise the
+    # two requests track the editor under different URLs and other editors stop
+    # seeing them. Falls back to the request URL when there is no record.
+    def folio_console_presence_url
+      if %w[edit update].include?(action_name) && params[:id].present?
+        url_for(action: :edit, id: params[:id], only_path: false)
+      else
+        request.url
+      end
+    end
+    helper_method :folio_console_presence_url
 
     def set_show_current_user_console_url_bar
       @show_current_user_console_url_bar = %w[edit update].include?(action_name)
