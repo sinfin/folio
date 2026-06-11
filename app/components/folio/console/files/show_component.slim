@@ -27,8 +27,8 @@
                 = render(Folio::Console::Ui::ButtonComponent.new(**replace_button_model))
 
           - if can_now?(:destroy, @file)
-            - if @file.indestructible_reason
-              .f-c-files-show__button-tooltip data=stimulus_tooltip(@file.indestructible_reason)
+            - if live_indestructible_reason
+              .f-c-files-show__button-tooltip data=stimulus_tooltip(live_indestructible_reason)
                 = render(Folio::Console::Ui::ButtonComponent.new(**destroy_button_model))
             - else
               = render(Folio::Console::Ui::ButtonComponent.new(**destroy_button_model))
