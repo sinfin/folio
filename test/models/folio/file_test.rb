@@ -516,6 +516,27 @@ class Folio::FileTest < ActiveSupport::TestCase
     assert_not FriendlyId::Slug.where(sluggable_type: "Folio::File", sluggable_id: video.id).exists?
     assert_not FriendlyId::Slug.where(slug: slug, sluggable_type: "Folio::File").exists?
   end
+
+  class CraVideoFile < Folio::File::Video
+    include Folio::CraMediaCloud::FileProcessing
+  end
+
+  test "destroy enqueues CRA media cleanup job for files with remote media" do
+    video = CraVideoFile.new(site: get_any_site)
+    video.file = Folio::Engine.root.join("test/fixtures/folio/blank.mp4")
+    video.dont_run_after_save_jobs = true
+
+    expect_method_called_on(object: video, method: :create_full_media) do
+      video.save!
+    end
+
+    video.update!(remote_services_data: { "remote_id" => "JOB123", "reference_id" => "REF456" })
+
+    assert_enqueued_with(job: Folio::CraMediaCloud::DeleteMediaJob,
+                         args: ["JOB123", { reference_id: "REF456" }]) do
+      video.destroy!
+    end
+  end
 end
 
 class Folio::FileUrlOrPathTest < ActiveSupport::TestCase
