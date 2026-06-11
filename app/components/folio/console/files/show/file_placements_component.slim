@@ -16,11 +16,7 @@
         - file_placement = row[:file_placement]
 
         - if row[:orphaned]
-          tr[
-            class="small"
-            class="f-c-files-show-file-placements__row"
-            class="f-c-files-show-file-placements__row--orphaned"
-          ]
+          tr.small.f-c-files-show-file-placements__row.f-c-files-show-file-placements__row--orphaned
             td.f-c-files-show-file-placements__td
               = t('.orphaned')
 

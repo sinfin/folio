@@ -32,6 +32,21 @@ class Folio::Console::Files::Show::FilePlacementsComponentTest < Folio::Console:
                     text: I18n.t("folio.console.files.show.file_placements_component.orphaned"))
   end
 
+  def test_render_orphaned_placement_with_title_snapshot
+    video = create(:folio_file_video)
+    Folio::FilePlacement::VideoCover.create!(placement: nil,
+                                             file: video,
+                                             placement_title: "Folio::Page - Smazaná stránka",
+                                             placement_title_type: "Folio::Page")
+
+    render_inline(Folio::Console::Files::Show::FilePlacementsComponent.new(file: video))
+
+    assert_selector(".f-c-files-show-file-placements__row--orphaned",
+                    text: "Folio::Page - Smazaná stránka")
+    assert_selector(".f-c-files-show-file-placements__row--orphaned",
+                    text: Folio::Page.model_name.human)
+  end
+
   def test_render_published_owner_state
     video = create(:folio_file_video)
     page = create(:folio_page, published: true)

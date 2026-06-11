@@ -42,7 +42,9 @@ class Folio::Console::Files::Show::FilePlacementsComponent < Folio::Console::App
     end
 
     def orphaned_type(file_placement)
-      file_placement.placement_title_type.presence || file_placement.type
+      file_placement.placement_title_type.presence&.safe_constantize&.model_name&.human ||
+        file_placement.type.constantize.model_name.human ||
+        file_placement.type
     end
 
     def placement_label(placement)
