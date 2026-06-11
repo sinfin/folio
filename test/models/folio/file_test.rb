@@ -433,6 +433,47 @@ class Folio::FileTest < ActiveSupport::TestCase
     assert slug_idx, "Expected an index on folio_files.slug"
     assert slug_idx.unique, "Expected slug index to be unique"
   end
+
+  test "used_in_published_content? is false with no placements" do
+    video = create(:folio_file_video)
+    assert_not video.used_in_published_content?
+  end
+
+  test "used_in_published_content? ignores orphaned placements" do
+    video = create(:folio_file_video)
+    Folio::FilePlacement::VideoCover.create!(placement: nil, file: video)
+    assert_not video.used_in_published_content?
+  end
+
+  test "used_in_published_content? respects owner published?" do
+    video = create(:folio_file_video)
+    page = create(:folio_page, published: false)
+    Folio::FilePlacement::VideoCover.create!(placement: page, file: video)
+    assert_not video.reload.used_in_published_content?
+
+    page.update!(published: true)
+    assert video.reload.used_in_published_content?
+  end
+
+  test "used_in_published_content? counts owners without published? as published" do
+    video = create(:folio_file_video)
+    site = get_current_or_existing_site_or_create_from_factory
+    Folio::FilePlacement::VideoCover.create!(placement: site, file: video)
+    assert video.reload.used_in_published_content?
+  end
+
+  test "used_in_published_content? unwraps atoms to their placement" do
+    video = create(:folio_file_video)
+    page = create(:folio_page, published: false)
+    atom = Dummy::Atom::Contents::Text.new(placement: page, content: "<p>t</p>")
+    atom.save!(validate: false)
+    Folio::FilePlacement::VideoCover.create!(placement: atom, file: video)
+
+    assert_not video.reload.used_in_published_content?
+
+    page.update!(published: true)
+    assert video.reload.used_in_published_content?
+  end
 end
 
 class Folio::FileUrlOrPathTest < ActiveSupport::TestCase

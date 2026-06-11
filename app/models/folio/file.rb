@@ -414,6 +414,26 @@ class Folio::File < Folio::ApplicationRecord
     # to be overriden in main_app should be needed
   end
 
+  # Live visibility check: true if the file is used in at least one published
+  # piece of content. Unlike +published_usage_count+ (licensing usage limits,
+  # see #calculate_published_usage_count) this unwraps atoms to their parent
+  # record and uses the owner's #published? (incl. published_at semantics).
+  # Single-record use only — for collections build an SQL scope instead.
+  def used_in_published_content?
+    file_placements.includes(:placement).find_each(batch_size: 100) do |file_placement|
+      owner = file_placement.placement
+      owner = owner.placement if owner.is_a?(Folio::Atom::Base)
+      next if owner.nil?
+      return true if !owner.respond_to?(:published?) || owner.published?
+    end
+
+    false
+  end
+
+  # NOTE: intentionally different semantics from #used_in_published_content?
+  # (visibility): here atom-owned placements count as published and only the
+  # raw `published` column is checked. Consumed by licensing usage limits
+  # (Folio::File::HasUsageConstraints) — do not change without checking those.
   def calculate_published_usage_count
     placement_types = file_placements.distinct.pluck(:placement_type)
     return 0 if placement_types.empty?
