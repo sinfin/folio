@@ -28,6 +28,67 @@ class Folio::Console::Api::CurrentUsersControllerTest < Folio::Console::BaseCont
     assert_equal true, response.parsed_body["data"]["other_user_at_url"]
   end
 
+  test "console_url_ping returns rendered warning bar html when another user edits the same record" do
+    page = create(:folio_page)
+    edit_url = edit_url_for(page)
+
+    other_user = create(:folio_user, :superadmin)
+    other_user.update_console_url!(edit_url)
+
+    post console_url_ping_console_api_current_user_url(format: :json),
+         params: { url: edit_url, placement: { type: page.class.name, id: page.id } }
+
+    assert_response(:ok)
+    assert_equal true, response.parsed_body["data"]["other_user_at_url"]
+    assert_includes response.parsed_body["data"]["bar_html"].to_s,
+                    "f-c-current-users-console-url-bar"
+  end
+
+  test "console_url_ping omits warning bar html when the editor is alone" do
+    page = create(:folio_page)
+    edit_url = edit_url_for(page)
+
+    post console_url_ping_console_api_current_user_url(format: :json),
+         params: { url: edit_url, placement: { type: page.class.name, id: page.id } }
+
+    assert_response(:ok)
+    assert_equal false, response.parsed_body["data"]["other_user_at_url"]
+    assert_nil response.parsed_body["data"]["bar_html"]
+  end
+
+  test "console_url_ping does not render a bar for a placement that does not match the pinged url" do
+    page_a = create(:folio_page)
+    page_b = create(:folio_page)
+    edit_url_a = edit_url_for(page_a)
+
+    other_user = create(:folio_user, :superadmin)
+    other_user.update_console_url!(edit_url_a)
+
+    # colliding on page_a, but the client asks for page_b's bar
+    post console_url_ping_console_api_current_user_url(format: :json),
+         params: { url: edit_url_a, placement: { type: page_b.class.name, id: page_b.id } }
+
+    assert_response(:ok)
+    assert_equal true, response.parsed_body["data"]["other_user_at_url"]
+    assert_nil response.parsed_body["data"]["bar_html"]
+  end
+
+  test "console_url_ping does not blow up on a non-ActiveRecord placement type" do
+    edit_url = "http://test.host/console/pages/1/edit"
+
+    other_user = create(:folio_user, :superadmin)
+    other_user.update_console_url!(edit_url)
+
+    # a real constant that is not an AR model would pass constantize but explode
+    # on find_by; it must be ignored, not raise
+    post console_url_ping_console_api_current_user_url(format: :json),
+         params: { url: edit_url, placement: { type: "String", id: "1" } }
+
+    assert_response(:ok)
+    assert_equal true, response.parsed_body["data"]["other_user_at_url"]
+    assert_nil response.parsed_body["data"]["bar_html"]
+  end
+
   test "console_url_ping ignores other users with stale console_url" do
     other_user = create(:folio_user, :superadmin)
     other_user.update_columns(console_url: "foo",
@@ -84,4 +145,11 @@ class Folio::Console::Api::CurrentUsersControllerTest < Folio::Console::BaseCont
     assert_equal false, response.parsed_body["data"]["html_auto_format"]
     assert_equal false, superadmin.console_preferences["html_auto_format"]
   end
+
+  private
+    # canonical (friendly-id / slug based) edit URL, matching what the heartbeat
+    # reports and what the controller compares the placement record against
+    def edit_url_for(record)
+      "http://test.host#{edit_console_page_path(record)}"
+    end
 end

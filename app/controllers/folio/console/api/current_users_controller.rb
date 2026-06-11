@@ -9,7 +9,16 @@ class Folio::Console::Api::CurrentUsersController < Folio::Console::Api::BaseCon
                                    .where.not(id: Folio::Current.user.id)
                                    .exists?
 
-    render json: { data: { other_user_at_url: } }
+    data = { other_user_at_url: }
+
+    # when another editor appears, hand the first editor a freshly rendered
+    # warning bar so it can be shown live without a full page reload (CS-337)
+    if other_user_at_url
+      bar_html = render_presence_bar
+      data[:bar_html] = bar_html if bar_html.present?
+    end
+
+    render json: { data: }
   end
 
   def console_url_clear
@@ -42,4 +51,54 @@ class Folio::Console::Api::CurrentUsersController < Folio::Console::Api::BaseCon
       data: Folio::Current.user.console_preferences || {}
     }, status:
   end
+
+  private
+    # The warning bar queries presence by this URL; the client posts the same
+    # canonical record presence URL, so reuse it for a consistent match.
+    def folio_console_presence_url
+      params[:url]
+    end
+    helper_method :folio_console_presence_url
+
+    def render_presence_bar
+      record = presence_bar_record
+      return nil if record.nil?
+      # render only what the user could edit anyway, matching the edit page's
+      # own authorization (and implicitly the record's site scope)
+      return nil unless can_now?(:update, record)
+
+      render_to_string(Folio::Console::CurrentUsers::ConsoleUrlBarComponent.new(show: true, record:),
+                       layout: false)
+    end
+
+    def presence_bar_record
+      placement = params[:placement]
+      return nil if placement.blank?
+
+      type = placement[:type].to_s
+      id = placement[:id]
+      return nil if type.blank? || id.blank?
+
+      # only resolve to an ActiveRecord model — safe_constantize avoids raising on
+      # unknown constants, and the class guard avoids calling find_by on a real
+      # but non-AR constant (e.g. "String")
+      klass = type.safe_constantize
+      return nil unless klass.is_a?(Class) && klass < ActiveRecord::Base
+
+      record = klass.find_by(id:)
+      return nil if record.nil?
+
+      # bind the rendered bar to the pinged presence URL: the record's edit path
+      # must match the URL the heartbeat reported, otherwise a client could ask
+      # for a bar of record B while colliding on record A
+      return nil unless presence_url_matches_record?(record)
+
+      record
+    end
+
+    def presence_url_matches_record?(record)
+      URI(params[:url].to_s).path.presence == polymorphic_path([:edit, :console, record])
+    rescue URI::InvalidURIError, ActionController::UrlGenerationError, NoMethodError
+      false
+    end
 end
