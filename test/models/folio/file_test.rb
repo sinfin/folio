@@ -455,6 +455,14 @@ class Folio::FileTest < ActiveSupport::TestCase
     assert video.reload.used_in_published_content?
   end
 
+  test "used_in_published_content? respects future published_at" do
+    video = create(:folio_file_video)
+    page = create(:folio_page, published: true, published_at: 1.day.from_now)
+    Folio::FilePlacement::VideoCover.create!(placement: page, file: video)
+
+    assert_not video.reload.used_in_published_content?
+  end
+
   test "used_in_published_content? counts owners without published? as published" do
     video = create(:folio_file_video)
     site = get_current_or_existing_site_or_create_from_factory

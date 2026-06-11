@@ -418,6 +418,8 @@ class Folio::File < Folio::ApplicationRecord
   # piece of content. Unlike +published_usage_count+ (licensing usage limits,
   # see #calculate_published_usage_count) this unwraps atoms to their parent
   # record and uses the owner's #published? (incl. published_at semantics).
+  # Atom parents are loaded one query each — the includes(:placement) below
+  # does not cover the second hop.
   # Single-record use only — for collections build an SQL scope instead.
   def used_in_published_content?
     file_placements.includes(:placement).find_each(batch_size: 100) do |file_placement|
