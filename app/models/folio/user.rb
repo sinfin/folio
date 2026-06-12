@@ -557,11 +557,13 @@ end
 #  failed_attempts           :integer          default(0), not null
 #  unlock_token              :string
 #  locked_at                 :datetime
+#  console_active_at         :datetime
 #
 # Indexes
 #
 #  index_folio_users_on_auth_site_id                       (auth_site_id)
 #  index_folio_users_on_confirmation_token                 (confirmation_token) UNIQUE
+#  index_folio_users_on_console_active_at                  (console_active_at)
 #  index_folio_users_on_crossdomain_devise_token           (crossdomain_devise_token)
 #  index_folio_users_on_email                              (email)
 #  index_folio_users_on_invitation_token                   (invitation_token) UNIQUE
