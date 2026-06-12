@@ -36,7 +36,24 @@ class Folio::Console::Api::CurrentUsersControllerTest < Folio::Console::BaseCont
     other_user.update_console_url!(edit_url)
 
     post console_url_ping_console_api_current_user_url(format: :json),
-         params: { url: edit_url, placement: { type: page.class.name, id: page.id } }
+         params: { url: edit_url, placement_token: placement_token_for(page, edit_url) }
+
+    assert_response(:ok)
+    assert_equal true, response.parsed_body["data"]["other_user_at_url"]
+    assert_includes response.parsed_body["data"]["bar_html"].to_s,
+                    "f-c-current-users-console-url-bar"
+  end
+
+  test "console_url_ping renders the bar from the signed token without re-deriving the route" do
+    page = create(:folio_page)
+    # a nested/host-app style URL the API could not regenerate from the record alone
+    nested_url = "http://test.host/console/blog/articles/1/comments/#{page.id}/edit"
+
+    other_user = create(:folio_user, :superadmin)
+    other_user.update_console_url!(nested_url)
+
+    post console_url_ping_console_api_current_user_url(format: :json),
+         params: { url: nested_url, placement_token: placement_token_for(page, nested_url) }
 
     assert_response(:ok)
     assert_equal true, response.parsed_body["data"]["other_user_at_url"]
@@ -49,40 +66,57 @@ class Folio::Console::Api::CurrentUsersControllerTest < Folio::Console::BaseCont
     edit_url = edit_url_for(page)
 
     post console_url_ping_console_api_current_user_url(format: :json),
-         params: { url: edit_url, placement: { type: page.class.name, id: page.id } }
+         params: { url: edit_url, placement_token: placement_token_for(page, edit_url) }
 
     assert_response(:ok)
     assert_equal false, response.parsed_body["data"]["other_user_at_url"]
     assert_nil response.parsed_body["data"]["bar_html"]
   end
 
-  test "console_url_ping does not render a bar for a placement that does not match the pinged url" do
+  test "console_url_ping does not render a bar when the token url does not match the pinged url" do
     page_a = create(:folio_page)
     page_b = create(:folio_page)
     edit_url_a = edit_url_for(page_a)
+    edit_url_b = edit_url_for(page_b)
 
     other_user = create(:folio_user, :superadmin)
     other_user.update_console_url!(edit_url_a)
 
-    # colliding on page_a, but the client asks for page_b's bar
+    # colliding on page_a, but the token is for page_b
     post console_url_ping_console_api_current_user_url(format: :json),
-         params: { url: edit_url_a, placement: { type: page_b.class.name, id: page_b.id } }
+         params: { url: edit_url_a, placement_token: placement_token_for(page_b, edit_url_b) }
 
     assert_response(:ok)
     assert_equal true, response.parsed_body["data"]["other_user_at_url"]
     assert_nil response.parsed_body["data"]["bar_html"]
   end
 
-  test "console_url_ping does not blow up on a non-ActiveRecord placement type" do
-    edit_url = "http://test.host/console/pages/1/edit"
+  test "console_url_ping ignores a tampered placement token" do
+    page = create(:folio_page)
+    edit_url = edit_url_for(page)
 
     other_user = create(:folio_user, :superadmin)
     other_user.update_console_url!(edit_url)
 
-    # a real constant that is not an AR model would pass constantize but explode
-    # on find_by; it must be ignored, not raise
     post console_url_ping_console_api_current_user_url(format: :json),
-         params: { url: edit_url, placement: { type: "String", id: "1" } }
+         params: { url: edit_url, placement_token: "not-a-valid-signed-token" }
+
+    assert_response(:ok)
+    assert_equal true, response.parsed_body["data"]["other_user_at_url"]
+    assert_nil response.parsed_body["data"]["bar_html"]
+  end
+
+  test "console_url_ping ignores a signed token for a non-ActiveRecord type" do
+    page = create(:folio_page)
+    edit_url = edit_url_for(page)
+
+    other_user = create(:folio_user, :superadmin)
+    other_user.update_console_url!(edit_url)
+
+    # validly signed but pointing at a real, non-AR constant — must be ignored, not raise
+    token = placement_verifier.generate({ "type" => "String", "id" => "1", "url" => edit_url })
+    post console_url_ping_console_api_current_user_url(format: :json),
+         params: { url: edit_url, placement_token: token }
 
     assert_response(:ok)
     assert_equal true, response.parsed_body["data"]["other_user_at_url"]
@@ -148,8 +182,18 @@ class Folio::Console::Api::CurrentUsersControllerTest < Folio::Console::BaseCont
 
   private
     # canonical (friendly-id / slug based) edit URL, matching what the heartbeat
-    # reports and what the controller compares the placement record against
+    # reports and what the page signs into the placement token
     def edit_url_for(record)
       "http://test.host#{edit_console_page_path(record)}"
+    end
+
+    def placement_verifier
+      Rails.application.message_verifier(
+        Folio::Console::CurrentUsers::PresencePingComponent::PLACEMENT_VERIFIER_PURPOSE
+      )
+    end
+
+    def placement_token_for(record, url)
+      placement_verifier.generate({ "type" => record.class.name, "id" => record.id, "url" => url })
     end
 end
