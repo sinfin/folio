@@ -14,7 +14,11 @@ class Folio::Console::CurrentUsers::ConsoleUrlBarComponent < Folio::Console::App
     def other_user_at_url
       return false unless can_now?(:access_console)
       return @other_user_at_url unless @other_user_at_url.nil?
-      @other_user_at_url = Folio::User.currently_editing_url(helpers.folio_console_presence_url).where.not(id: Folio::Current.user.id).first || false
+      return @other_user_at_url = false if @record.blank?
+
+      @other_user_at_url = Folio::ConsolePresence
+                           .others_editing(@record, except_user_id: Folio::Current.user.id)
+                           .first&.user || false
     end
 
     def has_tiptap_with_autosave?
