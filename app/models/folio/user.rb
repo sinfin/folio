@@ -4,6 +4,7 @@ class Folio::User < Folio::ApplicationRecord
   include Folio::Audited::Model
   include Folio::Devise::DeliverLater
   include Folio::HasAddresses
+  include Folio::HasConsolePresence
   include Folio::HasConsoleUrl
   include Folio::HasNewsletterSubscriptions
   include Folio::HasSiteRoles
