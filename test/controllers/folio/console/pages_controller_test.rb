@@ -101,19 +101,18 @@ class Folio::Console::PagesControllerTest < Folio::Console::BaseControllerTest
     assert_select ".f-c-current-users-presence-ping"
   end
 
-  test "presence url is canonical across edit and failed update (CS-337 regression)" do
+  test "edit and failed update both record presence for the same record" do
     page = create(:folio_page)
 
     get url_for([:edit, :console, page])
-    edit_presence_url = superadmin.reload.console_url
+    assert_select ".f-c-current-users-presence-ping"
+
+    # heartbeat is JS-driven; assert the ping component carries the stable record id
+    assert_select "[data-f-c-current-users-presence-ping-record-id-value='#{page.id}']"
 
     put url_for([:console, page]), params: { page: { title: "" } }
-    failed_update_presence_url = superadmin.reload.console_url
-
     assert_select ".form-group.page_title.form-group-invalid"
-    assert_equal edit_presence_url, failed_update_presence_url,
-                 "an editor must keep the same presence URL after a failed update, " \
-                 "otherwise another editor on the /edit URL stops seeing them"
+    assert_select "[data-f-c-current-users-presence-ping-record-id-value='#{page.id}']"
   end
 
   test "revision" do

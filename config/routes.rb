@@ -180,8 +180,8 @@ Folio::Engine.routes.draw do
         end
 
         resource :current_user, only: [] do
-          post :console_url_ping
-          post :console_url_clear
+          post :console_presence_ping
+          post :console_presence_clear
           post :update_console_preferences
         end
 

@@ -1,26 +1,14 @@
 //
-// Clears the current user's console_url when they leave a console page
-// (closing the tab, navigating away) so that other users don't see
-// a stale "this page is being edited" warning for up to 5 minutes.
+// Clears the current user's console editing presence when they leave a console
+// page (closing the tab, navigating away) so that other users don't see a
+// stale "this page is being edited" warning for up to 5 minutes.
 //
-// The clear is conditional server-side - it only happens when the user's
-// stored console_url still matches the URL sent by the beacon. This avoids
-// races with regular navigation inside the console where the next request
-// already stored a new console_url.
+// The clear removes all of the user's presence rows (no URL or record needed).
+// The surviving heartbeat controller re-creates the presence row within 10 s.
 //
 window.FolioConsole = window.FolioConsole || {}
 
 window.FolioConsole.ConsoleUrlBeacon = {
-  currentUrl () {
-    // prefer the canonical record presence URL (rendered server-side) so the
-    // edit page and a form re-rendered after a failed update share one URL;
-    // fall back to the location for non-record console pages
-    const meta = document.querySelector('meta[name="folio-console-presence-url"]')
-    const presenceUrl = meta && meta.getAttribute('content')
-
-    return presenceUrl || window.location.href.split('?')[0]
-  },
-
   apiUrl (name) {
     const meta = document.querySelector(`meta[name="folio-console-api-${name}-url"]`)
     return (meta && meta.getAttribute('content')) || null
@@ -30,8 +18,6 @@ window.FolioConsole.ConsoleUrlBeacon = {
     if (!url || !navigator.sendBeacon) return
 
     const data = new URLSearchParams()
-    data.append('url', window.FolioConsole.ConsoleUrlBeacon.currentUrl())
-
     const csrfMeta = document.querySelector('meta[name="csrf-token"]')
     if (csrfMeta) data.append('authenticity_token', csrfMeta.getAttribute('content'))
 
@@ -39,14 +25,12 @@ window.FolioConsole.ConsoleUrlBeacon = {
   },
 
   onPagehide () {
-    window.FolioConsole.ConsoleUrlBeacon.beacon(window.FolioConsole.ConsoleUrlBeacon.apiUrl('console-url-clear'))
+    window.FolioConsole.ConsoleUrlBeacon.beacon(window.FolioConsole.ConsoleUrlBeacon.apiUrl('console-presence-clear'))
   },
 
   onPageshow (e) {
-    // restore the lock when the page comes back from the back/forward cache
     if (!e.persisted) return
-
-    window.FolioConsole.ConsoleUrlBeacon.beacon(window.FolioConsole.ConsoleUrlBeacon.apiUrl('console-url-ping'))
+    window.FolioConsole.ConsoleUrlBeacon.beacon(window.FolioConsole.ConsoleUrlBeacon.apiUrl('console-presence-ping'))
   },
 
   bind () {
