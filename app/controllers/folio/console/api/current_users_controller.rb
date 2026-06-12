@@ -72,33 +72,34 @@ class Folio::Console::Api::CurrentUsersController < Folio::Console::Api::BaseCon
     end
 
     def presence_bar_record
-      placement = params[:placement]
-      return nil if placement.blank?
+      placement = verified_placement
+      return nil if placement.nil?
 
-      type = placement[:type].to_s
-      id = placement[:id]
-      return nil if type.blank? || id.blank?
+      # bind the rendered bar to the pinged presence URL: the token was signed by
+      # the page for this exact record + URL, so a client cannot ask for a bar of
+      # record B while colliding on record A
+      return nil unless placement["url"] == params[:url]
 
-      # only resolve to an ActiveRecord model — safe_constantize avoids raising on
-      # unknown constants, and the class guard avoids calling find_by on a real
-      # but non-AR constant (e.g. "String")
-      klass = type.safe_constantize
+      # only resolve to an ActiveRecord model — the class guard avoids calling
+      # find_by on a real but non-AR constant (e.g. "String")
+      klass = placement["type"].to_s.safe_constantize
       return nil unless klass.is_a?(Class) && klass < ActiveRecord::Base
 
-      record = klass.find_by(id:)
-      return nil if record.nil?
-
-      # bind the rendered bar to the pinged presence URL: the record's edit path
-      # must match the URL the heartbeat reported, otherwise a client could ask
-      # for a bar of record B while colliding on record A
-      return nil unless presence_url_matches_record?(record)
-
-      record
+      klass.find_by(id: placement["id"])
     end
 
-    def presence_url_matches_record?(record)
-      URI(params[:url].to_s).path.presence == polymorphic_path([:edit, :console, record])
-    rescue URI::InvalidURIError, ActionController::UrlGenerationError, NoMethodError
-      false
+    # The placement is a signed assertion from the page (see PresencePingComponent)
+    # carrying { type, id, url }. Trusting it avoids re-deriving the edit URL from
+    # the record, which the API cannot do for nested console routes that need a
+    # parent id the API request does not carry.
+    def verified_placement
+      token = params[:placement_token]
+      return nil if token.blank?
+
+      Rails.application.message_verifier(
+        Folio::Console::CurrentUsers::PresencePingComponent::PLACEMENT_VERIFIER_PURPOSE
+      ).verify(token)
+    rescue ActiveSupport::MessageVerifier::InvalidSignature
+      nil
     end
 end

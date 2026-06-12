@@ -2,8 +2,7 @@ window.Folio.Stimulus.register('f-c-current-users-presence-ping', class extends 
   static values = {
     apiUrl: String,
     presenceUrl: String,
-    recordId: Number,
-    recordType: String
+    placementToken: String
   }
 
   connect () {
@@ -44,8 +43,8 @@ window.Folio.Stimulus.register('f-c-current-users-presence-ping', class extends 
     const url = this.presenceUrlValue || window.location.href.split('?')[0]
     const data = { url }
 
-    if (this.hasRecordTypeValue && this.hasRecordIdValue) {
-      data.placement = { type: this.recordTypeValue, id: this.recordIdValue }
+    if (this.hasPlacementTokenValue) {
+      data.placement_token = this.placementTokenValue
     }
 
     window.Folio.Api.apiPost(this.apiUrlValue, data).then((res) => {
