@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_23_214909) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_12_102250) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -259,6 +259,15 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_23_214909) do
     t.index ["created_by_id"], name: "index_folio_console_notes_on_created_by_id"
     t.index ["site_id"], name: "index_folio_console_notes_on_site_id"
     t.index ["target_type", "target_id"], name: "index_folio_console_notes_on_target"
+  end
+
+  create_table "folio_console_presences", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["record_type", "record_id", "updated_at"], name: "index_folio_console_presences_on_record_and_freshness"
+    t.index ["user_id", "record_type", "record_id"], name: "index_folio_console_presences_on_user_and_record", unique: true
   end
 
   create_table "folio_content_templates", force: :cascade do |t|
@@ -670,8 +679,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_23_214909) do
     t.integer "failed_attempts", default: 0, null: false
     t.string "unlock_token"
     t.datetime "locked_at"
+    t.datetime "console_active_at"
     t.index ["auth_site_id"], name: "index_folio_users_on_auth_site_id"
     t.index ["confirmation_token"], name: "index_folio_users_on_confirmation_token", unique: true
+    t.index ["console_active_at"], name: "index_folio_users_on_console_active_at"
     t.index ["crossdomain_devise_token"], name: "index_folio_users_on_crossdomain_devise_token"
     t.index ["email"], name: "index_folio_users_on_email"
     t.index ["invitation_token"], name: "index_folio_users_on_invitation_token", unique: true
@@ -752,6 +763,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_23_214909) do
   add_foreign_key "folio_ai_user_instructions", "folio_sites", column: "site_id"
   add_foreign_key "folio_ai_user_instructions", "folio_users", column: "user_id"
   add_foreign_key "folio_console_notes", "folio_sites", column: "site_id"
+  add_foreign_key "folio_console_presences", "folio_users", column: "user_id"
   add_foreign_key "folio_content_templates", "folio_sites", column: "site_id"
   add_foreign_key "folio_file_site_links", "folio_files", column: "file_id"
   add_foreign_key "folio_file_site_links", "folio_sites", column: "site_id"
