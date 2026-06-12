@@ -25,9 +25,8 @@ meta[
 = csrf_meta_tags
 
 - if Folio::Current.user
-  meta name="folio-console-api-console-url-ping-url" content=console_url_ping_console_api_current_user_path(format: :json)
-  meta name="folio-console-api-console-url-clear-url" content=console_url_clear_console_api_current_user_path(format: :json)
-  meta name="folio-console-presence-url" content=folio_console_presence_url
+  meta name="folio-console-api-console-presence-ping-url" content=console_presence_ping_console_api_current_user_path(format: :json)
+  meta name="folio-console-api-console-presence-clear-url" content=console_presence_clear_console_api_current_user_path(format: :json)
 
 = render partial: 'layouts/folio/favicon',
          locals: { favicon_method: :layout_console_favicon_path }

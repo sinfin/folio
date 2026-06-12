@@ -1,28 +1,26 @@
 # frozen_string_literal: true
 
 class Folio::Console::Api::CurrentUsersController < Folio::Console::Api::BaseController
-  def console_url_ping
-    url = params.require(:url)
-    Folio::Current.user.update_console_url!(url)
+  def console_presence_ping
+    record = presence_record
+    Folio::Current.user.touch_console_active!
 
-    other_user_at_url = Folio::User.currently_editing_url(url)
-                                   .where.not(id: Folio::Current.user.id)
-                                   .exists?
-
-    data = { other_user_at_url: }
-
-    # when another editor appears, hand the first editor a freshly rendered
-    # warning bar so it can be shown live without a full page reload (CS-337)
-    if other_user_at_url
-      bar_html = render_presence_bar
-      data[:bar_html] = bar_html if bar_html.present?
+    if record.nil?
+      return render json: { data: { other_user_at_url: false } }
     end
+
+    Folio::Current.user.touch_console_presence!(record)
+
+    other = Folio::ConsolePresence.others_editing(record, except_user_id: Folio::Current.user.id)
+                                  .exists?
+    data = { other_user_at_url: other }
+    data[:bar_html] = render_presence_bar(record) if other
 
     render json: { data: }
   end
 
-  def console_url_clear
-    Folio::Current.user.clear_console_url!(only_if_url: params.require(:url))
+  def console_presence_clear
+    Folio::Current.user.clear_console_presence!
     head 204
   end
 
@@ -53,53 +51,25 @@ class Folio::Console::Api::CurrentUsersController < Folio::Console::Api::BaseCon
   end
 
   private
-    # The warning bar queries presence by this URL; the client posts the same
-    # canonical record presence URL, so reuse it for a consistent match.
-    def folio_console_presence_url
-      params[:url]
-    end
-    helper_method :folio_console_presence_url
+    # Resolve the edited record from the heartbeat payload. Only AR models the
+    # current user may edit are accepted — so no signed token is needed.
+    def presence_record
+      type = params[:record_type].to_s
+      id = params[:record_id]
+      return nil if type.blank? || id.blank?
 
-    def render_presence_bar
-      record = presence_bar_record
-      return nil if record.nil?
-      # render only what the user could edit anyway, matching the edit page's
-      # own authorization (and implicitly the record's site scope)
-      return nil unless can_now?(:update, record)
-
-      render_to_string(Folio::Console::CurrentUsers::ConsoleUrlBarComponent.new(show: true, record:),
-                       layout: false)
-    end
-
-    def presence_bar_record
-      placement = verified_placement
-      return nil if placement.nil?
-
-      # bind the rendered bar to the pinged presence URL: the token was signed by
-      # the page for this exact record + URL, so a client cannot ask for a bar of
-      # record B while colliding on record A
-      return nil unless placement["url"] == params[:url]
-
-      # only resolve to an ActiveRecord model — the class guard avoids calling
-      # find_by on a real but non-AR constant (e.g. "String")
-      klass = placement["type"].to_s.safe_constantize
+      klass = type.safe_constantize
       return nil unless klass.is_a?(Class) && klass < ActiveRecord::Base
 
-      klass.find_by(id: placement["id"])
+      record = klass.find_by(id:)
+      return nil if record.nil?
+      return nil unless can_now?(:update, record)
+
+      record
     end
 
-    # The placement is a signed assertion from the page (see PresencePingComponent)
-    # carrying { type, id, url }. Trusting it avoids re-deriving the edit URL from
-    # the record, which the API cannot do for nested console routes that need a
-    # parent id the API request does not carry.
-    def verified_placement
-      token = params[:placement_token]
-      return nil if token.blank?
-
-      Rails.application.message_verifier(
-        Folio::Console::CurrentUsers::PresencePingComponent::PLACEMENT_VERIFIER_PURPOSE
-      ).verify(token)
-    rescue ActiveSupport::MessageVerifier::InvalidSignature
-      nil
+    def render_presence_bar(record)
+      render_to_string(Folio::Console::CurrentUsers::ConsoleUrlBarComponent.new(show: true, record:),
+                       layout: false)
     end
 end
