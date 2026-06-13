@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_12_102250) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_13_073414) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -664,8 +664,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_12_102250) do
     t.string "sign_out_salt_part"
     t.bigint "source_site_id"
     t.boolean "superadmin", default: false, null: false
-    t.string "console_url"
-    t.datetime "console_url_updated_at"
     t.string "degree_pre", limit: 32
     t.string "degree_post", limit: 32
     t.string "phone_secondary"

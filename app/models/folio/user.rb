@@ -5,7 +5,6 @@ class Folio::User < Folio::ApplicationRecord
   include Folio::Devise::DeliverLater
   include Folio::HasAddresses
   include Folio::HasConsolePresence
-  include Folio::HasConsoleUrl
   include Folio::HasNewsletterSubscriptions
   include Folio::HasSiteRoles
 
@@ -543,8 +542,6 @@ end
 #  sign_out_salt_part        :string
 #  source_site_id            :bigint(8)
 #  superadmin                :boolean          default(FALSE), not null
-#  console_url               :string
-#  console_url_updated_at    :datetime
 #  degree_pre                :string(32)
 #  degree_post               :string(32)
 #  phone_secondary           :string

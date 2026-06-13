@@ -72,7 +72,7 @@ class Folio::Devise::SessionsControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test "destroy (sign out) will erase console_url columns" do
+  test "destroy (sign out) will clear console presences" do
     site = create(:folio_site, domain: "site1.localhost", type: "Folio::Site")
     email = "franta@kocourek.cz"
     password = "Strong@password1"
@@ -97,13 +97,14 @@ class Folio::Devise::SessionsControllerTest < ActionDispatch::IntegrationTest
       assert_response :success
       # signed in!
 
-      user.update!(console_url: "foo", console_url_updated_at: Time.current)
+      page = create(:folio_page)
+      user.touch_console_presence!(page)
+      assert_equal 1, user.console_presences.count
 
       # sign_out
       get destroy_user_session_url(only_path: false, host: site.env_aware_domain)
 
-      assert_nil user.reload.console_url
-      assert_nil user.console_url_updated_at
+      assert_equal 0, user.reload.console_presences.count
     end
   end
 
