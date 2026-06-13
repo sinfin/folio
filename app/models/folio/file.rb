@@ -533,8 +533,7 @@ class Folio::File < Folio::ApplicationRecord
     end
 
     def dispatch_destroyed_message
-      message_bus_user_ids = Folio::User.where.not(console_url: nil)
-                                        .where(console_url_updated_at: 1.hour.ago..)
+      message_bus_user_ids = Folio::User.where(console_active_at: 1.hour.ago..)
                                         .pluck(:id)
 
       return if message_bus_user_ids.blank?
