@@ -13,13 +13,16 @@ module Folio::HasConsolePresence
     return if record.blank?
 
     now = Time.current
-    presence = console_presences.find_or_initialize_by(
-      record_type: record.class.base_class.name,
-      record_id: record.id,
-    )
+    attrs = { record_type: record.class.base_class.name, record_id: record.id }
+
+    presence = console_presences.find_or_initialize_by(attrs)
     presence.updated_at = now
     presence.save!
 
+    touch_console_active!(now)
+  rescue ActiveRecord::RecordNotUnique
+    # another request inserted the row between find_or_initialize_by and save!
+    console_presences.where(attrs).update_all(updated_at: now)
     touch_console_active!(now)
   end
 
