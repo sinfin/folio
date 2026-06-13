@@ -28,19 +28,12 @@ window.FolioConsole.ConsoleUrlBeacon = {
     window.FolioConsole.ConsoleUrlBeacon.beacon(window.FolioConsole.ConsoleUrlBeacon.apiUrl('console-presence-clear'))
   },
 
-  onPageshow (e) {
-    if (!e.persisted) return
-    window.FolioConsole.ConsoleUrlBeacon.beacon(window.FolioConsole.ConsoleUrlBeacon.apiUrl('console-presence-ping'))
-  },
-
   bind () {
     window.addEventListener('pagehide', window.FolioConsole.ConsoleUrlBeacon.onPagehide)
-    window.addEventListener('pageshow', window.FolioConsole.ConsoleUrlBeacon.onPageshow)
   },
 
   unbind () {
     window.removeEventListener('pagehide', window.FolioConsole.ConsoleUrlBeacon.onPagehide)
-    window.removeEventListener('pageshow', window.FolioConsole.ConsoleUrlBeacon.onPageshow)
   }
 }
 

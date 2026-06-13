@@ -20,15 +20,20 @@ window.Folio.Stimulus.register('f-c-current-users-console-url-bar', class extend
   // the heartbeat lives in f-c-current-users-presence-ping (rendered separately
   // so it runs even for a lone editor); here we only react to its broadcast
   onPresencePing (e) {
-    // hide the warning once the other user is no longer editing the url -
-    // only for the plain presence variant, revision-based variants
-    // (takeover, outdated) depend on more than the other user's presence
+    // only the plain presence variant is toggled by ping — revision-based
+    // variants (takeover, outdated) depend on more than the other user's presence
     if (this.variantValue !== 'other_user') return
 
-    const data = e.detail
-    if (!data || data.other_user_at_url !== false) return
-
-    this.element.remove()
+    const present = e.detail && e.detail.other_user_at_url === true
+    if (present) {
+      this.absentPings = 0
+      this.element.classList.remove('f-c-current-users-console-url-bar--hidden')
+    } else {
+      this.absentPings = (this.absentPings || 0) + 1
+      if (this.absentPings >= 2) {
+        this.element.classList.add('f-c-current-users-console-url-bar--hidden')
+      }
+    }
   }
 
   onTakeoverButtonClick () {
