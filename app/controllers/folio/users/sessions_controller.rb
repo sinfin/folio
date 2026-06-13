@@ -15,7 +15,7 @@ class Folio::Users::SessionsController < Devise::SessionsController
         Folio::Current.user.sign_out_everywhere!
       end
 
-      Folio::Current.user.clear_console_url!
+      Folio::Current.user.clear_console_presence!
     end
 
     super

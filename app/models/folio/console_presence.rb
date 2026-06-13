@@ -16,3 +16,23 @@ class Folio::ConsolePresence < Folio::ApplicationRecord
     for_record(record).fresh.where.not(user_id: except_user_id)
   end
 end
+
+# == Schema Information
+#
+# Table name: folio_console_presences
+#
+#  id          :bigint(8)        not null, primary key
+#  user_id     :bigint(8)        not null
+#  record_type :string           not null
+#  record_id   :bigint(8)        not null
+#  updated_at  :datetime         not null
+#
+# Indexes
+#
+#  index_folio_console_presences_on_record_and_freshness  (record_type,record_id,updated_at)
+#  index_folio_console_presences_on_user_and_record       (user_id,record_type,record_id) UNIQUE
+#
+# Foreign Keys
+#
+#  fk_rails_...  (user_id => folio_users.id)
+#

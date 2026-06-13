@@ -98,9 +98,6 @@ class Folio::Console::Api::TiptapRevisionsControllerTest < Folio::Console::BaseC
     assert_not_nil my_revision
     assert_equal from_content.stringify_keys, my_revision.content
 
-    @another_user.reload
-    assert_nil @another_user.console_url
-
     from_content2 = { content: "Another user's content 2" }
     from_revision.update!(content: from_content2)
 
