@@ -14,7 +14,6 @@ class Folio::Console::CurrentUsers::PresencePingComponent < Folio::Console::Appl
       stimulus_controller("f-c-current-users-presence-ping",
                           values: {
                             api_url: ping_console_url,
-                            clear_url: controller.console_presence_clear_console_api_current_user_url(format: :json),
                             record_type: @record.class.base_class.name,
                             record_id: @record.id,
                           })

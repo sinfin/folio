@@ -11,14 +11,18 @@ class Folio::Console::CurrentUsers::ConsoleUrlBarComponent < Folio::Console::App
   end
 
   private
-    def other_user_at_url
-      return false unless can_now?(:access_console)
-      return @other_user_at_url unless @other_user_at_url.nil?
-      return @other_user_at_url = false if @record.blank?
+    def other_presence
+      return @other_presence unless @other_presence.nil?
+      return @other_presence = false unless can_now?(:access_console)
+      return @other_presence = false if @record.blank?
 
-      @other_user_at_url = Folio::ConsolePresence
-                           .others_editing(@record, except_user_id: Folio::Current.user.id)
-                           .first&.user || false
+      @other_presence = Folio::ConsolePresence
+                        .others_editing(@record, except_user_id: Folio::Current.user.id)
+                        .first || false
+    end
+
+    def other_user_at_url
+      other_presence ? other_presence.user : false
     end
 
     def has_tiptap_with_autosave?
@@ -78,7 +82,7 @@ class Folio::Console::CurrentUsers::ConsoleUrlBarComponent < Folio::Console::App
                                       edited_at: l(@record.updated_at, format: :short))
       when :takeover
         t(".autosave.title", edited_by: name,
-                             edited_at: l(other_user_at_url.console_url_updated_at, format: :short))
+                             edited_at: l(other_presence.updated_at, format: :short))
       else
         "#{t('.title')} #{content_tag(:span, name, class: 'f-c-current-users-console-url-bar__middle--name')}".html_safe
       end
