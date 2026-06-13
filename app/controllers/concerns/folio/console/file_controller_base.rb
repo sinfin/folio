@@ -163,8 +163,7 @@ module Folio::Console::FileControllerBase
     def message_bus_broadcast_update
       return if folio_console_record.saved_changes.blank?
 
-      user_ids = Folio::User.where.not(console_url: nil)
-                            .where(console_url_updated_at: 1.hour.ago..)
+      user_ids = Folio::User.where(console_active_at: 1.hour.ago..)
                             .pluck(:id)
 
       return if user_ids.blank?
