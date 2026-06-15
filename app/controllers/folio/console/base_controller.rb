@@ -13,7 +13,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
 
   before_action :add_root_breadcrumb
 
-  before_action :update_current_user_console_url
+  before_action :update_current_user_console_active
   before_action :set_show_current_user_console_url_bar
 
   before_action do
@@ -586,7 +586,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
       instance_variable_set(name, filtered)
     end
 
-    def update_current_user_console_url
+    def update_current_user_console_active
       return unless can_now?(:access_console)
       return if request.path.start_with?("/console/api")
       return if request.path.start_with?("/console/atoms")

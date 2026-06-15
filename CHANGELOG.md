@@ -12,7 +12,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-- **Console editing presence is keyed on the edited record, not the URL.** The "page is being edited" warning, the heartbeat (`console_presence_ping`/`console_presence_clear`) and the leave-beacon identify the edited record by `(record_type, record_id)` (new `folio_console_presences` table), so nested/host-app routes, post-failed-update URLs and locale prefixes no longer cause an editor to be missed. The first editor's warning is injected live and now uses observer-side hysteresis to avoid flicker when the other editor saves. The coarse "active in console" signal for message_bus moved to `folio_users.console_active_at`. Removed: `console_url`/`console_url_updated_at` columns, `Folio::HasConsoleUrl`, and `config.folio_rewriter_lambda_for_has_console_url`.
+- **Console editing presence is keyed on the edited record, not the URL.** The "page is being edited" warning, the heartbeat (`console_presence_ping`/`console_presence_clear`) and the leave-beacon identify the edited record by `(record_type, record_id)` (new `folio_console_presences` table), so nested/host-app routes, post-failed-update URLs and locale prefixes no longer cause an editor to be missed. The first editor's warning is injected live and now uses observer-side hysteresis to avoid flicker when the other editor saves. The coarse "active in console" signal for message_bus moved to `folio_users.console_active_at`. Removed `Folio::HasConsoleUrl` and `config.folio_rewriter_lambda_for_has_console_url`; the `console_url`/`console_url_updated_at` columns are no longer read and will be dropped in a follow-up contract migration (kept this release for rolling-deploy safety).
 
 ### Fixed
 

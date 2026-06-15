@@ -556,6 +556,8 @@ end
 #  unlock_token              :string
 #  locked_at                 :datetime
 #  console_active_at         :datetime
+#  console_url_updated_at    :datetime
+#  console_url               :string
 #
 # Indexes
 #
