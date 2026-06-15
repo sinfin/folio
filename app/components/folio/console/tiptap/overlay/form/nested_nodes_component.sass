@@ -1,0 +1,58 @@
+$medium-gray: #E8E8E8 !default
+
+.f-c-tiptap-overlay-form-nested-nodes
+  --f-c-tiptap-overlay-form-nested-nodes-spacer: #{2 * $spacer}
+
+  background: $medium-gray
+  border-radius: $border-radius
+  border: 1px solid $border-color
+  padding: var(--f-c-tiptap-overlay-form-nested-nodes-spacer)
+
+  .form-group--with-character-counter + &
+    margin-top: 2.5 * $spacer
+
+  &__header
+    align-items: center
+    display: flex
+    gap: var(--f-c-tiptap-overlay-form-nested-nodes-spacer)
+    justify-content: space-between
+    min-height: $input-height
+    padding-right: px-to-rem(90px) + $grid-gutter-width
+    position: relative
+    z-index: 1
+
+  &__nested-fields
+    position: relative
+    z-index: 2
+
+  &__nested-fields-fields-wrap:not(:empty)
+    padding-top: var(--f-c-tiptap-overlay-form-nested-nodes-spacer)
+
+  &__label
+    margin: 0
+    font-size: $font-size-base
+    font-weight: $font-weight-bold
+
+  &__item
+    border: 1px solid $border-color
+    border-radius: $border-radius
+    padding: var(--f-c-tiptap-overlay-form-nested-nodes-spacer)
+    background: $white
+
+  &__item-header
+    display: flex
+    align-items: center
+    justify-content: space-between
+    gap: var(--f-c-tiptap-overlay-form-nested-nodes-spacer)
+    margin-bottom: var(--f-c-tiptap-overlay-form-nested-nodes-spacer)
+
+  &__item-title
+    margin: 0
+    font-size: $font-size-base
+    font-weight: $font-weight-bold
+
+  &__add-button
+    bottom: 100%
+    position: absolute
+    right: 0
+    z-index: 2

@@ -39,7 +39,6 @@ class Folio::Site < Folio::ApplicationRecord
   has_many :users, through: :site_user_links,
                           source: :user
 
-
   # Validations
   validates :title, :email, :locale, :locales,
             presence: true
@@ -68,6 +67,7 @@ class Folio::Site < Folio::ApplicationRecord
        twitter
        linkedin
        youtube
+       spotify
        linktree
        appstore
        google_play
@@ -316,6 +316,7 @@ end
 #  address_secondary                 :text
 #  subtitle_languages                :jsonb
 #  subtitle_auto_generation_enabled  :boolean          default(FALSE)
+#  ai_settings                       :jsonb            not null
 #
 # Indexes
 #

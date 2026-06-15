@@ -5,6 +5,7 @@
   class="f-c-files-picker--as-#{@file_klass.human_type}"
   class="f-c-files-picker--size-#{@size}"
   class=(@darker ? "f-c-files-picker--darker" : nil)
+  class=(invalid? ? "f-c-files-picker--invalid" : nil)
   class="f-c-js-atoms-placement-setting"
 ]
   - unless @as_file_placement
@@ -67,3 +68,6 @@
             - if Rails.application.config.folio_files_require_alt
               span.f-c-files-picker__alt-ico.text-warning title=t('errors.messages.missing_file_alt')
                 = folio_icon(:alert)
+
+    - unless @as_file_placement
+      = @f.full_error @placement_key, class: "invalid-feedback d-block"

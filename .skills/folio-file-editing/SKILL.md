@@ -3,8 +3,8 @@ name: folio-file-editing
 description: >-
   File editing hygiene for Folio and host apps: trailing whitespace removal,
   single trailing newline (POSIX EOF), no BOM, consistent line endings, and
-  programmatic file writes. Apply whenever editing or generating any file —
-  code, config, markdown, YAML, or templates.
+  Ruby argument wrapping, and programmatic file writes. Apply whenever editing
+  or generating any file — code, config, markdown, YAML, or templates.
 ---
 
 # File editing conventions (Folio)
@@ -65,6 +65,37 @@ Preserve the existing indentation style of the file you're editing:
 - Markdown: **2 spaces** for nested lists
 
 Never mix tabs and spaces within a file.
+
+## Ruby argument wrapping
+
+When a Ruby call's keyword arguments span multiple lines, prefer aligning
+continuation arguments under the first keyword argument. This applies both with
+and without parentheses: the first character of each argument name must start in
+the same column, so the `f` in `foo:` and the `b` in `bar:` line up. Only switch
+to one-argument-per-line inside parentheses when that alignment would push the
+continuation far to the right.
+
+```ruby
+# Good
+call(foo: "good",
+     bar: "great")
+
+call foo: "good",
+     bar: "great"
+
+# Bad
+call(foo: "bad",
+   bar: "worse")
+
+call foo: "bad",
+   bar: "worse"
+
+# Fallback for very long receivers
+Some::Very::LongReceiver.call(
+  foo:,
+  bar: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
+)
+```
 
 ## Verification
 

@@ -19,5 +19,9 @@ module Folio
     def self.configure
       yield(config)
     end
+
+    def self.extract_text(value, additional_ignored_node_types: [])
+      Folio::Tiptap::TextExtractor.extract(value, additional_ignored_node_types:)
+    end
   end
 end

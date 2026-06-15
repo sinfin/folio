@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
 class Folio::Tiptap::NodeBuilder
-  def initialize(klass:, structure:, tiptap_config: nil)
+  def initialize(klass:, structure:, tiptap_config: nil, form_layout: :aside_attachments)
     @klass = klass
     @structure = convert_structure_to_hashes(structure)
     @tiptap_config = get_tiptap_config(tiptap_config)
+    @form_layout = Folio::Tiptap::FormLayoutBuilder.call(klass: @klass,
+                                                          structure: @structure,
+                                                          form_layout:)
     @embed_keys = []
   end
 
@@ -12,6 +15,7 @@ class Folio::Tiptap::NodeBuilder
     build_structure!
     setup_html_sanitization_config!
     handle_config!
+    handle_form_layout!
   end
 
   private
@@ -41,6 +45,8 @@ class Folio::Tiptap::NodeBuilder
           setup_structure_for_embed(key:)
         when :color
           setup_structure_for_color(key:)
+        when :nested_nodes
+          setup_structure_for_nested_nodes(key:, attr_config:)
         else
           fail ArgumentError, "Unsupported type #{attr_config[:type]} in tiptap_node definition"
         end
@@ -180,9 +186,15 @@ class Folio::Tiptap::NodeBuilder
           fail ArgumentError, "Expected a String or Hash for #{key}, got #{value.class.name}"
         end
 
-        whitelisted = transformed_value.slice(*::Folio::Tiptap::ALLOWED_URL_JSON_KEYS).transform_values do |v|
-          v.is_a?(String) ? v.strip.presence : nil
-        end.compact
+        whitelisted = transformed_value.slice(*::Folio::Tiptap::ALLOWED_URL_JSON_KEYS).filter_map do |url_key, url_value|
+          normalized = if url_key == "record_id"
+            Integer(url_value, exception: false)
+          elsif url_value.is_a?(String)
+            url_value.strip.presence
+          end
+
+          [url_key, normalized] if normalized
+        end.to_h
 
         # Sanitize href values to prevent dangerous URLs
         if whitelisted["href"].present?
@@ -215,6 +227,49 @@ class Folio::Tiptap::NodeBuilder
 
       # Track embed keys for later sanitization config setup
       @embed_keys << key
+    end
+
+    def setup_structure_for_nested_nodes(key:, attr_config:)
+      if @klass.nested?
+        fail ArgumentError, "Nested Tiptap nodes cannot declare nested_nodes"
+      end
+
+      validate_nested_nodes_config!(key:, attr_config:)
+      node_class = nested_node_class(key:, attr_config:)
+      attr_config[:node_class] = node_class
+      attr_config[:prebuild] = attr_config.fetch(:prebuild, true)
+
+      @klass.attribute key, default: -> { [] }
+
+      @klass.define_method "#{key}=" do |value|
+        raw_items = if value.blank?
+          []
+        elsif value.is_a?(ActionController::Parameters)
+          value.to_unsafe_h.values
+        elsif value.is_a?(Hash)
+          value.values
+        elsif value.is_a?(Array)
+          value
+        else
+          fail ArgumentError, "Expected a Hash or Array for #{key}, got #{value.class.name}"
+        end
+
+        nodes = raw_items.filter_map do |raw_item|
+          raw_attrs = raw_item.is_a?(ActionController::Parameters) ? raw_item.to_unsafe_h : raw_item
+
+          if raw_attrs.blank?
+            nil
+          elsif raw_attrs.is_a?(Hash)
+            Folio::Tiptap::Node.new_from_attributes(raw_attrs,
+                                                    allow_nested: true,
+                                                    expected_class: node_class)
+          else
+            fail ArgumentError, "Expected nested node attributes for #{key}, got #{raw_attrs.class.name}"
+          end
+        end
+
+        super(nodes)
+      end
     end
 
     def setup_structure_for_folio_attachment(key:, attr_config:)
@@ -251,10 +306,11 @@ class Folio::Tiptap::NodeBuilder
 
           ary.each do |raw_value|
             value = raw_value.with_indifferent_access
+            file_id = Integer(value[:file_id], exception: false)
 
-            if value[:file_id] && value[:_destroy] != "1"
+            if file_id&.positive? && value[:_destroy] != "1"
               whitelisted << {
-                "file_id" => value[:file_id].to_i,
+                "file_id" => file_id,
                 "title" => value[:title].presence,
                 "alt" => value[:alt].presence,
                 "description" => value[:description].presence,
@@ -343,18 +399,23 @@ class Folio::Tiptap::NodeBuilder
 
         # Override setter to enforce structure and whitelist keys
         @klass.define_method "#{key}_placement_attributes=" do |raw_value|
-          value = raw_value.with_indifferent_access
-
-          if value[:file_id] && value[:_destroy] != "1"
-            super({
-              "file_id" => value[:file_id].to_i,
-              "title" => value[:title].presence,
-              "alt" => value[:alt].presence,
-              "description" => value[:description].presence,
-              "folio_embed_data" => Folio::Embed.normalize_value(value[:folio_embed_data])
-            }.compact)
-          else
+          if raw_value.blank?
             super(nil)
+          else
+            value = raw_value.with_indifferent_access
+            file_id = Integer(value[:file_id], exception: false)
+
+            if file_id&.positive? && value[:_destroy] != "1"
+              super({
+                "file_id" => file_id,
+                "title" => value[:title].presence,
+                "alt" => value[:alt].presence,
+                "description" => value[:description].presence,
+                "folio_embed_data" => Folio::Embed.normalize_value(value[:folio_embed_data])
+              }.compact)
+            else
+              super(nil)
+            end
           end
         end
 
@@ -580,6 +641,40 @@ class Folio::Tiptap::NodeBuilder
       result
     end
 
+    def validate_nested_nodes_config!(key:, attr_config:)
+      required_keys = %i[type node_class]
+      allowed_keys = required_keys + %i[prebuild]
+      invalid_keys = attr_config.keys - allowed_keys
+      missing_keys = required_keys - attr_config.keys
+
+      if invalid_keys.present? || missing_keys.present?
+        fail ArgumentError, "Expected nested_nodes config for #{key} to include only :type, :node_class and optional :prebuild"
+      end
+
+      if attr_config.key?(:prebuild) && ![true, false].include?(attr_config[:prebuild])
+        fail ArgumentError, "Expected nested_nodes prebuild for #{key} to be true or false"
+      end
+    end
+
+    def nested_node_class(key:, attr_config:)
+      node_class = attr_config[:node_class]
+      node_class = node_class.safe_constantize if node_class.is_a?(String)
+
+      unless node_class.is_a?(Class) && node_class < Folio::Tiptap::Node
+        fail ArgumentError, "Expected nested_nodes node_class for #{key} to inherit from Folio::Tiptap::Node"
+      end
+
+      unless node_class.nested?
+        fail ArgumentError, "Expected nested_nodes node_class for #{key} to declare tiptap_node nested: true"
+      end
+
+      unless node_class.respond_to?(:structure)
+        fail ArgumentError, "Expected nested_nodes node_class for #{key} to define structure"
+      end
+
+      node_class
+    end
+
     # Structure of allowed keys and their value types in tiptap_config hash, hashes cannot include keys not listed here.
     # For hash values, each key specifies types: [] and optionally optional: true
     TIPTAP_CONFIG_HASH_STRUCTURE = {
@@ -656,6 +751,14 @@ class Folio::Tiptap::NodeBuilder
 
       @klass.define_singleton_method :tiptap_config do
         class_variable_get(:@@tiptap_config)
+      end
+    end
+
+    def handle_form_layout!
+      @klass.class_variable_set(:@@form_layout, @form_layout)
+
+      @klass.define_singleton_method :form_layout do
+        class_variable_get(:@@form_layout)
       end
     end
 

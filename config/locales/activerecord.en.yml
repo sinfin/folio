@@ -128,7 +128,9 @@ en:
         keyword/USER_ACCEPT_INVITATION_URL: URL used to finish the registration
         keyword/USER_CHANGE_PASSWORD_URL: URL used to set new password
         keyword/USER_CONFIRMATION_URL: URL used to confirm changes
+        keyword/USER_CONFLICT_PROVIDER: Sign-in provider
         keyword/USER_EMAIL: User e-mail
+        keyword/VALID_UNTIL_TIME: Link valid until
       folio/user:
         address_identification_number: Indentification number
         auth_site: Auth site
@@ -342,6 +344,7 @@ en:
     social_links/linktree: Linktree
     social_links/messenger: Messenger
     social_links/pinterest: Pinterest
+    social_links/spotify: Spotify
     social_links/tiktok: TikTok
     social_links/twitter: X
     social_links/youtube: Youtube

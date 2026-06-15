@@ -5,9 +5,55 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-### Changed
+- **Tiptap form layouts** - custom node overlay forms now support `form_layout:` with `:aside_attachments` as the default, explicit `nil` for flat forms, and custom `rows` / `columns` layouts for arranging fields.
+- **Tiptap nested nodes** — repeatable nested custom node rows with console overlay form components, virtual nested fields support, and a dummy card group example for testing.
+- **Tiptap `url_json` fields** — node attribute configs can set `disable_label` to hide the link label field in the console URL picker while keeping the remaining URL controls available.
 
 ### Fixed
+
+- **Console file picker**: Single file pickers now render placement validation messages and expose an invalid BEM modifier for styling the picker border.
+- **Tiptap `url_json` fields**: `record_id` values are now normalized and persisted as integers, including nested nodes sanitized through Tiptap content.
+- **Tiptap attachment fields**: Blank, zero, and invalid `file_id` values are ignored for single and multiple attachment attributes instead of persisting placeholder placements.
+- **URL inputs**: `url_json` custom link controls now render before SimpleForm hints, including dynamically initialized URL inputs, so `.form-text` appears after the visible control. It also turns the button red when invalid.
+- **Console atoms editor overlay clipping**: The atom-editing overlay (`.f-c-simple-form-with-atoms__overlay`, `position: fixed`) and its dismiss element are now rendered outside of the editor's scroll wrap. Previously they were nested inside `.f-c-simple-form-with-atoms__scroll`, which uses `overflow: hidden` in the horizontal layout — browsers that clip fixed-position descendants of overflow-hidden ancestors (observed in the wild on macOS Safari) cut the overlay to the scroll box, hiding its header with the Done/close buttons under the layout bars above (e.g. the "page is being edited" warning) and making the open atom impossible to save or close. Rendering the overlay as a direct child of the form root removes any clipping ancestor; no visual change in browsers that were not affected.
+- **Console "page is being edited" warning**: The warning no longer lingers for users who already left and no longer requires a page reload to go away. Closing the tab or navigating away from the console now clears the user's `console_url` via `navigator.sendBeacon` on `pagehide` (new `console_url_clear` API endpoint; the clear is conditional server-side — it only applies when the stored `console_url` still matches the leaving page, so regular console navigation is unaffected; `pageshow` from back/forward cache re-pings to restore the lock). Previously the lock persisted until its 5 minute expiry, showing a false collision warning to other editors. Additionally, `console_url_ping` now responds with `other_user_at_url` and the warning bar's Stimulus controller removes the plain presence variant once the other user leaves — previously the server-rendered bar stayed visible until a full page reload even after the collision ended. Revision-based variants (takeover, outdated) are unaffected.
+- **Console remote selects**: Match Select2 arrow and fade overlays to the disabled selection background so long values no longer show white patches.
+- **Input character counter**: Count exact plain-text length including repeated internal spaces and trailing spaces.
+- **Console validation box Tiptap focus**: Focus the visible Tiptap editor after scrolling to invalid Tiptap content and skip the hidden-input danger blink.
+- **AI current form snapshots**: Keep full atom payloads under `record_class.atom_keys` instead of only atom `data` leaves, so host apps using direct atom attributes can build prompt context from unsaved atom-backed forms.
+- **Console publishable inputs**: Treat open-ended `Folio::Publishable::Within` date ranges as restricted when the present start or end date excludes the current time, so future `published_from` values no longer render as active when `published_until` is blank.
+
+## [7.7.0] - 2026-06-02
+
+### Added
+
+- [packwerk](https://github.com/Shopify/packwerk) for functionality packs - see [docs/packs.md](docs/packs.md)
+- AI pack - text suggestions for inputs with `ai: true`, site and user per-field prompts - see [docs/ai.md](docs/ai.md)
+- **Console sidebar `:separator` support**: Sites can now include `:separator` in `console_sidebar_prepended_links` (and `before_menu`/`before_site` variants) to insert visual dividers inside custom sidebar sections.
+- **Console index filters `as: :date` support**: Filter definitions can now render a single date field, with optional `placeholder` and `prefix`, alongside the existing `:date_range` input.
+- **`Folio::File.default_file_order` scope** — exposes the canonical newest-first ordering (`created_at DESC, id DESC`) used by console file listings and pickers, including a deterministic `id` tiebreaker for stable pagination.
+- **MessageBus cross-page continuity**: any page can pass `?folio_mb_last_id=<id>` in its URL and `folio/message_bus.js` will subscribe from exactly that id (no bootstrap drop). Intended for flows that `POST` an action enqueueing a background job and then `redirect_to` another page that needs to receive the job's MessageBus updates — snapshot `window.Folio.MessageBus.lastId` before the redirect and append it as the URL param. The default behavior (no param → `lastId = -2` + bootstrap drop of the first message) is unchanged.
+
+### Changed
+
+- **Default file search results are sorted newest first** — search results in `Folio::Console::FileControllerBase#index` and `Folio::Console::Api::FileControllerBase#index_json` now apply `created_at DESC, id DESC` after `filter_by_params`, so the newest uploads appear first regardless of which filter combination is active.
+- **`ImageObject` `creditText`**: now uses `Folio::File#credit_text`, deduplicating matching `author` / `attribution_source` (e.g. `"Reuters / Reuters"` → `"Reuters"`) and falling back to `file_list_source` when both are
+  blank.
+- **`stimulus_lightbox_item`**: when called with a `Folio::FilePlacement::Base`, the helper now respects placement-level overrides — caption uses `description_with_fallback` (placement description, then file description) and author uses `file.attribution_source` with fallback to `file.author`. Previously file-level metadata was used regardless of placement overrides, so a placement caption set by an editor was silently ignored by the lightbox while still being shown in the visible figcaption (rendered by `Folio::Console::Ui::ImageComponent` and downstream consumers via `description_with_fallback`). When called with a standalone `Folio::File` the behavior is unchanged. A new `author:` keyword argument was added symmetric to the existing `title:` — both take precedence over the defaults if you need to force specific values.
+
+### Fixed
+
+- **Console batch file editing during upload**: Saving the batch edit form while photos are still uploading or being persisted now asks for confirmation. `batch_update` only sees files that already have a DB id, so files still being uploaded to S3 (or not yet persisted by `Folio::S3::CreateFileJob`) were silently skipped from the bulk edit. `Folio::FileListComponent` tracks an `uploading` Stimulus value (driven by new `f-uppy:complete` / `f-uppy:cancel-all` events from `Folio::UppyComponent`) and tiles awaiting a DB id get a `.f-file-list-file--awaiting-id` class; `Folio::Console::Files::Batch::BarComponent#submitForm` shows a blocking `window.confirm` when either is present and clears it automatically once all uploads finish.
+- **Console remote selects**: Select2 autocomplete now shows paginated blank-query options and localized minimum-input guidance for short non-blank queries instead of a normal no-results state.
+- **Tiptap custom nodes**: Suppress empty `.f-tiptap-node` wrappers when a custom node component returns `render? == false`, preventing leftover spacing for hidden nodes.
+- **Console flash autohide on server-rendered alerts**: `Folio::Console::Ui::FlashComponent` and `AlertComponent` now honor the `autohide` flag set on Rails flash (`flash: { notice: "...", autohide: true }`). The Stimulus controller `f-c-ui-alert` reads a new `autohide` value and closes the alert after 5s. Previously `autohide` was silently filtered out during the Cells → ViewComponent refactor and only the JS-side `Ui.Alert.create` honored it; flashes set by a controller `redirect_to` stayed visible until manually dismissed. JS `Ui.Alert.create` now delegates autohide to the same Stimulus controller (single code path).
+- **Console revision view**: Atoms preview iframe scrolls again in audit/revision mode when the editor uses horizontal layout (`pointer-events: auto` on `.f-c-simple-form-with-atoms__iframe` under `.f-c-layout-body--with-audit`). The read-only preview inside the iframe is unchanged (`.f-c-atoms-previews--non-interactive`).
+Left form column scrolls again in audit/revision mode (`pointer-events: auto` on `.f-c-simple-form-with-atoms__form-scroll`, with `pointer-events: none` re-applied on `.f-c-simple-form-with-atoms__form-container` to keep form fields non-interactive).
+- **friendly_id**: `strip_and_downcase_slug` now only normalizes the slug on new records or when the slug column was explicitly changed. Legacy records with mixed-case slugs are no longer silently downcased on every save, which previously broke `friendly_id` lookups (case-sensitive) on cached client-side URLs after the first save.
+- keep `index_for_picker` pagination links targeting the picker frame after uploads refresh pagy
+- refresh CSRF headers before JS API requests
+- console/layout/sidebar/search label overflow
+- use white-space: normal in tiptap nodes
 
 ## [7.6.4] - 2026-04-28
 

@@ -10,7 +10,24 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponent < ApplicationComponent
     validate_node_type!
   end
 
+  def render?
+    inner_content.present?
+  end
+
   private
+    def inner_content
+      return @inner_content if defined?(@inner_content)
+
+      @inner_content = render(node_component)
+    end
+
+    def node_component
+      @node_component ||= @node.class.view_component_class.new(
+        node: @node,
+        tiptap_content_information: @tiptap_content_information
+      )
+    end
+
     def validate_node_type!
       node_type = @prose_mirror_node.dig("attrs", "type")
 

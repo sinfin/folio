@@ -6,10 +6,17 @@ class Folio::Tiptap::Node
   include ActiveModel::Attributes
   include ActiveModel::Translation
 
-  def self.tiptap_node(structure:, tiptap_config: nil)
+  def self.tiptap_node(structure:, tiptap_config: nil, nested: false, form_layout: :aside_attachments)
+    @nested = nested == true
+
     Folio::Tiptap::NodeBuilder.new(klass: self,
                                    structure:,
-                                   tiptap_config:).build!
+                                   tiptap_config:,
+                                   form_layout:).build!
+  end
+
+  def self.nested?
+    @nested == true
   end
 
   def logger
@@ -17,13 +24,30 @@ class Folio::Tiptap::Node
   end
 
   def to_tiptap_node_hash
+    {
+      "type" => "folioTiptapNode",
+      "attrs" => to_tiptap_node_attrs,
+    }
+  end
+
+  def to_tiptap_node_attrs
+    {
+      "version" => version,
+      "type" => self.class.name,
+      "data" => tiptap_node_data,
+    }
+  end
+
+  def tiptap_node_data
     data = {}
 
     attributes.each do |key, value|
       if value.present? || value == false
         attr_type = self.class.structure.dig(key.to_sym, :type)
 
-        if attr_type && attr_type.in?(%i[rich_text url_json]) && value.is_a?(Hash)
+        if attr_type == :nested_nodes
+          data[key.to_s] = value.map(&:to_tiptap_node_attrs)
+        elsif attr_type && attr_type.in?(%i[rich_text url_json]) && value.is_a?(Hash)
           data[key.to_s] = value.to_json
         elsif attr_type == :color
           data[key.to_s] = value if Folio::Tiptap::Color.valid?(value)
@@ -33,24 +57,31 @@ class Folio::Tiptap::Node
       end
     end
 
-    {
-      "type" => "folioTiptapNode",
-      "attrs" => {
-        "version" => version,
-        "type" => self.class.name,
-        "data" => data,
-      },
-    }
+    data
   end
 
   def version
     1
   end
 
+  def nested_node_instances
+    self.class.structure.flat_map do |key, config|
+      config[:type] == :nested_nodes ? public_send(key) : []
+    end
+  end
+
+  def read_attribute_for_validation(attribute)
+    return nil if attribute.to_s.include?("[")
+
+    super
+  end
+
   def assign_attributes_from_param_attrs(attrs)
     return if attrs[:data].blank?
 
+    data_attrs = attrs.require(:data)
     permitted = []
+    nested_values = {}
 
     self.class.structure.each do |key, attr_config|
       case attr_config[:type]
@@ -87,12 +118,18 @@ class Folio::Tiptap::Node
           key,
           { key => Folio::Embed.hash_strong_params_keys },
         ]
+      when :nested_nodes
+        nested_values[key] = data_attrs[key] if data_attrs.key?(key)
       else
         permitted << key
       end
     end
 
-    permitted_data = attrs.require(:data).permit(*permitted)
+    permitted_data = data_attrs.permit(*permitted)
+    nested_values.each do |key, value|
+      permitted_data[key] = normalize_nested_param_value(value)
+    end
+
     assign_attributes(permitted_data)
   end
 
@@ -100,14 +137,22 @@ class Folio::Tiptap::Node
     "#{self}Component".constantize
   end
 
-  def self.new_from_attributes(attrs)
-    new_from_params(ActionController::Parameters.new(attrs))
+  def self.new_from_attributes(attrs, allow_nested: false, expected_class: nil)
+    new_from_params(ActionController::Parameters.new(attrs), allow_nested:, expected_class:)
   end
 
-  def self.new_from_params(attrs)
+  def self.new_from_params(attrs, allow_nested: false, expected_class: nil)
     klass = attrs.require(:type).safe_constantize
 
     if klass && klass < Folio::Tiptap::Node
+      if klass.nested? && !allow_nested
+        fail ArgumentError, "Nested Tiptap node type cannot be used as a top-level node: #{attrs['type']}"
+      end
+
+      if expected_class && klass != expected_class
+        fail ArgumentError, "Invalid nested Tiptap node type: #{attrs['type']}"
+      end
+
       node = klass.new
       node.assign_attributes_from_param_attrs(attrs)
       node
@@ -132,7 +177,9 @@ class Folio::Tiptap::Node
     elsif content.is_a?(Hash)
       if content["type"] == "folioTiptapNode"
         begin
-          nodes << new_from_attributes(content["attrs"])
+          node = new_from_attributes(content["attrs"])
+          nodes << node
+          nodes.concat(node.nested_node_instances)
         rescue ArgumentError => e
           Rails.logger.error("Folio::Tiptap::Node.instances_from_tiptap_content: #{e.message}")
         end
@@ -143,4 +190,41 @@ class Folio::Tiptap::Node
 
     nodes
   end
+
+  validate :validate_nested_nodes
+
+  private
+    def validate_nested_nodes
+      return unless self.class.respond_to?(:structure)
+
+      self.class.structure.each do |key, config|
+        next unless config[:type] == :nested_nodes
+
+        nested_nodes = Array(public_send(key))
+
+        if nested_nodes.empty?
+          errors.add(key, :blank)
+          next
+        end
+
+        nested_nodes.each_with_index do |nested_node, index|
+          next if nested_node.valid?
+
+          nested_node.errors.each do |error|
+            errors.import(error, attribute: :"#{key}[#{index}].#{error.attribute}")
+          end
+        end
+      end
+    end
+
+    def normalize_nested_param_value(value)
+      case value
+      when ActionController::Parameters
+        value.to_unsafe_h
+      when Array
+        value.map { |item| normalize_nested_param_value(item) }
+      else
+        value
+      end
+    end
 end

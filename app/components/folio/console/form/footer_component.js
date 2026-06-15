@@ -37,6 +37,7 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
   static targets = ['autosaveInput', 'submitButton', 'submitButtonIndicator']
 
   connect () {
+    this.autosaveSuppressed = false
     this.restoreUiState()
   }
 
@@ -44,6 +45,7 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     this.unbindUnload()
     this.clearAutosaveTimeout()
     delete this.lastTargetCache
+    delete this.autosaveSuppressed
   }
 
   bindUnload () {
@@ -82,6 +84,7 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
 
   queueAutosaveIfPossible (target) {
     if (!this.autosaveEnabledValue || !window.FolioConsole.Autosave.enabled) return
+    if (this.autosaveSuppressed) return
     if (this.autosavePausedValue) return
     if (this.atomsFormOpen()) return
     if (this.anyModalOpen()) return
@@ -115,6 +118,7 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     if (e.origin === window.origin) {
       switch (e.data.type) {
         case 'setFormAsDirty':
+          this.allowAutosave()
           this.statusValue = 'unsaved'
           this.queueAutosaveIfPossible()
           break
@@ -152,6 +156,13 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     if (!this.isFromProperForm(e)) return
 
     this.statusValue = 'unsaved'
+
+    if (this.shouldSuppressAutosaveForChange(e)) {
+      this.suppressAutosave()
+      return
+    }
+
+    this.allowAutosave()
 
     if (this.isFromBlacklistedTarget(e)) return
 
@@ -198,6 +209,19 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     if (this.autosaveTimerValue !== -1) {
       this.autosaveTimerValue = -1
     }
+  }
+
+  suppressAutosave () {
+    this.autosaveSuppressed = true
+    this.pauseAutosave()
+  }
+
+  allowAutosave () {
+    this.autosaveSuppressed = false
+  }
+
+  shouldSuppressAutosaveForChange (e) {
+    return e.detail && e.detail.folioAutosave === false
   }
 
   onPauseAutosave (e) {
@@ -359,6 +383,7 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
       return
     }
 
+    this.allowAutosave()
     this.queueAutosaveIfPossible()
   }
 

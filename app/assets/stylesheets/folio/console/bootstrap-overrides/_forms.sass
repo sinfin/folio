@@ -15,6 +15,15 @@ legend
   .f-c-ui-tabs__nav-item
     pointer-events: all
 
+  .f-c-simple-form-with-atoms__iframe
+    pointer-events: auto
+
+  .f-c-simple-form-with-atoms__form-scroll
+    pointer-events: auto
+
+    .f-c-simple-form-with-atoms__form-container
+      pointer-events: none
+
 .form-group
   margin-bottom: $f-c-form-group-spacer
 
@@ -96,7 +105,7 @@ legend
   display: block
 
 .invalid-feedback + .form-text,
-.form-text + .form-text
+.form-text:not(.f-input-character-counter-wrap) + .form-text
   margin-top: $form-text-margin-top / 2
 
 .form-label__required

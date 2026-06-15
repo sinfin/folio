@@ -49,6 +49,12 @@ class Folio::Console::Files::PickerComponent < Folio::Console::ApplicationCompon
                         })
   end
 
+  def invalid?
+    return false if @as_file_placement || @placement_key.blank?
+
+    @f.object.errors.where(@placement_key).present?
+  end
+
   def hint_for(fp)
     @hint.presence || t(".hint.#{fp.object.class.reflections["file"].class_name}", default: nil)
   end

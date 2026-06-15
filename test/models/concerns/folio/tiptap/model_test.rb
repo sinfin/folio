@@ -3,6 +3,24 @@
 require "test_helper"
 
 class Folio::Tiptap::ModelTest < ActiveSupport::TestCase
+  class NestedCard < Folio::Tiptap::Node
+    tiptap_node nested: true,
+                structure: {
+                   title: :string,
+                   cover: :image,
+                   reports: :documents,
+                 }
+  end
+
+  class CardGroup < Folio::Tiptap::Node
+    tiptap_node structure: {
+      cards: {
+        type: :nested_nodes,
+        node_class: NestedCard,
+      },
+    }
+  end
+
   test "convert_titap_fields_to_hashes" do
     page = create(:folio_page)
 
@@ -222,7 +240,64 @@ class Folio::Tiptap::ModelTest < ActiveSupport::TestCase
     assert_equal 0, page.tiptap_placements.count
   end
 
+  test "keeps Folio::FilePlacement::Tiptap placements from nested tiptap nodes" do
+    cover = create(:folio_file_image)
+    report = create(:folio_file_document)
+
+    node = CardGroup.new(cards: [
+      {
+        "type" => "Folio::Tiptap::ModelTest::NestedCard",
+        "version" => 1,
+        "data" => {
+          "title" => "Nested card",
+          "cover_placement_attributes" => {
+            "file_id" => cover.id,
+          },
+          "report_placements_attributes" => [
+            {
+              "file_id" => report.id,
+            },
+          ],
+        },
+      },
+    ])
+
+    page = create(:folio_page, tiptap_content: nil)
+    page.update!(tiptap_content: make_tiptap_content([node.to_tiptap_node_hash]))
+
+    assert_equal 2, page.tiptap_placements.count
+    assert_equal [cover.id, report.id].sort, page.tiptap_placements.map(&:file_id).sort
+
+    page.update!(tiptap_content: make_tiptap_content([
+      {
+        "type" => "paragraph",
+        "content" => [
+          {
+            "type" => "text",
+            "text" => "No nested files"
+          }
+        ]
+      }
+    ]))
+
+    assert_equal 0, page.tiptap_placements.count
+  end
+
   private
+    def make_tiptap_content(content)
+      {
+        Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content] => {
+          "type" => "doc",
+          "content" => [
+            {
+              "type" => "paragraph",
+              "content" => content
+            }
+          ]
+        }
+      }
+    end
+
     def dummy_tiptap_doc
       {
         Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content] => {

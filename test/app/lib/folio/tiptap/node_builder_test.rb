@@ -9,6 +9,7 @@ class Folio::Tiptap::NodeBuilderTest < ActiveSupport::TestCase
       text: :text,
       content: :rich_text,
       button_url_json: :url_json,
+      button_url_json_without_label: { type: :url_json, disable_label: true },
       position: :integer,
       folio_embed_data: :embed,
       accent_color: :color,
@@ -26,12 +27,36 @@ class Folio::Tiptap::NodeBuilderTest < ActiveSupport::TestCase
               presence: true
   end
 
+  class NestedCard < Folio::Tiptap::Node
+    tiptap_node nested: true,
+                structure: {
+                   title: :string,
+                   content: :rich_text,
+                   cover: :image,
+                 }
+
+    validates :title,
+              presence: true
+  end
+
+  class CardGroup < Folio::Tiptap::Node
+    tiptap_node structure: {
+      title: :string,
+      cards: {
+        type: :nested_nodes,
+        node_class: NestedCard,
+      },
+    }
+  end
+
   test "convert_structure_to_hashes" do
     assert_equal({ type: :string }, Node.structure[:title])
 
     assert_equal({ type: :integer }, Node.structure[:position])
 
     assert_equal({ type: :url_json }, Node.structure[:button_url_json])
+
+    assert_equal({ type: :url_json, disable_label: true }, Node.structure[:button_url_json_without_label])
 
     assert_equal({
       type: :folio_attachment,
@@ -79,6 +104,172 @@ class Folio::Tiptap::NodeBuilderTest < ActiveSupport::TestCase
     assert_equal({ type: :embed }, Node.structure[:folio_embed_data])
 
     assert_equal({ type: :color }, Node.structure[:accent_color])
+  end
+
+  test "form_layout defaults to aside_attachments" do
+    assert_equal :aside_attachments, Node.form_layout
+  end
+
+  test "form_layout accepts explicit nil for flat layout" do
+    klass = Class.new(Folio::Tiptap::Node) do
+      tiptap_node structure: {
+        title: :string,
+      }, form_layout: nil
+    end
+
+    assert_nil klass.form_layout
+  end
+
+  test "form_layout accepts rows and columns with direct field names" do
+    klass = Class.new(Folio::Tiptap::Node) do
+      tiptap_node structure: {
+        title: :string,
+        cover: :image,
+        body: :text,
+      }, form_layout: {
+        rows: [
+          "title",
+          {
+            columns: [
+              :cover,
+              { rows: [:body] },
+            ],
+          },
+        ],
+      }
+    end
+
+    assert_equal({
+      rows: [
+        :title,
+        {
+          columns: [
+            :cover,
+            { rows: [:body] },
+          ],
+        },
+      ],
+    }, klass.form_layout)
+  end
+
+  test "nested node declaration marks class as nested" do
+    assert NestedCard.nested?
+    assert_not Node.nested?
+  end
+
+  test "nested_nodes structure validates and normalizes node_class" do
+    assert_equal({
+      type: :nested_nodes,
+      node_class: NestedCard,
+      prebuild: true,
+    }, CardGroup.structure[:cards])
+  end
+
+  test "nested_nodes accepts prebuild false" do
+    klass = Class.new(Folio::Tiptap::Node) do
+      tiptap_node structure: {
+        cards: {
+          type: :nested_nodes,
+          node_class: NestedCard,
+          prebuild: false,
+        },
+      }
+    end
+
+    assert_equal false, klass.structure[:cards][:prebuild]
+  end
+
+  test "nested_nodes rejects non boolean prebuild" do
+    error = assert_raises(ArgumentError) do
+      Class.new(Folio::Tiptap::Node) do
+        tiptap_node structure: {
+          cards: {
+            type: :nested_nodes,
+            node_class: NestedCard,
+            prebuild: "no",
+          },
+        }
+      end
+    end
+
+    assert_match(/prebuild/, error.message)
+  end
+
+  test "nested_nodes rejects invalid node_class" do
+    assert_raises(ArgumentError) do
+      Class.new(Folio::Tiptap::Node) do
+        tiptap_node structure: {
+          cards: {
+            type: :nested_nodes,
+            node_class: String,
+          },
+        }
+      end
+    end
+  end
+
+  test "nested_nodes rejects extra config keys" do
+    assert_raises(ArgumentError) do
+      Class.new(Folio::Tiptap::Node) do
+        tiptap_node structure: {
+          cards: {
+            type: :nested_nodes,
+            node_class: NestedCard,
+            default: [],
+          },
+        }
+      end
+    end
+  end
+
+  test "nested_nodes rejects non nested tiptap node_class" do
+    assert_raises(ArgumentError) do
+      Class.new(Folio::Tiptap::Node) do
+        tiptap_node structure: {
+          cards: {
+            type: :nested_nodes,
+            node_class: Node,
+          },
+        }
+      end
+    end
+  end
+
+  test "nested node classes cannot declare nested_nodes" do
+    assert_raises(ArgumentError) do
+      Class.new(Folio::Tiptap::Node) do
+        tiptap_node nested: true,
+                     structure: {
+                       cards: {
+                         type: :nested_nodes,
+                         node_class: NestedCard,
+                       },
+                     }
+      end
+    end
+  end
+
+  test "nested_nodes validation requires at least one nested node" do
+    node = CardGroup.new(title: "Cards")
+
+    assert_not node.valid?
+    assert_includes node.errors.attribute_names, :cards
+  end
+
+  test "nested_nodes validation aggregates nested node errors" do
+    node = CardGroup.new(cards: [
+      {
+        "type" => "Folio::Tiptap::NodeBuilderTest::NestedCard",
+        "version" => 1,
+        "data" => {
+          "title" => "",
+        },
+      },
+    ])
+
+    assert_not node.valid?
+    assert_includes node.errors.attribute_names, :"cards[0].title"
+    assert_not_includes node.errors.attribute_names, :cards
   end
 
   test "boolean_from_collection uses boolean type and stores true/false not strings" do
@@ -183,6 +374,41 @@ class Folio::Tiptap::NodeBuilderTest < ActiveSupport::TestCase
     assert_nil node.button_url_json["href"]
     assert_equal "Click", node.button_url_json["label"]
     assert_equal "My Link", node.button_url_json["title"]
+  end
+
+  test "single attachment ignores blank and zero file ids" do
+    node = Node.new
+
+    node.cover_placement_attributes = {
+      "file_id" => "",
+      "description" => "Blank file id",
+      "alt" => "Blank file id",
+    }
+
+    assert_nil node.cover_placement_attributes
+    assert_nil node.cover_placement
+
+    node.cover_placement_attributes = {
+      "file_id" => "0",
+      "description" => "Zero file id",
+      "alt" => "Zero file id",
+    }
+
+    assert_nil node.cover_placement_attributes
+    assert_nil node.cover_placement
+  end
+
+  test "multiple attachments ignore blank and zero file ids" do
+    node = Node.new
+
+    node.report_placements_attributes = {
+      "0" => { "file_id" => "", "alt" => "Blank file id" },
+      "1" => { "file_id" => "0", "alt" => "Zero file id" },
+      "2" => { "file_id" => "invalid", "alt" => "Invalid file id" },
+    }
+
+    assert_equal [], node.report_placements_attributes
+    assert_equal [], node.report_placements
   end
 
   test "embed attribute gets normalized correctly" do

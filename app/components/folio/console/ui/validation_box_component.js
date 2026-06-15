@@ -76,12 +76,37 @@ window.Folio.Stimulus.register('f-c-ui-validation-box', class extends window.Sti
 
     btn.formGroup.scrollIntoView({ behavior: 'smooth', block: 'center' })
 
+    const tiptapInput = this.tiptapInputForFormGroup(btn.formGroup)
+    if (tiptapInput) {
+      this.focusTiptapInput(tiptapInput)
+      return
+    }
+
     if (window.FolioConsole && window.FolioConsole.DangerBoxShadowBlink && window.FolioConsole.DangerBoxShadowBlink.blinkFormGroup) {
       window.FolioConsole.DangerBoxShadowBlink.blinkFormGroup(btn.formGroup)
     }
 
     const input = btn.formGroup.querySelector('.form-control')
     if (input) input.focus()
+  }
+
+  tiptapInputForFormGroup (formGroup) {
+    if (formGroup.matches('[data-controller~="f-input-tiptap"]')) return formGroup
+    return formGroup.querySelector('[data-controller~="f-input-tiptap"]')
+  }
+
+  focusTiptapInput (tiptapInput) {
+    window.setTimeout(() => {
+      const controller = this.application.getControllerForElementAndIdentifier(tiptapInput, 'f-input-tiptap')
+
+      if (controller && typeof controller.focusEditor === 'function') {
+        controller.focusEditor()
+        return
+      }
+
+      const iframe = tiptapInput.querySelector('.f-input-tiptap__iframe')
+      if (iframe) iframe.focus()
+    }, 250)
   }
 
   openFileShowModal (e) {

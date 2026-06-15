@@ -9,61 +9,57 @@ div[
   ]
 
   .f-nested-fields__fields-wrap[
+    class=@fields_wrap_class_name
     data=stimulus_data(target: 'fieldsWrap', action: { sortupdate: 'onSortUpdate' })
   ]
-    = @f.simple_fields_for @key, @collection do |ff|
-      ruby:
-        @g = ff
-        supports_position = @position && @g.object.respond_to?(:position)
+    - if virtual?
+      - @collection.each_with_index do |object, index|
+        ruby:
+          @row_key = row_key_for(index)
+          @row_index = index
 
-      .f-nested-fields__fields[
-        data=stimulus_target('fields')
-        hidden=@g.object.marked_for_destruction?
-      ]
-        .f-nested-fields__fields-content
-          = content
+        = @f.simple_fields_for fields_name(@row_key), object do |ff|
+          ruby:
+            @g = ff
+            supports_position = supports_position?(@g.object)
 
-        = @g.hidden_field :id, class: "f-nested-fields__id-input"
+          .f-nested-fields__fields[
+            data=stimulus_target('fields')
+            data-nested-fields-row-key=@row_key
+          ]
+            .f-nested-fields__fields-content
+              = content
 
-        - if @destroy || supports_position
-          .f-nested-fields__controls
-            - if @destroy
-              = @g.hidden_field :_destroy, class: "f-nested-fields__destroy-input", value: @g.object.marked_for_destruction? ? "1" : nil
+            = controls(supports_position)
 
-              .f-nested-fields__control.f-nested-fields__control--destroy[
-                data=stimulus_action(click: 'onDestroyClick')
-              ]
-                - if @destroy == true
-                  = destroy_icon
+            - if supports_position && @fully_draggable
+              .f-nested-fields__sortable-backdrop
 
-                  - if @destroy_label.present?
-                    .f-nested-fields__destroy-label
-                      = @destroy_label
-                - else
-                  == @destroy
+            - remove_instance_variable(:@__vc_content)
+    - else
+      = @f.simple_fields_for @key, @collection do |ff|
+        ruby:
+          @g = ff
+          @row_key = nil
+          @row_index = nil
+          supports_position = supports_position?(@g.object)
 
-            - if supports_position
-              = @g.hidden_field :position, class: "f-nested-fields__position-input"
+        .f-nested-fields__fields[
+          data=stimulus_target('fields')
+          data-nested-fields-row-key=@g.index
+          hidden=@g.object.marked_for_destruction?
+        ]
+          .f-nested-fields__fields-content
+            = content
 
-              .f-nested-fields__control.f-nested-fields__control--arrow[
-                data=stimulus_action(click: 'onPositionUpClick')
-              ]
-                = folio_icon(:arrow_up, height: 24)
+          = @g.hidden_field :id, class: "f-nested-fields__id-input"
 
-              .f-nested-fields__control.f-nested-fields__control--sortable-handle[
-                data=stimulus_target("sortableHandle")
-              ]
-                = folio_icon(:drag, height: 24)
+          = controls(supports_position, destroyed: @g.object.marked_for_destruction?)
 
-              .f-nested-fields__control.f-nested-fields__control--arrow[
-                data=stimulus_action(click: 'onPositionDownClick')
-              ]
-                = folio_icon(:arrow_down, height: 24)
+          - if supports_position && @fully_draggable
+            .f-nested-fields__sortable-backdrop
 
-        - if supports_position && @fully_draggable
-          .f-nested-fields__sortable-backdrop
-
-        - remove_instance_variable(:@__vc_content)
+          - remove_instance_variable(:@__vc_content)
 
   - if @add
     .f-nested-fields__add[
@@ -75,60 +71,34 @@ div[
       - elsif @add != :hidden
         == @add
 
-      template.f-nested-fields__template[
-        hidden=true
-        data=stimulus_target('template')
+  - if template?
+    template.f-nested-fields__template[
+      hidden=true
+      data=stimulus_target('template')
+    ]
+      .f-nested-fields__fields[
+        class="f-nested-fields__fields--dynamic"
+        data=stimulus_target('fields')
+        data-nested-fields-row-key=template_row_key
       ]
-        .f-nested-fields__fields[
-          class="f-nested-fields__fields--dynamic"
-          data=stimulus_target('fields')
-        ]
-          = @f.simple_fields_for @key,
-                                 new_object,
-                                 child_index: "f-nested-fields-template-#{@key}" do |ff|
-            ruby:
-              @g = ff
-              supports_position = @position && @g.object.respond_to?(:position)
+        = @f.simple_fields_for fields_name(template_row_key),
+                               new_object,
+                               fields_options(template_row_key) do |ff|
+          ruby:
+            @g = ff
+            @row_key = template_row_key if virtual?
+            @row_index = 0 if virtual?
+            supports_position = supports_position?(@g.object)
 
-            .f-nested-fields__fields-content
-              = content
+          .f-nested-fields__fields-content
+            = content
 
-            - if @destroy || supports_position
-              .f-nested-fields__controls
-                - if @destroy
-                  = @g.hidden_field :_destroy, class: "f-nested-fields__destroy-input"
+          - unless virtual?
+            = @g.hidden_field :id, class: "f-nested-fields__id-input"
 
-                  .f-nested-fields__control.f-nested-fields__control--destroy[
-                    data=stimulus_action(click: 'onDestroyClick')
-                  ]
-                    - if @destroy == true
-                      = destroy_icon
+          = controls(supports_position)
 
-                      - if @destroy_label.present?
-                        .f-nested-fields__destroy-label
-                          = @destroy_label
-                    - else
-                      == @destroy
+          - if supports_position && @fully_draggable
+            .f-nested-fields__sortable-backdrop
 
-                - if supports_position
-                  = @g.hidden_field :position, class: "f-nested-fields__position-input"
-
-                  .f-nested-fields__control.f-nested-fields__control--arrow[
-                    data=stimulus_action(click: 'onPositionUpClick')
-                  ]
-                    = folio_icon(:arrow_up, height: 24)
-
-                  .f-nested-fields__control.f-nested-fields__control--sortable-handle[
-                    data=stimulus_target("sortableHandle")
-                  ]
-                    = folio_icon(:drag, height: 24)
-
-                  .f-nested-fields__control.f-nested-fields__control--arrow[
-                    data=stimulus_action(click: 'onPositionDownClick')
-                  ]
-                    = folio_icon(:arrow_down, height: 24)
-
-            - if supports_position && @fully_draggable
-              .f-nested-fields__sortable-backdrop
-
-            - remove_instance_variable(:@__vc_content)
+          - remove_instance_variable(:@__vc_content)

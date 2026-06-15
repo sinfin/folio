@@ -21,9 +21,48 @@ Minitest.backtrace_filter = Minitest::BacktraceFilter.new
 VCR.configure do |config|
   config.cassette_library_dir = "test/fixtures/vcr_cassettes"
   config.hook_into :webmock
+  config.default_cassette_options = {
+    match_requests_on: %i[method uri body],
+    record: :once,
+  }
+
+  %w[
+    FOLIO_AI_OPENAI_API_KEY
+    FOLIO_AI_ANTHROPIC_API_KEY
+    OPENAI_API_KEY
+    ANTHROPIC_API_KEY
+  ].each do |env_key|
+    config.filter_sensitive_data("<#{env_key}>") { ENV[env_key] }
+  end
+
+  config.before_record do |interaction|
+    uri = URI(interaction.request.uri)
+    ai_provider_request = %w[
+      api.openai.com
+      api.anthropic.com
+    ].include?(uri.host)
+
+    if ai_provider_request
+      %w[
+        Openai-Organization
+        Openai-Project
+        X-Request-Id
+        Set-Cookie
+      ].each do |header|
+        interaction.response.headers[header] = ["<FILTERED>"] if interaction.response.headers.key?(header)
+      end
+    end
+
+    interaction.ignore! if ai_provider_request && interaction.response.status.code.to_i >= 400
+  end
 end
 
 FactoryBot.definition_file_paths << Folio::Engine.root.join("test/factories")
+
+Folio.enabled_packs.each do |pack_name|
+  factory_path = Folio::Engine.root.join("packs", pack_name.to_s, "test/factories")
+  FactoryBot.definition_file_paths << factory_path if factory_path.exist?
+end
 
 module ActiveJob::TestHelper
   include ActionMailerTestHelper
@@ -61,6 +100,21 @@ class ActiveSupport::TestCase
     # Restore original values
     original_values.each do |key, value|
       Rails.application.config.send("#{key}=", value)
+    end
+  end
+
+  def with_ai_config(**config_overrides)
+    original_values = {}
+
+    config_overrides.each do |key, value|
+      original_values[key] = Folio::Ai.public_send(key)
+      Folio::Ai.public_send("#{key}=", value)
+    end
+
+    yield
+  ensure
+    original_values.each do |key, value|
+      Folio::Ai.public_send("#{key}=", value)
     end
   end
 

@@ -45,8 +45,7 @@ module Folio::FriendlyId
     end
 
     def strip_and_downcase_slug
-      if slug.present?
-        self.slug = slug.strip.downcase.parameterize
-      end
+      return unless slug.present? && (new_record? || slug_changed?)
+      self.slug = slug.strip.downcase.parameterize
     end
 end

@@ -6,12 +6,14 @@ window.Folio.Confirm.I18n = {
   cs: {
     default: 'Opravdu?',
     delete: 'Smazat?',
-    remove: 'Odebrat?'
+    remove: 'Odebrat?',
+    batchUploadInFlight: 'Některé soubory ještě nejsou plně zpracované a vaše úpravy se u nich neobjeví. Chcete změny i tak uložit?'
   },
   en: {
     default: 'Are you sure?',
     delete: 'Delete?',
-    remove: 'Remove?'
+    remove: 'Remove?',
+    batchUploadInFlight: "Some files aren't fully processed yet and your changes won't appear on them. Do you want to save the changes anyway?"
   }
 }
 

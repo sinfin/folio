@@ -115,6 +115,21 @@ class Folio::StructuredData::BodyComponentTest < Folio::ComponentTest
     assert_not article_data["image"].key?("creditText")
   end
 
+  test "render article image creditText deduplicates matching author and attribution_source" do
+    create_and_host_site
+    article = create(:dummy_blog_article, published_at: Time.current)
+    image = create(:folio_file_image, author: "Reuters", attribution_source: "Reuters")
+    create(:folio_file_placement_cover, file: image, placement: article)
+    article.reload
+
+    render_inline(Folio::StructuredData::BodyComponent.new(record: article, breadcrumbs: []))
+
+    json = JSON.parse(page.find('script[type="application/ld+json"]', visible: false).text(:all))
+    article_data = json["@graph"].find { |item| item["@type"] == "Article" }
+
+    assert_equal "Reuters", article_data["image"]["creditText"]
+  end
+
   test "render article structured data has no image when article has no cover" do
     create_and_host_site
     article = create(:dummy_blog_article, published_at: Time.current)
