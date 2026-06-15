@@ -35,6 +35,8 @@ class Folio::Console::CurrentUsers::PresencePingComponentTest < Folio::Console::
     render_ping(create(:folio_page))
     assert_selector("[data-f-c-current-users-presence-ping-api-url-value*='console_presence_ping']",
                     visible: :all)
+    assert_selector("[data-f-c-current-users-presence-ping-clear-url-value*='console_presence_clear']",
+                    visible: :all)
   end
 
   private

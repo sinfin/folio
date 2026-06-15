@@ -1,13 +1,16 @@
 window.Folio.Stimulus.register('f-c-current-users-presence-ping', class extends window.Stimulus.Controller {
   static values = {
     apiUrl: String,
+    clearUrl: String,
     recordType: String,
     recordId: Number
   }
 
   connect () {
     this.boundOnVisibilityChange = () => this.onVisibilityChange()
+    this.boundOnPagehide = () => this.clearPresence()
     document.addEventListener('visibilitychange', this.boundOnVisibilityChange)
+    window.addEventListener('pagehide', this.boundOnPagehide)
     this.pingUrl() // assert presence immediately, do not wait for the first interval
     this.startPinging()
   }
@@ -15,6 +18,7 @@ window.Folio.Stimulus.register('f-c-current-users-presence-ping', class extends 
   disconnect () {
     this.stopPinging()
     document.removeEventListener('visibilitychange', this.boundOnVisibilityChange)
+    window.removeEventListener('pagehide', this.boundOnPagehide)
   }
 
   startPinging () {
@@ -30,6 +34,18 @@ window.Folio.Stimulus.register('f-c-current-users-presence-ping', class extends 
 
   onVisibilityChange () {
     if (document.visibilityState === 'visible') this.pingUrl()
+  }
+
+  clearPresence () {
+    if (!navigator.sendBeacon || !this.hasClearUrlValue || this.clearUrlValue === '') return
+
+    const data = new URLSearchParams()
+    data.append('record_type', this.recordTypeValue)
+    data.append('record_id', this.recordIdValue)
+    const csrf = document.querySelector('meta[name="csrf-token"]')
+    if (csrf) data.append('authenticity_token', csrf.getAttribute('content'))
+
+    navigator.sendBeacon(this.clearUrlValue, data)
   }
 
   pingUrl () {
