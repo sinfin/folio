@@ -5,7 +5,8 @@ window.Folio.Stimulus.register('f-c-current-users-console-url-bar', class extend
     deleteRevisionUrl: String,
     fromUserId: Number,
     recordId: Number,
-    recordType: String
+    recordType: String,
+    variant: String
   }
 
   connect () {
@@ -32,8 +33,20 @@ window.Folio.Stimulus.register('f-c-current-users-console-url-bar', class extend
   pingUrl () {
     const currentUrl = window.location.href.split('?')[0]
     if (this.apiUrlValue !== 'dont_ping') {
-      window.Folio.Api.apiPost(this.apiUrlValue, { url: currentUrl })
+      window.Folio.Api.apiPost(this.apiUrlValue, { url: currentUrl }).then((res) => {
+        this.onPingResponse(res)
+      }).catch(() => {})
     }
+  }
+
+  onPingResponse (res) {
+    // hide the warning once the other user is no longer editing the url -
+    // only for the plain presence variant, revision-based variants
+    // (takeover, outdated) depend on more than the other user's presence
+    if (this.variantValue !== 'other_user') return
+    if (!res || !res.data || res.data.other_user_at_url !== false) return
+
+    this.element.remove()
   }
 
   onTakeoverButtonClick () {

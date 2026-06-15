@@ -57,11 +57,22 @@ class Folio::Console::CurrentUsers::ConsoleUrlBarComponent < Folio::Console::App
       end
     end
 
+    def variant
+      @variant ||= if outdated_revision.present?
+        :outdated
+      elsif other_user_has_different_revision?
+        :takeover
+      else
+        :other_user
+      end
+    end
+
     def title
-      if outdated_revision.present?
+      case variant
+      when :outdated
         t(".autosave.outdated_title", edited_by: outdated_revision.superseded_by_user.to_label,
                                       edited_at: l(@record.updated_at, format: :short))
-      elsif other_user_has_different_revision?
+      when :takeover
         t(".autosave.title", edited_by: name,
                              edited_at: l(other_user_at_url.console_url_updated_at, format: :short))
       else
@@ -70,9 +81,10 @@ class Folio::Console::CurrentUsers::ConsoleUrlBarComponent < Folio::Console::App
     end
 
     def middle_text
-      if outdated_revision.present?
+      case variant
+      when :outdated
         t(".autosave.outdated_text")
-      elsif other_user_has_different_revision?
+      when :takeover
         t(".autosave.text")
       else
         t(".text")
@@ -80,7 +92,8 @@ class Folio::Console::CurrentUsers::ConsoleUrlBarComponent < Folio::Console::App
     end
 
     def buttons
-      if outdated_revision.present?
+      case variant
+      when :outdated
         [
           {
             variant: :primary,
@@ -88,7 +101,7 @@ class Folio::Console::CurrentUsers::ConsoleUrlBarComponent < Folio::Console::App
             data: stimulus_action(click: "onOutdatedContinueButtonClick")
           }
         ]
-      elsif other_user_has_different_revision?
+      when :takeover
         [
           {
             variant: :primary,
@@ -114,7 +127,8 @@ class Folio::Console::CurrentUsers::ConsoleUrlBarComponent < Folio::Console::App
                             delete_revision_url: controller.delete_revision_console_api_tiptap_revisions_path,
                             from_user_id: other_user_at_url.present? ? other_user_at_url.id : nil,
                             record_id: @record&.id,
-                            record_type: @record&.class&.name
+                            record_type: @record&.class&.name,
+                            variant:
                           })
     end
 
