@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 - **Tiptap form layouts** - custom node overlay forms now support `form_layout:` with `:aside_attachments` as the default, explicit `nil` for flat forms, and custom `rows` / `columns` layouts for arranging fields.
 - **Tiptap nested nodes** — repeatable nested custom node rows with console overlay form components, virtual nested fields support, and a dummy card group example for testing.
 - **Tiptap `url_json` fields** — node attribute configs can set `disable_label` to hide the link label field in the console URL picker while keeping the remaining URL controls available.
+- **Tiptap color fields** — custom node structures can now declare `:color` attributes, rendered as color inputs in the console overlay and persisted as normalized `#rrggbb` values.
 
 ### Fixed
 
