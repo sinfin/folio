@@ -3,8 +3,18 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- **Tiptap form layouts** - custom node overlay forms now support `form_layout:` with `:aside_attachments` as the default, explicit `nil` for flat forms, and custom `rows` / `columns` layouts for arranging fields.
+- **Tiptap nested nodes** — repeatable nested custom node rows with console overlay form components, virtual nested fields support, and a dummy card group example for testing.
+- **Tiptap `url_json` fields** — node attribute configs can set `disable_label` to hide the link label field in the console URL picker while keeping the remaining URL controls available.
+
 ### Fixed
 
+- **Console file picker**: Single file pickers now render placement validation messages and expose an invalid BEM modifier for styling the picker border.
+- **Tiptap `url_json` fields**: `record_id` values are now normalized and persisted as integers, including nested nodes sanitized through Tiptap content.
+- **Tiptap attachment fields**: Blank, zero, and invalid `file_id` values are ignored for single and multiple attachment attributes instead of persisting placeholder placements.
+- **URL inputs**: `url_json` custom link controls now render before SimpleForm hints, including dynamically initialized URL inputs, so `.form-text` appears after the visible control. It also turns the button red when invalid.
 - **Console atoms editor overlay clipping**: The atom-editing overlay (`.f-c-simple-form-with-atoms__overlay`, `position: fixed`) and its dismiss element are now rendered outside of the editor's scroll wrap. Previously they were nested inside `.f-c-simple-form-with-atoms__scroll`, which uses `overflow: hidden` in the horizontal layout — browsers that clip fixed-position descendants of overflow-hidden ancestors (observed in the wild on macOS Safari) cut the overlay to the scroll box, hiding its header with the Done/close buttons under the layout bars above (e.g. the "page is being edited" warning) and making the open atom impossible to save or close. Rendering the overlay as a direct child of the form root removes any clipping ancestor; no visual change in browsers that were not affected.
 - **Console "page is being edited" warning**: The warning no longer lingers for users who already left and no longer requires a page reload to go away. Closing the tab or navigating away from the console now clears the user's `console_url` via `navigator.sendBeacon` on `pagehide` (new `console_url_clear` API endpoint; the clear is conditional server-side — it only applies when the stored `console_url` still matches the leaving page, so regular console navigation is unaffected; `pageshow` from back/forward cache re-pings to restore the lock). Previously the lock persisted until its 5 minute expiry, showing a false collision warning to other editors. Additionally, `console_url_ping` now responds with `other_user_at_url` and the warning bar's Stimulus controller removes the plain presence variant once the other user leaves — previously the server-rendered bar stayed visible until a full page reload even after the collision ended. Revision-based variants (takeover, outdated) are unaffected.
 - **Console remote selects**: Match Select2 arrow and fade overlays to the disabled selection background so long values no longer show white patches.

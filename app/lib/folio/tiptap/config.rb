@@ -37,6 +37,8 @@ module Folio
         @theme = theme
         @autolink = autolink
 
+        validate_node_names!
+
         @schema = schema || build_default_schema
       end
 
@@ -67,8 +69,22 @@ module Folio
 
       private
         def get_all_tiptap_node_names
-          Dir[Rails.root.join("app/models/**/tiptap/node/**/*.rb")].map do |path|
-            path.gsub("#{Rails.root}/app/models/", "").delete_suffix(".rb").camelize
+          Dir[Rails.root.join("app/models/**/tiptap/node/**/*.rb")].filter_map do |path|
+            node_name = path.gsub("#{Rails.root}/app/models/", "").delete_suffix(".rb").camelize
+            node_klass = node_name.safe_constantize
+
+            next if node_klass && node_klass < Folio::Tiptap::Node && node_klass.nested?
+
+            node_name
+          end
+        end
+
+        def validate_node_names!
+          @node_names.each do |node_name|
+            node_klass = node_name.safe_constantize
+            next unless node_klass && node_klass < Folio::Tiptap::Node && node_klass.nested?
+
+            fail ArgumentError, "Nested Tiptap node cannot be registered as top-level node: #{node_name}"
           end
         end
 

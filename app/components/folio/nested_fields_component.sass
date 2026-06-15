@@ -46,6 +46,9 @@ $transparent-b300: rgba(0, 0, 0, 0.15) !default
   &__control--sortable-handle
     cursor: grabbing
 
+  &__duplicate-icon
+    transform: scale(0.8)
+
   &__position
     position: absolute
     right: 0
@@ -73,5 +76,6 @@ $transparent-b300: rgba(0, 0, 0, 0.15) !default
     pointer-events: none
 
   &--fully-draggable &__control--destroy,
+  &--fully-draggable &__control--add-more,
   &--fully-draggable &__control--arrow
     pointer-events: auto

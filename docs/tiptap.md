@@ -192,13 +192,190 @@ All compact definitions are internally converted to hash format:
 - `{ type: :string }`, `{ type: :text }`: Basic text attributes (support `default` and `hint`, see [Placeholder and hint](#placeholder-and-hint-console-overlay-form))
 - `{ type: :integer }`: Integer attributes with automatic type conversion and validation
 - `{ type: :rich_text }`: JSON-stored rich text content
-- `{ type: :url_json }`: URL with metadata
+- `{ type: :url_json }`: URL with metadata. Add `disable_label: true` to hide the modal label field when the node has its own label/title attribute.
 - `{ type: :embed }`: Embed data with automatic normalization and validation
+- `{ type: :nested_nodes, node_class: MyNestedNode, prebuild: false }`: Ordered, repeatable nested Folio Tiptap node attrs. `prebuild` is optional and defaults to `true`.
 - `{ type: :collection, collection: [...] }`: Collection to pick from
 - `{ type: :folio_attachment, file_type: "Folio::File::Image", has_many: false, ... }`: File attachments
 - `{ type: :relation, class_name: "Model", has_many: false }`: Model relationships
 
 **Note**: The compact syntax is still fully supported and recommended for most use cases. The hash format is primarily used internally and for advanced customization.
+
+### Console Overlay Form Layout
+
+The console overlay form uses `form_layout: :aside_attachments` by default. This places fields declared before the first single attachment above the two-column area, single attachments in a narrow left column, and the remaining fields in the right column. This is useful for card-like nested nodes with an image and text metadata.
+
+```rb
+class MyApp::Tiptap::Node::Contents::Carousel < Folio::Tiptap::Node
+  class Item < Folio::Tiptap::Node
+    tiptap_node nested: true,
+                structure: {
+                  url: {
+                    type: :url_json,
+                    disable_label: true,
+                  },
+                  cover: :image,
+                  badge_label: :string,
+                  title: :string,
+                }
+  end
+
+  tiptap_node structure: {
+    items: {
+      type: :nested_nodes,
+      node_class: Item,
+    },
+  }
+end
+```
+
+Use `form_layout: nil` to keep the old flat structure-order form:
+
+```rb
+class MyApp::Tiptap::Node::Contents::Quote < Folio::Tiptap::Node
+  tiptap_node structure: {
+    text: :text,
+    author: :string,
+  }, form_layout: nil
+end
+```
+
+For custom layouts, use direct field names inside `rows` and `columns`. Custom layouts must include every structure field exactly once.
+
+```rb
+class MyApp::Tiptap::Node::Contents::Card < Folio::Tiptap::Node
+  tiptap_node structure: {
+    url: { type: :url_json, disable_label: true },
+    cover: :image,
+    badge_label: :string,
+    title: :string,
+  }, form_layout: {
+    rows: [
+      :url,
+      {
+        columns: [
+          :cover,
+          {
+            rows: [
+              :badge_label,
+              :title,
+            ],
+          },
+        ],
+      },
+    ],
+  }
+end
+```
+
+### Nested Nodes
+
+Nested nodes let a single top-level `folioTiptapNode` own an ordered list of repeatable child structures. They are useful for card groups, timelines, feature lists, and similar "molecule" blocks where editors configure the whole group in one overlay.
+
+Nested nodes are Rails-side attrs, not ProseMirror child nodes. The editor still stores one atomic top-level `folioTiptapNode`; nested rows are serialized inside the parent node's `attrs.data`.
+
+```rb
+class MyApp::Tiptap::Node::Cards < Folio::Tiptap::Node
+  class Card < Folio::Tiptap::Node
+    tiptap_node nested: true,
+                structure: {
+                   title: :string,
+                   text: :rich_text,
+                   cover: :image,
+                 }
+
+    validates :title,
+              presence: true
+  end
+
+  LAYOUTS = %w[one_per_row two_per_row three_per_row]
+
+  tiptap_node structure: {
+    layout: LAYOUTS,
+    cards: {
+      type: :nested_nodes,
+      node_class: Card,
+    },
+  }
+end
+```
+
+The `nested_nodes` config is intentionally strict. Only this shape is supported:
+
+```rb
+cards: {
+  type: :nested_nodes,
+  node_class: Card,
+  prebuild: false, # optional, defaults to true
+}
+```
+
+The `node_class` must inherit from `Folio::Tiptap::Node`, declare `tiptap_node nested: true`, and define its own structure. A nested node class cannot declare another `type: :nested_nodes` field, so deep nesting is rejected.
+
+When `prebuild` is omitted, the console overlay renders one blank nested row for an empty collection. Use `prebuild: false` only when the editor should explicitly click Add before entering the first row.
+
+Nested classes are not top-level editor blocks:
+
+- they are excluded from automatic Tiptap node discovery
+- explicit top-level registration raises an error
+- they do not need a standalone ViewComponent
+
+Stored JSON keeps nested nodes as attrs inside parent `data`:
+
+```json
+{
+  "type": "folioTiptapNode",
+  "attrs": {
+    "version": 1,
+    "type": "MyApp::Tiptap::Node::Cards",
+    "data": {
+      "layout": "two_per_row",
+      "cards": [
+        {
+          "version": 1,
+          "type": "MyApp::Tiptap::Node::Cards::Card",
+          "data": {
+            "title": "First card",
+            "text": "{\"type\":\"doc\",\"content\":[]}",
+            "cover_placement_attributes": {
+              "file_id": 123,
+              "alt": "Image alt"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+```
+
+In the parent component, nested rows are normal node objects:
+
+```rb
+@node.cards.each do |card|
+  card.title
+  card.text
+  card.cover
+  card.cover_placement
+end
+```
+
+The console overlay renders `type: :nested_nodes` as repeatable nested rows with add, remove, duplicate, and move up/down controls. Submitted params use stable UI keys and nested node attrs:
+
+```text
+tiptap_node_attrs[data][cards][item_0][type]
+tiptap_node_attrs[data][cards][item_0][version]
+tiptap_node_attrs[data][cards][item_0][data][title]
+tiptap_node_attrs[data][cards][item_0][data][cover_placement_attributes][file_id]
+```
+
+Validation requires every `type: :nested_nodes` field to contain at least one nested node. Validation also runs on each nested node. Field-level errors remain on the nested object for form rendering, and the parent also aggregates paths such as `cards[0].title` for summaries and debugging.
+
+Nested nodes participate in the same model-level processing as top-level custom nodes:
+
+- sanitization follows the declared nested node structure, including `:rich_text`, `:url_json`, and `:embed` fields
+- `Folio::Tiptap.extract_text` includes textual attributes from nested nodes
+- `Folio::Tiptap::Node.instances_from_tiptap_content` returns both top-level nodes and nested node instances, so nested file attachments are included in Tiptap placement tracking
 
 #### Example: Both Syntaxes
 
@@ -229,13 +406,13 @@ class MyApp::ExampleNode < Folio::Tiptap::Node
     button_url: { type: :url_json },
     folio_embed_data: { type: :embed },
     background: { type: :collection, collection: %w[gray blue red] },
-    cover: { 
+    cover: {
       type: :folio_attachment,
       file_type: "Folio::File::Image",
       placement_class_name: "Folio::FilePlacement::Cover",
       has_many: false
     },
-    documents: { 
+    documents: {
       type: :folio_attachment,
       file_type: "Folio::File::Document",
       placement_class_name: "Folio::FilePlacement::Document",
@@ -440,10 +617,21 @@ node.assign_attributes_from_param_attrs({
     url_data: {                         # URL JSON filtered to allowed keys
       href: "https://example.com",
       title: "Link Title"
+    },
+    cards: {                            # Form params use stable UI keys
+      item_0: {
+        type: "MyApp::Tiptap::Node::Cards::Card",
+        version: 1,
+        data: {
+          title: "Nested title"
+        }
+      }
     }
   }
 })
 ```
+
+Nested node params may be a stable-keyed hash, as rendered by the console overlay, or an array. In both cases they are assigned to the node as an ordered array and serialized back to `attrs.data.cards` as an array.
 
 The method handles:
 - **Type safety**: Validates the node class exists and inherits from `Folio::Tiptap::Node`
@@ -451,6 +639,7 @@ The method handles:
 - **Type casting**: Converts string IDs to integers, parses JSON strings
 - **File attachments**: Handles placement attributes for file relationships
 - **URL validation**: Filters URL JSON to only allowed keys and/or parses JSON strings
+- **Nested nodes**: Accepts stable-keyed hash params or arrays, instantiates the declared nested `node_class`, and rejects nested node classes as top-level node types
 
 ### Paste Configuration
 
