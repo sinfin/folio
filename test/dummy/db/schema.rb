@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_13_073414) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_12_102250) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -678,6 +678,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_13_073414) do
     t.string "unlock_token"
     t.datetime "locked_at"
     t.datetime "console_active_at"
+    t.datetime "console_url_updated_at"
+    t.string "console_url"
     t.index ["auth_site_id"], name: "index_folio_users_on_auth_site_id"
     t.index ["confirmation_token"], name: "index_folio_users_on_confirmation_token", unique: true
     t.index ["console_active_at"], name: "index_folio_users_on_console_active_at"
