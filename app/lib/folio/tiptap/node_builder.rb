@@ -43,6 +43,8 @@ class Folio::Tiptap::NodeBuilder
           setup_structure_for_integer(key:)
         when :embed
           setup_structure_for_embed(key:)
+        when :color
+          setup_structure_for_color(key:)
         when :nested_nodes
           setup_structure_for_nested_nodes(key:, attr_config:)
         else
@@ -83,6 +85,23 @@ class Folio::Tiptap::NodeBuilder
 
     def setup_structure_default(key:)
       @klass.attribute key, type: :text
+    end
+
+    def setup_structure_for_color(key:)
+      @klass.attribute key, type: :text
+      @klass.validates key, format: { with: Folio::Tiptap::Color::HEX_FORMAT }, allow_blank: true
+
+      @klass.define_method "#{key}=" do |value|
+        transformed_value = if value.nil?
+          nil
+        elsif value.is_a?(String)
+          Folio::Tiptap::Color.normalize(value) || value
+        else
+          fail ArgumentError, "Expected a String for #{key}, got #{value.class.name}"
+        end
+
+        super(transformed_value)
+      end
     end
 
     def setup_structure_for_collection(key:, attr_config:)

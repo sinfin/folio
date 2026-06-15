@@ -10,7 +10,7 @@ class Folio::Console::Tiptap::Overlay::Form::InputComponent < Folio::Console::Ap
   private
     def input
       case @attr_config[:type]
-      when :string, :text, :integer, :url_json, :rich_text
+      when :string, :text, :integer, :url_json, :rich_text, :color
         send("render_input_#{@attr_config[:type]}")
       when :nested_nodes
         render(Folio::Console::Tiptap::Overlay::Form::NestedNodesComponent.new(
@@ -80,6 +80,12 @@ class Folio::Console::Tiptap::Overlay::Form::InputComponent < Folio::Console::Ap
     def render_input_rich_text
       @f.input @key,
                as: :tiptap,
+               hint:
+    end
+
+    def render_input_color
+      @f.input @key,
+               as: :color,
                hint:
     end
 
