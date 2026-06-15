@@ -1,0 +1,12 @@
+.f-c-tiptap-overlay-form-layout
+  &__row
+    display: flex
+    gap: 0 $grid-gutter-width
+
+  &__col
+    flex: 0 1 auto
+    min-width: 0
+
+    & + &,
+    &:only-child
+      flex-grow: 1

@@ -25,6 +25,7 @@ If no existing skill fits, suggest updating this `AGENTS.md` or creating a new
 | **code-review** | Review current local branch changes or explicit diffs; findings-first feedback for code review prompts |
 | **folio-pack** | Optional pack boundaries and namespaces; files under `packs/<name>`; route mappings to pack-owned controllers/components |
 | **folio-rails-code-structure** | Ruby/Rails code structure: thin model/controller/concern entrypoints, focused classes under `lib/`, avoid helper-method clusters; excludes jobs |
+| **folio-rails-models** | Rails/ActiveModel models: validations, virtual attributes, attachment/file placement validation targets, console required markers |
 | **folio-testing** | Folio/host-app test strategy, behavior-facing assertions, component/JS behavior tests, stubs/mocks, factories/fixtures; `test/**`, `packs/**/test/**` |
 | **folio-slim** | Slim template formatting: multi-line attributes, multiple `class` attrs, avoid inline Ruby, template length; `.slim` files |
 | **folio-scss** | SCSS/Sass styling: BEM nesting with `&`, colocated component stylesheets, scoping, don't style child components; `.sass`/`.scss` files |

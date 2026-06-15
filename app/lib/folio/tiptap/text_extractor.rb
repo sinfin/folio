@@ -3,8 +3,6 @@
 class Folio::Tiptap::TextExtractor
   DEFAULT_IGNORED_NODE_TYPES = %w[hardBreak horizontalRule].freeze
 
-  TEXTUAL_NODE_ATTR_TYPES = %i[string text rich_text].freeze
-
   def self.extract(value, additional_ignored_node_types: [])
     new(additional_ignored_node_types:).extract(value)
   end
@@ -66,9 +64,13 @@ class Folio::Tiptap::TextExtractor
         return
       end
 
-      instance.class.structure.each do |key, config|
-        next unless TEXTUAL_NODE_ATTR_TYPES.include?(config[:type])
+      walk_tiptap_node_instance(instance)
+    end
 
+    def walk_tiptap_node_instance(instance)
+      return if @ignored_node_types.include?(instance.class.name)
+
+      instance.class.structure.each do |key, config|
         value = instance.public_send(key)
         next if value.blank?
 
@@ -77,6 +79,8 @@ class Folio::Tiptap::TextExtractor
           @parts << value.to_s if value.is_a?(String)
         when :rich_text
           walk(unwrap(value)) if value.is_a?(Hash)
+        when :nested_nodes
+          value.each { |nested_node| walk_tiptap_node_instance(nested_node) }
         end
       end
     end

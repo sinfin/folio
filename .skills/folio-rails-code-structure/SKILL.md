@@ -43,6 +43,11 @@ implementation across incidental private helpers there.
 - In optional packs, use the pack's own `lib/` tree for pack-owned focused
   classes.
 
+## Method signatures
+
+- When a method takes more than two arguments, use keyword arguments instead of
+  positional arguments. This applies to private helpers as well as public APIs.
+
 ## Jobs
 
 Jobs are already focused classes that perform one unit of work. Do not extract
