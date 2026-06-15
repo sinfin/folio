@@ -30,7 +30,11 @@ module Folio::HasConsolePresence
     update_columns(console_active_at: now)
   end
 
-  def clear_console_presence!
-    console_presences.delete_all
+  def clear_console_presence!(record = nil)
+    scope = console_presences
+    if record.present?
+      scope = scope.where(record_type: record.class.base_class.name, record_id: record.id)
+    end
+    scope.delete_all
   end
 end

@@ -65,7 +65,6 @@
 //= require folio/console/_data-cocoon-single-nested
 //= require folio/console/_data-destroy-association
 //= require folio/console/modules/event_names
-//= require folio/console/modules/console-url-beacon
 //= require folio/console/modules/danger-box-shadow-blink
 //= require folio/console/modules/popover
 //= require folio/console/modules/with_aside

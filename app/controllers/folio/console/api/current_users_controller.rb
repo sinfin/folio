@@ -20,7 +20,8 @@ class Folio::Console::Api::CurrentUsersController < Folio::Console::Api::BaseCon
   end
 
   def console_presence_clear
-    Folio::Current.user.clear_console_presence!
+    record = presence_record
+    Folio::Current.user.clear_console_presence!(record) if record
     head 204
   end
 

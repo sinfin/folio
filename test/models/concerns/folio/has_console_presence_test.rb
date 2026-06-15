@@ -42,6 +42,16 @@ class Folio::HasConsolePresenceTest < ActiveSupport::TestCase
     assert_equal 0, Folio::ConsolePresence.where(user_id: user.id).count
   end
 
+  test "clear_console_presence!(record) removes only that record's row and leaves others intact" do
+    user.touch_console_presence!(page)
+    user.touch_console_presence!(other_page)
+
+    user.clear_console_presence!(page)
+
+    assert_equal 0, Folio::ConsolePresence.for_record(page).where(user_id: user.id).count
+    assert_equal 1, Folio::ConsolePresence.for_record(other_page).where(user_id: user.id).count
+  end
+
   test "touch_console_active! sets console_active_at without creating presence" do
     user.touch_console_active!
 

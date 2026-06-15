@@ -49,14 +49,18 @@ class Folio::Console::Api::CurrentUsersControllerTest < Folio::Console::BaseCont
     assert_equal false, response.parsed_body["data"]["other_user_at_url"]
   end
 
-  test "console_presence_clear removes the user's presence" do
+  test "console_presence_clear removes only the targeted record's presence and leaves others intact" do
     page = create(:folio_page)
+    other_page = create(:folio_page)
     superadmin.touch_console_presence!(page)
+    superadmin.touch_console_presence!(other_page)
 
-    post console_presence_clear_console_api_current_user_url(format: :json)
+    post console_presence_clear_console_api_current_user_url(format: :json),
+         params: { record_type: page.class.name, record_id: page.id }
 
     assert_response(:no_content)
-    assert_equal 0, Folio::ConsolePresence.where(user_id: superadmin.id).count
+    assert_equal 0, Folio::ConsolePresence.for_record(page).where(user_id: superadmin.id).count
+    assert_equal 1, Folio::ConsolePresence.for_record(other_page).where(user_id: superadmin.id).count
   end
 
   test "update_console_preference" do
