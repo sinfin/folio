@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [7.7.1] - 2026-06-16
+
 ### Added
 
 - **Tiptap form layouts** - custom node overlay forms now support `form_layout:` with `:aside_attachments` as the default, explicit `nil` for flat forms, and custom `rows` / `columns` layouts for arranging fields.
