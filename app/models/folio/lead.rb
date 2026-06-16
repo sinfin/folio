@@ -86,24 +86,3 @@ class Folio::Lead < Folio::ApplicationRecord
       errors.add(:verified_captcha, :invalid)
     end
 end
-
-# == Schema Information
-#
-# Table name: folio_leads
-#
-#  id              :bigint(8)        not null, primary key
-#  email           :string
-#  phone           :string
-#  note            :text
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  name            :string
-#  url             :string
-#  additional_data :json
-#  aasm_state      :string           default("submitted")
-#  site_id         :bigint(8)
-#
-# Indexes
-#
-#  index_folio_leads_on_site_id  (site_id)
-#

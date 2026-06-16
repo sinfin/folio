@@ -86,27 +86,3 @@ class Folio::MenuItemTest < ActiveSupport::TestCase
     end
   end
 end
-
-# == Schema Information
-#
-# Table name: folio_menu_items
-#
-#  id          :integer          not null, primary key
-#  menu_id     :integer
-#  type        :string
-#  ancestry    :string
-#  title       :string
-#  rails_path  :string
-#  position    :integer
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#  target_type :string
-#  target_id   :integer
-#
-# Indexes
-#
-#  index_folio_menu_items_on_ancestry                   (ancestry)
-#  index_folio_menu_items_on_menu_id                    (menu_id)
-#  index_folio_menu_items_on_target_type_and_target_id  (target_type,target_id)
-#  index_folio_menu_items_on_type                       (type)
-#

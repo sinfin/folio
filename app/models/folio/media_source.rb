@@ -84,26 +84,3 @@ class Folio::MediaSource < Folio::ApplicationRecord
       @nullified_file_ids = nil
     end
 end
-
-# == Schema Information
-#
-# Table name: folio_media_sources
-#
-#  id              :bigint(8)        not null, primary key
-#  title           :string           not null
-#  licence         :string
-#  copyright_text  :string
-#  max_usage_count :integer          default(1)
-#  site_id         :bigint(8)        not null
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#
-# Indexes
-#
-#  index_folio_media_sources_on_site_id  (site_id)
-#  index_folio_media_sources_on_title    (title) UNIQUE
-#
-# Foreign Keys
-#
-#  fk_rails_...  (site_id => folio_sites.id)
-#
