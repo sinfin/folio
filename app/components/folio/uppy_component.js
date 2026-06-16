@@ -131,10 +131,26 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
         getUploadParameters: (file) => {
           return window.Folio.Api.apiPost('/folio/api/s3/before', { ...args, file_name: file.name })
             .then((response) => {
-              this.uppy.setFileMeta(file.id, {
+              const metadata = {
                 s3_path: response.s3_path,
                 jwt: response.jwt,
                 sanitized_name: response.file_name
+              }
+
+              this.uppy.setFileMeta(file.id, metadata)
+
+              const updatedFile = this.uppy.getFile(file.id) || file
+
+              this.dispatch('upload-start', {
+                detail: {
+                  file: this.uppyFilePayload({
+                    ...updatedFile,
+                    meta: {
+                      ...updatedFile.meta,
+                      ...metadata
+                    }
+                  })
+                }
               })
 
               return {
@@ -154,12 +170,7 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
       })
 
       this.uppy.on('upload-success', (file) => {
-        this.uppyUploadSuccess({
-          name: file.meta.sanitized_name || file.name,
-          s3_path: file.meta.s3_path,
-          jwt: file.meta.jwt,
-          preview: file.preview
-        })
+        this.uppyUploadSuccess(this.uppyFilePayload(file))
       })
 
       this.uppy.on('complete', (result) => {
@@ -173,6 +184,16 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
       this.uppy.on('error', (error) => {
         console.error('[Uppy] System error:', error)
         this.showError(window.Folio.i18n(this.constructor.ERROR_MESSAGES, 'systemError'))
+      })
+
+      this.uppy.on('upload-error', (file, error, response) => {
+        this.dispatch('upload-error', {
+          detail: {
+            file: this.uppyFilePayload(file),
+            error,
+            response
+          }
+        })
       })
 
       if (!this.inlineValue) {
@@ -205,6 +226,22 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
 
   uppyUploadSuccess (file) {
     this.dispatch('upload-success', { detail: { file } })
+  }
+
+  uppyFilePayload (file) {
+    if (!file) return {}
+
+    const meta = file.meta || {}
+
+    return {
+      id: file.id,
+      name: meta.sanitized_name || file.name,
+      size: file.size,
+      s3_path: meta.s3_path,
+      jwt: meta.jwt,
+      preview: file.preview,
+      progress: file.progress
+    }
   }
 
   showError (message) {
