@@ -7,6 +7,10 @@ All notable changes to this project will be documented in this file.
 
 - **Console private attachments**: Replace the Dropzone/S3Upload add flow with `Folio::UppyComponent`, preserving nested attachment ordering/destroy behavior and hiding move arrows in single-attachment mode.
 
+### Fixed
+
+- **Uppy drag-and-drop**: Only the first active uploader handles window-level file drops, preventing duplicate uploads when a page renders multiple `Folio::UppyComponent` instances.
+
 ## [7.7.1] - 2026-06-16
 
 ### Added

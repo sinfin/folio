@@ -34,6 +34,7 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
   connect () {
     window.folioUppyCounter = (window.folioUppyCounter || 0) + 1
     this.folioUppyCounter = window.folioUppyCounter
+    this.registerInstance()
 
     this.element.classList.add(`f-uppy--${window.folioUppyCounter}`)
     this.triggerTarget.classList.add(`f-uppy__trigger--${window.folioUppyCounter}`)
@@ -52,10 +53,14 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
   }
 
   disconnect () {
-    if (!this.uppy) return
+    if (this.uppy) {
+      this.uppy.destroy()
+      delete this.uppy
+    }
 
-    this.uppy.destroy()
-    delete this.uppy
+    delete this.windowDropTargetRegistered
+    this.unregisterInstance()
+    this.constructor.assignWindowDropTarget()
   }
 
   init () {
@@ -119,9 +124,7 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
 
       this.uppy.use(window.Uppy.Dashboard, dashboardOpts)
 
-      this.uppy.use(window.Uppy.DropTarget, {
-        target: document.body
-      })
+      this.registerWindowDropTargetIfFirst()
 
       const args = { type: this.fileTypeValue }
       if (this.existingIdValue) args.existing_id = this.existingIdValue
@@ -209,6 +212,50 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
       console.error('[Uppy] Failed to initialize Uppy:', error)
       this.showError(window.Folio.i18n(this.constructor.ERROR_MESSAGES, 'failedToInitialize'))
     }
+  }
+
+  static instances () {
+    window.Folio.uppyInstances = window.Folio.uppyInstances || []
+    return window.Folio.uppyInstances
+  }
+
+  static assignWindowDropTarget () {
+    const instance = this.instances().find((uppyInstance) => uppyInstance.uppy)
+    if (!instance) return
+
+    instance.registerWindowDropTargetIfFirst()
+  }
+
+  registerInstance () {
+    const instances = this.constructor.instances()
+    if (instances.includes(this)) return
+
+    instances.push(this)
+  }
+
+  unregisterInstance () {
+    const instances = this.constructor.instances()
+    const index = instances.indexOf(this)
+
+    if (index === -1) return
+
+    instances.splice(index, 1)
+  }
+
+  isFirstInstance () {
+    return this.constructor.instances()[0] === this
+  }
+
+  registerWindowDropTargetIfFirst () {
+    if (!this.uppy) return
+    if (this.windowDropTargetRegistered) return
+    if (!this.isFirstInstance()) return
+
+    // Only one instance can own document body drops, otherwise each instance uploads the same dragged file.
+    this.uppy.use(window.Uppy.DropTarget, {
+      target: document.body
+    })
+    this.windowDropTargetRegistered = true
   }
 
   uppyComplete (result) {
