@@ -67,6 +67,14 @@ class Folio::File::Audio < Folio::File
                            method_name: :get_object)
   end
 
+  def player_source_url(expires_in: 15.minutes.to_i)
+    playable_download_url(expires_in:) || original_download_url(expires_in:)
+  end
+
+  def player_source_mime_type
+    playable_file_path.present? ? playable_content_type : file_mime_type
+  end
+
   def low_quality_source?
     remote_services_data.to_h["quality_warning"] == "low_bitrate"
   end
@@ -108,4 +116,9 @@ class Folio::File::Audio < Folio::File
       format("%d:%02d", m, s)
     end
   end
+
+  private
+    def original_download_url(expires_in:)
+      Folio::S3.url_rewrite(file.remote_url(expires: expires_in.seconds.from_now))
+    end
 end

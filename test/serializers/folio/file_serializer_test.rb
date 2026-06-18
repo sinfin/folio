@@ -3,6 +3,15 @@
 require "test_helper"
 
 class Folio::FileSerializerTest < ActiveSupport::TestCase
+  test "private audio without playable derivative falls back to original source url" do
+    audio = create(:folio_file_audio)
+
+    data = Folio::FileSerializer.new(audio).serializable_hash.dig(:data, :attributes)
+
+    assert data[:source_url].present?
+    assert_equal audio.file_mime_type, data[:player_source_mime_type]
+  end
+
   test "private audio uses playable content type for player source mime type" do
     audio = create(:folio_file_audio)
     audio.update_columns(
