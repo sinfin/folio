@@ -32,12 +32,23 @@ class Folio::FileSerializer
   attribute :player_source_mime_type do |object|
     if object.try(:processing_service) == "mux" && object.ready?
       "application/x-mpegurl"
-    elsif object.file_mime_type
-      if object.file_mime_type.match?(%r{audio/.+-aac-.+})
+    elsif (source_mime_type = source_mime_type_for(object))
+      if source_mime_type.match?(%r{audio/.+-aac-.+})
         "audio/aac"
       else
-        object.file_mime_type
+        source_mime_type
       end
     end
+  end
+
+  class << self
+    private
+      def source_mime_type_for(object)
+        if object.is_a?(Folio::File::Audio) && object.try(:private?)
+          object.playable_content_type.presence || object.file_mime_type
+        else
+          object.file_mime_type
+        end
+      end
   end
 end
