@@ -6,6 +6,8 @@ class Folio::File::ProcessAudioJob < Folio::ApplicationJob
   def perform(audio_file)
     return unless audio_file.is_a?(Folio::File::Audio)
 
+    audio_file.retry_processing! if audio_file.processing_failed?
+
     Folio::File::AudioProcessingService.new(audio_file).call
     broadcast_file_update(audio_file)
   rescue StandardError => error
