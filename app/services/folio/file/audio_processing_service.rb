@@ -13,8 +13,8 @@ class Folio::File::AudioProcessingService
   TARGET_SAMPLE_RATE_HZ = 44_100
   MONO_BITRATE = "128k"
   STEREO_BITRATE = "192k"
-  DERIVATIVE_ROOT = "audio".freeze
-  PLAYABLE_SUBPATH = "encoded".freeze
+  DERIVATIVE_ROOT = "audio"
+  PLAYABLE_SUBPATH = "encoded"
 
   ALWAYS_REENCODE_MIME_TYPES = %w[
     audio/mp4
@@ -40,6 +40,8 @@ class Folio::File::AudioProcessingService
   end
 
   def call
+    old_playable_path = audio_file.playable_file_path
+    old_playable_storage = audio_file.playable_storage_data["storage"]
     metadata = inspect_media
     mapped_metadata = build_mapped_metadata(metadata)
     playable_data = create_playable_derivative(metadata)
@@ -51,6 +53,9 @@ class Folio::File::AudioProcessingService
     )
 
     audio_file.processing_done! if audio_file.processing?
+    cleanup_old_derivative!(old_path: old_playable_path,
+                            old_storage: old_playable_storage,
+                            new_path: playable_data["path"])
     audio_file.reload
   end
 
@@ -194,8 +199,6 @@ class Folio::File::AudioProcessingService
     def store_derivative(tempfile:, extension:, content_type:)
       relative_path = derivative_relative_path(extension)
 
-      cleanup_old_derivative!(new_path: relative_path)
-
       test_aware_s3_upload(s3_path: relative_path,
                            file: tempfile,
                            acl: "private")
@@ -208,13 +211,14 @@ class Folio::File::AudioProcessingService
       }
     end
 
-    def cleanup_old_derivative!(new_path:)
-      old_path = audio_file.playable_file_path
+    def cleanup_old_derivative!(old_path:, old_storage:, new_path:)
       return unless old_path.present?
-      return unless audio_file.playable_storage_data["storage"] == "s3"
+      return unless old_storage == "s3"
       return if old_path == new_path
 
       test_aware_s3_delete(s3_path: old_path)
+    rescue StandardError => e
+      Rails.logger.warn("[AudioProcessingService] old derivative cleanup failed for file ##{audio_file.id}: #{e.message}")
     end
 
     def derivative_relative_path(extension)
@@ -294,8 +298,8 @@ class Folio::File::AudioProcessingService
     end
 
     def normalized_tags(tags)
-      tags.each_with_object({}) do |(key, value), hash|
-        hash[key.to_s.downcase] = value
+      tags.transform_keys do |key|
+        key.to_s.downcase
       end
     end
 

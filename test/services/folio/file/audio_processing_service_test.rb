@@ -88,4 +88,92 @@ class Folio::File::AudioProcessingServiceTest < ActiveSupport::TestCase
     assert_equal artwork.id, audio.remote_services_data["artwork_image_id"]
     assert audio.file_metadata_extracted_at.present?
   end
+
+  test "call keeps old playable derivative when new derivative upload fails" do
+    old_path = "audio/encoded/1/1/old-playable.mp3"
+    audio = create(:folio_file_audio,
+                   remote_services_data: {
+                     "playable" => {
+                       "storage" => "s3",
+                       "path" => old_path,
+                       "extension" => "mp3",
+                       "content_type" => "audio/mpeg",
+                     }
+                   })
+    service = Folio::File::AudioProcessingService.new(audio)
+    inspect_media_result = {
+      "format" => {
+        "duration" => "120",
+        "bit_rate" => "128000",
+        "tags" => {},
+      },
+      "streams" => [
+        {
+          "codec_type" => "audio",
+          "codec_name" => "mp3",
+          "sample_rate" => "44100",
+          "channels" => 1,
+        }
+      ]
+    }
+    delete_calls = []
+
+    service.stub(:inspect_media, inspect_media_result) do
+      service.stub(:shell, "") do
+        service.stub(:test_aware_s3_delete, -> (s3_path:) { delete_calls << s3_path }) do
+          service.stub(:test_aware_s3_upload, -> (**_kwargs) { raise "upload failed" }) do
+            assert_raises(RuntimeError) { service.call }
+          end
+        end
+      end
+    end
+
+    assert_empty delete_calls
+    assert_equal old_path, audio.reload.playable_file_path
+  end
+
+  test "call deletes old playable derivative after new derivative is persisted" do
+    old_path = "audio/encoded/1/1/old-playable.mp3"
+    audio = create(:folio_file_audio,
+                   remote_services_data: {
+                     "playable" => {
+                       "storage" => "s3",
+                       "path" => old_path,
+                       "extension" => "mp3",
+                       "content_type" => "audio/mpeg",
+                     }
+                   })
+    service = Folio::File::AudioProcessingService.new(audio)
+    inspect_media_result = {
+      "format" => {
+        "duration" => "120",
+        "bit_rate" => "128000",
+        "tags" => {},
+      },
+      "streams" => [
+        {
+          "codec_type" => "audio",
+          "codec_name" => "mp3",
+          "sample_rate" => "44100",
+          "channels" => 1,
+        }
+      ]
+    }
+    delete_calls = []
+
+    service.stub(:inspect_media, inspect_media_result) do
+      service.stub(:shell, "") do
+        service.stub(:test_aware_s3_upload, nil) do
+          service.stub(:test_aware_s3_delete, lambda { |s3_path:|
+            delete_calls << s3_path
+            assert_not_equal old_path, audio.reload.playable_file_path
+          }) do
+            service.call
+          end
+        end
+      end
+    end
+
+    assert_equal [old_path], delete_calls
+  end
 end
