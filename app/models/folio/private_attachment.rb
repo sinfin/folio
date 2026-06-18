@@ -45,32 +45,3 @@ class Folio::PrivateAttachment < Folio::ApplicationRecord
     }
   end
 end
-
-# == Schema Information
-#
-# Table name: folio_private_attachments
-#
-#  id                  :bigint(8)        not null, primary key
-#  attachmentable_type :string
-#  attachmentable_id   :bigint(8)
-#  type                :string
-#  file_uid            :string
-#  file_name           :string
-#  title               :text
-#  alt                 :string
-#  thumbnail_sizes     :text             default("--- {}\n")
-#  position            :integer
-#  file_width          :integer
-#  file_height         :integer
-#  file_size           :bigint(8)
-#  additional_data     :json
-#  created_at          :datetime         not null
-#  updated_at          :datetime         not null
-#  hash_id             :string
-#  file_mime_type      :string
-#
-# Indexes
-#
-#  index_folio_private_attachments_on_attachmentable  (attachmentable_type,attachmentable_id)
-#  index_folio_private_attachments_on_type            (type)
-#

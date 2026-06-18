@@ -1,27 +1,65 @@
 (() => {
-  const getLuminance = (hex) => {
+  // NOTE: Intentionally duplicated in app/components/folio/embed/box_component.js.
+  // Keep this file self-contained so static embed works with only data/embed/source assets.
+  const relativeLuminance = (hex) => {
     try {
-      // Convert hex to RGB
       const r = parseInt(hex.slice(1, 3), 16) / 255
       const g = parseInt(hex.slice(3, 5), 16) / 255
       const b = parseInt(hex.slice(5, 7), 16) / 255
 
-      // Check for invalid values
       if (isNaN(r) || isNaN(g) || isNaN(b)) {
-        return 1 // Default to light (no dark class)
+        return 1
       }
 
-      // Apply gamma correction
       const rLinear = r <= 0.03928 ? r / 12.92 : Math.pow((r + 0.055) / 1.055, 2.4)
       const gLinear = g <= 0.03928 ? g / 12.92 : Math.pow((g + 0.055) / 1.055, 2.4)
       const bLinear = b <= 0.03928 ? b / 12.92 : Math.pow((b + 0.055) / 1.055, 2.4)
 
-      // Calculate relative luminance
       return 0.2126 * rLinear + 0.7152 * gLinear + 0.0722 * bLinear
     } catch (error) {
-      // Return default luminance for light background if parsing fails
       return 1
     }
+  }
+
+  const urlParamsForTheme = new URLSearchParams(window.location.search)
+  const legacyBackgroundColor = urlParamsForTheme.get('backgroundColor')
+  const lightModeBackgroundColor = urlParamsForTheme.get('lightModeBackgroundColor')
+  const darkModeBackgroundColor = urlParamsForTheme.get('darkModeBackgroundColor')
+
+  const validateHexColor = (value) => value && /^#[0-9A-Fa-f]{6}$/.test(value)
+
+  const applyDocumentBackground = (explicitScheme) => {
+    let hex = null
+    let useDarkClass = false
+
+    if (validateHexColor(lightModeBackgroundColor) && validateHexColor(darkModeBackgroundColor)) {
+      let scheme
+      if (explicitScheme === 'light' || explicitScheme === 'dark') {
+        scheme = explicitScheme
+      } else {
+        scheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+      }
+      hex = scheme === 'dark' ? darkModeBackgroundColor : lightModeBackgroundColor
+      useDarkClass = relativeLuminance(hex) < 0.5
+    } else if (validateHexColor(legacyBackgroundColor)) {
+      hex = legacyBackgroundColor
+      useDarkClass = relativeLuminance(hex) < 0.5
+    }
+
+    if (!hex) return
+
+    document.documentElement.style.backgroundColor = hex
+    document.body.style.backgroundColor = hex
+    document.body.classList.toggle('f-embed-body--dark-background', useDarkClass)
+  }
+
+  // Script runs in <head>; body may not exist yet — defer theme until DOM is ready.
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      applyDocumentBackground()
+    })
+  } else {
+    applyDocumentBackground()
   }
 
   const setDynamicMinHeight = (iframe) => {
@@ -46,18 +84,6 @@
 
     if (urlParams.get('centered') === '1') {
       container.classList.add('f-embed__container--centered')
-    }
-
-    const backgroundColor = urlParams.get('backgroundColor')
-    if (backgroundColor && /^#[0-9A-Fa-f]{6}$/.test(backgroundColor)) {
-      document.documentElement.style.backgroundColor = backgroundColor
-      document.body.style.backgroundColor = backgroundColor
-
-      // Check luminance and add dark background class if needed
-      const luminance = getLuminance(backgroundColor)
-      if (luminance < 0.5) {
-        document.body.classList.add('f-embed-body--dark-background')
-      }
     }
 
     if (data.html) {
@@ -287,6 +313,13 @@
       case 'f-embed:set-data':
         setData(e.data.folioEmbedData)
         break
+      case 'f-embed:set-color-scheme': {
+        const scheme = e.data.colorScheme
+        if (scheme === 'light' || scheme === 'dark') {
+          applyDocumentBackground(scheme)
+        }
+        break
+      }
     }
   })
 

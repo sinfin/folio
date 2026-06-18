@@ -95,26 +95,3 @@ class Folio::SiteUserLink < Folio::ApplicationRecord
     locked?
   end
 end
-
-# == Schema Information
-#
-# Table name: folio_site_user_links
-#
-#  id         :bigint(8)        not null, primary key
-#  user_id    :bigint(8)        not null
-#  site_id    :bigint(8)        not null
-#  roles      :jsonb
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  locked_at  :datetime
-#
-# Indexes
-#
-#  index_folio_site_user_links_on_site_id  (site_id)
-#  index_folio_site_user_links_on_user_id  (user_id)
-#
-# Foreign Keys
-#
-#  fk_rails_...  (site_id => folio_sites.id)
-#  fk_rails_...  (user_id => folio_users.id)
-#

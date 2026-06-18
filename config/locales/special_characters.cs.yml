@@ -1,0 +1,9 @@
+---
+cs:
+  folio:
+    special_characters:
+      popup_component:
+        title: Speciální znaky
+        close: Zavřít
+      trigger_component:
+        label: :folio.special_characters.popup_component.title

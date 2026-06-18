@@ -108,6 +108,9 @@ content_copy:
 content_save:
   width: 24
   height: 24
+creation:
+  width: 24
+  height: 24
 credit_card_scan_outline:
   width: 24
   height: 24
@@ -301,6 +304,9 @@ send_clock:
   width: 24
   height: 24
 send_lock:
+  width: 24
+  height: 24
+special_character:
   width: 24
   height: 24
 speedometer:

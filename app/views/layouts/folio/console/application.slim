@@ -45,6 +45,7 @@ html.f-c-layout-html.f-html--show-sensitive-content lang=I18n.locale
     - unless barebone_layout_for_turbo_frame?
       = yield :modals
 
+      = render(Folio::SpecialCharacters::PopupComponent.new)
       / == cell('folio/console/aasm/email_modal')
       = render(Folio::Console::Ui::NotificationModalComponent.new)
       = render(Folio::Console::FormModalComponent.new)

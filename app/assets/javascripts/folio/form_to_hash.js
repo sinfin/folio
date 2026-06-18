@@ -1,5 +1,7 @@
 window.Folio = window.Folio || {}
 
+// convert flat object or form with Rails Style keys to nested object
+// "file[name] = 'xx' file[length] = 5" => '{ file: {name: "xxx", length: 5}}'
 window.Folio.formToHash = (formOrHash) => {
   if (formOrHash instanceof window.HTMLFormElement) {
     const formData = new FormData(formOrHash)

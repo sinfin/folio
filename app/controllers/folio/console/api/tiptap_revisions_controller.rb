@@ -35,27 +35,22 @@ class Folio::Console::Api::TiptapRevisionsController < Folio::Console::Api::Base
   end
 
   def takeover_revision
+    placement = find_placement
+    authorize!(:update, placement)
     from_user = Folio::User.find(params[:from_user_id])
-    record_class = params[:record_type].constantize
-    record = record_class.find(params[:record_id])
-    authorize!(:update, record)
+    attribute_name = placement_params[:attribute_name] || "tiptap_content"
 
-    # Takeover all revisions from the other user (for all attribute_names)
-    from_revisions = record.tiptap_revisions.where(user: from_user)
+    from_revision = placement.latest_tiptap_revision(user: from_user, attribute_name:)
+
     return render json: {
-      error: t(".no_revision_found", user_id: from_user.id, record_id: record.id, record_type: record.class.name)
-    }, status: :not_found if from_revisions.empty?
+      error: t(".no_revision_found", user_id: from_user.id, record_id: placement.id, record_type: placement.class.name)
+    }, status: :not_found unless from_revision
 
-    from_revisions.each do |from_revision|
-      to_revision = record.tiptap_revisions.find_or_initialize_by(
-        user: Folio::Current.user,
-        attribute_name: from_revision.attribute_name
-      )
-      to_revision.content = from_revision.content
-      to_revision.save!
-    end
-
-    from_user.update_console_url!(nil)
+    to_revision = placement.tiptap_revisions.find_or_initialize_by(user: Folio::Current.user, attribute_name:)
+    to_revision.content = from_revision.content
+    to_revision.superseded_by_user = nil if placement.latest_tiptap_revision == from_revision
+    to_revision.updated_at = Time.current # to force update  if existing revision have same content as from_revision
+    to_revision.save!
 
     render json: { success: true }
   end

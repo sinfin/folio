@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# CI enforces the same lint scope in test/integration/folio/guardfile_linters_test.rb — update that test
+# when you change the watch patterns below.
+
 require_relative "lib/guard/standard_js"
 
 guard :rubocop, cli: ["--autocorrect-all"] do

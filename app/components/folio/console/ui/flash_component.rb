@@ -11,10 +11,13 @@ class Folio::Console::Ui::FlashComponent < Folio::Console::ApplicationComponent
   }
 
   def initialize(flash:)
+    @autohide = flash.present? && (flash["autohide"] || flash[:autohide]) ? true : false
     @flash = if flash.present?
       flash.filter { |key, _value| key != "timedout" && key != "autohide" }
     else
       flash
     end
   end
+
+  attr_reader :autohide
 end

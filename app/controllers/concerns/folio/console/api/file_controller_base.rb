@@ -79,11 +79,13 @@ module Folio::Console::Api::FileControllerBase
   def pagination
     @pagy, _records = pagy(folio_console_records, items: Folio::Console::FileControllerBase::PAGY_ITEMS)
 
-    pagination_params = filter_params.to_h.merge("page" => params[:page])
+    request_path = pagination_request_path
+    pagination_params = filter_params.to_h.merge("page" => params[:page],
+                                                 "request_path" => request_path)
 
     @pagy_options = {
       reload_url: url_for([:pagination, :console, :api, @klass, pagination_params]),
-      request_path: pagination_request_path
+      request_path:
     }
 
     if %w[image video].include?(@klass.human_type)
@@ -203,28 +205,16 @@ module Folio::Console::Api::FileControllerBase
       raise ActionController::BadRequest.new("Invalid file IDs - you are not allowed to update file #{forbidden_file.id}")
     end
 
-    update_params = params.require(:file_attributes)
-                          .permit(:author,
-                                  :attribution_source,
-                                  :attribution_source_url,
-                                  :attribution_copyright,
-                                  :attribution_licence,
-                                  :alt,
-                                  :tag_list,
-                                  :headline,
-                                  :description)
-                          .to_h
-                          .select { |_, value| value.present? }
-
     @klass.transaction do
-      files.each { |file| file.update!(update_params) }
+      files.each { |file| file.update!(update_params(required: true)) }
     end
 
     batch_service.set_form_open(false)
 
     dispatch_batch_bar_message
     render_batch_bar_component(change_to_propagate: { change: "update", file_ids: @safe_file_ids },
-                               flash: { success: t("folio.console.api.file_controller_base.batch_update_success") })
+                               flash: { success: t("folio.console.api.file_controller_base.batch_update_success") },
+                               attribute_overrides: {}) # form is saved to DB
   end
 
   def file_picker_file_hash
@@ -424,10 +414,16 @@ module Folio::Console::Api::FileControllerBase
     end
 
     def index_json
-      pagination, records = pagy(folio_console_records.ordered, items: 60)
+      pagination, records = pagy(index_json_records, items: 60)
       meta = meta_from_pagy(pagination).merge(human_type: @klass.human_type)
 
       json_from_records(records, Folio::Console::FileSerializer, meta:)
+    end
+
+    def index_json_records
+      return folio_console_records if @sorted_by_param
+
+      folio_console_records.default_file_order
     end
 
     def index_cache_key
@@ -443,19 +439,16 @@ module Folio::Console::Api::FileControllerBase
     end
 
     def pagination_request_path
+      if params[:request_path].present? && console_file_request_path?(params[:request_path])
+        return params[:request_path]
+      end
+
       if request.referrer.present?
         begin
           uri = URI.parse(request.referrer)
           referrer_path = uri.path
 
-          # Check if referrer is a console file path (index, index_for_modal, or index_for_picker)
-          # Match patterns like:
-          # - /console/file/images
-          # - /console/file/images/index_for_modal
-          # - /console/file/images/index_for_picker
-          file_path_pattern = %r{/console/file/#{@klass.model_name.element.pluralize}(?:/(?:index_for_modal|index_for_picker))?$}
-
-          return referrer_path if referrer_path.match?(file_path_pattern)
+          return referrer_path if console_file_request_path?(referrer_path)
         rescue URI::InvalidURIError
           # Fallback if referrer can't be parsed
         end
@@ -463,6 +456,17 @@ module Folio::Console::Api::FileControllerBase
 
       # Fallback to default
       url_for([:console, @klass, only_path: true])
+    end
+
+    def console_file_request_path?(path)
+      return false unless path.is_a?(String)
+      return false unless path.start_with?("/") && !path.start_with?("//")
+
+      # Match paths like:
+      # - /console/file/images
+      # - /console/file/images/index_for_modal
+      # - /console/file/images/index_for_picker
+      path.match?(%r{/console/file/#{@klass.model_name.element.pluralize}(?:/(?:index_for_modal|index_for_picker))?\z})
     end
 
     def set_safe_file_ids
@@ -523,12 +527,31 @@ module Folio::Console::Api::FileControllerBase
       end
     end
 
-    def render_batch_bar_component(flash: nil, change_to_propagate: nil)
+    def render_batch_bar_component(flash: nil, change_to_propagate: nil, attribute_overrides: update_params(required: false))
+      # attribute_overrides = {} unless batch_service.form_open?
+
       component = Folio::Console::Files::Batch::BarComponent.new(file_klass: @klass,
                                                                  updated_at: @batch_bar_updated_at || Time.current,
                                                                  multi_picker:  params[:multi_picker] == "1",
-                                                                 change_to_propagate:)
+                                                                 change_to_propagate:,
+                                                                 attribute_overrides:)
 
       render_component_json(component, flash:)
+    end
+
+    def update_params(required: true)
+      return { file_attributes: {} } if params[:file_attributes].blank? && !required
+      params.require(:file_attributes)
+            .permit(:author,
+                    :attribution_source,
+                    :attribution_source_url,
+                    :attribution_copyright,
+                    :attribution_licence,
+                    :alt,
+                    :tag_list,
+                    :headline,
+                    :description)
+            .to_h
+            .select { |_, value| value.present? }
     end
 end

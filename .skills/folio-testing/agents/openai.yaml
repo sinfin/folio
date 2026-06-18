@@ -1,0 +1,4 @@
+interface:
+  display_name: "Folio Testing"
+  short_description: "Ruby/Rails test conventions for Folio, including scoped stubs instead of ENV mutation."
+  default_prompt: "Use this skill when adding or changing Folio tests, test helpers, mocks, stubs, factories, or fixtures."

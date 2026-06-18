@@ -65,6 +65,7 @@
 //= require folio/console/_data-cocoon-single-nested
 //= require folio/console/_data-destroy-association
 //= require folio/console/modules/event_names
+//= require folio/console/modules/console-url-beacon
 //= require folio/console/modules/danger-box-shadow-blink
 //= require folio/console/modules/popover
 //= require folio/console/modules/with_aside
@@ -104,8 +105,8 @@
 //= require folio/console/file/processing_notifier/processing_notifier
 //= require folio/console/file_placements/multi_picker_fields/placement_component
 //= require folio/console/file_placements/multi_picker_fields_component
-//= require folio/console/files/batch/bar_component
 //= require folio/console/files/batch/form_component
+//= require folio/console/files/batch/bar_component
 //= require folio/console/files/display_toggle_component
 //= require folio/console/files/index_modal_component
 //= require folio/console/files/picker/document_component
@@ -119,6 +120,8 @@
 //= require folio/console/files/subtitles_form_component
 //= require folio/console/folio_attributes_fields_component
 //= require folio/console/form/footer_component
+//= require folio/special_characters/popup_component
+//= require folio/special_characters/trigger_component
 //= require folio/console/form_modal_component
 //= require folio/console/index/images/images
 //= require folio/console/index/position_buttons/position_buttons

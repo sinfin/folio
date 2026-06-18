@@ -141,7 +141,9 @@ cs:
         keyword/USER_ACCEPT_INVITATION_URL: Adresa pro dokončení registrace
         keyword/USER_CHANGE_PASSWORD_URL: Adresa pro nastavení nového hesla
         keyword/USER_CONFIRMATION_URL: Adresa pro potvrzení změn
+        keyword/USER_CONFLICT_PROVIDER: Poskytovatel přihlášení
         keyword/USER_EMAIL: E-mail uživatele
+        keyword/VALID_UNTIL_TIME: Platnost odkazu
       folio/user:
         address_identification_number: IČO
         addresses: Adresa
@@ -178,6 +180,10 @@ cs:
         state: Stát
         vat_identification_number: DIČ
         zip: PSČ
+      folio/file_placement/base:
+        alt: Alternativní popisek
+        description: Popisek
+        title: Titulek
 
     errors:
       messages:
@@ -212,7 +218,6 @@ cs:
           attributes:
             roles:
               not_available_for_site: "Role %{roles} nejsou všechny dostupné pro web '%{site}'."
-
       clonable:
         association_not_found: "Asociace '%{association}' neexistuje pro %{model}"
         attribute_not_found: "Atribut '%{attribute}' neexistuje pro %{model}"
@@ -416,6 +421,7 @@ cs:
     social_links/linktree: Linktree
     social_links/messenger: Messenger
     social_links/pinterest: Pinterest
+    social_links/spotify: Spotify
     social_links/tiktok: TikTok
     social_links/twitter: X
     social_links/youtube: Youtube

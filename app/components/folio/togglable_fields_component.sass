@@ -1,21 +1,48 @@
-$f-togglable-fields-input-top: 0.3em !default
-$f-togglable-fields-gap: $form-group-spacer !default
+$f-togglable-fields-label__padding: 0px !default
+// input width + padding + spacer
+$f-togglable-fields-label__padding-left: calc(#{px-to-rem(13px)} + #{$f-togglable-fields-label__padding} + #{px-to-rem(8px)}) !default
+$f-togglable-fields-label__background: transparent !default
+$f-togglable-fields-label__background--hover: transparent !default
+$f-togglable-fields-label__font-weight: $font-weight-semibold !default
+$f-togglable-fields-label__font-size: px-to-rem(14px) !default
+$f-togglable-fields-label__line-height: 1.5 !default
+$f-togglable-fields-input__top: calc(0.3em + #{$f-togglable-fields-label__padding}) !default
+$f-togglable-fields-input__left: $f-togglable-fields-label__padding !default
+$f-togglable-fields-content__padding: px-to-rem(12px) 0 0 !default
+$f-togglable-fields-content__padding--down-sm: $f-togglable-fields-content__padding !default
+$f-togglable-fields-content__background: transparent !default
 
 .f-togglable-fields
   position: relative
 
   &__input
     position: absolute
-    top: $f-togglable-fields-input-top
+    top: $f-togglable-fields-input__top
+    left: $f-togglable-fields-input__left
 
   &__label
-    padding-left: $form-check-padding-start
+    width: 100%
+    padding: $f-togglable-fields-label__padding
+    padding-left: $f-togglable-fields-label__padding-left
+    background: $f-togglable-fields-label__background
+    font-weight: $f-togglable-fields-label__font-weight
+    font-size: $f-togglable-fields-label__font-size
+    line-height: $f-togglable-fields-label__line-height
+    margin-bottom: 0
+    cursor: pointer
 
   &__content
     display: none
-
-  &__input:checked ~ &__label
-    margin-bottom: $f-togglable-fields-gap
+    padding: $f-togglable-fields-content__padding
+    background: $f-togglable-fields-content__background
 
   &__input:checked ~ &__content
     display: block
+
+  +media-breakpoint-down(sm)
+    &__content
+      padding: $f-togglable-fields-content__padding--down-sm
+
+  @media screen and (hover: hover)
+    &__label:hover
+      background: $f-togglable-fields-label__background--hover

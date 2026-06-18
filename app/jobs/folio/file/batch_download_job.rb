@@ -23,7 +23,7 @@ class Folio::File::BatchDownloadJob < Folio::ApplicationJob
 
     tmp_zip_file = Tempfile.new("folio-files")
 
-    Zip::File.open(tmp_zip_file.path, Zip::File::CREATE) do |zip|
+    ::Zip::File.open(tmp_zip_file.path, ::Zip::File::CREATE) do |zip|
       files.each do |file|
         # dragonfly ¯\_(ツ)_/¯
         tmp_file = file.file.file

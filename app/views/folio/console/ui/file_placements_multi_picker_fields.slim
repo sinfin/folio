@@ -1,7 +1,16 @@
 - if @page
+  ruby:
+    placement_tabs = [
+      { label: "Default", href: file_placements_multi_picker_fields_console_ui_path, active: params[:variant] != "no_title" },
+      { label: "No title", href: file_placements_multi_picker_fields_console_ui_path(variant: "no_title"), active: params[:variant] == "no_title" },
+    ]
+
+  = render(Folio::Console::Ui::TabsComponent.new(tabs: placement_tabs))
+
   = simple_form_for(@page, url: update_file_placements_multi_picker_fields_console_ui_path) do |f|
     = render(Folio::Console::FilePlacements::MultiPickerFieldsComponent.new(f:,
-                                                                            placement_klass: Folio::FilePlacement::ImageOrEmbed))
+                                                                            placement_klass: Folio::FilePlacement::ImageOrEmbed,
+                                                                            placement_attributes: @placement_attributes))
       h1: a.f-c-unlink href=console_ui_path Folio Console UI
 
       h2 File Placements Multi Picker Fields

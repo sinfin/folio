@@ -33,6 +33,10 @@ class Folio::User < Folio::ApplicationRecord
     def self.should_confirm_email_change?
       true
     end
+
+    def confirmation_required?
+      false
+    end
   end
 
   selected_device_modules << :omniauthable if Rails.application.config.folio_users_omniauth_providers.present?
@@ -493,82 +497,3 @@ class Folio::User < Folio::ApplicationRecord
       end
     end
 end
-
-# == Schema Information
-#
-# Table name: folio_users
-#
-#  id                        :bigint(8)        not null, primary key
-#  email                     :string
-#  encrypted_password        :string           default(""), not null
-#  reset_password_token      :string
-#  reset_password_sent_at    :datetime
-#  remember_created_at       :datetime
-#  sign_in_count             :integer          default(0), not null
-#  current_sign_in_at        :datetime
-#  last_sign_in_at           :datetime
-#  current_sign_in_ip        :inet
-#  last_sign_in_ip           :inet
-#  confirmation_token        :string
-#  confirmed_at              :datetime
-#  confirmation_sent_at      :datetime
-#  unconfirmed_email         :string
-#  first_name                :string
-#  last_name                 :string
-#  admin_note                :text
-#  created_at                :datetime         not null
-#  updated_at                :datetime         not null
-#  invitation_token          :string
-#  invitation_created_at     :datetime
-#  invitation_sent_at        :datetime
-#  invitation_accepted_at    :datetime
-#  invitation_limit          :integer
-#  invited_by_type           :string
-#  invited_by_id             :bigint(8)
-#  invitations_count         :integer          default(0)
-#  nickname                  :string
-#  use_secondary_address     :boolean          default(FALSE)
-#  primary_address_id        :bigint(8)
-#  secondary_address_id      :bigint(8)
-#  subscribed_to_newsletter  :boolean          default(FALSE)
-#  has_generated_password    :boolean          default(FALSE)
-#  phone                     :string
-#  crossdomain_devise_token  :string
-#  crossdomain_devise_set_at :datetime
-#  sign_out_salt_part        :string
-#  source_site_id            :bigint(8)
-#  superadmin                :boolean          default(FALSE), not null
-#  console_url               :string
-#  console_url_updated_at    :datetime
-#  degree_pre                :string(32)
-#  degree_post               :string(32)
-#  phone_secondary           :string
-#  born_at                   :date
-#  bank_account_number       :string
-#  company_name              :string
-#  time_zone                 :string           default("Prague")
-#  auth_site_id              :bigint(8)        not null
-#  preferred_locale          :string
-#  console_preferences       :jsonb
-#  failed_attempts           :integer          default(0), not null
-#  unlock_token              :string
-#  locked_at                 :datetime
-#
-# Indexes
-#
-#  index_folio_users_on_auth_site_id                       (auth_site_id)
-#  index_folio_users_on_confirmation_token                 (confirmation_token) UNIQUE
-#  index_folio_users_on_crossdomain_devise_token           (crossdomain_devise_token)
-#  index_folio_users_on_email                              (email)
-#  index_folio_users_on_invitation_token                   (invitation_token) UNIQUE
-#  index_folio_users_on_invited_by_id                      (invited_by_id)
-#  index_folio_users_on_invited_by_type_and_invited_by_id  (invited_by_type,invited_by_id)
-#  index_folio_users_on_primary_address_id                 (primary_address_id)
-#  index_folio_users_on_reset_password_token               (reset_password_token) UNIQUE
-#  index_folio_users_on_secondary_address_id               (secondary_address_id)
-#  index_folio_users_on_source_site_id                     (source_site_id)
-#
-# Foreign Keys
-#
-#  fk_rails_...  (auth_site_id => folio_sites.id)
-#

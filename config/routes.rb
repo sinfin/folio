@@ -181,6 +181,7 @@ Folio::Engine.routes.draw do
 
         resource :current_user, only: [] do
           post :console_url_ping
+          post :console_url_clear
           post :update_console_preferences
         end
 
@@ -275,6 +276,15 @@ Folio::Engine.routes.draw do
         get :selectize
         get :select2
         get :react_select
+      end
+
+      if Folio.pack_enabled?(:ai)
+        resource :ai_text_suggestions,
+                 only: [],
+                 controller: "/folio/ai/console/api/text_suggestions" do
+          post :text_suggestions
+          post :instructions
+        end
       end
 
       resources :file_placements, only: %i[index],

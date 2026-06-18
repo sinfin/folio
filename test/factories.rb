@@ -32,10 +32,6 @@ FactoryBot.define do
     locales { [I18n.default_locale] }
   end
 
-  if Rails.application.class.name.deconstantize == "Dummy"
-    factory :dummy_site, class: "Dummy::Site", parent: :folio_site
-  end
-
   factory :folio_page, class: "Folio::Page" do
     locale { :cs }
     if Rails.application.config.folio_using_traco
@@ -145,16 +141,6 @@ FactoryBot.define do
     position { 0 }
   end
 
-  factory :folio_session_attachment_image,
-          class: "Dummy::SessionAttachment::Image" do
-    file { Folio::Engine.root.join("test/fixtures/folio/test.gif") }
-    web_session_id { "web_session_id" }
-  end
-
-  factory :folio_session_attachment_document,
-          parent: :folio_session_attachment_image,
-          class: "Dummy::SessionAttachment::Document"
-
   factory :folio_email_template,
           class: "Folio::EmailTemplate" do
     mailer { "mailer" }
@@ -246,36 +232,6 @@ FactoryBot.define do
     city { "city" }
     zip { "zip" }
     country_code { "cc" }
-  end
-
-  factory :dummy_menu, class: "Dummy::Menu::Navigation", parent: :folio_menu
-
-  factory :dummy_menu_footer, class: "Dummy::Menu::Footer", parent: :folio_menu
-
-  factory :dummy_blog_article, class: "Dummy::Blog::Article" do
-    sequence(:title) { |i| "Article title #{i + 1}" }
-    perex { "perex" }
-    published { true }
-    site { get_current_or_existing_site_or_create_from_factory }
-  end
-
-  factory :dummy_blog_topic, class: "Dummy::Blog::Topic" do
-    sequence(:title) { |i| "Topic title #{i + 1}" }
-    published { true }
-    site { get_current_or_existing_site_or_create_from_factory }
-  end
-
-  factory :dummy_blog_author, class: "Dummy::Blog::Author" do
-    first_name { "Firstname" }
-    sequence(:last_name) { |i| "Lastname #{i + 1}" }
-    published { true }
-    site { get_current_or_existing_site_or_create_from_factory }
-  end
-
-  factory :dummy_folio_attribute_type, class: "Dummy::AttributeType::Page" do
-    sequence(:title) { |i| "Title #{i + 1}" }
-    data_type { "string" }
-    site { get_current_or_existing_site_or_create_from_factory }
   end
 
   factory :folio_video_subtitle, class: "Folio::VideoSubtitle" do

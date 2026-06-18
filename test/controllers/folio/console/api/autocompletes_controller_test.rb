@@ -199,6 +199,57 @@ class Folio::Console::Api::AutocompletesControllerTest < Folio::Console::BaseCon
     assert json["meta"].present? || json["data"].present?
   end
 
+  test "select2 pagination" do
+    30.times { |i| create(:folio_page, title: "Foo page #{i + 1}") }
+
+    get select2_console_api_autocomplete_path(klass: "Folio::Page", q: "Foo", page: 1)
+    json = JSON.parse(response.body)
+    assert_equal 25, json["results"].size
+    assert json["meta"].present?
+    assert_equal 1, json["meta"]["page"]
+    assert_equal 2, json["meta"]["pages"]
+    assert json["meta"]["next"].present?
+
+    get select2_console_api_autocomplete_path(klass: "Folio::Page", q: "Foo", page: 2)
+    json = JSON.parse(response.body)
+    assert_equal 5, json["results"].size
+    assert json["meta"].present?
+    assert_equal 2, json["meta"]["page"]
+    assert_equal 2, json["meta"]["pages"]
+    assert_nil json["meta"]["next"]
+  end
+
+  test "select2 paginates blank query in smaller pages" do
+    30.times { |i| create(:folio_page, title: "Blank query page #{i + 1}") }
+
+    get select2_console_api_autocomplete_path(klass: "Folio::Page", page: 1)
+    json = JSON.parse(response.body)
+    assert_equal 10, json["results"].size
+    assert json["meta"].present?
+    assert_equal 1, json["meta"]["page"]
+    assert_equal 3, json["meta"]["pages"]
+    assert_equal 2, json["meta"]["next"]
+
+    get select2_console_api_autocomplete_path(klass: "Folio::Page", page: 3)
+    json = JSON.parse(response.body)
+    assert_equal 10, json["results"].size
+    assert json["meta"].present?
+    assert_equal 3, json["meta"]["page"]
+    assert_equal 3, json["meta"]["pages"]
+    assert_nil json["meta"]["next"]
+  end
+
+  test "select2 blank query falls back to primary key order" do
+    existing_ids = Folio::SiteUserLink.pluck(:id)
+    older = create(:folio_site_user_link)
+    newer = create(:folio_site_user_link)
+
+    get select2_console_api_autocomplete_path(klass: "Folio::SiteUserLink", without: existing_ids.join(","))
+    json = JSON.parse(response.body)
+
+    assert_equal [newer.id, older.id], json["results"].map { |r| r["id"] }
+  end
+
   test "it respects accessible_by scope" do
     same_part = "emailme"
     superadmin = create(:folio_user, superadmin: true, email: "#{same_part}@supedamin.com", first_name: "Superadmin")
@@ -213,8 +264,8 @@ class Folio::Console::Api::AutocompletesControllerTest < Folio::Console::BaseCon
 
     get field_console_api_autocomplete_path(klass: "Folio::User", q: same_part, field: "email")
 
-    assert_equal([administrator, manager, superadmin].collect(&:email),
-                 JSON.parse(response.body)["data"])
+    assert_equal([administrator, manager, superadmin].collect(&:email).sort,
+                 JSON.parse(response.body)["data"].sort)
 
     sign_out superadmin
     sign_in administrator
@@ -338,6 +389,24 @@ class Folio::Console::Api::AutocompletesControllerTest < Folio::Console::BaseCon
     json = JSON.parse(response.body)
     assert_equal(1, json["data"].size)
     assert_equal("Foo bar baz", json["data"][0]["text"])
+  end
+
+  test "show prioritizes exact match over partial match" do
+    create(:folio_page, title: "Foo bar baz")
+    create(:folio_page, title: "Foo")
+
+    get console_api_autocomplete_path(klass: "Folio::Page", q: "Foo")
+    json = JSON.parse(response.body)
+    assert_equal "Foo", json["data"].first
+  end
+
+  test "react_select prioritizes exact match over partial match" do
+    create(:folio_page, title: "Foo bar baz")
+    create(:folio_page, title: "Foo")
+
+    get react_select_console_api_autocomplete_path(class_names: "Folio::Page", q: "Foo")
+    json = JSON.parse(response.body)
+    assert_equal "Foo", json["data"].first["text"]
   end
 
   test "react_select with multiple classes ignores short queries" do

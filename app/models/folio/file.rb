@@ -82,7 +82,7 @@ class Folio::File < Folio::ApplicationRecord
 
   # Relations
   has_many :file_placements, class_name: "Folio::FilePlacement::Base"
-  has_many :placements, through: :file_placements
+  has_many :placements, through: :file_placements # just for some type of file_placements!
   belongs_to :created_by_folio_user, class_name: "Folio::User",
                                      optional: true,
                                      inverse_of: :created_files
@@ -98,7 +98,8 @@ class Folio::File < Folio::ApplicationRecord
   validate :validate_attribution_and_texts_if_needed
 
   # Scopes
-  scope :ordered, -> { order(created_at: :desc) }
+  scope :ordered, -> { order(created_at: :desc, id: :desc) }
+  scope :default_file_order, -> { reorder(arel_table[:created_at].desc, arel_table[:id].desc) }
 
   scope :by_placement, -> (placement_title) { order(created_at: :desc) }
 
@@ -133,7 +134,12 @@ class Folio::File < Folio::ApplicationRecord
                   }
 
   scope :by_query, -> (query) do
-    by_query_raw(sanitize_filename_for_search(query))
+    return none if query.blank?
+
+    sanitized = sanitize_filename_for_search(query)
+    where(id: by_query_raw(sanitized).reselect("folio_files.id"))
+      .or(where("folio_files.slug ILIKE ?", "%#{sanitize_sql_like(query.to_s)}%"))
+      .or(where(id: tagged_with(query, wild: true, any: true).reselect("folio_files.id")))
   end
 
   pg_search_scope :by_file_name_for_search,
@@ -205,6 +211,11 @@ class Folio::File < Folio::ApplicationRecord
 
   def self.correct_site(site)
     Rails.application.config.folio_shared_files_between_sites ? Folio::Current.main_site : site
+  end
+
+
+  def self.clonable_ignored_associations
+    [:placements]
   end
 
   def title
@@ -362,6 +373,13 @@ class Folio::File < Folio::ApplicationRecord
     end
   end
 
+  # Combined credit string used for JSON-LD creditText, RSS media:credit, etc.
+  # Joins author and attribution_source (deduplicated) and falls back to
+  # file_list_source when both are blank.
+  def credit_text
+    [author.presence, attribution_source.presence].compact_blank.uniq.join(" / ").presence || file_list_source.presence
+  end
+
   def to_label
     file_name.presence || self.class.model_name.human
   end
@@ -443,33 +461,17 @@ class Folio::File < Folio::ApplicationRecord
     end
 
     def slug_candidates
-      %i[slug headline hash_id_for_slug to_label]
+      # Prefer explicit slug or headline; fall back to a neutral identifier
+      %i[slug headline neutral_slug]
     end
 
+    def neutral_slug
+      "#{Time.current.to_i}-#{SecureRandom.hex(5)}"
+    end
+
+    # Kept for backward compatibility if referenced elsewhere; not used in slug_candidates
     def hash_id_for_slug
-      new_slug = nil
-      hash = nil
-
-      loop do
-        # Parameterize filename base to match strip_and_downcase_slug behavior
-        new_slug_base = if file_name.present?
-          file_name.split(".", 2)[0].parameterize
-        else
-          "file"
-        end
-        new_slug = hash ? "#{new_slug_base}-#{hash}" : new_slug_base
-
-        exists = self.class.base_class.exists?(slug: new_slug)
-
-        break unless exists
-
-        # Generate lowercase hash to match strip_and_downcase_slug formatting
-        hash = SecureRandom.urlsafe_base64(8)
-                           .downcase
-                           .gsub(/-|_/, ("a".."z").to_a[rand(26)])
-      end
-
-      new_slug
+      neutral_slug
     end
 
     def set_file_name_for_search
@@ -545,71 +547,3 @@ class Folio::File < Folio::ApplicationRecord
                          user_ids: message_bus_user_ids
     end
 end
-
-# == Schema Information
-#
-# Table name: folio_files
-#
-#  id                                :bigint(8)        not null, primary key
-#  file_uid                          :string
-#  file_name                         :string
-#  type                              :string
-#  thumbnail_sizes                   :text             default({})
-#  created_at                        :datetime         not null
-#  updated_at                        :datetime         not null
-#  file_width                        :integer
-#  file_height                       :integer
-#  file_size                         :bigint(8)
-#  additional_data                   :json
-#  file_metadata                     :json
-#  slug                              :string
-#  author                            :string
-#  description                       :text
-#  file_placements_count             :integer          default(0), not null
-#  file_name_for_search              :string
-#  sensitive_content                 :boolean          default(FALSE)
-#  file_mime_type                    :string
-#  default_gravity                   :string
-#  file_track_duration               :integer
-#  aasm_state                        :string
-#  remote_services_data              :json
-#  preview_track_duration_in_seconds :integer
-#  alt                               :string
-#  site_id                           :bigint(8)        not null
-#  attribution_source                :string
-#  attribution_source_url            :string
-#  attribution_copyright             :string
-#  attribution_licence               :string
-#  headline                          :string
-#  capture_date                      :datetime
-#  gps_latitude                      :decimal(10, 6)
-#  gps_longitude                     :decimal(10, 6)
-#  file_metadata_extracted_at        :datetime
-#  media_source_id                   :bigint(8)
-#  attribution_max_usage_count       :integer
-#  published_usage_count             :integer          default(0), not null
-#  thumbnail_configuration           :jsonb
-#  created_by_folio_user_id          :bigint(8)
-#
-# Indexes
-#
-#  index_folio_files_on_by_author                 (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))) USING gin
-#  index_folio_files_on_by_file_name              (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))) USING gin
-#  index_folio_files_on_by_file_name_for_search   (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))) USING gin
-#  index_folio_files_on_by_label_query            ((((to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text))) || to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((headline)::text, ''::text)))) || to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(description, ''::text)))))) USING gin
-#  index_folio_files_on_created_at                (created_at)
-#  index_folio_files_on_created_by_folio_user_id  (created_by_folio_user_id)
-#  index_folio_files_on_file_name                 (file_name)
-#  index_folio_files_on_media_source_id           (media_source_id)
-#  index_folio_files_on_published_usage_count     (published_usage_count)
-#  index_folio_files_on_site_id                   (site_id)
-#  index_folio_files_on_slug                      (slug)
-#  index_folio_files_on_type                      (type)
-#  index_folio_files_on_updated_at                (updated_at)
-#
-# Foreign Keys
-#
-#  fk_rails_...  (created_by_folio_user_id => folio_users.id) ON DELETE => nullify
-#  fk_rails_...  (media_source_id => folio_media_sources.id)
-#  fk_rails_...  (site_id => folio_sites.id)
-#

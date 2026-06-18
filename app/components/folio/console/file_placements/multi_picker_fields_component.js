@@ -134,7 +134,7 @@ window.Folio.Stimulus.register('f-c-file-placements-multi-picker-fields', class 
     const lastPlacement = placements[placements.length - 1]
     if (!lastPlacement) return
 
-    const input = lastPlacement.querySelector('.f-c-file-placements-multi-picker-fields-placement__field--description .form-control')
+    const input = lastPlacement.querySelector('.f-c-file-placements-multi-picker-fields-placement__field .form-control')
     if (!input) return
 
     lastPlacement.scrollIntoView({ behavior: 'smooth', block: 'center' })

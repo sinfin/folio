@@ -1,7 +1,8 @@
 window.Folio.Stimulus.register('f-file-list', class extends window.Stimulus.Controller {
   static values = {
     fileType: String,
-    reloadPagy: { type: Boolean, default: false }
+    reloadPagy: { type: Boolean, default: false },
+    uploading: { type: Boolean, default: false }
   }
 
   static targets = ['fileTemplate', 'uppy', 'blank', 'thead', 'flexItem']
@@ -25,6 +26,24 @@ window.Folio.Stimulus.register('f-file-list', class extends window.Stimulus.Cont
     fileElement.querySelector('.f-file-list-file__info-file-name').innerText = file.name
 
     this.prependFileElement(fileElement)
+  }
+
+  folioUploadsStarted (e) {
+    this.uploadingValue = true
+
+    const bar = document.querySelector('.f-c-files-batch-bar')
+
+    if (bar) {
+      bar.dispatchEvent(new CustomEvent('f-c-files-batch-bar:cancel'))
+    }
+  }
+
+  folioUploadsFinished (e) {
+    this.uploadingValue = false
+  }
+
+  uploadingValueChanged (value) {
+    this.element.classList.toggle('f-file-list--uploading', !!value)
   }
 
   tableViewChange (e) {

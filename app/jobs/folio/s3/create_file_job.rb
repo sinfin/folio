@@ -153,15 +153,39 @@ class Folio::S3::CreateFileJob < Folio::S3::BaseJob
     end
 
     def save_file_with_slug_retry
-      return true if @file.save
+      return true if save_with_db_uniqueness_guard
 
-      # If slug uniqueness validation failed, clear slug and retry once
-      if @file.errors[:slug].present? && @file.errors[:slug].any? { |e| e.type == :taken || e.type == :slug_not_unique_across_classes }
-        @file.slug = nil  # Clear slug to trigger regeneration (will use hash_id_for_slug fallback)
-        return @file.save
+      if slug_conflict?(@file)
+        Rails.logger.warn("[Folio] Slug validation conflict on #{file_ident_for_log}. Regenerating slug.")
+        @file.slug = nil
+        return true if save_with_db_uniqueness_guard
       end
 
       false
+    end
+
+    def save_with_db_uniqueness_guard
+      @file.save
+    rescue ActiveRecord::RecordNotUnique => e
+      Rails.logger.warn("[Folio] DB unique violation on slug for #{file_ident_for_log}: #{e.message}. Regenerating slug.")
+      @file.slug = nil
+      begin
+        @file.save
+      rescue ActiveRecord::RecordNotUnique
+        false
+      end
+    end
+
+    def slug_conflict?(record)
+      errs = record.errors[:slug]
+      return false if errs.blank?
+
+      errs.any? { |e| e.type == :taken || e.type == :slug_not_unique_across_classes }
+    end
+
+    def file_ident_for_log
+      id = @file.respond_to?(:id) ? @file.id : nil
+      "#{@file.class.name}##{id || 'new'}"
     end
 
     def trigger_metadata_extraction(image, replacing_file: false)

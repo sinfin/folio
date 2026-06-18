@@ -22,12 +22,10 @@ window.Folio.Stimulus.register('f-input-character-counter', class extends window
 
   connect () {
     this.addElementToFormGroup()
-    this.boundOnInput = this.onInput.bind(this)
   }
 
   disconnect () {
     this.removeElementFromFormGroup()
-    delete this.boundOnInput
   }
 
   onInput (e) {
@@ -45,10 +43,15 @@ window.Folio.Stimulus.register('f-input-character-counter', class extends window
 
   addElementToFormGroup () {
     const formGroup = this.element.closest('.form-group')
-    const input = formGroup.querySelector('input, textarea')
 
     if (!formGroup) {
       throw new Error('Missing parent form-group element.')
+    }
+
+    const existingWrap = formGroup.querySelector('.f-input-character-counter-wrap')
+
+    if (existingWrap) {
+      existingWrap.remove()
     }
 
     formGroup.style.position = 'relative'
@@ -88,8 +91,6 @@ window.Folio.Stimulus.register('f-input-character-counter', class extends window
       }
     }
 
-    this.bindChangeEventListener(input)
-
     wrap.appendChild(document.createTextNode(` ${window.Folio.i18n(window.Folio.Input.CharacterCounter.i18n, 'shortForCharacter')}`))
 
     this.element.insertAdjacentElement('afterend', wrap)
@@ -98,25 +99,10 @@ window.Folio.Stimulus.register('f-input-character-counter', class extends window
   removeElementFromFormGroup () {
     const formGroup = this.element.closest('.form-group')
 
-    const input = formGroup.querySelector('input, textarea')
-    this.unbindChangeEventListener(input)
-
     const wrap = formGroup.querySelector('.f-input-character-counter-wrap')
 
     if (!wrap) return
     if (!wrap.parentNode) return
     wrap.parentNode.removeChild(wrap)
-  }
-
-  bindChangeEventListener (input) {
-    if (input) {
-      input.addEventListener('change', this.boundOnInput)
-    }
-  }
-
-  unbindChangeEventListener (input) {
-    if (this.boundOnInput && input) {
-      input.removeEventListener('change', this.boundOnInput)
-    }
   }
 })

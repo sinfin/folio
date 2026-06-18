@@ -17,6 +17,20 @@ class Folio::Console::PagesControllerTest < Folio::Console::BaseControllerTest
     assert_response :success
   end
 
+  test "index by_label_query handles special characters" do
+    page = create(:folio_page, title: "ŉ page")
+
+    Rails.application.config.folio_special_characters_character_string.each_char do |char|
+      get url_for([:console, Folio::Page]), params: { by_label_query: char }
+
+      assert_response :success, "Failed for query: #{char.inspect}"
+    end
+
+    get url_for([:console, Folio::Page]), params: { by_label_query: "ŉ" }
+
+    assert_select ".f-c-catalogue__row", text: /#{page.title}/
+  end
+
   test "new" do
     get url_for([:console, Folio::Page, action: :new])
     assert_response :success

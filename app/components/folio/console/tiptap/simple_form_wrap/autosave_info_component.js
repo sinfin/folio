@@ -2,8 +2,10 @@ window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap-autosave-info', clas
   static values = {
     placementType: String,
     placementId: Number,
-    attributeName: String,
-    deleteUrl: String
+    takeoverUrl: String,
+    deleteRevisionUrl: String,
+    fromUserId: Number,
+    attributeName: String
   }
 
   static targets = ['unsavedChanges', 'failedToSave']
@@ -15,6 +17,7 @@ window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap-autosave-info', clas
 
   onDiscardButtonClick () {
     const data = {
+      from_user_id: this.fromUserIdValue,
       placement: {
         type: this.placementTypeValue,
         id: this.placementIdValue,
@@ -22,15 +25,28 @@ window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap-autosave-info', clas
       }
     }
 
-    window.Folio.Api.apiDelete(this.deleteUrlValue, data)
-      .then((response) => {
-        if (response && response.success) {
-          window.location.reload()
-        }
-      })
-      .catch((error) => {
-        console.warn('[Folio] [Tiptap] Discard failed:', error)
-      })
+    window.Folio.Api.apiPost(this.takeoverUrlValue, data).then(() => {
+      window.location.reload()
+    }).catch((err) => {
+      console.error('Takeover failed:', err)
+    })
+  }
+
+  onReloadButtonClick () {
+    const data = {
+      from_user_id: this.fromUserIdValue,
+      placement: {
+        type: this.placementTypeValue,
+        id: this.placementIdValue,
+        attribute_name: this.attributeNameValue || 'tiptap_content'
+      }
+    }
+
+    window.Folio.Api.apiDelete(this.deleteRevisionUrlValue, data).then(() => {
+      window.location.reload()
+    }).catch((err) => {
+      console.error('Deleting revision failed:', err)
+    })
   }
 
   hideUnsavedChanges () {

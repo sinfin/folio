@@ -15,6 +15,11 @@ en:
   folio:
     nested_fields_component:
       add: Add
+      add_more: Add more
+      destroy: Remove
+      duplicate: Duplicate
+      move_down: Move down
+      move_up: Move up
 
     root_breadcrumb: Homepage
     file:
@@ -62,6 +67,13 @@ en:
       content: This image contains sensitive content. To see it, verify your age. Are you over 18?
       accept: Yes
       cancel: No
+    special_characters:
+      popup_component:
+        title: Special characters
+        close: Close
+      trigger_component:
+        label: Special characters
+
     console:
       pages:
         clone:

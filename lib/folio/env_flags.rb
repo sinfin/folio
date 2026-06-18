@@ -7,12 +7,14 @@ module Folio
       "FOLIO_DEBUG_ATOMS" => "Raises atom errors in development",
       "FOLIO_API_DONT_RESCUE_ERRORS" => "Disables error rescue in API controllers",
       "FOLIO_TIPTAP_DEV" => "Uses development tiptap iframe with wildcard origin",
+      "FOLIO_AI_DISABLED" => "Disables Folio AI prompts and suggestions globally",
       "FOLIO_SKIP_METADATA_EXTRACTION" => "Skips metadata extraction in tests",
       "FOLIO_MAINTENANCE" => "Enables maintenance mode middleware",
       "REACT_DEV" => "React development mode (loads React from dev server)",
       "FORCE_MINI_PROFILER" => "Force enable mini profiler",
       "DEV_TESTING_PRODUCTION" => "Testing production-like behavior in development",
-      "SKIP_FOLIO_FILE_AFTER_SAVE_JOB" => "Skips file after-save job processing"
+      "SKIP_FOLIO_FILE_AFTER_SAVE_JOB" => "Skips file after-save job processing",
+      "FOLIO_DEV_FALLBACK_TO_MAIN_SITE" => "In development, if site not found by host, fallback to main site instead of raising error"
     }.freeze
 
     def self.present_flags

@@ -6,8 +6,7 @@ module Folio::Console::FileControllerIndexFilters
   private
     def index_filters
       filters = {
-        # TODO: enable with the rest of the filtering changes
-        # by_query: { as: :text, icon: :magnify },
+        by_query: { as: :text, icon: :magnify },
         created_by_current_user: { as: :boolean },
         by_used: [true, false],
         by_tag_id: {

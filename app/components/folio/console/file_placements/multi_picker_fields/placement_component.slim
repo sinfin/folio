@@ -27,30 +27,18 @@ div[
         .invalid-feedback.d-block.m-0 data-name=@placement_key
           = @g.object.errors.where(:file).map(&:full_message).join(" ")
 
-      div[
-        class="f-c-file-placements-multi-picker-fields-placement__field"
-        class="f-c-file-placements-multi-picker-fields-placement__field--description"
-      ]
-        = @g.input :description,
-                   autosize: true,
-                   input_html: { rows: 1, data: stimulus_target("description") }
-
-      - unless embed?
+      - @placement_attributes.each do |attr|
+        - next if attr == :alt && embed?
+        - next if attr == :folio_embed_data && !@g.object.class.folio_file_placement_supports_embed?
         div[
-          class="f-c-file-placements-multi-picker-fields-placement__field"
-          class="f-c-file-placements-multi-picker-fields-placement__field--alt"
-          data=stimulus_target('altWrap')
+          class="f-c-file-placements-multi-picker-fields-placement__field f-c-file-placements-multi-picker-fields-placement__field--#{attr}"
+          data=placement_attribute_wrapper_data(attr)
         ]
-          = @g.input :alt,
-                     input_html: { data: stimulus_target("alt") }
-
-      - if @g.object.class.folio_file_placement_supports_embed?
-        div[
-          class="f-c-file-placements-multi-picker-fields-placement__field"
-          class="f-c-file-placements-multi-picker-fields-placement__field--folio_embed_data"
-          data=stimulus_target("embedFieldsWrap")
-        ]
-          = folio_embed_data_input(@g)
+          - opts = placement_attribute_input_options(attr)
+          - if opts.nil?
+            = folio_embed_data_input(@g)
+          - else
+            = @g.input attr, **opts
 
   span.f-c-file-placements-multi-picker-fields-placement__loader[
     class="folio-loader"

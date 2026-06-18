@@ -59,6 +59,10 @@ div[
             .f-c-form-footer__collapsible-backdrop data=stimulus_action_unless_readonly(click: "toggleCollapsed")
             .f-c-form-footer__collapsible-content
               - if @record
+                - unless read_only?
+                  .f-c-form-footer__special-characters
+                    = render(Folio::SpecialCharacters::TriggerComponent.new)
+
                 - unless @audit
                   = render(Folio::Console::Autosave::ToggleComponent.new(record: @record))
 

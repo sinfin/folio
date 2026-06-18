@@ -96,6 +96,7 @@ declare global {
     embed_node_class_name?: string;
     node_groups?: FolioTiptapNodeGroup[];
     theme?: string;
+    autolink?: boolean;
   }
 
   interface FolioTiptapAutosaveIndicatorInfo {
@@ -163,6 +164,7 @@ declare global {
     Folio: {
       Tiptap: {
         root: ReturnType<typeof import("react-dom/client").createRoot> | null;
+        editor?: TiptapEditor;
         init: (props: {
           node: HTMLElement;
           folioTiptapConfig?: FolioTiptapConfig;

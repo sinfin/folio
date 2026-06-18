@@ -3,6 +3,25 @@
 require "test_helper"
 
 class Folio::Tiptap::ContentTest < ActiveSupport::TestCase
+  class NestedCard < Folio::Tiptap::Node
+    tiptap_node nested: true,
+                structure: {
+                   title: :string,
+                   content: :rich_text,
+                   button_url_json: :url_json,
+                   folio_embed_data: :embed,
+                 }
+  end
+
+  class CardGroup < Folio::Tiptap::Node
+    tiptap_node structure: {
+      cards: {
+        type: :nested_nodes,
+        node_class: NestedCard,
+      },
+    }
+  end
+
   test "scrubs HTML from JSON string values" do
     record = Object.new
     content = Folio::Tiptap::Content.new(record: record)
@@ -422,6 +441,64 @@ class Folio::Tiptap::ContentTest < ActiveSupport::TestCase
     # Other marks should be preserved
     assert marks.any? { |mark| mark["type"] == "bold" }
     assert marks.any? { |mark| mark["type"] == "italic" }
+  end
+
+  test "sanitizes nested folio tiptap node data by nested node structure" do
+    record = Object.new
+    content = Folio::Tiptap::Content.new(record: record)
+
+    input_value = {
+      "content" => [
+        {
+          "type" => "folioTiptapNode",
+          "attrs" => {
+            "type" => "Folio::Tiptap::ContentTest::CardGroup",
+            "version" => 1,
+            "data" => {
+              "cards" => [
+                {
+                  "type" => "Folio::Tiptap::ContentTest::NestedCard",
+                  "version" => 1,
+                  "data" => {
+                    "title" => unsafe_html_input,
+                    "content" => {
+                      "type" => "doc",
+                      "content" => [
+                        {
+                          "type" => "paragraph",
+                          "content" => [{ "type" => "text", "text" => unsafe_html_input }]
+                        }
+                      ]
+                    }.to_json,
+                    "button_url_json" => {
+                      "href" => "javascript:alert('xss')",
+                      "label" => unsafe_html_input,
+                      "record_id" => "123",
+                      "record_type" => "Folio::Page",
+                    },
+                    "folio_embed_data" => {
+                      "active" => true,
+                      "html" => unsafe_html_input,
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        },
+      ]
+    }
+
+    result = content.convert_and_sanitize_value(input_value)
+    card_data = result[:value]["content"][0]["attrs"]["data"]["cards"][0]["data"]
+
+    assert result[:ok]
+    assert_equal expected_scrubbed_text, card_data["title"]
+    assert_includes card_data["content"], expected_scrubbed_text
+    assert_nil card_data["button_url_json"]["href"]
+    assert_equal expected_scrubbed_text, card_data["button_url_json"]["label"]
+    assert_equal 123, card_data["button_url_json"]["record_id"]
+    assert_equal unsafe_html_input, card_data["folio_embed_data"]["html"]
   end
 
   private

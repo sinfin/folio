@@ -204,23 +204,14 @@ module Folio::Tiptap::Model
   def latest_tiptap_revision(user: nil, attribute_name: nil)
     return nil unless tiptap_autosave_enabled?(attribute_name:)
 
-    target_user = user || Folio::Current.user
-    return nil unless target_user
-
-    scope = tiptap_revisions.where(user: target_user)
+    scope = tiptap_revisions.ordered
     scope = scope.where(attribute_name:) if attribute_name.present?
-    scope.first
+    scope = scope.where(user: user) if user
+    scope.last
   end
 
   def has_tiptap_revision?(user: nil, attribute_name: nil)
-    return false unless tiptap_autosave_enabled?(attribute_name:)
-
-    target_user = user || Folio::Current.user
-    return false unless target_user
-
-    scope = tiptap_revisions.where(user: target_user)
-    scope = scope.where(attribute_name:) if attribute_name.present?
-    scope.exists?
+    latest_tiptap_revision(user:, attribute_name:).present?
   end
 
   private
