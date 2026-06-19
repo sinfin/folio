@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- **Embed dark-mode background on Safari**: the embed iframe now reads the embedder's actual `data-bs-theme` to pick its background instead of relying on the OS `prefers-color-scheme`, which Safari does not propagate into same-origin iframes. Falls back to `prefers-color-scheme` for cross-origin embedders.
 - **AI current form snapshots**: Keep full atom payloads under `record_class.atom_keys` instead of only atom `data` leaves, so host apps using direct atom attributes can build prompt context from unsaved atom-backed forms.
 
 ## [7.7.0] - 2026-06-02

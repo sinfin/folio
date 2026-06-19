@@ -28,6 +28,18 @@
 
   const validateHexColor = (value) => value && /^#[0-9A-Fa-f]{6}$/.test(value)
 
+  // Safari does not propagate the embedder's color-scheme into the iframe's
+  // prefers-color-scheme media query, so reading it directly is the reliable source.
+  const embedderColorScheme = () => {
+    try {
+      if (window.parent === window) return null
+      const theme = window.parent.document.documentElement.getAttribute('data-bs-theme')
+      return (theme === 'light' || theme === 'dark') ? theme : null
+    } catch (error) {
+      return null
+    }
+  }
+
   const applyDocumentBackground = (explicitScheme) => {
     let hex = null
     let useDarkClass = false
@@ -37,7 +49,8 @@
       if (explicitScheme === 'light' || explicitScheme === 'dark') {
         scheme = explicitScheme
       } else {
-        scheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+        scheme = embedderColorScheme() ||
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
       }
       hex = scheme === 'dark' ? darkModeBackgroundColor : lightModeBackgroundColor
       useDarkClass = relativeLuminance(hex) < 0.5
