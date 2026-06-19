@@ -71,15 +71,27 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
           next unless controller.can?(name, model)
           base = default_actions[name].presence || {}
           if obj.is_a?(Hash)
-            acts << base.merge(obj)
+            acts << base.merge(obj).reverse_merge(name:)
           else
-            acts << base.merge(url: obj)
+            acts << base.merge(url: obj).reverse_merge(name:)
           end
         end
       end
     end
 
     acts.filter_map do |action|
+      title = t("folio.console.actions.#{action[:name]}")
+      ico = folio_icon(action[:icon], height: action[:icon_height])
+      link_class = "f-c-index-actions__link text-#{action[:variant] || "reset"}"
+
+      if action[:disabled].is_a?(Proc) ? action[:disabled].call(model) : action[:disabled]
+        next content_tag(:span,
+                         ico,
+                         title:,
+                         class: "#{link_class} f-c-index-actions__link--disabled",
+                         "aria-disabled": "true")
+      end
+
       data = action[:data] || {}
 
       if action[:confirm]
@@ -97,14 +109,12 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
       end
 
       opts = {
-        title: t("folio.console.actions.#{action[:name]}"),
+        title:,
         method: action[:method],
         target: action[:target],
-        class: "f-c-index-actions__link text-#{action[:variant] || "reset"}#{action[:class_name] ? " #{action[:class_name]}" : ""}#{action[:cursor] ? " f-c-index-actions__link--cursor-#{action[:cursor]}" : ""}",
+        class: "#{link_class}#{action[:class_name] ? " #{action[:class_name]}" : ""}#{action[:cursor] ? " f-c-index-actions__link--cursor-#{action[:cursor]}" : ""}",
         data:
       }
-
-      ico = folio_icon(action[:icon], height: action[:icon_height])
 
       if action[:url]
         url = action[:url].is_a?(Proc) ? action[:url].call(model) : action[:url]
