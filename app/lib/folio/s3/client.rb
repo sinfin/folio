@@ -31,11 +31,14 @@ module Folio::S3::Client
     )
   end
 
-  def test_aware_presign_url(s3_path:, method_name: :get_object)
+  def test_aware_presign_url(s3_path:, method_name: :get_object, expires_in: nil)
     if use_local_file_system?
       "https://dummy-s3-bucket.com/#{s3_path}"
     else
-      s3_presigner.presigned_url(method_name, bucket: s3_bucket, key: test_aware_s3_path(s3_path))
+      options = { bucket: s3_bucket, key: test_aware_s3_path(s3_path) }
+      options[:expires_in] = expires_in if expires_in
+
+      s3_presigner.presigned_url(method_name, options)
     end
   end
 

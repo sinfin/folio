@@ -62,7 +62,8 @@ class Folio::File::Audio < Folio::File
     return unless playable_file_path.present?
 
     test_aware_presign_url(s3_path: playable_file_path,
-                           method_name: :get_object)
+                           method_name: :get_object,
+                           expires_in:)
   end
 
   def player_source_url(expires_in: 15.minutes.to_i)

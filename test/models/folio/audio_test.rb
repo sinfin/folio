@@ -52,6 +52,31 @@ class Folio::File::AudioTest < ActiveSupport::TestCase
     end
   end
 
+  test "playable download url passes expires_in to presign" do
+    audio = create(:folio_file_audio,
+                   remote_services_data: {
+                     "playable" => {
+                       "storage" => "s3",
+                       "path" => "test/audio/encoded/file.mp3",
+                       "extension" => "mp3",
+                       "content_type" => "audio/mpeg",
+                     }
+                   })
+    passed_expires_in = nil
+    presigner = -> (s3_path:, method_name:, expires_in: nil) do
+      assert_equal "test/audio/encoded/file.mp3", s3_path
+      assert_equal :get_object, method_name
+      passed_expires_in = expires_in
+      "https://signed.example.test/file.mp3"
+    end
+
+    audio.stub(:test_aware_presign_url, presigner) do
+      assert_equal "https://signed.example.test/file.mp3", audio.playable_download_url(expires_in: 1.hour.to_i)
+    end
+
+    assert_equal 1.hour.to_i, passed_expires_in
+  end
+
   test "formatted_duration returns nil when file_track_duration is nil" do
     audio = build(:folio_file_audio, file_track_duration: nil)
     assert_nil audio.formatted_duration
