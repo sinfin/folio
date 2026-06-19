@@ -81,6 +81,9 @@ chevron_up:
 close:
   width: 24
   height: 24
+close_box:
+  width: 24
+  height: 24
 cog:
   width: 24
   height: 24
