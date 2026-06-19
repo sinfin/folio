@@ -8,12 +8,14 @@
           th.f-c-files-show-file-placements__td = t('.th/type')
           th.f-c-files-show-file-placements__td = t('.th/placement_type')
           th.f-c-files-show-file-placements__td = t('.th/placement_label')
+          - if show_site_column?
+            th.f-c-files-show-file-placements__td = t('.th/site')
           th.f-c-files-show-file-placements__td = t('.th/created_at')
           th.f-c-files-show-file-placements__td
 
       - @file_placements.each do |file_placement|
         - next if file_placement.placement.blank?
-        - placement = file_placement.placement.is_a?(Folio::Atom::Base) ? file_placement.placement.placement : file_placement.placement
+        - placement = placement_record(file_placement)
         - action = placement_action(placement)
 
         tr.small
@@ -33,6 +35,10 @@
                 = placement_label(placement)
             - else
               = placement_label(placement)
+
+          - if show_site_column?
+            td.f-c-files-show-file-placements__td
+              = placement_site_label(placement)
 
           td.f-c-files-show-file-placements__td
             = l(file_placement.created_at, format: :console_short)
