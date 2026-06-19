@@ -30,12 +30,10 @@ class Folio::File::Audio < Folio::File
   end
 
   def artwork_image
-    @artwork_image ||= begin
-      image_id = remote_services_data.to_h["artwork_image_id"]
-      return if image_id.blank?
+    return @artwork_image if defined?(@artwork_image)
 
-      Folio::File::Image.find_by(id: image_id)
-    end
+    image_id = remote_services_data.to_h["artwork_image_id"]
+    @artwork_image = image_id.present? ? Folio::File::Image.find_by(id: image_id) : nil
   end
 
   def artwork_image_placement

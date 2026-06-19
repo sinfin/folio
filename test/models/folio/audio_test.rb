@@ -92,4 +92,19 @@ class Folio::File::AudioTest < ActiveSupport::TestCase
     assert_instance_of Folio::FilePlacement::Cover, placement
     assert_equal artwork, placement.file
   end
+
+  test "artwork image memoizes missing derived image" do
+    audio = create(:folio_file_audio, remote_services_data: { "artwork_image_id" => -1 })
+    find_calls = 0
+    missing_image_lookup = -> (*, **) do
+      find_calls += 1
+      nil
+    end
+
+    Folio::File::Image.stub(:find_by, missing_image_lookup) do
+      2.times { assert_nil audio.artwork_image }
+    end
+
+    assert_equal 1, find_calls
+  end
 end
