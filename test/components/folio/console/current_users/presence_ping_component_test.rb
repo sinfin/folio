@@ -15,8 +15,8 @@ class Folio::Console::CurrentUsers::PresencePingComponentTest < Folio::Console::
     super
   end
 
-  # The core CS-337 fix: the heartbeat must run even when the editor is alone in
-  # the article, so the user does not silently expire out of the presence window.
+  # The heartbeat must run even when the editor is alone in the record, so the
+  # user does not silently expire out of the presence window.
   def test_renders_ping_controller_even_when_user_is_alone
     render_ping
 

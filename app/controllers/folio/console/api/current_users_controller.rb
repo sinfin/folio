@@ -12,7 +12,7 @@ class Folio::Console::Api::CurrentUsersController < Folio::Console::Api::BaseCon
     data = { other_user_at_url: }
 
     # when another editor appears, hand the first editor a freshly rendered
-    # warning bar so it can be shown live without a full page reload (CS-337)
+    # warning bar so it can be shown live without a full page reload
     if other_user_at_url
       bar_html = render_presence_bar
       data[:bar_html] = bar_html if bar_html.present?

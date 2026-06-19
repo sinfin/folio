@@ -101,7 +101,7 @@ class Folio::Console::PagesControllerTest < Folio::Console::BaseControllerTest
     assert_select ".f-c-current-users-presence-ping"
   end
 
-  test "presence url is canonical across edit and failed update (CS-337 regression)" do
+  test "presence url is canonical across edit and failed update" do
     page = create(:folio_page)
 
     get url_for([:edit, :console, page])
