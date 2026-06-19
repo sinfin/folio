@@ -90,13 +90,6 @@ class Folio::File::Audio < Folio::File
     Folio::File::AudioProcessingService.new(self).extract_metadata!(force:, save:)
   end
 
-  def should_extract_metadata?
-    return false unless file.present?
-    return false if file_metadata_extracted_at.present? && !attached_file_changed?
-
-    true
-  end
-
   def process_attached_file
     Folio::File::ProcessAudioJob.perform_later(self)
   end
