@@ -598,10 +598,13 @@ class Folio::Console::BaseController < Folio::ApplicationController
     # the record so the edit page (GET /…/edit) and a form re-rendered after a
     # failed update (PATCH /…) resolve to the SAME presence URL — otherwise the
     # two requests track the editor under different URLs and other editors stop
-    # seeing them. Falls back to the request URL when there is no record.
+    # seeing them. Falls back to the request URL when there is no record or when
+    # the edit URL cannot be generated (e.g. a nested route whose parent id is
+    # not in scope, or a resource without an edit route) — better a slightly
+    # less canonical URL than a 500 on every edit/update of such a resource.
     def folio_console_presence_url
       if %w[edit update].include?(action_name) && params[:id].present?
-        url_for(action: :edit, id: params[:id], only_path: false)
+        safe_url_for(action: :edit, id: params[:id], only_path: false) || request.url
       else
         request.url
       end

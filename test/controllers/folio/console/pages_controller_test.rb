@@ -116,6 +116,29 @@ class Folio::Console::PagesControllerTest < Folio::Console::BaseControllerTest
                  "otherwise another editor on the /edit URL stops seeing them"
   end
 
+  test "edit still renders when the canonical presence URL cannot be generated" do
+    # A nested console route whose parent id is out of scope, or a resource
+    # without an edit route, makes url_for(action: :edit) unresolvable, so
+    # safe_url_for returns nil. Presence must degrade to the request URL instead
+    # of 500-ing the whole edit page.
+    page = create(:folio_page)
+
+    klass = Folio::Console::PagesController
+    klass.send(:alias_method, :folio_test_orig_safe_url_for, :safe_url_for)
+    klass.send(:define_method, :safe_url_for) { |_opts| nil }
+
+    begin
+      get url_for([:edit, :console, page])
+    ensure
+      klass.send(:alias_method, :safe_url_for, :folio_test_orig_safe_url_for)
+      klass.send(:remove_method, :folio_test_orig_safe_url_for)
+    end
+
+    assert_response :success
+    assert_select ".f-c-current-users-presence-ping"
+    assert_equal @request.url, superadmin.reload.console_url
+  end
+
   test "revision" do
     page = Audited.stub(:auditing_enabled, true) {  create(:folio_page) }
 
