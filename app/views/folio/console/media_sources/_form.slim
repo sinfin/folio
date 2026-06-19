@@ -6,6 +6,31 @@
 = f.input :max_usage_count, input_html: { min: 1 }
 
 - if Rails.application.config.folio_shared_files_between_sites
-  = react_ordered_multiselect(f, :allowed_sites, sortable: false)
+  h2.h5.mt-4 = t('.site_rules')
+  p.text-muted = t('.site_rules_hint')
+
+  = folio_nested_fields(f,
+                        :media_source_site_links,
+                        position: false,
+                        add_label: t('.add_site_rule')) do |g|
+    .row
+      .col-md-3
+        = g.association :site,
+                        collection: Folio::Site.ordered,
+                        include_blank: false,
+                        label: false
+      .col-md-3
+        = g.input :licence,
+                  label: false,
+                  placeholder: Folio::MediaSource.human_attribute_name(:licence)
+      .col-md-3
+        = g.input :copyright_text,
+                  label: false,
+                  placeholder: Folio::MediaSource.human_attribute_name(:copyright_text)
+      .col-md-3
+        = g.input :max_usage_count,
+                  label: false,
+                  placeholder: Folio::MediaSource.human_attribute_name(:max_usage_count),
+                  input_html: { min: 1 }
 
 = form_footer f

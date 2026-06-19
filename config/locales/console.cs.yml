@@ -78,6 +78,11 @@ cs:
           success: Vybrané záznamy byly obnoveny.
           error: Některé z vybraných záznamů se nepodařilo obnovit.
       blank: Neuvedeno
+      media_sources:
+        form:
+          add_site_rule: Přidat pravidlo pro titul
+          site_rules: Pravidla podle titulu
+          site_rules_hint: Nevyplněná pole dědí hodnotu z hlavního zdroje. Pokud nejsou vyplněné žádné řádky, zdroj je použitelný všude.
       boolean:
         "yes": "Ano"
         "no": "Ne"

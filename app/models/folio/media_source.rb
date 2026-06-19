@@ -37,6 +37,24 @@ class Folio::MediaSource < Folio::ApplicationRecord
     end
   end
 
+  def rule_for_site(site)
+    return unless site
+
+    media_source_site_links.detect { |link| link.site_id == site.id }
+  end
+
+  def effective_licence(site:)
+    rule_for_site(site)&.effective_licence || licence
+  end
+
+  def effective_copyright_text(site:)
+    rule_for_site(site)&.effective_copyright_text || copyright_text
+  end
+
+  def effective_max_usage_count(site:)
+    rule_for_site(site)&.effective_max_usage_count || max_usage_count
+  end
+
   def indestructible_reason
     return nil unless assigned_media_count.positive?
     I18n.t("folio.media_source.cannot_destroy_with_assigned_media", count: assigned_media_count)
