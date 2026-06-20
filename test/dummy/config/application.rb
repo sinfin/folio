@@ -21,7 +21,10 @@ module Dummy
     config.folio_leads_from_component_class_name = "Folio::Leads::FormComponent"
     config.folio_newsletter_subscriptions = true
     config.folio_site_default_test_factory = :dummy_site
-    config.folio_dragonfly_datastore = :file if Rails.env.test? && ENV["USE_S3_STORAGE_FOR_TESTS"].to_i == 0
+
+    if Rails.env.local? && ENV["FOLIO_DEV_LOCAL_FILES"].present?
+      config.folio_dragonfly_datastore = :file
+    end
 
     config.folio_tiptap_use_for_pages = true
 

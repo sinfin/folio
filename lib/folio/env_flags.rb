@@ -14,7 +14,8 @@ module Folio
       "FORCE_MINI_PROFILER" => "Force enable mini profiler",
       "DEV_TESTING_PRODUCTION" => "Testing production-like behavior in development",
       "SKIP_FOLIO_FILE_AFTER_SAVE_JOB" => "Skips file after-save job processing",
-      "FOLIO_DEV_FALLBACK_TO_MAIN_SITE" => "In development, if site not found by host, fallback to main site instead of raising error"
+      "FOLIO_DEV_FALLBACK_TO_MAIN_SITE" => "In development, if site not found by host, fallback to main site instead of raising error",
+      "FOLIO_DEV_LOCAL_FILES" => "In development, use file storage for dragonfly",
     }.freeze
 
     def self.present_flags
