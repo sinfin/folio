@@ -62,7 +62,9 @@ BEM class follows the same rules as regular ViewComponents (see folio-view-compo
 
 ## Testing
 
-Tests subclass `Folio::Tiptap::NodeComponentTest` (extends `Folio::ComponentTest`). Follow the **folio-view-component** skill for testing rules — same principles apply: assert **rendered output**, one `render_inline` per test.
+Tests subclass `Folio::Tiptap::NodeComponentTest` (extends `Folio::ComponentTest`).
+Follow [`.skills/folio-testing/SKILL.md`](../folio-testing/SKILL.md) for
+rendered-output assertions and one-render-per-test guidance.
 
 The `tiptap_content_information` helper and `create_test_tiptap_node` are provided by the test base class.
 

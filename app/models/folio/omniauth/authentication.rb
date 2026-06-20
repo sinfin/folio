@@ -47,25 +47,3 @@ class Folio::Omniauth::Authentication < Folio::ApplicationRecord
     email.include?("privaterelay.appleid.com")
   end
 end
-
-# == Schema Information
-#
-# Table name: folio_omniauth_authentications
-#
-#  id               :bigint(8)        not null, primary key
-#  folio_user_id    :bigint(8)
-#  uid              :string
-#  provider         :string
-#  email            :string
-#  nickname         :string
-#  access_token     :string
-#  raw_info         :json
-#  conflict_token   :string
-#  conflict_user_id :integer
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
-#
-# Indexes
-#
-#  index_folio_omniauth_authentications_on_folio_user_id  (folio_user_id)
-#

@@ -16,6 +16,7 @@ window.Folio.Input.Url.disposeFormGroup = (formGroup) => {
 
   formGroup.removeAttribute('data-f-c-input-form-group-url-loaded-value')
   formGroup.removeAttribute('data-f-c-input-form-group-url-json-value')
+  formGroup.removeAttribute('data-f-c-input-form-group-url-disable-label-value')
   formGroup.removeAttribute('data-action')
 
   formGroup.classList.remove('f-c-input-form-group-url')
@@ -29,19 +30,28 @@ window.Folio.Input.Url.initFormGroup = (formGroup, opts = {}) => {
   formGroup.classList.add('f-c-input-form-group-url')
   formGroup.setAttribute('data-f-c-input-form-group-url-loaded-value', 'false')
   formGroup.setAttribute('data-f-c-input-form-group-url-json-value', opts.json ? 'true' : 'false')
+  formGroup.setAttribute('data-f-c-input-form-group-url-disable-label-value', opts.disableLabel ? 'true' : 'false')
   formGroup.setAttribute('data-f-c-input-form-group-only-path-value', opts.absoluteUrls ? 'true' : 'false')
   formGroup.setAttribute('data-f-c-input-form-group-default-custom-url-value', opts.defaultCustomUrl ? 'true' : 'false')
   formGroup.setAttribute('data-action', 'f-c-input-form-group-url:edit->f-c-input-form-group-url#edit f-c-input-form-group-url:remove->f-c-input-form-group-url#remove')
 
-  formGroup.insertAdjacentHTML('beforeend', `
+  const customHtml = `
     <div class="form-group__custom-html">
       <div class="f-c-input-form-group-url__inner">
         <div class="f-c-input-form-group-url__loader-wrap">
           <div class="folio-loader folio-loader--small f-c-input-form-group-url__loader"></div>
         </div>
         <div class="f-c-input-form-group-url__control-bar-wrap"></div>
+      </div>
     </div>
-  `)
+  `
+  const hint = Array.from(formGroup.children).find((child) => child.classList.contains('form-text'))
+
+  if (hint) {
+    hint.insertAdjacentHTML('beforebegin', customHtml)
+  } else {
+    formGroup.insertAdjacentHTML('beforeend', customHtml)
+  }
 
   formGroup.dataset.controller = 'f-c-input-form-group-url'
 }
@@ -52,6 +62,7 @@ window.Folio.Stimulus.register('f-c-input-form-group-url', class extends window.
     json: Boolean,
     disabled: Boolean,
     absoluteUrls: { type: Boolean, default: false },
+    disableLabel: { type: Boolean, default: false },
     defaultCustomUrl: { type: Boolean, default: false }
   }
 
@@ -146,6 +157,7 @@ window.Folio.Stimulus.register('f-c-input-form-group-url', class extends window.
       urlJson,
       json,
       absoluteUrls,
+      disableLabel: this.disableLabelValue,
       defaultCustomUrl,
       trigger: this
     }

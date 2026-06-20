@@ -283,18 +283,14 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
         site_links = site_specific_links(site)
 
-        if site_links[:console_sidebar_prepended_links].present?
-          links << site_links[:console_sidebar_prepended_links].compact
-        end
+        push_site_link_groups(links, site_links[:console_sidebar_prepended_links])
 
         page_group = []
         page_group << link_for_site_class(site, Folio::Page)
         page_group << homepage_for_site(site)
         links << page_group.compact
 
-        if site_links[:console_sidebar_before_menu_links].present?
-          links << site_links[:console_sidebar_before_menu_links].compact
-        end
+        push_site_link_groups(links, site_links[:console_sidebar_before_menu_links])
 
         menu_group = []
         menu_group << link_for_site_class(site, Folio::Menu)
@@ -304,9 +300,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
         links << menu_group.compact
 
-        if site_links[:console_sidebar_before_site_links].present?
-          links << site_links[:console_sidebar_before_site_links].compact
-        end
+        push_site_link_groups(links, site_links[:console_sidebar_before_site_links])
 
         if can_now?(:update, site)
           links << {
@@ -340,11 +334,32 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
           next if (group_links_defs = site.class.try(links_group_key)).blank?
 
           group_links_defs.each do |link_or_hash|
-            site_links[links_group_key] << link_from_definitions(site, link_or_hash)
+            if link_or_hash == :separator
+              site_links[links_group_key] << :separator
+            else
+              site_links[links_group_key] << link_from_definitions(site, link_or_hash)
+            end
           end
         end
       end
       site_links
+    end
+
+    def push_site_link_groups(links, link_items)
+      return if link_items.blank?
+
+      split_links_by_separator(link_items).each do |group|
+        compacted = group.compact
+        links << compacted if compacted.present?
+      end
+    end
+
+    def split_links_by_separator(link_items)
+      return [link_items] unless link_items.include?(:separator)
+
+      link_items.chunk { |item| item == :separator }
+                .reject { |is_sep, _| is_sep }
+                .map(&:last)
     end
 
 

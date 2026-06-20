@@ -70,6 +70,26 @@ class Folio::FriendlyIdTest < ActiveSupport::TestCase
     assert_equal original_slug, file.reload.slug
   end
 
+  test "preserves legacy mixed-case slug when other attributes are updated" do
+    file = create(:folio_file_image)
+    file.update_columns(slug: "MixedCaseSlug")
+
+    file.reload
+    file.description = "updated description"
+    assert file.save!
+    assert_equal "MixedCaseSlug", file.reload.slug
+  end
+
+  test "downcases slug when user explicitly assigns a new value" do
+    file = create(:folio_file_image)
+    file.update_columns(slug: "MixedCaseSlug")
+
+    file.reload
+    file.slug = "Another Mixed Case"
+    assert file.save!
+    assert_equal "another-mixed-case", file.reload.slug
+  end
+
   test "should validate slug uniqueness across multiple classes" do
     site = get_any_site
     page = create(:folio_page, slug: "test", site:)

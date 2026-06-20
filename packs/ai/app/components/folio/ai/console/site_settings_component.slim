@@ -1,0 +1,92 @@
+.f-ai-c-site-settings
+  - if provider_configuration_available?
+    .f-ai-c-site-settings__intro.alert.alert-info
+      = t(".intro")
+
+    = boolean_input(:enabled,
+                    label: t(".enabled_label"),
+                    checked: site_enabled?)
+
+    .row
+      .col-md-6
+        = provider_input(:default_provider,
+                         label: t(".default_provider"),
+                         selected: default_provider)
+
+      .col-md-6
+        = model_input(:default_model,
+                      label: t(".default_model"),
+                      provider: default_provider,
+                      selected: default_model,
+                      blank_label: provider_default_model_label(default_provider))
+
+    - integrations.each do |integration|
+      .f-ai-c-site-settings__integration.card.mb-g
+        .card-header
+          .f-ai-c-site-settings__integration-title = integration.label
+
+        .card-body
+          .row
+            .col-md-6
+              = provider_input(:integrations,
+                               integration.key,
+                               :default_provider,
+                               label: t(".integration_provider"),
+                               selected: integration_provider(integration),
+                               include_blank: t(".inherit_provider"))
+
+            .col-md-6
+              = model_input(:integrations,
+                            integration.key,
+                            :default_model,
+                            label: t(".integration_model"),
+                            provider: integration_effective_provider(integration),
+                            selected: integration_model(integration),
+                            blank_label: integration_blank_model_label(integration))
+
+          - integration.fields.values.each do |field|
+            .f-ai-c-site-settings__field
+              .f-ai-c-site-settings__field-header
+                = boolean_input(:integrations,
+                                integration.key,
+                                :fields,
+                                field.key,
+                                :enabled,
+                                label: field_label(integration, field),
+                                checked: field_enabled?(integration, field))
+
+                - if field_hint(field)
+                  small.f-ai-c-site-settings__field-hint = field_hint(field)
+
+              = text_area_input(:integrations,
+                                integration.key,
+                                :fields,
+                                field.key,
+                                :prompt,
+                                label: t(".prompt_label"),
+                                value: field_prompt(integration, field))
+
+              .row
+                .col-md-6
+                  = provider_input(:integrations,
+                                   integration.key,
+                                   :fields,
+                                   field.key,
+                                   :provider,
+                                   label: t(".field_provider"),
+                                   selected: field_provider(integration, field),
+                                   include_blank: t(".inherit_provider"))
+
+                .col-md-6
+                  = model_input(:integrations,
+                                integration.key,
+                                :fields,
+                                field.key,
+                                :model,
+                                label: t(".field_model"),
+                                provider: field_effective_provider(integration, field),
+                                selected: field_model(integration, field),
+                                blank_label: field_blank_model_label(integration, field))
+  - else
+    .f-ai-c-site-settings__intro.alert.alert-danger
+      = t(".no_eligible_providers")

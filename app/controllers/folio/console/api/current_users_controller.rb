@@ -2,7 +2,18 @@
 
 class Folio::Console::Api::CurrentUsersController < Folio::Console::Api::BaseController
   def console_url_ping
-    Folio::Current.user.update_console_url!(params.require(:url))
+    url = params.require(:url)
+    Folio::Current.user.update_console_url!(url)
+
+    other_user_at_url = Folio::User.currently_editing_url(url)
+                                   .where.not(id: Folio::Current.user.id)
+                                   .exists?
+
+    render json: { data: { other_user_at_url: } }
+  end
+
+  def console_url_clear
+    Folio::Current.user.clear_console_url!(only_if_url: params.require(:url))
     head 204
   end
 

@@ -16,13 +16,12 @@ Gem::Specification.new do |s|
   s.description = "Description of Folio."
   s.license     = "MIT"
 
-  s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
+  s.files = Dir["{app,config,db,lib,packs}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
 
   s.add_dependency "aasm"
   s.add_dependency "acts-as-taggable-on"
   s.add_dependency "after_commit_everywhere"
   s.add_dependency "ancestry"
-  s.add_dependency "annot8" # Rails 8 compatible fork of annotate
   s.add_dependency "audited"
   s.add_dependency "aws-sdk-s3"
   s.add_dependency "babel-transpiler"
@@ -93,6 +92,7 @@ Gem::Specification.new do |s|
   s.add_dependency "view_component", "~> 4.0"
   s.add_dependency "turbo-rails"
 
+  s.add_development_dependency "packwerk"
   s.add_development_dependency "better_errors"
   s.add_development_dependency "binding_of_caller" # used by BetterErrors
   s.add_development_dependency "capybara"

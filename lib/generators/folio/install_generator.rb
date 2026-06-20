@@ -40,7 +40,6 @@ module Folio
           gem "rubocop-rails"
           gem "rubocop-rails_config"
           gem "rubocop-rake"
-          gem "annotate"
           gem "guard-rubocop"
           gem "guard-slimlint"
           gem "letter_opener"
@@ -120,7 +119,11 @@ module Folio
           "test/factories.rb",
           "test/test_helper.rb",
           "vendor/assets/bower.json",
-        ].each { |f| template "#{f}.tt", f.gsub("application_namespace_path", application_namespace_path) }
+        ].each do |f|
+          target = f.gsub("application_namespace_path", application_namespace_path)
+          final_target = target.start_with?("app/") ? "#{pack_path_prefix}#{target}" : target
+          template "#{f}.tt", final_target
+        end
 
         template ".env.sample.tt", ".env"
       end
@@ -136,7 +139,6 @@ module Folio
           "config/secrets.yml",
           "data/email_templates_data.yml",
           "Guardfile",
-          "lib/tasks/auto_annotate_models.rake",
           "vendor/assets/bower_components/.keep",
           "vendor/assets/redactor/redactor.css",
           "vendor/assets/redactor/redactor.js",
@@ -145,8 +147,9 @@ module Folio
         [
           "app/cells/#{application_namespace_path}/.keep",
         ].each do |f|
-          FileUtils.mkdir_p(::File.dirname(f))
-          FileUtils.touch(f)
+          final_path = f.start_with?("app/") ? "#{pack_path_prefix}#{f}" : f
+          FileUtils.mkdir_p(::File.dirname(final_path))
+          FileUtils.touch(final_path)
         end
 
         copy_file Folio::Engine.root.join(".ruby-version"), ".ruby-version"
@@ -163,7 +166,7 @@ module Folio
       def application_settings
         return if ::File.readlines(Rails.root.join("config/application.rb")).grep('Rails.root.join("lib")').any?
 
-# cannot use <<~'RUBY' here, because ALL lines need to be 4 spaces intended
+        # cannot use <<~'RUBY' here, because ALL lines need to be 4 spaces intended
         inject_into_file "config/application.rb", after: /config\.load_defaults.+\n/ do <<-'RUBY'.gsub("application_namespace_path", application_namespace_path)
     config.exceptions_app = self.routes
 

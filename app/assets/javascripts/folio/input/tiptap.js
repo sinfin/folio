@@ -78,6 +78,11 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     this.iframeTarget.contentWindow.postMessage(data, this.originValue || window.origin)
   }
 
+  focusEditor () {
+    this.iframeTarget.focus()
+    this.sendMessageToIframe({ type: 'f-input-tiptap:focus' })
+  }
+
   onSpecialCharactersInsertText (e) {
     const text = e.detail?.text
     if (typeof text !== 'string' || !text) return

@@ -3,6 +3,48 @@
 require "test_helper"
 
 class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::Tiptap::NodeComponentTest
+  class HiddenNode < Folio::Tiptap::Node
+    tiptap_node structure: {}
+  end
+
+  class HiddenNodeComponent < ApplicationComponent
+    def initialize(node:, tiptap_content_information:)
+      @node = node
+      @tiptap_content_information = tiptap_content_information
+    end
+
+    def render?
+      false
+    end
+
+    def call
+      tag.div(class: "hidden-node")
+    end
+  end
+
+  class CountingNode < Folio::Tiptap::Node
+    tiptap_node structure: {}
+  end
+
+  class CountingNodeComponent < ApplicationComponent
+    class << self
+      attr_accessor :render_count
+    end
+
+    self.render_count = 0
+
+    def initialize(node:, tiptap_content_information:)
+      @node = node
+      @tiptap_content_information = tiptap_content_information
+    end
+
+    def call
+      self.class.render_count += 1
+
+      tag.div("Counting node", class: "counting-node")
+    end
+  end
+
   def test_render_basic_folio_tiptap_node
     prose_mirror_node = {
       "type" => "folioTiptapNode",
@@ -14,7 +56,41 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::Tiptap::Node
 
     render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
 
+    assert_selector(".f-tiptap-node .d-tiptap-node-card")
     assert_selector(".d-tiptap-node-card")
+  end
+
+  def test_component_does_not_render_wrapper_when_inner_component_is_hidden
+    prose_mirror_node = {
+      "type" => "folioTiptapNode",
+      "attrs" => {
+        "type" => HiddenNode.name,
+        "data" => {}
+      }
+    }
+
+    record = build_mock_record_with_node_names([HiddenNode.name])
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: record, prose_mirror_node:, tiptap_content_information: tiptap_content_information(record: record)))
+
+    assert_no_selector(".hidden-node")
+    assert_no_selector(".f-tiptap-node")
+  end
+
+  def test_component_renders_inner_component_once
+    prose_mirror_node = {
+      "type" => "folioTiptapNode",
+      "attrs" => {
+        "type" => CountingNode.name,
+        "data" => {}
+      }
+    }
+
+    CountingNodeComponent.render_count = 0
+    record = build_mock_record_with_node_names([CountingNode.name])
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: record, prose_mirror_node:, tiptap_content_information: tiptap_content_information(record: record)))
+
+    assert_selector(".f-tiptap-node .counting-node")
+    assert_equal 1, CountingNodeComponent.render_count
   end
 
   def test_render_with_string_type_attribute
@@ -348,5 +424,16 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::Tiptap::Node
   private
     def build_mock_record
       Folio::Page.new
+    end
+
+    def build_mock_record_with_node_names(node_names)
+      record = build_mock_record
+      config = Folio::Tiptap::Config.new(node_names:)
+
+      record.define_singleton_method(:tiptap_config) do |attribute_name: nil|
+        config
+      end
+
+      record
     end
 end
