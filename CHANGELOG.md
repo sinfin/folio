@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - **Uppy drag-and-drop**: Only the first active uploader handles window-level file drops, preventing duplicate uploads when a page renders multiple `Folio::UppyComponent` instances.
+- **Ordered multi-select**: Handle text overflow gracefully - line clamp 2 and text-overflow: ellipsis
 
 ## [7.7.1] - 2026-06-16
 
