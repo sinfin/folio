@@ -51,10 +51,10 @@ class Folio::Console::FileSerializer
   end
 
   attribute :source_url do |object|
-    if object.try(:private?)
-      if object.is_a?(Folio::File::Audio)
-        object.player_source_url
-      end
+    if object.is_a?(Folio::File::Audio)
+      object.player_source_url
+    elsif object.try(:private?)
+      nil
     else
       Folio::S3.cdn_url_rewrite(object.file.remote_url)
     end
@@ -146,7 +146,7 @@ class Folio::Console::FileSerializer
   class << self
     private
       def source_mime_type_for(object)
-        if object.is_a?(Folio::File::Audio) && object.try(:private?)
+        if object.is_a?(Folio::File::Audio)
           object.player_source_mime_type
         else
           object.file_mime_type

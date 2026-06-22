@@ -12,10 +12,10 @@ class Folio::DownloadsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to Folio::S3.cdn_url_rewrite(doc.file.remote_url)
   end
 
-  test "show returns not found for private file" do
+  test "show redirects audio files" do
     create_and_host_site
     audio = create(:folio_file_audio)
     get download_path(audio, audio.file_name, locale: :cs)
-    assert_response :not_found
+    assert_redirected_to Folio::S3.cdn_url_rewrite(audio.file.remote_url)
   end
 end

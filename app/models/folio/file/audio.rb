@@ -67,7 +67,7 @@ class Folio::File::Audio < Folio::File
   end
 
   def player_source_url(expires_in: 15.minutes.to_i)
-    playable_download_url(expires_in:) || original_download_url(expires_in:)
+    playable_download_url(expires_in:) || original_source_url(expires_in:)
   end
 
   def player_source_mime_type
@@ -76,10 +76,6 @@ class Folio::File::Audio < Folio::File
 
   def low_quality_source?
     remote_services_data.to_h["quality_warning"] == "low_bitrate"
-  end
-
-  def private?
-    true
   end
 
   def self.human_type
@@ -110,7 +106,11 @@ class Folio::File::Audio < Folio::File
   end
 
   private
-    def original_download_url(expires_in:)
-      Folio::S3.url_rewrite(file.remote_url(expires: expires_in.seconds.from_now))
+    def original_source_url(expires_in:)
+      if private?
+        Folio::S3.url_rewrite(file.remote_url(expires: expires_in.seconds.from_now))
+      else
+        Folio::S3.cdn_url_rewrite(file.remote_url)
+      end
     end
 end

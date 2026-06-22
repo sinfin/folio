@@ -3,10 +3,10 @@
 require "test_helper"
 
 class Folio::File::AudioTest < ActiveSupport::TestCase
-  test "audio files are private" do
+  test "audio files are public by default" do
     audio = build(:folio_file_audio)
 
-    assert_predicate audio, :private?
+    assert_not_predicate audio, :private?
   end
 
   test "mapped metadata exposes normalized audio fields" do
@@ -75,6 +75,34 @@ class Folio::File::AudioTest < ActiveSupport::TestCase
     end
 
     assert_equal 1.hour.to_i, passed_expires_in
+  end
+
+  test "player source url falls back to public cdn original for public audio" do
+    audio = create(:folio_file_audio)
+    cdn_url = "https://cdn.example.test/audio.mp3"
+
+    Folio::S3.stub(:cdn_url_rewrite, cdn_url) do
+      assert_equal cdn_url, audio.player_source_url
+    end
+  end
+
+  test "player source url signs original fallback for private audio" do
+    audio = create(:folio_file_audio)
+    signed_url = "https://signed.example.test/audio.mp3"
+    signed_calls = 0
+
+    audio.stub(:private?, true) do
+      Folio::S3.stub(:cdn_url_rewrite, -> (*) { flunk "private audio must not use public cdn fallback" }) do
+        Folio::S3.stub(:url_rewrite, lambda { |_|
+          signed_calls += 1
+          signed_url
+        }) do
+          assert_equal signed_url, audio.player_source_url(expires_in: 1.hour.to_i)
+        end
+      end
+    end
+
+    assert_equal 1, signed_calls
   end
 
   test "formatted_duration returns nil when file_track_duration is nil" do

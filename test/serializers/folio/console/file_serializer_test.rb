@@ -3,7 +3,7 @@
 require "test_helper"
 
 class Folio::Console::FileSerializerTest < ActiveSupport::TestCase
-  test "private audio without playable derivative falls back to original source url" do
+  test "audio without playable derivative falls back to original source url" do
     audio = create(:folio_file_audio)
 
     data = Folio::Console::FileSerializer.new(audio).serializable_hash.dig(:data, :attributes)
@@ -12,7 +12,7 @@ class Folio::Console::FileSerializerTest < ActiveSupport::TestCase
     assert_equal audio.file_mime_type, data[:player_source_mime_type]
   end
 
-  def test_private_audio_uses_playable_download_url_as_source_url
+  test "audio uses playable download url as source url" do
     audio = create(:folio_file_audio)
     playable_url = "https://media.example.com/audio/playable.mp3"
 
@@ -24,6 +24,21 @@ class Folio::Console::FileSerializerTest < ActiveSupport::TestCase
 
     assert_equal playable_url, data[:source_url]
     assert_equal "audio/mpeg", data[:player_source_mime_type]
+  end
+
+  test "private audio uses player source url without public cdn fallback" do
+    audio = create(:folio_file_audio)
+    signed_url = "https://signed.example.com/audio/playable.mp3"
+
+    data = audio.stub(:private?, true) do
+      audio.stub(:player_source_url, signed_url) do
+        Folio::S3.stub(:cdn_url_rewrite, -> (*) { flunk "private audio must not use public cdn fallback" }) do
+          Folio::Console::FileSerializer.new(audio).serializable_hash.dig(:data, :attributes)
+        end
+      end
+    end
+
+    assert_equal signed_url, data[:source_url]
   end
 
   test "non-private file uses cdn url as source_url and file_mime_type for player_source_mime_type" do
