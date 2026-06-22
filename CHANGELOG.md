@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- **Ordered multi-select**: Remote autocomplete now shows localized minimum-input guidance for short non-blank queries instead of a normal no-results state.
 - **Uppy drag-and-drop**: Only the first active uploader handles window-level file drops, preventing duplicate uploads when a page renders multiple `Folio::UppyComponent` instances.
 - **Ordered multi-select**: Handle text overflow gracefully - line clamp 2 and text-overflow: ellipsis
 

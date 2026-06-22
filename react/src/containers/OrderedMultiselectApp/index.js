@@ -16,6 +16,8 @@ import Select from 'components/Select'
 import Item from './Item'
 import Serialized from './Serialized'
 
+const AUTOCOMPLETE_QUERY_MIN_LENGTH = 3
+
 class OrderedMultiselectApp extends React.Component {
   constructor (props) {
     super(props)
@@ -127,6 +129,7 @@ class OrderedMultiselectApp extends React.Component {
           key={without}
           defaultOptions
           addAtomSettings
+          minimumInputLength={AUTOCOMPLETE_QUERY_MIN_LENGTH}
           menuPlacement={orderedMultiselect.menuPlacement}
         />
 
