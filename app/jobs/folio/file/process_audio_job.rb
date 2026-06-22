@@ -8,14 +8,23 @@ class Folio::File::ProcessAudioJob < Folio::ApplicationJob
 
     audio_file.retry_processing! if audio_file.processing_failed?
 
-    Folio::File::AudioProcessingService.new(audio_file).call
-    broadcast_file_update(audio_file)
-  rescue StandardError => error
-    handle_failure(audio_file, error)
-    raise
+    begin
+      Folio::File::AudioProcessingService.new(audio_file).call
+    rescue StandardError => error
+      handle_failure(audio_file, error)
+      raise
+    end
+
+    safe_broadcast_file_update(audio_file)
   end
 
   private
+    def safe_broadcast_file_update(audio_file)
+      broadcast_file_update(audio_file)
+    rescue StandardError => error
+      Rails.logger.warn("[ProcessAudioJob] broadcast failed for audio file ##{audio_file.id}: #{error.message}")
+    end
+
     def handle_failure(audio_file, error)
       return unless audio_file&.persisted?
 
@@ -30,6 +39,6 @@ class Folio::File::ProcessAudioJob < Folio::ApplicationJob
         updated_at: Time.current
       )
 
-      broadcast_file_update(audio_file)
+      safe_broadcast_file_update(audio_file)
     end
 end
