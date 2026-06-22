@@ -36,6 +36,7 @@ window.Folio.Stimulus.register('f-embed-box', class extends window.Stimulus.Cont
 
   connect () {
     this.bindIntersectionObserver()
+    this.applyColorScheme(this.currentColorScheme)
   }
 
   disconnect () {
@@ -97,9 +98,18 @@ window.Folio.Stimulus.register('f-embed-box', class extends window.Stimulus.Cont
     this.load()
   }
 
+  get currentColorScheme () {
+    return document.documentElement.getAttribute('data-bs-theme') === 'dark' ? 'dark' : 'light'
+  }
+
   onFolioColorSchemeChange (e) {
     const scheme = e.detail?.colorScheme
     if (scheme !== 'light' && scheme !== 'dark') return
+
+    this.applyColorScheme(scheme)
+  }
+
+  applyColorScheme (scheme) {
     if (!this.hasDualBackgroundColors) return
 
     const hex = scheme === 'dark' ? this.darkModeBackgroundColorValue : this.lightModeBackgroundColorValue
