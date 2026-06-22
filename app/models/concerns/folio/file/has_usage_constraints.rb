@@ -16,29 +16,19 @@ module Folio::File::HasUsageConstraints
     scope :by_usage_constraints, -> (constraint_status) do
       case constraint_status
       when "usable", "true"
-        usable_by_limit = where("attribution_max_usage_count IS NULL OR published_usage_count < attribution_max_usage_count")
-
         if Rails.application.config.folio_shared_files_between_sites
-          usable_by_limit.where(
-            "NOT EXISTS (SELECT 1 FROM folio_file_site_links WHERE folio_file_site_links.file_id = folio_files.id) OR EXISTS (SELECT 1 FROM folio_file_site_links WHERE folio_file_site_links.file_id = folio_files.id AND folio_file_site_links.site_id = ?)",
-            Folio::Current.site.id
-          )
+          with_usage_constraints_site_rule_joins(Folio::Current.site)
+            .where(usage_constraints_under_limit_sql(Folio::Current.site))
+            .where(usage_constraints_allowed_site_sql(Folio::Current.site))
         else
-          usable_by_limit
+          where("attribution_max_usage_count IS NULL OR published_usage_count < attribution_max_usage_count")
         end
       when "unusable", "false"
-        unusable_by_limit = where("attribution_max_usage_count > 0 AND published_usage_count >= attribution_max_usage_count")
-
-        # Files are unusable if:
-        # 1. Usage limit exceeded (published_usage_count >= attribution_max_usage_count)
-        # 2. File has site restrictions, but the current site is not in the allowed list
         if Rails.application.config.folio_shared_files_between_sites
-          where("(attribution_max_usage_count > 0 AND published_usage_count >= attribution_max_usage_count) OR " \
-                "(media_source_id IS NOT NULL AND EXISTS (SELECT 1 FROM folio_file_site_links WHERE folio_file_site_links.file_id = folio_files.id) AND NOT EXISTS (SELECT 1 FROM folio_file_site_links WHERE folio_file_site_links.file_id = folio_files.id AND folio_file_site_links.site_id = ?))",
-                Folio::Current.site.id)
-
+          with_usage_constraints_site_rule_joins(Folio::Current.site)
+            .where("#{usage_constraints_over_limit_sql(Folio::Current.site)} OR NOT (#{usage_constraints_allowed_site_sql(Folio::Current.site)})")
         else
-          unusable_by_limit
+          where("attribution_max_usage_count > 0 AND published_usage_count >= attribution_max_usage_count")
         end
       else
         none
@@ -75,18 +65,152 @@ module Folio::File::HasUsageConstraints
     def has_usage_constraints?
       true
     end
+
+    def with_usage_constraints_site_rule_joins(site)
+      joins(
+        sanitize_sql_array([
+          <<~SQL.squish,
+            LEFT JOIN folio_media_sources usage_constraint_media_sources
+              ON usage_constraint_media_sources.id = folio_files.media_source_id
+            LEFT JOIN folio_media_source_site_links usage_constraint_media_source_site_links
+              ON usage_constraint_media_source_site_links.media_source_id = usage_constraint_media_sources.id
+             AND usage_constraint_media_source_site_links.site_id = :site_id
+          SQL
+          { site_id: site.id }
+        ])
+      )
+    end
+
+    def usage_constraints_under_limit_sql(site = nil)
+      effective_max = usage_constraints_effective_max_usage_count_sql
+      usage_count = usage_constraints_effective_published_usage_count_sql(site)
+
+      "(#{effective_max} IS NULL OR #{usage_count} < #{effective_max})"
+    end
+
+    def usage_constraints_over_limit_sql(site = nil)
+      effective_max = usage_constraints_effective_max_usage_count_sql
+      usage_count = usage_constraints_effective_published_usage_count_sql(site)
+
+      "(#{effective_max} > 0 AND #{usage_count} >= #{effective_max})"
+    end
+
+    def usage_constraints_allowed_site_sql(site)
+      sanitize_sql_array([
+        <<~SQL.squish,
+          (
+            (
+              EXISTS (
+                SELECT 1
+                  FROM folio_media_source_site_links usage_constraint_any_media_source_site_links
+                 WHERE usage_constraint_any_media_source_site_links.media_source_id = folio_files.media_source_id
+              )
+              AND usage_constraint_media_source_site_links.id IS NOT NULL
+            )
+            OR
+            (
+              NOT EXISTS (
+                SELECT 1
+                  FROM folio_media_source_site_links usage_constraint_any_media_source_site_links
+                 WHERE usage_constraint_any_media_source_site_links.media_source_id = folio_files.media_source_id
+              )
+              AND (
+                NOT EXISTS (
+                  SELECT 1
+                    FROM folio_file_site_links usage_constraint_file_site_links
+                   WHERE usage_constraint_file_site_links.file_id = folio_files.id
+                )
+                OR EXISTS (
+                  SELECT 1
+                    FROM folio_file_site_links usage_constraint_file_site_links
+                   WHERE usage_constraint_file_site_links.file_id = folio_files.id
+                     AND usage_constraint_file_site_links.site_id = :site_id
+                )
+              )
+            )
+          )
+        SQL
+        { site_id: site.id }
+      ])
+    end
+
+    def usage_constraints_effective_max_usage_count_sql
+      <<~SQL.squish
+        COALESCE(
+          usage_constraint_media_source_site_links.max_usage_count,
+          usage_constraint_media_sources.max_usage_count,
+          folio_files.attribution_max_usage_count
+        )
+      SQL
+    end
+
+    def usage_constraints_effective_published_usage_count_sql(site)
+      return "folio_files.published_usage_count" unless site
+
+      <<~SQL.squish
+        CASE
+          WHEN EXISTS (
+            SELECT 1
+              FROM folio_media_source_site_links usage_constraint_media_source_rules
+             WHERE usage_constraint_media_source_rules.media_source_id = folio_files.media_source_id
+          )
+          THEN #{Folio::File::PublishedUsageCounter.sql_for_outer_file(site:)}
+          ELSE folio_files.published_usage_count
+        END
+      SQL
+    end
   end
 
-  def usage_limit_exceeded?
-    return false unless attribution_max_usage_count&.positive?
-    published_usage_count >= attribution_max_usage_count
+  def usage_limit_exceeded?(site: Folio::Current.site)
+    max_usage_count = effective_attribution_max_usage_count(site:)
+    return false unless max_usage_count&.positive?
+
+    usage_count = if site && site_specific_usage_constraints?
+      published_usage_count_for_site(site)
+    else
+      published_usage_count
+    end
+
+    usage_count >= max_usage_count
   end
 
   def can_be_used_on_site?(site)
+    return true unless site
+
     if Rails.application.config.folio_shared_files_between_sites
-      allowed_sites.empty? || allowed_sites.include?(site)
+      if media_source&.media_source_site_links&.any?
+        media_source.rule_for_site(site).present?
+      else
+        allowed_sites.empty? || allowed_sites.include?(site)
+      end
     else
       true
+    end
+  end
+
+  def effective_attribution_licence(site: Folio::Current.site)
+    media_source&.effective_licence(site:) || attribution_licence
+  end
+
+  def effective_attribution_copyright(site: Folio::Current.site)
+    media_source&.effective_copyright_text(site:) || attribution_copyright
+  end
+
+  def effective_attribution_max_usage_count(site: Folio::Current.site)
+    media_source&.effective_max_usage_count(site:) || attribution_max_usage_count
+  end
+
+  def published_usage_count_for_site(site)
+    return published_usage_count unless site
+
+    Folio::File::PublishedUsageCounter.count(self, site:)
+  end
+
+  def allowed_sites_for_usage_constraints
+    if site_specific_usage_constraints?
+      media_source.allowed_sites
+    else
+      allowed_sites
     end
   end
 
@@ -95,13 +219,20 @@ module Folio::File::HasUsageConstraints
   end
 
   private
+    def site_specific_usage_constraints?
+      Rails.application.config.folio_shared_files_between_sites &&
+        media_source&.media_source_site_links&.any?
+    end
+
     def find_media_source_for(attribution_source)
-      if Rails.application.config.folio_shared_files_between_sites
-        Folio::MediaSource.find_by(title: attribution_source)
+      scope = if Rails.application.config.folio_shared_files_between_sites
+        Folio::MediaSource.all
       else
         Folio::MediaSource.by_site(Folio::Current.site)
-                           .find_by(title: attribution_source)
       end
+
+      scope.find_by(title: attribution_source) ||
+        scope.where("LOWER(folio_unaccent(title)) = LOWER(folio_unaccent(?))", attribution_source).first
     end
 
     def handle_attribution_source_changes
