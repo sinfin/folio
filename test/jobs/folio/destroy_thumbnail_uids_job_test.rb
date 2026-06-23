@@ -10,6 +10,6 @@ class Folio::DestroyThumbnailUidsJobTest < ActiveJob::TestCase
     Dragonfly.app.stub(:datastore, datastore) do
       Folio::DestroyThumbnailUidsJob.perform_now(%w[uid-a uid-b uid-a])
     end
-    datastore.verify
+    assert_mock datastore
   end
 end
