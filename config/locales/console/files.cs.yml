@@ -46,6 +46,7 @@ cs:
             th/placement_label: Záznam
             th/created_at: Vytvořeno
             in_atom: kapitola obsahu
+            no_thumbnails_yet: Zatím nebyly vygenerovány žádné verze
 
           thumbnails_component:
             title: Verze a velikosti
@@ -58,6 +59,11 @@ cs:
           thumbnails:
             ratio_component:
               all_versions: "Všechny vygenerované verze:"
+              variants_count:
+                one: "%{count} velikost"
+                few: "%{count} velikosti"
+                many: "%{count} velikosti"
+                other: "%{count} velikostí"
 
             crop_edit_component:
               edit: Upravit ořez
