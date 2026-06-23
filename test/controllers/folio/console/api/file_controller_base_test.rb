@@ -410,6 +410,22 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
     end
 
     if klass.human_type == "image"
+      test "#{klass} - update_thumbnails_crop writes crop under the bucket label and every exact ratio of the keys" do
+        file = create(klass.model_name.singular)
+
+        patch url_for([:update_thumbnails_crop, :console, :api, file, format: :json]), params: {
+          ratio: "3:2",
+          thumbnail_size_keys: %w[480x320# 370x240#],
+          crop: { x: 0.4, y: 0.6 }
+        }
+
+        assert_response(:success)
+        file.reload
+        ratios = file.thumbnail_configuration["ratios"]
+        assert_equal({ "x" => 0.4, "y" => 0.6 }, ratios["3:2"]["crop"])
+        assert_equal({ "x" => 0.4, "y" => 0.6 }, ratios["37:24"]["crop"])
+      end
+
       test "#{klass} - update_thumbnails_crop" do
         file = create(klass.model_name.singular)
 
