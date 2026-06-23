@@ -1,8 +1,28 @@
 # frozen_string_literal: true
 
 class Folio::Console::Files::Show::ThumbnailsComponent < Folio::Console::ApplicationComponent
+  # Canonical ratios to which near values are snapped (group label).
+  CANONICAL_RATIOS = %w[1:1 5:4 4:3 7:5 3:2 16:10 16:9 2:1 21:9 4:5 3:4 2:3 9:16].freeze
+  # Relative tolerance for snapping (provisional; confirm with design).
+  RATIO_TOLERANCE = 0.03
+
   def initialize(file:)
     @file = file
+  end
+
+  # Returns the canonical ratio label when the value is within RATIO_TOLERANCE of a
+  # canonical ratio; otherwise returns the exact reduced-fraction label.
+  def self.canonical_ratio_label(width, height)
+    return "0:0" if width.zero? || height.zero?
+    value = width.to_f / height
+    best = CANONICAL_RATIOS.min_by do |r|
+      cw, ch = r.split(":").map(&:to_i)
+      (value - cw.to_f / ch).abs / (cw.to_f / ch)
+    end
+    bw, bh = best.split(":").map(&:to_i)
+    return best if ((value - bw.to_f / bh).abs / (bw.to_f / bh)) <= RATIO_TOLERANCE
+    gcd = width.gcd(height)
+    "#{width / gcd}:#{height / gcd}"
   end
 
   def self.group_thumbnail_size_keys(keys)
@@ -11,12 +31,8 @@ class Folio::Console::Files::Show::ThumbnailsComponent < Folio::Console::Applica
     keys.each do |key|
       if key.end_with?("#")
         suffix = "crop"
-        dimensions = key[0..-2]
-
-        width_str, height_str = dimensions.split("x", 2)
-        width, height = width_str.to_i, height_str.to_i
-        gcd = width.gcd(height)
-        aspect_ratio = "#{width / gcd}:#{height / gcd}"
+        width_str, height_str = key[0..-2].split("x", 2)
+        aspect_ratio = canonical_ratio_label(width_str.to_i, height_str.to_i)
       else
         suffix = "regular"
         aspect_ratio = "regular"
