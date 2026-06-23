@@ -59,6 +59,7 @@ cs:
           thumbnails:
             ratio_component:
               all_versions: "Všechny vygenerované verze:"
+              show_all_thumbnails: "Všechny vygenerované náhledy"
               variants_count:
                 one: "%{count} velikost"
                 few: "%{count} velikosti"

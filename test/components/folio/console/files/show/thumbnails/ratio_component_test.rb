@@ -39,7 +39,7 @@ class Folio::Console::Files::Show::Thumbnails::RatioComponentTest < Folio::Conso
         assert_selector "details.f-c-files-show-thumbnails-ratio__detail"
         assert_no_selector "details.f-c-files-show-thumbnails-ratio__detail[open]"
         assert_selector "summary.f-c-files-show-thumbnails-ratio__detail-summary",
-                        text: I18n.t("folio.console.files.show.thumbnails.ratio_component.all_versions")
+                        text: I18n.t("folio.console.files.show.thumbnails.ratio_component.show_all_thumbnails")
       end
     end
   end
