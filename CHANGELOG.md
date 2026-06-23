@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- **Tiptap toolbar groups**: Only render custom node group dropdowns in the toolbar when the configured `node_groups` entry has `toolbar_slot`, so nodes with only `group` remain slash-menu grouped without appearing in the toolbar.
 - **Console file search by filename**: `Folio::File.by_query` now matches a raw `file_name` substring in addition to full-text search. Filenames that look like hostnames (e.g. `name.com_123456.mp4`) are stored by PostgreSQL full-text search as a single `host` lexeme, while pg_search splits the query on dots and ANDs the resulting terms — so searching the whole filename never matched. Searching by filename in the console file/video list now finds the file.
 - **Ordered multi-select**: Remote autocomplete now shows localized minimum-input guidance for short non-blank queries instead of a normal no-results state.
 - **Uppy drag-and-drop**: Only the first active uploader handles window-level file drops, preventing duplicate uploads when a page renders multiple `Folio::UppyComponent` instances.
