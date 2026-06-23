@@ -128,6 +128,13 @@ module Folio::Thumbnails
           force:)
   end
 
+  # Host app may override to provide a human-readable label for a thumbnail
+  # ratio group (e.g. "Card · Gallery"). Folio itself does not know the usage
+  # context, so the default is nil and the UI falls back to the raw ratio.
+  def thumbnail_ratio_label(ratio, thumbnail_size_keys)
+    nil
+  end
+
   def thumb_in_test_env(w_x_h, quality: 90)
     width, height = get_thumbnail_dimensions(w_x_h)
 

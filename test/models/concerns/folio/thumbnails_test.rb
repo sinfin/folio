@@ -206,4 +206,9 @@ class Folio::ThumbnailsTest < ActiveSupport::TestCase
     assert_equal 0, result.width
     assert_equal 0, result.height
   end
+
+  test "thumbnail_ratio_label defaults to nil" do
+    image = create(:folio_file_image)
+    assert_nil image.thumbnail_ratio_label("2:1", ["200x100#"])
+  end
 end
