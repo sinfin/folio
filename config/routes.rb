@@ -276,6 +276,9 @@ Folio::Engine.routes.draw do
         get :selectize
         get :select2
         get :react_select
+        post :react_select_create
+        patch :react_select_update
+        delete :react_select_destroy
       end
 
       if Folio.pack_enabled?(:ai)
