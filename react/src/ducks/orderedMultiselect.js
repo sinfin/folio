@@ -63,7 +63,9 @@ const initialState = {
   url: null,
   options: null,
   sortable: true,
-  atomSetting: false
+  atomSetting: false,
+  serialization: null,
+  inputName: null
 }
 
 // Reducer

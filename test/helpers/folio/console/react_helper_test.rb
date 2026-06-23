@@ -13,6 +13,72 @@ class Folio::Console::ReactHelperTest < ActionView::TestCase
 
     assert_includes wrap["data-url"], "/console/api/autocomplete/react_select"
     assert_nil wrap["data-options"]
+    assert_nil wrap["data-serialization"]
+    assert_nil wrap["data-input-name"]
+  end
+
+  test "react_ordered_multiselect renders virtual remote array data" do
+    author = create(:dummy_blog_author,
+                    first_name: "Ada",
+                    last_name: "Lovelace")
+
+    wrap = ordered_multiselect_wrap(build(:dummy_blog_article),
+                                    relation_name: :issue_ids,
+                                    virtual: {
+                                      class_name: "Dummy::Blog::Author",
+                                      selected: [author],
+                                      input_name: "dummy_blog_article[issue_ids][]",
+                                    },
+                                    label_method: :full_name)
+    params = Rack::Utils.parse_nested_query(URI.parse(wrap["data-url"]).query)
+    items = data_json(wrap, "items")
+
+    assert_includes wrap["data-url"], "/console/api/autocomplete/react_select"
+    assert_equal "Dummy::Blog::Author", params["class_names"]
+    assert_equal "full_name", params["label_method"]
+    assert_equal "array", wrap["data-serialization"]
+    assert_equal "dummy_blog_article[issue_ids][]", wrap["data-input-name"]
+    assert_nil wrap["data-param-base"]
+    assert_nil wrap["data-foreign-key"]
+    assert_equal [], data_json(wrap, "removed-items")
+    assert_equal author.id, items[0]["value"]
+    assert_equal "Ada Lovelace", items[0]["label"]
+  end
+
+  test "react_ordered_multiselect keeps explicit label in virtual mode" do
+    issue = create(:dummy_blog_author,
+                   first_name: "Project > Issue",
+                   last_name: "1")
+
+    form = ordered_multiselect_form(build(:dummy_blog_article),
+                                    relation_name: :issue_ids,
+                                    virtual: {
+                                      class_name: "Dummy::Blog::Author",
+                                      selected: [issue],
+                                      input_name: "dummy_blog_article[issue_ids][]",
+                                    },
+                                    label_method: :full_name,
+                                    label: "Vydání")
+    wrap = form.find(".folio-react-wrap--ordered-multiselect")
+    items = data_json(wrap, "items")
+    label = form.find("label")
+
+    assert_equal "Vydání", label.text
+    assert_includes label["class"].split, "string"
+    assert_includes label["class"].split, "optional"
+    assert_includes label["class"].split, "form-label"
+    assert_equal "Project > Issue 1", items[0]["label"]
+  end
+
+  test "react_ordered_multiselect keeps visible error feedback" do
+    article = build(:dummy_blog_article)
+    article.errors.add(:authors, "must be present")
+    form = ordered_multiselect_form(article)
+    feedback = form.find(".invalid-feedback")
+
+    assert_includes form.find(".form-group")["class"].split, "form-group-invalid"
+    assert_includes feedback["class"].split, "d-block"
+    assert_equal "Autoři must be present", feedback.text
   end
 
   test "react_ordered_multiselect renders local collection options" do
@@ -86,11 +152,16 @@ class Folio::Console::ReactHelperTest < ActionView::TestCase
 
   private
     def ordered_multiselect_wrap(record, relation_name: :authors, **options)
+      ordered_multiselect_form(record, relation_name:, **options)
+        .find(".folio-react-wrap--ordered-multiselect")
+    end
+
+    def ordered_multiselect_form(record, relation_name: :authors, **options)
       html = simple_form_for(record, url: "/") do |f|
         concat(react_ordered_multiselect(f, relation_name, **options))
       end
 
-      Capybara.string(html).find(".folio-react-wrap--ordered-multiselect")
+      Capybara.string(html)
     end
 
     def data_json(wrap, key)

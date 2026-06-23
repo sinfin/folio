@@ -148,98 +148,112 @@ module Folio::Console::ReactHelper
                                 group_method: nil,
                                 group_label_method: nil,
                                 label_method: :to_console_label,
-                                value_method: :id)
+                                value_method: :id,
+                                virtual: nil)
     class_name = "folio-react-wrap folio-react-wrap--ordered-multiselect"
 
     unless sortable
       class_name += " folio-react-wrap--ordered-multiselect-not-sortable"
     end
 
-    klass = f.object.class
-    reflection = klass.reflections[relation_name.to_s]
-    through = reflection.options[:through]
-
-    if through.nil?
-      raise StandardError, "Only supported for :through relations"
-    end
-
-    through_klass = reflection.class_name.constantize
-    param_base = "#{f.object_name}[#{through}_attributes]"
-
     items = []
     removed_items = []
+    options = nil
+    data_serialization = nil
+    data_input_name = nil
+    param_base = nil
+    foreign_key = nil
 
-    f.object.send(through).each do |record|
-      through_record = through_klass.find(record.send(reflection.foreign_key))
-      hash = {
-        id: record.id,
-        label: through_record.to_console_label,
-        value: through_record.id,
-        _destroy: record.marked_for_destruction?,
-      }
+    if virtual
+      raise ArgumentError, "Cannot combine virtual ordered multiselect with collection" if collection
 
-      if hash[:_destroy]
-        if hash[:id]
-          removed_items << hash
-        end
-      else
-        items << hash
+      class_names = virtual.fetch(:class_name)
+      data_serialization = "array"
+      data_input_name = virtual.fetch(:input_name)
+
+      items = Array(virtual.fetch(:selected)).map do |record|
+        item_label = react_ordered_multiselect_value(record, label_method)
+        value = react_ordered_multiselect_value(record, value_method)
+
+        {
+          id: nil,
+          label: item_label.to_s,
+          value:,
+          _destroy: false,
+        }
       end
-    end
+    else
+      klass = f.object.class
+      reflection = klass.reflections[relation_name.to_s]
+      through = reflection.options[:through]
 
-    options = react_ordered_multiselect_options(collection,
-                                                group_method:,
-                                                group_label_method:,
-                                                label_method:,
-                                                value_method:,
-                                                through_klass:) if collection
+      if through.nil?
+        raise StandardError, "Only supported for :through relations"
+      end
+
+      through_klass = reflection.class_name.constantize
+      param_base = "#{f.object_name}[#{through}_attributes]"
+      foreign_key = reflection.foreign_key
+      class_names = through_klass.to_s
+
+      f.object.send(through).each do |record|
+        through_record = through_klass.find(record.send(reflection.foreign_key))
+        hash = {
+          id: record.id,
+          label: through_record.to_console_label,
+          value: through_record.id,
+          _destroy: record.marked_for_destruction?,
+        }
+
+        if hash[:_destroy]
+          if hash[:id]
+            removed_items << hash
+          end
+        else
+          items << hash
+        end
+      end
+
+      options = react_ordered_multiselect_options(collection,
+                                                  group_method:,
+                                                  group_label_method:,
+                                                  label_method:,
+                                                  value_method:,
+                                                  through_klass:) if collection
+    end
 
     url = unless options
-      Folio::Engine.routes.url_helpers.url_for([
-                                                 :react_select,
-                                                 :console,
-                                                 :api,
-                                                 :autocomplete,
-                                                 {
-                                                   class_names: through_klass.to_s,
-                                                   scope: scope,
-                                                   order_scope: order_scope,
-                                                   only_path: true
-                                                 }
-                                               ])
+      react_ordered_multiselect_url(class_names:,
+                                    scope:,
+                                    order_scope:,
+                                    label_method:)
     end
 
-    form_group_class_name = if f.object.errors[relation_name].present?
-      "form-group form-group-invalid"
-    else
-      "form-group"
-    end
+    input_options = {}
+    input_options[:required] = required unless required.nil?
+    input_options[:label] = label unless label.nil? || label == true
+    input_options[:full_error_html] = { class: "d-block" }
 
-    content_tag(:div, class: form_group_class_name) do
-      unless label == false
-        label_text = label == true ? nil : label
-        concat(f.label(relation_name, label_text, required: required))
-      end
+    react_wrap = content_tag(
+      :div,
+      content_tag(:span, nil, class: "folio-loader"),
+      "class" => "#{class_name} form-control",
+      "data-name" => "#{f.object_name}[#{relation_name}]",
+      "data-param-base" => param_base,
+      "data-foreign-key" => foreign_key,
+      "data-removed-items" => removed_items.to_json,
+      "data-items" => items.to_json,
+      "data-url" => url,
+      "data-options" => options&.to_json,
+      "data-sortable" => sortable ? "1" : "0",
+      "data-menu-placement" => menu_placement,
+      "data-atom-setting" => atom_setting,
+      "data-serialization" => data_serialization,
+      "data-input-name" => data_input_name
+    )
 
-      concat(
-        content_tag(
-          :div,
-          content_tag(:span, nil, class: "folio-loader"),
-          "class" => "#{class_name} form-control",
-          "data-name" => "#{f.object_name}[#{relation_name}]",
-          "data-param-base" => param_base,
-          "data-foreign-key" => reflection.foreign_key,
-          "data-removed-items" => removed_items.to_json,
-          "data-items" => items.to_json,
-          "data-url" => url,
-          "data-options" => options&.to_json,
-          "data-sortable" => sortable ? "1" : "0",
-          "data-menu-placement" => menu_placement,
-          "data-atom-setting" => atom_setting
-        )
-      )
-
-      concat(f.full_error(relation_name, class: "invalid-feedback d-block"))
+    f.input(relation_name, input_options) do
+      react_wrap
     end
   end
 
@@ -336,6 +350,33 @@ module Folio::Console::ReactHelper
       elsif record.respond_to?(:[])
         record[method]
       end
+    end
+
+    def react_ordered_multiselect_url(class_names:,
+                                      scope:,
+                                      order_scope:,
+                                      label_method:)
+      options = {
+        class_names:,
+        scope:,
+        order_scope:,
+        only_path: true,
+      }
+
+      if label_method.present? &&
+         label_method != :to_console_label &&
+         label_method != "to_console_label" &&
+         !label_method.respond_to?(:call)
+        options[:label_method] = label_method
+      end
+
+      Folio::Engine.routes.url_helpers.url_for([
+                                                 :react_select,
+                                                 :console,
+                                                 :api,
+                                                 :autocomplete,
+                                                 options
+                                               ])
     end
 
     def react_notes_common(f: nil, target: nil)

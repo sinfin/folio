@@ -25,8 +25,32 @@ function SerializedRemovedItem ({ id, index, paramBase }) {
   )
 }
 
+function SerializedArrayItem ({ item, inputName }) {
+  const value = item.value === undefined || item.value === null ? '' : item.value
+
+  return (
+    <input type='hidden' name={inputName} value={value} />
+  )
+}
+
 function Serialized ({ orderedMultiselect }) {
-  const { paramBase, foreignKey, items, removedItems, sortable } = orderedMultiselect
+  const { paramBase, foreignKey, items, removedItems, sortable, serialization, inputName } = orderedMultiselect
+
+  if (serialization === 'array') {
+    return (
+      <div hidden>
+        <input type='hidden' name={inputName} value='' />
+
+        {items.map((item) => (
+          <SerializedArrayItem
+            key={item.uniqueId}
+            item={item}
+            inputName={inputName}
+          />
+        ))}
+      </div>
+    )
+  }
 
   let i = -1
   const index = () => { i++; return i }

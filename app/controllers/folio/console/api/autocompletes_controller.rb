@@ -260,6 +260,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
     p_order = params[:order_scope]
     p_without = params[:without]
     p_page = params[:page]&.to_i || 1
+    label_method = params[:label_method].presence || :to_console_label
 
     if q.present? && q.length < AUTOCOMPLETE_QUERY_MIN_LENGTH
       render json: { data: [], meta: { page: 1, pages: 1, from: nil, to: nil, count: 0, next: nil } }
@@ -319,16 +320,10 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
           records = sort_exact_match_first(records, q) if q.present?
 
           response = records.map do |record|
-            text = record.to_console_label
-            text = "#{text} – #{record.class.model_name.human}" if show_model_names
-
-            {
-              id: record.id,
-              text:,
-              label: text,
-              value: Folio::Console::StiHelper.sti_record_to_select_value(record),
-              type: klass.to_s
-            }
+            react_select_record_hash(record,
+                                     label_method:,
+                                     show_model_names:,
+                                     type: klass)
           end
 
           render json: { data: response, meta: meta_from_pagy(pagination) }
@@ -391,16 +386,10 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
         paginated_records = all_records[offset, AUTOCOMPLETE_PAGY_ITEMS] || []
 
         response = paginated_records.map do |record|
-          text = record.to_console_label
-          text = "#{text} – #{record.class.model_name.human}" if show_model_names
-
-          {
-            id: record.id,
-            text:,
-            label: text,
-            value: Folio::Console::StiHelper.sti_record_to_select_value(record),
-            type: record.class.to_s
-          }
+          react_select_record_hash(record,
+                                   label_method:,
+                                   show_model_names:,
+                                   type: record.class)
         end
 
         # Create pagination meta manually
@@ -424,6 +413,19 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
   end
 
   private
+    def react_select_record_hash(record, label_method:, show_model_names:, type:)
+      text = record.send(label_method)
+      text = "#{text} – #{record.class.model_name.human}" if show_model_names
+
+      {
+        id: record.id,
+        text:,
+        label: text,
+        value: Folio::Console::StiHelper.sti_record_to_select_value(record),
+        type: type.to_s
+      }
+    end
+
     def apply_ordered_for_folio_console_selects(scope, klass)
       return [scope, false] unless klass.respond_to?(:ordered_for_folio_console_selects)
 
