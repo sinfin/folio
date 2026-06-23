@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- **Console collection selects**: Add `filterable: true` for local Select2 filtering over pre-rendered collection options and grouped selects, preserving existing `remote:` autocomplete behavior.
+
 ### Changed
 
 - **Console private attachments**: Replace the Dropzone/S3Upload add flow with `Folio::UppyComponent`, preserving nested attachment ordering/destroy behavior and hiding move arrows in single-attachment mode.
