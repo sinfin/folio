@@ -13,6 +13,7 @@ import {
 
 import Select from 'components/Select'
 
+import filterOptions from './filterOptions'
 import Item from './Item'
 import Serialized from './Serialized'
 
@@ -82,7 +83,24 @@ class OrderedMultiselectApp extends React.Component {
   render () {
     const { orderedMultiselect } = this.props
     const without = orderedMultiselect.items.map((item) => item.value).join(',')
-    const url = `${orderedMultiselect.url}&without=${without}`
+    const rawOptions = orderedMultiselect.options ? filterOptions(orderedMultiselect.options, orderedMultiselect.items) : null
+    const selectProps = {
+      onChange: this.onSelect,
+      createable: false,
+      isClearable: false,
+      placeholder: window.FolioConsole.translations.addPlaceholder,
+      key: without,
+      menuPlacement: orderedMultiselect.menuPlacement
+    }
+
+    if (rawOptions) {
+      selectProps.rawOptions = rawOptions
+    } else {
+      selectProps.async = `${orderedMultiselect.url}&without=${without}`
+      selectProps.defaultOptions = true
+      selectProps.addAtomSettings = true
+      selectProps.minimumInputLength = AUTOCOMPLETE_QUERY_MIN_LENGTH
+    }
 
     // using key={without} forces Select to reload default options
 
@@ -120,18 +138,7 @@ class OrderedMultiselectApp extends React.Component {
           />
         ) : null}
 
-        <Select
-          onChange={this.onSelect}
-          createable={false}
-          isClearable={false}
-          async={url}
-          placeholder={window.FolioConsole.translations.addPlaceholder}
-          key={without}
-          defaultOptions
-          addAtomSettings
-          minimumInputLength={AUTOCOMPLETE_QUERY_MIN_LENGTH}
-          menuPlacement={orderedMultiselect.menuPlacement}
-        />
+        <Select {...selectProps} />
 
         <Serialized orderedMultiselect={orderedMultiselect} />
       </div>
