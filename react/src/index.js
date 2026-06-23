@@ -76,6 +76,7 @@ window.FolioConsole.React.init = (domRoot) => {
       paramBase: domRoot.dataset.paramBase,
       foreignKey: domRoot.dataset.foreignKey,
       url: domRoot.dataset.url,
+      options: domRoot.dataset.options ? JSON.parse(domRoot.dataset.options) : null,
       sortable: domRoot.dataset.sortable !== '0',
       atomSetting: domRoot.dataset.atomSetting,
       menuPlacement: domRoot.dataset.menuPlacement

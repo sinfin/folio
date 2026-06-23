@@ -66,4 +66,53 @@ class Folio::SimpleFormOverridesTest < ActionView::TestCase
     assert page.has_css?(".form-group._link_json .form-group__custom-html", count: 1)
     assert page.has_css?(".form-group._link_json .form-group__custom-html + .form-text", text: "Visible hint")
   end
+
+  test "filterable collection select preserves grouped collection" do
+    grouped_collection = [
+      ["Project B", [["Beta", 2], ["Gamma", 3]]],
+      ["Project A", [["Alpha", 1]]],
+    ]
+
+    html = simple_form_for "", method: :get, url: "/" do |f|
+      concat(f.input :category_id,
+                     as: :grouped_select,
+                     collection: grouped_collection,
+                     filterable: true,
+                     group_method: :last,
+                     group_label_method: :first,
+                     include_blank: "Select category")
+    end
+
+    page = Capybara.string(html)
+    select = page.find("select[name='category_id']")
+
+    assert_includes select["data-controller"].split, "f-input-collection-filterable"
+    assert_includes select["class"].split, "f-input--collection-filterable"
+    assert_nil select["data-f-input-collection-remote-select-url-value"]
+    assert_equal "Select category", select["data-f-input-collection-filterable-include-blank-value"]
+
+    assert page.has_css?("select[name='category_id'] > option[value='']", text: "Select category")
+    assert page.has_css?("select[name='category_id'] optgroup[label='Project B'] option[value='2']", text: "Beta")
+    assert page.has_css?("select[name='category_id'] optgroup[label='Project B'] option[value='3']", text: "Gamma")
+    assert page.has_css?("select[name='category_id'] optgroup[label='Project A'] option[value='1']", text: "Alpha")
+    assert_equal 3, page.all("select[name='category_id'] optgroup option").count
+  end
+
+  test "remote collection select keeps remote controller" do
+    html = simple_form_for "", method: :get, url: "/" do |f|
+      concat(f.input :record_id,
+                     collection: [["Existing", "1"]],
+                     filterable: true,
+                     include_blank: "Select record",
+                     remote: "/autocomplete")
+    end
+
+    page = Capybara.string(html)
+    select = page.find("select[name='record_id']")
+
+    assert_includes select["data-controller"].split, "f-input-collection-remote-select"
+    assert_not_includes select["data-controller"].split, "f-input-collection-filterable"
+    assert_equal "/autocomplete", select["data-f-input-collection-remote-select-url-value"]
+    assert_nil select["data-f-input-collection-filterable-include-blank-value"]
+  end
 end

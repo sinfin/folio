@@ -39,7 +39,7 @@ class Folio::FileByQueryTest < ActiveSupport::TestCase
     video_with_file_name("ssstwitter.com_1781448018455.mp4")
     other = video_with_file_name("completely-different-name.mp4")
 
-    refute_includes Folio::File::Video.by_query("ssstwitter.com_1781448018455.mp4").pluck(:id),
-                    other.id
+    assert_not_includes Folio::File::Video.by_query("ssstwitter.com_1781448018455.mp4").pluck(:id),
+                        other.id
   end
 end

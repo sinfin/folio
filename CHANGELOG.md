@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- **Console collection selects**: Add `filterable: true` for local Select2 filtering over pre-rendered collection options and grouped selects, preserving existing `remote:` autocomplete behavior.
+- **React ordered multi-select**: Support local `collection:` options, including grouped options, for ordered relation pickers that should filter without remote autocomplete.
+
 ### Changed
 
 - **Console private attachments**: Replace the Dropzone/S3Upload add flow with `Folio::UppyComponent`, preserving nested attachment ordering/destroy behavior and hiding move arrows in single-attachment mode.
@@ -10,7 +15,9 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - **Console file search by filename**: `Folio::File.by_query` now matches a raw `file_name` substring in addition to full-text search. Filenames that look like hostnames (e.g. `name.com_123456.mp4`) are stored by PostgreSQL full-text search as a single `host` lexeme, while pg_search splits the query on dots and ANDs the resulting terms — so searching the whole filename never matched. Searching by filename in the console file/video list now finds the file.
+- **Ordered multi-select**: Remote autocomplete now shows localized minimum-input guidance for short non-blank queries instead of a normal no-results state.
 - **Uppy drag-and-drop**: Only the first active uploader handles window-level file drops, preventing duplicate uploads when a page renders multiple `Folio::UppyComponent` instances.
+- **Ordered multi-select**: Handle text overflow gracefully - line clamp 2 and text-overflow: ellipsis
 
 ## [7.7.1] - 2026-06-16
 
