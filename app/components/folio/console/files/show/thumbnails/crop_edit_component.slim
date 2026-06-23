@@ -3,31 +3,8 @@
   class="f-c-files-show-thumbnails-crop-edit--mode-#{mode}"
 ]
   .f-c-files-show-thumbnails-crop-edit__top
-    h4.f-c-files-show-thumbnails-crop-edit__title.m-0
-      = @ratio
-
     - if @can_update
       = buttons
-      = buttons_while_editing
-
-  .f-c-files-show-thumbnails-crop-edit__editor.mt-3[
-    data=stimulus_target("editor")
-  ]
-    .f-c-files-show-thumbnails-crop-edit__editor-inner[
-      style=editor_inner_style
-      data=stimulus_target("editorInner")
-    ]
-      img.f-c-files-show-thumbnails-crop-edit__editor-img[
-        src=Folio::S3.url_rewrite(@file.file.remote_url)
-        data=stimulus_target("editorImage")
-        width=image_width
-        height=image_height
-      ]
-
-    span.f-c-files-show-thumbnails-crop-edit__editor-loader[
-      class="folio-loader"
-      class="folio-loader--transparent"
-    ]
 
   .f-c-files-show-thumbnails-crop-edit__img-wrap.mt-3
     - if image_url
@@ -38,3 +15,39 @@
       ]
     - else
       = folio_icon(:close)
+
+  .f-c-files-show-thumbnails-crop-edit__overlay
+    .f-c-files-show-thumbnails-crop-edit__backdrop[
+      data=stimulus_action(click: "cancelEditing")
+    ]
+    .f-c-files-show-thumbnails-crop-edit__modal
+      .f-c-files-show-thumbnails-crop-edit__modal-header
+        h4.f-c-files-show-thumbnails-crop-edit__title.m-0
+          = @ratio
+        button.f-c-files-show-thumbnails-crop-edit__close[
+          type="button"
+          data=stimulus_action(click: "cancelEditing")
+        ]
+          = folio_icon(:close)
+
+      - if @can_update
+        .f-c-files-show-thumbnails-crop-edit__editor.mt-3[
+          data=stimulus_target("editor")
+        ]
+          .f-c-files-show-thumbnails-crop-edit__editor-inner[
+            style=editor_inner_style
+            data=stimulus_target("editorInner")
+          ]
+            img.f-c-files-show-thumbnails-crop-edit__editor-img[
+              src=Folio::S3.url_rewrite(@file.file.remote_url)
+              data=stimulus_target("editorImage")
+              width=image_width
+              height=image_height
+            ]
+
+          span.f-c-files-show-thumbnails-crop-edit__editor-loader[
+            class="folio-loader"
+            class="folio-loader--transparent"
+          ]
+
+        = buttons_while_editing

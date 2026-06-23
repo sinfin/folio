@@ -9,6 +9,17 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
 
   static targets = ['editorImage', 'editorInner']
 
+  connect () {
+    this.escHandler = (e) => {
+      if (e.key === 'Escape' && this._isEditing()) this.cancelEditing()
+    }
+    document.addEventListener('keydown', this.escHandler)
+  }
+
+  _isEditing () {
+    return ['editing', 'setting-cropperjs', 'loading-javascript'].includes(this.stateValue)
+  }
+
   startEditing () {
     this.stateValue = 'loading-javascript'
 
@@ -64,9 +75,16 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
 
     this.stateValue = 'saving'
 
+    const ratioEl = this.element.closest('.f-c-files-show-thumbnails-ratio')
+    const parent = ratioEl.parentElement
+    const idx = Array.prototype.indexOf.call(parent.children, ratioEl)
+    const wasOpen = !!ratioEl.querySelector('details')?.open
+
     window.Folio.Api.apiPatch(this.apiUrlValue, data).then((res) => {
       if (res && res.data) {
-        this.element.closest('.f-c-files-show-thumbnails-ratio').outerHTML = res.data
+        ratioEl.outerHTML = res.data
+        const newDetails = parent.children[idx]?.querySelector('details')
+        if (newDetails) newDetails.open = wasOpen
       } else {
         throw new Error('Invalid response from server')
       }
@@ -134,6 +152,7 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
   }
 
   disconnect () {
+    document.removeEventListener('keydown', this.escHandler)
     this.unbindCropper()
   }
 

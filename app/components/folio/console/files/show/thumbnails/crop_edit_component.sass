@@ -7,7 +7,6 @@
     justify-content: space-between
     min-height: 28px
 
-  &__editor,
   &__img-wrap
     align-items: center
     background: $gray
@@ -22,6 +21,15 @@
     max-height: 100%
     max-width: 100%
 
+  &__editor
+    align-items: center
+    background: $gray
+    display: flex
+    justify-content: center
+    position: relative
+    width: 290px
+    height: 290px
+
   &__editor-inner
     display: block
     background: $gray-medium-dark
@@ -33,15 +41,74 @@
     height: auto
     max-width: none
 
-  &:not([data-f-c-files-show-thumbnails-crop-edit-state-value="viewing"]) &__buttons,
-  &:not([data-f-c-files-show-thumbnails-crop-edit-state-value="editing"]) &__buttons-while-editing,
-  &:not([data-f-c-files-show-thumbnails-crop-edit-state-value="viewing"]) &__img-wrap,
-  &[data-f-c-files-show-thumbnails-crop-edit-state-value="viewing"] &__editor,
-  &[data-f-c-files-show-thumbnails-crop-edit-state-value="editing"] &__editor-loader
+  // Overlay / modal
+
+  &__overlay
+    bottom: 0
+    display: flex
+    align-items: center
+    justify-content: center
+    left: 0
+    position: fixed
+    right: 0
+    top: 0
+    z-index: $zindex-modal
+
+  &__backdrop
+    background: rgba(0, 0, 0, 0.5)
+    bottom: 0
+    left: 0
+    position: fixed
+    right: 0
+    top: 0
+
+  &__modal
+    background: #fff
+    border-radius: $border-radius
+    max-height: 90vh
+    overflow-y: auto
+    padding: $grid-gutter-base
+    position: relative
+    z-index: 1
+
+  &__modal-header
+    align-items: center
+    display: flex
+    justify-content: space-between
+    margin-bottom: $grid-gutter-base
+
+  &__close
+    background: none
+    border: none
+    cursor: pointer
+    padding: 0
+
+  // State-driven visibility
+
+  // Hide overlay in viewing/waiting-for-thumbnail states
+  &[data-f-c-files-show-thumbnails-crop-edit-state-value="viewing"] &__overlay,
+  &[data-f-c-files-show-thumbnails-crop-edit-state-value="waiting-for-thumbnail"] &__overlay
     display: none
 
+  // Hide trigger button while not in viewing state
+  &:not([data-f-c-files-show-thumbnails-crop-edit-state-value="viewing"]) &__buttons
+    display: none
+
+  // Hide img-wrap while not in viewing state
+  &:not([data-f-c-files-show-thumbnails-crop-edit-state-value="viewing"]) &__img-wrap
+    display: none
+
+  // Hide buttons-while-editing when not editing
+  &:not([data-f-c-files-show-thumbnails-crop-edit-state-value="editing"]) &__buttons-while-editing
+    display: none
+
+  // Hide editor-inner (cropper) when not editing
   &:not([data-f-c-files-show-thumbnails-crop-edit-state-value="editing"]) &__editor-inner
     visibility: hidden
+
+  // Hide editor-loader when editing
+  &[data-f-c-files-show-thumbnails-crop-edit-state-value="editing"] &__editor-loader
+    display: none
 
   &__editor cropper-canvas
     width: 100%
