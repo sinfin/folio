@@ -466,6 +466,17 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
         assert_equal 180, file.thumbnail_sizes["320x180#"][:height]
         assert file.thumbnail_sizes["320x180#"][:url].present?
       end
+
+      test "#{klass} - update_thumbnails_crop destroys old thumbnail uids asynchronously" do
+        file = create(klass.model_name.singular)
+        file.update!(thumbnail_sizes: { "200x100#" => { "uid" => "uid-async-1", "webp_uid" => "uid-async-2" } })
+
+        assert_enqueued_with(job: Folio::DestroyThumbnailUidsJob) do
+          patch url_for([:update_thumbnails_crop, :console, :api, file, format: :json]),
+                params: { ratio: "2:1", thumbnail_size_keys: %w[200x100#], crop: { x: 0.5, y: 0.5 } },
+                as: :json
+        end
+      end
     end
   end
 end

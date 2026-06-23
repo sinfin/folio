@@ -332,13 +332,8 @@ module Folio::Console::Api::FileControllerBase
                                                 y:)
     end
 
-    begin
-      thumb_uids_to_destroy.uniq.each do |uid|
-        Dragonfly.app.datastore.destroy(uid)
-      end
-    rescue StandardError => e
-      Rails.logger.error("Failed to destroy old thumbnail UID #{uid}: #{e.message}")
-    end
+    uids = thumb_uids_to_destroy.compact.uniq
+    Folio::DestroyThumbnailUidsJob.perform_later(uids) if uids.any?
 
     render_component_json(Folio::Console::Files::Show::Thumbnails::RatioComponent.new(file: @file,
                                                                                       ratio:,
