@@ -6,12 +6,18 @@
                                                                               thumbnail_size_keys: @thumbnail_size_keys,
                                                                               updated_thumbnails_crop: @updated_thumbnails_crop))
 
+    - rep_thumb = @file.thumbnail_sizes[representative_key]
+    - rep_url = rep_thumb.is_a?(Hash) ? rep_thumb[:url].presence : nil
+    .f-c-files-show-thumbnails-ratio__summary-thumbnail
+      - if rep_url
+        img.f-c-files-show-thumbnails-ratio__summary-thumbnail-img[loading="lazy" src=rep_url]
+
     .f-c-files-show-thumbnails-ratio__summary-meta
       span.f-c-files-show-thumbnails-ratio__summary-label = label
       span.f-c-files-show-thumbnails-ratio__summary-count = t('.variants_count', count: variants_count)
 
   details.f-c-files-show-thumbnails-ratio__detail
-    summary = t('.all_versions')
+    summary.f-c-files-show-thumbnails-ratio__detail-summary = t('.all_versions')
 
     .f-c-files-show-thumbnails-ratio__thumbs-flex
       - @thumbnail_size_keys.each do |thumbnail_size_key|

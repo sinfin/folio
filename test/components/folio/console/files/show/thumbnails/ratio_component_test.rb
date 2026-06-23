@@ -33,10 +33,13 @@ class Folio::Console::Files::Show::Thumbnails::RatioComponentTest < Folio::Conso
         assert_selector ".f-c-files-show-thumbnails-ratio__summary"
         assert_text "2:1"                      # label fallback (hook returns nil)
         assert_text "2"                        # variant count
+        # representative thumbnail preview in summary
+        assert_selector ".f-c-files-show-thumbnails-ratio__summary-thumbnail"
         # detail collapsed by default (native <details> without `open`)
         assert_selector "details.f-c-files-show-thumbnails-ratio__detail"
         assert_no_selector "details.f-c-files-show-thumbnails-ratio__detail[open]"
-        assert_selector "summary", text: I18n.t("folio.console.files.show.thumbnails.ratio_component.all_versions")
+        assert_selector "summary.f-c-files-show-thumbnails-ratio__detail-summary",
+                        text: I18n.t("folio.console.files.show.thumbnails.ratio_component.all_versions")
       end
     end
   end
