@@ -1,28 +1,39 @@
 .f-c-files-show-thumbnails-ratio
-  &__box
+  margin: $grid-gutter-half 0
+
+  &__summary
     background: $medium-gray
     border-radius: $border-radius
     display: flex
     flex-wrap: wrap
     gap: $grid-gutter-width
     padding: $grid-gutter-half
-    margin: $grid-gutter-half 0
 
-  &__left
-    max-width: 290px
-    width: 100%
-    flex: 0 0 auto
-
-  &__thumbs
+  &__summary-meta
+    display: flex
+    align-items: center
+    gap: $grid-gutter-half
     flex: 1 0 auto
-    width: 290px
+
+  &__summary-label
+    font-weight: bold
+
+  &__summary-count
+    color: $text-muted
+
+  &__detail
+    padding: $grid-gutter-half
+    padding-top: 0
+
+    > summary
+      cursor: pointer
+      min-height: 28px
+      display: flex
+      align-items: center
+      color: $text-muted
+      padding: $grid-gutter-half 0
 
   &__thumbs-flex
     display: flex
     flex-wrap: wrap
     gap: $grid-gutter-half
-
-  &__thumbs-title
-    min-height: 28px
-    display: flex
-    align-items: center

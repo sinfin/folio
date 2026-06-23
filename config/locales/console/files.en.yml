@@ -58,6 +58,9 @@ en:
           thumbnails:
             ratio_component:
               all_versions: "All generated versions:"
+              variants_count:
+                one: "%{count} size"
+                other: "%{count} sizes"
 
             crop_edit_component:
               edit: Edit crop

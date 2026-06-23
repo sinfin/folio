@@ -21,4 +21,34 @@ class Folio::Console::Files::Show::Thumbnails::RatioComponentTest < Folio::Conso
       end
     end
   end
+
+  test "collapsed card shows label fallback (ratio), variant count, and a collapsed detail" do
+    with_controller_class(Folio::Console::File::ImagesController) do
+      with_request_url "/console/file/images" do
+        file = create(:folio_file_image)
+        render_inline(Folio::Console::Files::Show::Thumbnails::RatioComponent.new(
+          file:, ratio: "2:1", thumbnail_size_keys: %w[200x100# 400x200#]))
+
+        # summary
+        assert_selector ".f-c-files-show-thumbnails-ratio__summary"
+        assert_text "2:1"                      # label fallback (hook returns nil)
+        assert_text "2"                        # variant count
+        # detail collapsed by default (native <details> without `open`)
+        assert_selector "details.f-c-files-show-thumbnails-ratio__detail"
+        assert_no_selector "details.f-c-files-show-thumbnails-ratio__detail[open]"
+        assert_selector "summary", text: I18n.t("folio.console.files.show.thumbnails.ratio_component.all_versions")
+      end
+    end
+  end
+
+  test "regular group renders no crop editor" do
+    with_controller_class(Folio::Console::File::ImagesController) do
+      with_request_url "/console/file/images" do
+        file = create(:folio_file_image)
+        render_inline(Folio::Console::Files::Show::Thumbnails::RatioComponent.new(
+          file:, ratio: "regular", thumbnail_size_keys: %w[250x250 500x500]))
+        assert_no_selector ".f-c-files-show-thumbnails-crop-edit"
+      end
+    end
+  end
 end
