@@ -28,18 +28,7 @@ class Folio::Console::Files::Show::Thumbnails::CropEditComponent < Folio::Consol
 
       return nil if valid_keys.empty?
 
-      highest_area_key = valid_keys.max_by do |key|
-        dimensions = key.gsub(/[#>^]$/, "")
-        width_str, height_str = dimensions.split("x", 2)
-
-        if width_str.nil? || width_str.empty?
-          height_str.to_i
-        elsif height_str.nil? || height_str.empty?
-          width_str.to_i
-        else
-          width_str.to_i * height_str.to_i
-        end
-      end
+      highest_area_key = Folio::Console::Files::Show::Thumbnails::RepresentativeImage.representative_thumbnail_size_key(valid_keys)
 
       @image_url = @file.thumb(highest_area_key).url
     end
