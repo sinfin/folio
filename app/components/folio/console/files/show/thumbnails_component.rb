@@ -1,46 +1,60 @@
 # frozen_string_literal: true
 
 class Folio::Console::Files::Show::ThumbnailsComponent < Folio::Console::ApplicationComponent
-  # Canonical ratios to which near values are snapped (group label).
-  CANONICAL_RATIOS = %w[1:1 5:4 4:3 7:5 3:2 16:10 16:9 2:1 21:9 4:5 3:4 2:3 9:16].freeze
-  # Relative tolerance for snapping (provisional; confirm with design).
-  RATIO_TOLERANCE = 0.03
+  # Relative tolerance for proximity clustering of crop aspect ratios (provisional; confirm with design).
+  RATIO_TOLERANCE = 0.04
 
   def initialize(file:)
     @file = file
   end
 
-  # Returns the canonical ratio label when the value is within RATIO_TOLERANCE of a
-  # canonical ratio; otherwise returns the exact reduced-fraction label.
-  def self.canonical_ratio_label(width, height)
-    return "0:0" if width.zero? || height.zero?
-    value = width.to_f / height
-    best = CANONICAL_RATIOS.min_by do |r|
-      cw, ch = r.split(":").map(&:to_i)
-      (value - cw.to_f / ch).abs / (cw.to_f / ch)
-    end
-    bw, bh = best.split(":").map(&:to_i)
-    return best if ((value - bw.to_f / bh).abs / (bw.to_f / bh)) <= RATIO_TOLERANCE
-    gcd = width.gcd(height)
-    "#{width / gcd}:#{height / gcd}"
+  # Returns the "cleanest" reduced-fraction label for a bucket of [key, w, h] entries:
+  # the one with the smallest numerator+denominator after gcd reduction.
+  def self.cleanest_ratio_label(entries)
+    entries.map { |(_k, w, h)|
+      g = w.gcd(h)
+      [(w / g) + (h / g), "#{w / g}:#{h / g}"]
+    }.min_by(&:first).last
   end
 
   def self.group_thumbnail_size_keys(keys)
     grouped = {}
 
+    # Collect crop entries: [key, ratio_float, w, h]
+    crop_entries = []
+
     keys.each do |key|
       if key.end_with?("#")
-        suffix = "crop"
         width_str, height_str = key[0..-2].split("x", 2)
-        aspect_ratio = canonical_ratio_label(width_str.to_i, height_str.to_i)
+        w = width_str.to_i
+        h = height_str.to_i
+        next if w.zero? || h.zero?
+        crop_entries << [key, w.to_f / h, w, h]
       else
-        suffix = "regular"
-        aspect_ratio = "regular"
+        grouped["regular"] ||= {}
+        grouped["regular"]["regular"] ||= []
+        grouped["regular"]["regular"] << key
+      end
+    end
+
+    # Proximity cluster crop entries (ascending ratio, anchor = bucket's smallest ratio)
+    unless crop_entries.empty?
+      buckets = []
+      crop_entries.sort_by { |(_k, r, _w, _h)| r }.each do |key, r, w, h|
+        b = buckets.last
+        if b && ((r - b[:anchor]) / b[:anchor]) <= RATIO_TOLERANCE
+          b[:entries] << [key, w, h]
+        else
+          buckets << { anchor: r, entries: [[key, w, h]] }
+        end
       end
 
-      grouped[suffix] ||= {}
-      grouped[suffix][aspect_ratio] ||= []
-      grouped[suffix][aspect_ratio] << key
+      grouped["crop"] = {}
+      buckets.each do |bucket|
+        label = cleanest_ratio_label(bucket[:entries])
+        grouped["crop"][label] ||= []
+        grouped["crop"][label].concat(bucket[:entries].map(&:first))
+      end
     end
 
     # Sort "regular" keys by area, with specific priority order
