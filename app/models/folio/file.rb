@@ -308,6 +308,16 @@ class Folio::File < Folio::ApplicationRecord
     false
   end
 
+  def source_payload(intent: :cacheable)
+    cacheable = !private?
+
+    {
+      url: cacheable ? Folio::S3.cdn_url_rewrite(file.remote_url) : nil,
+      mime_type: file_mime_type,
+      cacheable:,
+    }
+  end
+
   def self.default_gravities_for_select
     DEFAULT_GRAVITIES.map do |gravity|
       [human_attribute_name("default_gravity/#{gravity}"), gravity]

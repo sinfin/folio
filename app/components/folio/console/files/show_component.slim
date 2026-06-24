@@ -70,6 +70,8 @@
             .f-c-files-show__td
               - if key == :usage_constraints
                 = render(Folio::Console::Files::UsageConstraintsComponent.new(file: @file))
+              - elsif key == :file_track_duration
+                = @file.formatted_duration
               - else
                 = render(Folio::Console::Ui::InPlaceInputComponent.new(attribute: key,
                                                                        record: @file,
