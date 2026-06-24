@@ -105,6 +105,66 @@ class Folio::File::AudioTest < ActiveSupport::TestCase
     assert_equal 1, signed_calls
   end
 
+  test "cacheable source payload uses public original even when playable derivative exists" do
+    audio = create(:folio_file_audio,
+                   file_mime_type: "audio/wav",
+                   remote_services_data: {
+                     "playable" => {
+                       "storage" => "s3",
+                       "path" => "test/audio/encoded/file.mp3",
+                       "extension" => "mp3",
+                       "content_type" => "audio/mpeg",
+                     }
+                   })
+    cdn_url = "https://cdn.example.test/audio.wav"
+
+    audio.stub(:playable_download_url, -> (*) { flunk "cacheable payload must not presign playable audio" }) do
+      Folio::S3.stub(:cdn_url_rewrite, cdn_url) do
+        assert_equal({
+          url: cdn_url,
+          mime_type: "audio/wav",
+          cacheable: true,
+        }, audio.source_payload(intent: :cacheable))
+      end
+    end
+  end
+
+  test "immediate source payload uses playable derivative with matching mime type" do
+    audio = create(:folio_file_audio,
+                   file_mime_type: "audio/wav",
+                   remote_services_data: {
+                     "playable" => {
+                       "storage" => "s3",
+                       "path" => "test/audio/encoded/file.mp3",
+                       "extension" => "mp3",
+                       "content_type" => "audio/mpeg",
+                     }
+                   })
+    signed_url = "https://signed.example.test/file.mp3"
+
+    audio.stub(:playable_download_url, signed_url) do
+      assert_equal({
+        url: signed_url,
+        mime_type: "audio/mpeg",
+        cacheable: false,
+      }, audio.source_payload(intent: :immediate_playback))
+    end
+  end
+
+  test "cacheable source payload omits private audio url" do
+    audio = create(:folio_file_audio)
+
+    audio.stub(:private?, true) do
+      Folio::S3.stub(:cdn_url_rewrite, -> (*) { flunk "private audio cacheable payload must not use CDN" }) do
+        assert_equal({
+          url: nil,
+          mime_type: audio.file_mime_type,
+          cacheable: false,
+        }, audio.source_payload(intent: :cacheable))
+      end
+    end
+  end
+
   test "formatted_duration returns nil when file_track_duration is nil" do
     audio = build(:folio_file_audio, file_track_duration: nil)
     assert_nil audio.formatted_duration

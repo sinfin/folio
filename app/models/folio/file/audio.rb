@@ -66,12 +66,22 @@ class Folio::File::Audio < Folio::File
                            expires_in:)
   end
 
+  # Immediate playback API for callers that need a playable derivative.
+  # Public/cacheable serializers should use source_payload(intent: :cacheable).
   def player_source_url(expires_in: 15.minutes.to_i)
-    playable_download_url(expires_in:) || original_source_url(expires_in:)
+    source_payload(intent: :immediate_playback, expires_in:)[:url]
   end
 
   def player_source_mime_type
     playable_file_path.present? ? playable_content_type : file_mime_type
+  end
+
+  def source_payload(intent: :cacheable, expires_in: 15.minutes.to_i)
+    if intent == :immediate_playback
+      immediate_source_payload(expires_in:)
+    else
+      super(intent:)
+    end
   end
 
   def low_quality_source?
@@ -106,11 +116,31 @@ class Folio::File::Audio < Folio::File
   end
 
   private
-    def original_source_url(expires_in:)
-      if private?
-        Folio::S3.url_rewrite(file.remote_url(expires: expires_in.seconds.from_now))
+    def immediate_source_payload(expires_in:)
+      if playable_file_path.present?
+        {
+          url: playable_download_url(expires_in:),
+          mime_type: playable_content_type,
+          cacheable: false,
+        }
       else
-        Folio::S3.cdn_url_rewrite(file.remote_url)
+        original_source_payload(expires_in:)
       end
+    end
+
+    def original_source_payload(expires_in:)
+      cacheable = !private?
+
+      url = if cacheable
+        Folio::S3.cdn_url_rewrite(file.remote_url)
+      else
+        Folio::S3.url_rewrite(file.remote_url(expires: expires_in.seconds.from_now))
+      end
+
+      {
+        url:,
+        mime_type: file_mime_type,
+        cacheable:,
+      }
     end
 end
