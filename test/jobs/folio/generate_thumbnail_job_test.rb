@@ -14,8 +14,26 @@ class Folio::GenerateThumbnailJobTest < ActiveJob::TestCase
 
     image.reload
 
-    assert_match(/test\.jpg\Z/, image.thumbnail_sizes["100x100#"][:url])
-    assert_match(/test\.webp\Z/, image.thumbnail_sizes["100x100#"][:webp_url])
+    assert_match(/test(?:_[^\/]+)?\.jpg\z/, image.thumbnail_sizes["100x100#"][:url])
+    assert_match(/test(?:_[^\/]+)?\.webp\z/, image.thumbnail_sizes["100x100#"][:webp_url])
+  end
+
+  test "does not enqueue file after save job when storing generated thumbnail" do
+    image = create(:folio_file_image, additional_data: { "generate_thumbnails_in_test" => true })
+    original_config = Rails.application.config.try(:folio_testing_after_save_job)
+
+    Rails.application.config.folio_testing_after_save_job = true
+    begin
+      clear_enqueued_jobs
+
+      perform_enqueued_jobs only: Folio::GenerateThumbnailJob do
+        image.thumb("100x100#")
+      end
+
+      assert_no_enqueued_jobs only: Folio::Files::AfterSaveJob
+    ensure
+      Rails.application.config.folio_testing_after_save_job = original_config
+    end
   end
 
   test "uses fallback image when file is missing" do

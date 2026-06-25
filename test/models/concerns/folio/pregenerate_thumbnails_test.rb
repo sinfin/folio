@@ -14,6 +14,53 @@ class Folio::PregenerateThumbnailsTest < ActiveSupport::TestCase
     end
   end
 
+  class PageWithNestedPregeneratedCover < Folio::Page
+    def self.pregenerated_thumbnails
+      { "Folio::FilePlacement::Cover" => [[THUMB_SIZE, THUMB_SIZE_TWO]] }
+    end
+  end
+
+  class PageWithQualityPregeneratedCover < Folio::Page
+    def self.pregenerated_thumbnails
+      { "Folio::FilePlacement::Cover" => [[THUMB_SIZE, 70]] }
+    end
+  end
+
+  test "pregenerates nested size arrays as separate thumbnail sizes" do
+    image = create(:folio_file_image, additional_data: { "generate_thumbnails_in_test" => true })
+    page = create_page_singleton(PageWithNestedPregeneratedCover)
+    placement = Folio::FilePlacement::Cover.new(file: image, placement: page)
+
+    clear_enqueued_jobs
+
+    placement.pregenerate_thumbnails
+
+    perform_enqueued_jobs only: Folio::GenerateThumbnailJob
+
+    image.reload
+
+    assert image.thumbnail_sizes[Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE].present?
+    assert image.thumbnail_sizes[THUMB_SIZE].present?
+    assert image.thumbnail_sizes[THUMB_SIZE_TWO].present?
+  end
+
+  test "keeps numeric quality tuples as one thumbnail variant" do
+    image = create(:folio_file_image, additional_data: { "generate_thumbnails_in_test" => true })
+    page = create_page_singleton(PageWithQualityPregeneratedCover)
+    placement = Folio::FilePlacement::Cover.new(file: image, placement: page)
+
+    clear_enqueued_jobs
+
+    placement.pregenerate_thumbnails
+
+    perform_enqueued_jobs only: Folio::GenerateThumbnailJob
+
+    image.reload
+
+    assert image.thumbnail_sizes[Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE].present?
+    assert_equal 70, image.thumbnail_sizes[THUMB_SIZE][:quality]
+  end
+
   test "should pregenerate thumbnails" do
     image = create(:folio_file_image, additional_data: { "generate_thumbnails_in_test" => true })
 
