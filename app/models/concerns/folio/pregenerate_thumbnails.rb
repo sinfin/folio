@@ -21,17 +21,11 @@ module Folio::PregenerateThumbnails
 
     versions = placement.class.try(:pregenerated_thumbnails)
 
-    collection = [Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE]
+    collection = [Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE] + pregenerated_thumbnail_variants(versions)
 
-    if versions.is_a?(Hash)
-      if versions[self.class.to_s].present?
-        collection += versions[self.class.to_s].uniq
-      end
-    elsif versions.is_a?(Array)
-      collection += versions.uniq
-    end
+    collection.each do |variant|
+      version = pregenerated_thumbnail_version(variant)
 
-    collection.each do |version|
       h[:versions] << version
       thumb = file.thumbnail_sizes[version]
 
@@ -84,29 +78,55 @@ module Folio::PregenerateThumbnails
 
     # public page thumbnails
     return unless respond_to?(:placement)
-    versions = placement.class.try(:pregenerated_thumbnails)
-    return if versions.blank?
+    pregenerated_thumbnail_variants(placement.class.try(:pregenerated_thumbnails)).each do |variant|
+      version = pregenerated_thumbnail_version(variant)
+      quality = pregenerated_thumbnail_quality(variant)
 
-    if versions.is_a?(Hash)
-      if versions[self.class.to_s].present?
-        collection = versions[self.class.to_s].uniq
+      if quality.present?
+        file.thumb(version, quality:)
       else
-        collection = nil
-      end
-    elsif versions.is_a?(Array)
-      collection = versions.uniq
-    else
-      collection = nil
-    end
-
-    if collection.present?
-      collection.each do |version, quality|
-        if quality.present?
-          file.thumb(version, quality:)
-        else
-          file.thumb(version)
-        end
+        file.thumb(version)
       end
     end
   end
+
+  private
+    def pregenerated_thumbnail_variants(versions)
+      collection = case versions
+                   when Hash
+                     versions[self.class.to_s]
+                   when Array
+                     versions
+      end
+
+      normalize_pregenerated_thumbnail_variants(collection).uniq
+    end
+
+    def normalize_pregenerated_thumbnail_variants(collection)
+      Array(collection).flat_map do |variant|
+        if variant.is_a?(Array)
+          if pregenerated_thumbnail_quality_variant?(variant)
+            [[variant.first, variant.second]]
+          else
+            normalize_pregenerated_thumbnail_variants(variant)
+          end
+        elsif variant.present?
+          [variant]
+        else
+          []
+        end
+      end
+    end
+
+    def pregenerated_thumbnail_quality_variant?(variant)
+      variant.size == 2 && variant.first.is_a?(String) && variant.second.is_a?(Numeric)
+    end
+
+    def pregenerated_thumbnail_version(variant)
+      variant.is_a?(Array) ? variant.first : variant
+    end
+
+    def pregenerated_thumbnail_quality(variant)
+      variant.is_a?(Array) ? variant.second : nil
+    end
 end
