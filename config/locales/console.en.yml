@@ -347,7 +347,7 @@ en:
           in: Replace from YAML
           out: Save to YAML
           in_new: Create new from YAML
-      catalogue_sort_arrows:
+      catalogue_sort_arrows_component:
         sort_asc: Ascending sort
         sort_desc: Descending sort
       catalogue:
