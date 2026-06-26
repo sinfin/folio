@@ -102,6 +102,12 @@
     if (data.html) {
       container.innerHTML = data.html
 
+      // Bandcamp players are pasted as raw <iframe> with width:100%, so margin-auto
+      // centering is a no-op. Tag the container so CSS can cap the width and center it.
+      if (container.querySelector('iframe[src*="bandcamp.com"]')) {
+        container.classList.add('f-embed__container--bandcamp')
+      }
+
       // Extract and execute scripts manually
       const scripts = container.querySelectorAll('script')
       scripts.forEach(script => {

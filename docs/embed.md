@@ -32,6 +32,15 @@ The module supports the following platforms with their respective URL patterns:
 - **Twitter/X**: `https://twitter.com/{id}` or `https://x.com/{id}`
 - **YouTube**: `https://www.youtube.com/watch?v={id}` or `https://youtu.be/{id}`
 
+### Raw HTML embeds
+
+Embeds pasted as raw `<iframe>` HTML (e.g. Bandcamp, Spotify) are rendered as-is via
+the `"html"` field rather than URL pattern matching. Bandcamp players are pasted with
+`width: 100%`, which makes the default margin-auto centering a no-op. The embed renderer
+detects `iframe[src*="bandcamp.com"]` and tags the container with
+`.f-embed__container--bandcamp`, which caps the player width (700px) so it centers within
+the content column instead of stretching full-width and appearing left-aligned.
+
 ## Validation
 
 ### Using the Validation Concern
