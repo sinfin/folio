@@ -69,6 +69,24 @@ class Folio::MediaSourceTest < ActiveSupport::TestCase
     assert_equal 1, media_source.effective_max_usage_count(site:)
   end
 
+  test "site rules are ordered by creation time" do
+    media_source = create(:folio_media_source)
+    newest_site = create(:dummy_site)
+    oldest_site = create(:dummy_site)
+
+    newest_link = media_source.media_source_site_links.create!(
+      site: newest_site,
+      created_at: 1.hour.ago
+    )
+    oldest_link = media_source.media_source_site_links.create!(
+      site: oldest_site,
+      created_at: 2.hours.ago
+    )
+    oldest_link.update!(licence: "Edited licence")
+
+    assert_equal [oldest_link, newest_link], media_source.reload.media_source_site_links.to_a
+  end
+
   test "destroy nullifies attached files attributes and removes only media-source sites" do
     media_source = create(:folio_media_source)
     site1 = create(:folio_site, domain: "site1.localhost", type: "Folio::Site")
