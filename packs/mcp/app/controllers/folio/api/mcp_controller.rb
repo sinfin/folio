@@ -18,6 +18,8 @@ module Folio
 
         log_mcp_response(response_json)
 
+        return head :accepted if response_json.nil? && mcp_notification_request?(request_body)
+
         render json: response_json, content_type: "application/json"
       end
 
@@ -57,6 +59,14 @@ module Folio
         def secure_compare_token(token, digest)
           BCrypt::Password.new(digest) == token
         rescue BCrypt::Errors::InvalidHash
+          false
+        end
+
+        def mcp_notification_request?(body)
+          parsed = JSON.parse(body)
+
+          parsed.is_a?(Hash) && parsed["id"].blank? && parsed["method"].present?
+        rescue JSON::ParserError
           false
         end
 
