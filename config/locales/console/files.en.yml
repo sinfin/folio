@@ -72,6 +72,7 @@ en:
             cancel_download: Cancel download
             cancel: Close batch actions
             download_failure: Failed to prepare files for download
+            delete_disabled_for_uploads: Newly uploaded files can be deleted individually after the upload finishes.
             add_to_picker/default: Select
             add_to_picker/image: Select to gallery
 

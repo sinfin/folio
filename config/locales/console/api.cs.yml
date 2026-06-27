@@ -5,4 +5,5 @@ cs:
       api:
         file_controller_base:
           batch_delete_success: Soubory byly odstraněny.
+          batch_delete_upload_added_error: Nově nahrané soubory nelze odstranit touto hromadnou akcí. Po dokončení uploadu je smažte jednotlivě.
           batch_update_success: Soubory byly upraveny.

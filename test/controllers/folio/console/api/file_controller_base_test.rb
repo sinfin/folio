@@ -309,6 +309,22 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       assert_equal("0", parsed_component.css(".f-c-files-batch-bar__count").first.text.strip)
     end
 
+    test "#{klass} - batch_delete rejects upload-added files" do
+      file = create(klass.model_name.singular)
+
+      get file_list_file_folio_api_s3_path(file_id: file.id,
+                                           file_type: file.class.to_s,
+                                           add_to_batch: true,
+                                           batch_actions: true,
+                                           format: :json)
+      assert_response :success
+
+      delete url_for([:batch_delete, :console, :api, klass, format: :json]), params: { file_ids: [file.id] }
+
+      assert_response(:bad_request)
+      assert klass.exists?(file.id), "Don't batch-delete files added automatically by the upload flow"
+    end
+
     test "#{klass} - batch_download, batch_download_success, batch_download_failure, cancel_batch_download" do
       files = create_list(klass.model_name.singular, 3)
       file_ids = files.map(&:id)

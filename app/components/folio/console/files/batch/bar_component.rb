@@ -56,7 +56,10 @@ class Folio::Console::Files::Batch::BarComponent < Folio::Console::ApplicationCo
 
       base = { variant: :danger, icon: :delete, label: t(".delete") }
 
-      if indestructible_file.present?
+      if upload_added_file_ids.any?
+        base[:disabled] = true
+        ary << [stimulus_tooltip(t(".delete_disabled_for_uploads")), base]
+      elsif indestructible_file.present?
         base[:disabled] = true
         ary << [stimulus_tooltip(indestructible_file.indestructible_reason), base]
       else
@@ -135,6 +138,10 @@ class Folio::Console::Files::Batch::BarComponent < Folio::Console::ApplicationCo
 
     def batch_service
       @batch_service ||= Folio::Console::Files::BatchService.new(session_id: session_id, file_class_name: file_class_name)
+    end
+
+    def upload_added_file_ids
+      @upload_added_file_ids ||= batch_service.upload_added_file_ids & file_ids
     end
 
     def serialized_files_json

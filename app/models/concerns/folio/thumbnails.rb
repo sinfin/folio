@@ -33,7 +33,7 @@ module Folio::Thumbnails
 
     before_validation :reset_thumbnails
 
-    after_save :run_set_additional_data_job
+    after_commit :run_set_additional_data_job, on: %i[create update]
     after_destroy :delete_thumbnails
 
     # Validate image dimensions for thumbnailable files (images)

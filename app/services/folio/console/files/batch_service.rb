@@ -20,6 +20,8 @@
 class Folio::Console::Files::BatchService
   REDIS_NAMESPACE = "folio:console:files:batch"
   DEFAULT_EXPIRATION = 1.hour.to_i
+  SOURCE_MANUAL = "manual"
+  SOURCE_UPLOAD = "upload"
 
   def initialize(session_id:, file_class_name:)
     @session_id = session_id
@@ -27,18 +29,24 @@ class Folio::Console::Files::BatchService
   end
 
   # File operations
-  def add_file(file_id)
-    redis_client.sadd(files_key, file_id)
-    redis_client.expire(files_key, DEFAULT_EXPIRATION)
+  def add_file(file_id, source: SOURCE_MANUAL)
+    redis_client.multi do |redis|
+      redis.sadd?(files_key, file_id)
+      redis.hset(sources_key, file_id, normalize_source(source))
+      expire_batch_keys(redis)
+    end
 
     file_id
   end
 
-  def add_files(file_ids)
+  def add_files(file_ids, source: SOURCE_MANUAL)
     return [] if file_ids.empty?
 
-    redis_client.sadd(files_key, file_ids)
-    redis_client.expire(files_key, DEFAULT_EXPIRATION)
+    redis_client.multi do |redis|
+      redis.sadd?(files_key, file_ids)
+      file_ids.each { |file_id| redis.hset(sources_key, file_id, normalize_source(source)) }
+      expire_batch_keys(redis)
+    end
 
     file_ids
   end
@@ -46,7 +54,11 @@ class Folio::Console::Files::BatchService
   def remove_files(file_ids)
     return [] if file_ids.empty?
 
-    redis_client.srem(files_key, file_ids)
+    redis_client.multi do |redis|
+      redis.srem(files_key, file_ids)
+      redis.hdel(sources_key, *file_ids)
+      expire_batch_keys(redis)
+    end
 
     file_ids
   end
@@ -60,11 +72,30 @@ class Folio::Console::Files::BatchService
   end
 
   def clear_files
-    redis_client.del(files_key)
+    redis_client.del(files_key, sources_key)
   end
 
   def has_file?(file_id)
     redis_client.sismember(files_key, file_id)
+  end
+
+  def upload_added_file_ids
+    file_sources.filter_map do |file_id, source|
+      file_id if source == SOURCE_UPLOAD
+    end
+  end
+
+  def upload_added_file?(file_id)
+    file_sources[file_id.to_i] == SOURCE_UPLOAD
+  end
+
+  def file_sources
+    valid_file_ids = get_file_ids
+    raw_sources = redis_client.hgetall(sources_key)
+
+    valid_file_ids.each_with_object({}) do |file_id, hash|
+      hash[file_id] = raw_sources[file_id.to_s] || SOURCE_MANUAL
+    end
   end
 
   # Form state operations
@@ -101,13 +132,19 @@ class Folio::Console::Files::BatchService
     redis_client.multi do |redis|
       # Only add IDs that are in the valid_ids list
       valid_add_ids = add_ids & valid_ids
-      redis.sadd(files_key, valid_add_ids) if valid_add_ids.any?
+      if valid_add_ids.any?
+        redis.sadd?(files_key, valid_add_ids)
+        valid_add_ids.each { |file_id| redis.hset(sources_key, file_id, SOURCE_MANUAL) }
+      end
 
       # Remove specified IDs
-      redis.srem(files_key, remove_ids) if remove_ids.any?
+      if remove_ids.any?
+        redis.srem(files_key, remove_ids)
+        redis.hdel(sources_key, *remove_ids)
+      end
 
       # Set expiration
-      redis.expire(files_key, DEFAULT_EXPIRATION)
+      expire_batch_keys(redis)
     end
 
     # Return current file IDs
@@ -117,6 +154,10 @@ class Folio::Console::Files::BatchService
   private
     def files_key
       @files_key ||= "#{REDIS_NAMESPACE}:files:#{@session_id}:#{@file_class_name}"
+    end
+
+    def sources_key
+      @sources_key ||= "#{REDIS_NAMESPACE}:sources:#{@session_id}:#{@file_class_name}"
     end
 
     def form_key
@@ -135,5 +176,14 @@ class Folio::Console::Files::BatchService
         reconnect_delay: ENV.fetch("REDIS_RECONNECT_DELAY", 0.5).to_f,
         reconnect_delay_max: ENV.fetch("REDIS_RECONNECT_DELAY_MAX", 5.0).to_f,
       )
+    end
+
+    def normalize_source(source)
+      source.to_s == SOURCE_UPLOAD ? SOURCE_UPLOAD : SOURCE_MANUAL
+    end
+
+    def expire_batch_keys(redis)
+      redis.expire(files_key, DEFAULT_EXPIRATION)
+      redis.expire(sources_key, DEFAULT_EXPIRATION)
     end
 end

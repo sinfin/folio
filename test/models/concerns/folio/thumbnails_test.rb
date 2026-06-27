@@ -7,6 +7,18 @@ class Folio::ThumbnailsTest < ActiveSupport::TestCase
 
   THUMB_SIZE = "111x111#"
 
+  test "set additional data job is scheduled after commit" do
+    clear_enqueued_jobs
+
+    Folio::File::Image.transaction(requires_new: true) do
+      create(:folio_file_image)
+
+      assert_enqueued_jobs 0, only: Folio::Files::SetAdditionalDataJob
+    end
+
+    assert_enqueued_jobs 1, only: Folio::Files::SetAdditionalDataJob
+  end
+
   test "should not generate duplicate jobs" do
     image = create(:folio_file_image, additional_data: { "generate_thumbnails_in_test" => true })
 

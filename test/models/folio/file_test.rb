@@ -14,6 +14,19 @@ class Folio::FileTest < ActiveSupport::TestCase
     Rails.application.config.folio_testing_after_save_job = true
   end
 
+  test "after save job is scheduled after commit" do
+    clear_enqueued_jobs
+
+    Folio::File.transaction(requires_new: true) do
+      create(:folio_file_document)
+
+      assert_enqueued_jobs 0, only: Folio::Files::AfterSaveJob
+    end
+
+    after_save_job_count = enqueued_jobs.count { |job| job[:job] == Folio::Files::AfterSaveJob }
+    assert_operator after_save_job_count, :>, 0
+  end
+
   test "touches placement placements" do
     page = create(:folio_page)
     updated_at = page.updated_at

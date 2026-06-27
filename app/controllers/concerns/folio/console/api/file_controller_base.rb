@@ -177,6 +177,16 @@ module Folio::Console::Api::FileControllerBase
 
   def batch_delete
     files = @klass.where(id: @safe_file_ids).to_a
+    upload_added_file_ids = batch_service.upload_added_file_ids & @safe_file_ids
+
+    if upload_added_file_ids.any?
+      Rails.logger.warn(
+        "Blocked batch_delete for upload-added files " \
+        "file_class=#{@klass} file_ids=#{upload_added_file_ids.join(",")} " \
+        "session_id=#{session.id.public_id} user_id=#{Folio::Current.user&.id}"
+      )
+      raise ActionController::BadRequest.new(t("folio.console.api.file_controller_base.batch_delete_upload_added_error"))
+    end
 
     if indestructible_file = files.find { |file| file.indestructible_reason }
       raise ActionController::BadRequest.new(indestructible_file.indestructible_reason)

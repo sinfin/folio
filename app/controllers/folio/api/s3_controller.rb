@@ -55,7 +55,7 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
       if add_to_batch
         batch_service = Folio::Console::Files::BatchService.new(session_id: session.id.public_id,
                                                                 file_class_name: file_klass.to_s)
-        batch_service.add_file(@file.id)
+        batch_service.add_file(@file.id, source: Folio::Console::Files::BatchService::SOURCE_UPLOAD)
         batch_service.set_form_open(true)
       end
 
