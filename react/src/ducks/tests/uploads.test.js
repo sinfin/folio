@@ -141,6 +141,23 @@ describe('uploadsReducer', () => {
     expect(state['Folio::File::Image'].dropzoneFiles[S3_PATH].attributes.uploadState).toEqual(UPLOAD_STATE_FAILED)
   })
 
+  it('does not downgrade terminal upload states to intermediate states', () => {
+    state = uploadsReducer(state, addDropzoneFile('Folio::File::Image', S3_PATH))
+    state = uploadsReducer(state, updateDropzoneFile('Folio::File::Image', S3_PATH, {
+      progress: 100,
+      progressText: 'Saved',
+      uploadState: UPLOAD_STATE_SAVED
+    }))
+
+    state = uploadsReducer(state, updateDropzoneFile('Folio::File::Image', S3_PATH, {
+      progressText: 'Processing',
+      uploadState: UPLOAD_STATE_PROCESSING
+    }))
+
+    expect(state['Folio::File::Image'].dropzoneFiles[S3_PATH].attributes.uploadState).toEqual(UPLOAD_STATE_SAVED)
+    expect(state['Folio::File::Image'].dropzoneFiles[S3_PATH].attributes.progressText).toEqual('Saved')
+  })
+
   it('removeDropzoneFile', () => {
     expect(state['Folio::File::Image'].dropzoneFiles).toEqual({})
     state = uploadsReducer(state, addDropzoneFile('Folio::File::Image', S3_PATH))

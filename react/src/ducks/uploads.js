@@ -23,6 +23,21 @@ export const UPLOAD_STATE_PROCESSING = 'processing'
 export const UPLOAD_STATE_SAVED = 'saved'
 export const UPLOAD_STATE_FAILED = 'failed'
 
+const TERMINAL_UPLOAD_STATES = [
+  UPLOAD_STATE_SAVED,
+  UPLOAD_STATE_FAILED
+]
+
+const terminalUploadState = (uploadState) => TERMINAL_UPLOAD_STATES.indexOf(uploadState) !== -1
+
+const shouldKeepCurrentUploadAttributes = (currentAttributes, incomingAttributes) => {
+  if (!currentAttributes || !terminalUploadState(currentAttributes.uploadState)) return false
+
+  const incomingUploadState = incomingAttributes && incomingAttributes.uploadState
+
+  return !terminalUploadState(incomingUploadState)
+}
+
 // Actions
 
 export function setUploadAttributes (fileType, attributes) {
@@ -188,7 +203,15 @@ function uploadsReducer (rawState = initialState, action) {
       }
     }
 
-    case UPDATE_DROPZONE_FILE:
+    case UPDATE_DROPZONE_FILE: {
+      const currentDropzoneFile = state[action.fileType].dropzoneFiles[action.s3Path]
+      const attributes = shouldKeepCurrentUploadAttributes(currentDropzoneFile.attributes, action.attributes)
+        ? currentDropzoneFile.attributes
+        : {
+          ...currentDropzoneFile.attributes,
+          ...action.attributes
+        }
+
       return {
         ...state,
         [action.fileType]: {
@@ -196,15 +219,13 @@ function uploadsReducer (rawState = initialState, action) {
           dropzoneFiles: {
             ...state[action.fileType].dropzoneFiles,
             [action.s3Path]: {
-              ...state[action.fileType][action.s3Path],
-              attributes: {
-                ...state[action.fileType].dropzoneFiles[action.s3Path].attributes,
-                ...action.attributes
-              }
+              ...currentDropzoneFile,
+              attributes
             }
           }
         }
       }
+    }
 
     case REMOVE_DROPZONE_FILE:
       return {
