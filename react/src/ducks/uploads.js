@@ -17,6 +17,12 @@ const UPDATE_DROPZONE_FILE = 'uploads/UPDATE_DROPZONE_FILE'
 const REMOVE_DROPZONE_FILE = 'uploads/REMOVE_DROPZONE_FILE'
 const THUMBNAIL_DROPZONE_FILE = 'uploads/THUMBNAIL_DROPZONE_FILE'
 
+export const UPLOAD_STATE_UPLOADING_TO_S3 = 'uploading_to_s3'
+export const UPLOAD_STATE_UPLOADED_TO_S3 = 'uploaded_to_s3'
+export const UPLOAD_STATE_PROCESSING = 'processing'
+export const UPLOAD_STATE_SAVED = 'saved'
+export const UPLOAD_STATE_FAILED = 'failed'
+
 // Actions
 
 export function setUploadAttributes (fileType, attributes) {
@@ -155,7 +161,13 @@ function uploadsReducer (rawState = initialState, action) {
     case ADD_DROPZONE_FILE: {
       const pendingDataThumbnail = state[action.fileType].pendingDataThumbnails[action.s3Path]
 
-      const newAttributes = { ...action.attributes, progress: 0 }
+      const newAttributes = {
+        ...action.attributes,
+        progress: 0,
+        uploadState: action.attributes && action.attributes.uploadState
+          ? action.attributes.uploadState
+          : UPLOAD_STATE_UPLOADING_TO_S3
+      }
 
       if (pendingDataThumbnail) {
         newAttributes.dataThumbnail = pendingDataThumbnail
