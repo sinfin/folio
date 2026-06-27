@@ -31,11 +31,15 @@ const TERMINAL_UPLOAD_STATES = [
 const terminalUploadState = (uploadState) => TERMINAL_UPLOAD_STATES.indexOf(uploadState) !== -1
 
 const shouldKeepCurrentUploadAttributes = (currentAttributes, incomingAttributes) => {
-  if (!currentAttributes || !terminalUploadState(currentAttributes.uploadState)) return false
+  if (!currentAttributes) return false
 
+  const currentUploadState = currentAttributes.uploadState
   const incomingUploadState = incomingAttributes && incomingAttributes.uploadState
 
-  return !terminalUploadState(incomingUploadState)
+  if (currentUploadState === UPLOAD_STATE_SAVED) return incomingUploadState !== UPLOAD_STATE_SAVED
+  if (currentUploadState === UPLOAD_STATE_FAILED) return !terminalUploadState(incomingUploadState)
+
+  return false
 }
 
 // Actions

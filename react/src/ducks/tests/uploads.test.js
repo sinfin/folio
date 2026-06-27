@@ -134,11 +134,13 @@ describe('uploadsReducer', () => {
     }))
     expect(state['Folio::File::Image'].dropzoneFiles[S3_PATH].attributes.uploadState).toEqual(UPLOAD_STATE_SAVED)
 
-    state = uploadsReducer(state, updateDropzoneFile('Folio::File::Image', S3_PATH, {
+    const failedPath = `${S3_PATH}/failed`
+    state = uploadsReducer(state, addDropzoneFile('Folio::File::Image', failedPath))
+    state = uploadsReducer(state, updateDropzoneFile('Folio::File::Image', failedPath, {
       progressText: 'Failed',
       uploadState: UPLOAD_STATE_FAILED
     }))
-    expect(state['Folio::File::Image'].dropzoneFiles[S3_PATH].attributes.uploadState).toEqual(UPLOAD_STATE_FAILED)
+    expect(state['Folio::File::Image'].dropzoneFiles[failedPath].attributes.uploadState).toEqual(UPLOAD_STATE_FAILED)
   })
 
   it('does not downgrade terminal upload states to intermediate states', () => {
@@ -152,6 +154,40 @@ describe('uploadsReducer', () => {
     state = uploadsReducer(state, updateDropzoneFile('Folio::File::Image', S3_PATH, {
       progressText: 'Processing',
       uploadState: UPLOAD_STATE_PROCESSING
+    }))
+
+    expect(state['Folio::File::Image'].dropzoneFiles[S3_PATH].attributes.uploadState).toEqual(UPLOAD_STATE_SAVED)
+    expect(state['Folio::File::Image'].dropzoneFiles[S3_PATH].attributes.progressText).toEqual('Saved')
+  })
+
+  it('does not overwrite a saved upload with a later failure', () => {
+    state = uploadsReducer(state, addDropzoneFile('Folio::File::Image', S3_PATH))
+    state = uploadsReducer(state, updateDropzoneFile('Folio::File::Image', S3_PATH, {
+      progress: 100,
+      progressText: 'Saved',
+      uploadState: UPLOAD_STATE_SAVED
+    }))
+
+    state = uploadsReducer(state, updateDropzoneFile('Folio::File::Image', S3_PATH, {
+      progressText: 'Failed',
+      uploadState: UPLOAD_STATE_FAILED
+    }))
+
+    expect(state['Folio::File::Image'].dropzoneFiles[S3_PATH].attributes.uploadState).toEqual(UPLOAD_STATE_SAVED)
+    expect(state['Folio::File::Image'].dropzoneFiles[S3_PATH].attributes.progressText).toEqual('Saved')
+  })
+
+  it('can replace a failed upload state with saved', () => {
+    state = uploadsReducer(state, addDropzoneFile('Folio::File::Image', S3_PATH))
+    state = uploadsReducer(state, updateDropzoneFile('Folio::File::Image', S3_PATH, {
+      progress: 100,
+      progressText: 'Failed',
+      uploadState: UPLOAD_STATE_FAILED
+    }))
+
+    state = uploadsReducer(state, updateDropzoneFile('Folio::File::Image', S3_PATH, {
+      progressText: 'Saved',
+      uploadState: UPLOAD_STATE_SAVED
     }))
 
     expect(state['Folio::File::Image'].dropzoneFiles[S3_PATH].attributes.uploadState).toEqual(UPLOAD_STATE_SAVED)
