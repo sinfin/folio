@@ -143,7 +143,12 @@ module Folio::Console::ReactHelper
                                 sortable: true,
                                 required: nil,
                                 label: nil,
-                                menu_placement: :bottom)
+                                menu_placement: :bottom,
+                                collection: nil,
+                                group_method: nil,
+                                group_label_method: nil,
+                                label_method: :to_console_label,
+                                value_method: :id)
     class_name = "folio-react-wrap folio-react-wrap--ordered-multiselect"
 
     unless sortable
@@ -182,18 +187,27 @@ module Folio::Console::ReactHelper
       end
     end
 
-    url = Folio::Engine.routes.url_helpers.url_for([
-                                                     :react_select,
-                                                     :console,
-                                                     :api,
-                                                     :autocomplete,
-                                                     {
-                                                       class_names: through_klass.to_s,
-                                                       scope: scope,
-                                                       order_scope: order_scope,
-                                                       only_path: true
-                                                     }
-                                                   ])
+    options = react_ordered_multiselect_options(collection,
+                                                group_method:,
+                                                group_label_method:,
+                                                label_method:,
+                                                value_method:,
+                                                through_klass:) if collection
+
+    url = unless options
+      Folio::Engine.routes.url_helpers.url_for([
+                                                 :react_select,
+                                                 :console,
+                                                 :api,
+                                                 :autocomplete,
+                                                 {
+                                                   class_names: through_klass.to_s,
+                                                   scope: scope,
+                                                   order_scope: order_scope,
+                                                   only_path: true
+                                                 }
+                                               ])
+    end
 
     form_group_class_name = if f.object.errors[relation_name].present?
       "form-group form-group-invalid"
@@ -218,6 +232,7 @@ module Folio::Console::ReactHelper
           "data-removed-items" => removed_items.to_json,
           "data-items" => items.to_json,
           "data-url" => url,
+          "data-options" => options&.to_json,
           "data-sortable" => sortable ? "1" : "0",
           "data-menu-placement" => menu_placement,
           "data-atom-setting" => atom_setting
@@ -254,6 +269,75 @@ module Folio::Console::ReactHelper
   end
 
   private
+    def react_ordered_multiselect_options(collection,
+                                          group_method:,
+                                          group_label_method:,
+                                          label_method:,
+                                          value_method:,
+                                          through_klass:)
+      records = collection.respond_to?(:call) ? collection.call : collection
+
+      if group_method
+        records.to_a.filter_map do |group|
+          group_options = react_ordered_multiselect_value(group, group_method).to_a.map do |record|
+            react_ordered_multiselect_option(record,
+                                             label_method:,
+                                             value_method:,
+                                             through_klass:)
+          end
+
+          next if group_options.blank?
+
+          {
+            label: react_ordered_multiselect_value(group, group_label_method || label_method).to_s,
+            options: group_options,
+          }
+        end
+      else
+        records.to_a.map do |record|
+          react_ordered_multiselect_option(record,
+                                           label_method:,
+                                           value_method:,
+                                           through_klass:)
+        end
+      end
+    end
+
+    def react_ordered_multiselect_option(record,
+                                         label_method:,
+                                         value_method:,
+                                         through_klass:)
+      label = react_ordered_multiselect_value(record, label_method)
+      value = react_ordered_multiselect_value(record, value_method)
+
+      {
+        id: value,
+        label: label.to_s,
+        text: label.to_s,
+        value:,
+        type: record.respond_to?(:to_model) ? record.class.to_s : through_klass.to_s,
+      }
+    end
+
+    def react_ordered_multiselect_value(record, method)
+      return method.call(record) if method.respond_to?(:call)
+
+      if record.is_a?(Array)
+        case method
+        when :to_console_label, :label, :first
+          record.first
+        when :id, :value, :last
+          record.last
+        else
+          record.public_send(method) if record.respond_to?(method)
+        end
+      elsif record.respond_to?(method)
+        record.public_send(method)
+      elsif record.respond_to?(:[])
+        record[method]
+      end
+    end
+
     def react_notes_common(f: nil, target: nil)
       class_name = "folio-react-wrap folio-react-wrap--notes-fields"
 

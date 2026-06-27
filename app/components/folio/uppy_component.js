@@ -34,6 +34,7 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
   connect () {
     window.folioUppyCounter = (window.folioUppyCounter || 0) + 1
     this.folioUppyCounter = window.folioUppyCounter
+    this.registerInstance()
 
     this.element.classList.add(`f-uppy--${window.folioUppyCounter}`)
     this.triggerTarget.classList.add(`f-uppy__trigger--${window.folioUppyCounter}`)
@@ -52,10 +53,14 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
   }
 
   disconnect () {
-    if (!this.uppy) return
+    if (this.uppy) {
+      this.uppy.destroy()
+      delete this.uppy
+    }
 
-    this.uppy.destroy()
-    delete this.uppy
+    delete this.windowDropTargetRegistered
+    this.unregisterInstance()
+    this.constructor.assignWindowDropTarget()
   }
 
   init () {
@@ -119,9 +124,7 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
 
       this.uppy.use(window.Uppy.Dashboard, dashboardOpts)
 
-      this.uppy.use(window.Uppy.DropTarget, {
-        target: document.body
-      })
+      this.registerWindowDropTargetIfFirst()
 
       const args = { type: this.fileTypeValue }
       if (this.existingIdValue) args.existing_id = this.existingIdValue
@@ -131,10 +134,26 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
         getUploadParameters: (file) => {
           return window.Folio.Api.apiPost('/folio/api/s3/before', { ...args, file_name: file.name })
             .then((response) => {
-              this.uppy.setFileMeta(file.id, {
+              const metadata = {
                 s3_path: response.s3_path,
                 jwt: response.jwt,
                 sanitized_name: response.file_name
+              }
+
+              this.uppy.setFileMeta(file.id, metadata)
+
+              const updatedFile = this.uppy.getFile(file.id) || file
+
+              this.dispatch('upload-start', {
+                detail: {
+                  file: this.uppyFilePayload({
+                    ...updatedFile,
+                    meta: {
+                      ...updatedFile.meta,
+                      ...metadata
+                    }
+                  })
+                }
               })
 
               return {
@@ -154,12 +173,7 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
       })
 
       this.uppy.on('upload-success', (file) => {
-        this.uppyUploadSuccess({
-          name: file.meta.sanitized_name || file.name,
-          s3_path: file.meta.s3_path,
-          jwt: file.meta.jwt,
-          preview: file.preview
-        })
+        this.uppyUploadSuccess(this.uppyFilePayload(file))
       })
 
       this.uppy.on('complete', (result) => {
@@ -173,6 +187,16 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
       this.uppy.on('error', (error) => {
         console.error('[Uppy] System error:', error)
         this.showError(window.Folio.i18n(this.constructor.ERROR_MESSAGES, 'systemError'))
+      })
+
+      this.uppy.on('upload-error', (file, error, response) => {
+        this.dispatch('upload-error', {
+          detail: {
+            file: this.uppyFilePayload(file),
+            error,
+            response
+          }
+        })
       })
 
       if (!this.inlineValue) {
@@ -190,6 +214,50 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
     }
   }
 
+  static instances () {
+    window.Folio.uppyInstances = window.Folio.uppyInstances || []
+    return window.Folio.uppyInstances
+  }
+
+  static assignWindowDropTarget () {
+    const instance = this.instances().find((uppyInstance) => uppyInstance.uppy)
+    if (!instance) return
+
+    instance.registerWindowDropTargetIfFirst()
+  }
+
+  registerInstance () {
+    const instances = this.constructor.instances()
+    if (instances.includes(this)) return
+
+    instances.push(this)
+  }
+
+  unregisterInstance () {
+    const instances = this.constructor.instances()
+    const index = instances.indexOf(this)
+
+    if (index === -1) return
+
+    instances.splice(index, 1)
+  }
+
+  isFirstInstance () {
+    return this.constructor.instances()[0] === this
+  }
+
+  registerWindowDropTargetIfFirst () {
+    if (!this.uppy) return
+    if (this.windowDropTargetRegistered) return
+    if (!this.isFirstInstance()) return
+
+    // Only one instance can own document body drops, otherwise each instance uploads the same dragged file.
+    this.uppy.use(window.Uppy.DropTarget, {
+      target: document.body
+    })
+    this.windowDropTargetRegistered = true
+  }
+
   uppyComplete (result) {
     // Remove only successfully uploaded files
     result.successful.forEach((file) => {
@@ -205,6 +273,22 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
 
   uppyUploadSuccess (file) {
     this.dispatch('upload-success', { detail: { file } })
+  }
+
+  uppyFilePayload (file) {
+    if (!file) return {}
+
+    const meta = file.meta || {}
+
+    return {
+      id: file.id,
+      name: meta.sanitized_name || file.name,
+      size: file.size,
+      s3_path: meta.s3_path,
+      jwt: meta.jwt,
+      preview: file.preview,
+      progress: file.progress
+    }
   }
 
   showError (message) {

@@ -84,6 +84,14 @@ button data=stimulus_action(click: "submit")
 a data=stimulus_action({ click: "open" }, { id: item_id })   / action + params
 ```
 
+When one element needs both target and action data for the same controller, use
+`stimulus_data` directly instead of merging helper hashes:
+
+```ruby
+stimulus_data(target: "input",
+              action: { input: "update" })
+```
+
 Prefer Stimulus targets over selectors for controller-owned elements. When an
 element is read or controlled by multiple Stimulus controllers, add a target for
 each relevant controller instead of querying by `querySelector` from another

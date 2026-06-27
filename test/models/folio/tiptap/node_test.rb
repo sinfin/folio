@@ -23,6 +23,28 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
               presence: true
   end
 
+  class NestedCard < Folio::Tiptap::Node
+    tiptap_node nested: true,
+                structure: {
+                   title: :string,
+                   content: :rich_text,
+                   cover: :image,
+                 }
+
+    validates :title,
+              presence: true
+  end
+
+  class CardGroup < Folio::Tiptap::Node
+    tiptap_node structure: {
+      title: :string,
+      cards: {
+        type: :nested_nodes,
+        node_class: NestedCard,
+      },
+    }
+  end
+
   RICH_TEXT_HASH = { "type" => "doc", "content" => [{ "type" => "paragraph", "attrs" => { "textAlign" => nil }, "content" => [{ "type" => "text", "text" => "lorem" }] }, { "type" => "paragraph", "attrs" => { "textAlign" => nil }, "content" => [{ "type" => "text", "text" => "ipsum" }] }] }
 
   URL_JSON_HASH = { href: "foo", label: "bar" }
@@ -39,6 +61,23 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
     assert_equal 3, node.position
     assert_equal RICH_TEXT_HASH, node.content
     assert_equal({ "href" => "https://example.com", "label" => "Example" }, node.button_url_json)
+  end
+
+  test "url_json normalizes record id as integer" do
+    node = Node.new(title: "foo",
+                    button_url_json: {
+                      href: "/foo",
+                      label: "Example",
+                      record_id: "123",
+                      record_type: "Folio::Page",
+                    }.to_json)
+
+    assert_equal 123, node.button_url_json["record_id"]
+    assert_equal "Folio::Page", node.button_url_json["record_type"]
+
+    serialized_url_json = JSON.parse(node.to_tiptap_node_hash["attrs"]["data"]["button_url_json"])
+    assert_equal 123, serialized_url_json["record_id"]
+    assert_equal "Folio::Page", serialized_url_json["record_type"]
   end
 
   test "attachments" do
@@ -198,5 +237,97 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
 
     assert_nil node.another_page
     assert_nil node.another_page_id
+  end
+
+  test "nested nodes serialize as attrs inside parent data" do
+    cover = create(:folio_file_image)
+    node = CardGroup.new(title: "Cards",
+                         cards: [
+                           {
+                             "version" => 1,
+                             "type" => "Folio::Tiptap::NodeTest::NestedCard",
+                             "data" => {
+                               "title" => "First",
+                               "content" => RICH_TEXT_HASH.to_json,
+                               "cover_placement_attributes" => {
+                                 "file_id" => cover.id,
+                               },
+                             },
+                           },
+                         ])
+
+    hash = node.to_tiptap_node_hash
+    card_hash = hash["attrs"]["data"]["cards"].first
+
+    assert_equal "folioTiptapNode", hash["type"]
+    assert_equal "Folio::Tiptap::NodeTest::CardGroup", hash["attrs"]["type"]
+    assert_not_equal "folioTiptapNode", card_hash["type"]
+    assert_equal 1, card_hash["version"]
+    assert_equal "Folio::Tiptap::NodeTest::NestedCard", card_hash["type"]
+    assert_equal "First", card_hash["data"]["title"]
+    assert_equal RICH_TEXT_HASH.to_json, card_hash["data"]["content"]
+    assert_equal cover.id, card_hash["data"]["cover_placement_attributes"]["file_id"]
+  end
+
+  test "nested nodes assignment rejects node objects" do
+    assert_raises(ArgumentError) do
+      CardGroup.new(cards: [NestedCard.new(title: "First")])
+    end
+  end
+
+  test "assign_attributes_from_param_attrs builds ordered nested node objects" do
+    image = create(:folio_file_image)
+    params = ActionController::Parameters.new(
+      tiptap_node_attrs: {
+        type: "Folio::Tiptap::NodeTest::CardGroup",
+        data: {
+          title: "Cards",
+          cards: {
+            "row-a" => {
+              type: "Folio::Tiptap::NodeTest::NestedCard",
+              version: "1",
+              data: {
+                title: "First",
+                cover_placement_attributes: { file_id: image.id.to_s },
+              },
+            },
+            "row-b" => {
+              type: "Folio::Tiptap::NodeTest::NestedCard",
+              version: "1",
+              data: {
+                title: "Second",
+              },
+            },
+          },
+        },
+      },
+    )
+
+    node = CardGroup.new
+    node.assign_attributes_from_param_attrs(params[:tiptap_node_attrs])
+
+    assert_equal "Cards", node.title
+    assert_equal ["First", "Second"], node.cards.map(&:title)
+    assert_equal [NestedCard, NestedCard], node.cards.map(&:class)
+    assert_equal image.id, node.cards.first.cover_placement.file_id
+  end
+
+  test "parent aggregates nested node validation errors" do
+    node = CardGroup.new(cards: [
+      {
+        "version" => 1,
+        "type" => "Folio::Tiptap::NodeTest::NestedCard",
+        "data" => { "title" => "" },
+      },
+      {
+        "version" => 1,
+        "type" => "Folio::Tiptap::NodeTest::NestedCard",
+        "data" => { "title" => "Valid" },
+      },
+    ])
+
+    assert_not node.valid?
+    assert node.cards.first.errors[:title].present?
+    assert node.errors[:"cards[0].title"].present?
   end
 end

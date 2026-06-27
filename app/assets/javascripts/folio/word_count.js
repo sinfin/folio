@@ -13,13 +13,15 @@ window.Folio.wordCount = ({ text, words, characters }) => {
   }
 
   if (text) {
+    const containsHtml = /<[^>]*>?|&\w+;/m.test(text)
+
     hash.cleanText = text.replace(/<[^>]*>?/gm, ' ').trim().replace(/(\s|&\w+;)+/g, ' ')
 
     const textWithoutSpaces = hash.cleanText.replace(/ /g, '')
 
-    hash.charactersWithSpaces = hash.cleanText.length
+    hash.charactersWithSpaces = containsHtml ? hash.cleanText.length : text.length
     hash.characters = textWithoutSpaces.length
-    hash.words = hash.cleanText.split(' ').length
+    hash.words = hash.cleanText ? hash.cleanText.split(' ').length : 0
   } else if (typeof words === 'number' && typeof characters === 'number') {
     hash.words = words
     hash.characters = characters

@@ -3,12 +3,49 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- **Console collection selects**: Add `filterable: true` for local Select2 filtering over pre-rendered collection options and grouped selects, preserving existing `remote:` autocomplete behavior.
+- **React ordered multi-select**: Support local `collection:` options, including grouped options, for ordered relation pickers that should filter without remote autocomplete.
+
+### Changed
+
+- **Console private attachments**: Replace the Dropzone/S3Upload add flow with `Folio::UppyComponent`, preserving nested attachment ordering/destroy behavior and hiding move arrows in single-attachment mode.
+
 ### Fixed
 
 - **Console upload states**: Direct S3 uploads now expose explicit UI states for S3 upload, S3 completion, background processing, saved and failed outcomes. React file lists and thumbnails keep the temporary upload placeholder visible long enough to show saved/failed feedback, then clean it up automatically.
 - **Direct S3 upload retries**: `Folio::S3::CreateFileJob` now records successful temp S3 uploads in a short-lived cache so late `/folio/api/s3/after` retries can rebroadcast success for an already-created file instead of surfacing a misleading `File not found on S3`. Real missing temp objects now include user/session/path diagnostics in the Rails log.
 - **Embed dark-mode background**: the embed now derives its background from the page's actual color mode (`data-bs-theme`) on load instead of relying on the OS `prefers-color-scheme`. The iframe reads the embedder's theme directly (`data/embed/source/embed.js`; falls back to `prefers-color-scheme` for cross-origin embedders) — fixes the reversed background on Safari, which does not propagate the embedder's color-scheme into same-origin iframes. The `f-embed-box` wrapper and loader now also sync to the current theme on `connect` (`box_component.js`) instead of staying on the server-rendered light color until the user toggles.
+- **Tiptap toolbar groups**: Only render custom node group dropdowns in the toolbar when the configured `node_groups` entry has `toolbar_slot`, so nodes with only `group` remain slash-menu grouped without appearing in the toolbar.
+- **Console file search by filename**: `Folio::File.by_query` now matches a raw `file_name` substring in addition to full-text search. Filenames that look like hostnames (e.g. `name.com_123456.mp4`) are stored by PostgreSQL full-text search as a single `host` lexeme, while pg_search splits the query on dots and ANDs the resulting terms — so searching the whole filename never matched. Searching by filename in the console file/video list now finds the file.
+- **Ordered multi-select**: Remote autocomplete now shows localized minimum-input guidance for short non-blank queries instead of a normal no-results state.
+- **Uppy drag-and-drop**: Only the first active uploader handles window-level file drops, preventing duplicate uploads when a page renders multiple `Folio::UppyComponent` instances.
+- **Ordered multi-select**: Handle text overflow gracefully - line clamp 2 and text-overflow: ellipsis
 - **AI current form snapshots**: Keep full atom payloads under `record_class.atom_keys` instead of only atom `data` leaves, so host apps using direct atom attributes can build prompt context from unsaved atom-backed forms.
+- **Console publishable inputs**: Treat open-ended `Folio::Publishable::Within` date ranges as restricted when the present start or end date excludes the current time, so future `published_from` values no longer render as active when `published_until` is blank.
+
+## [7.7.1] - 2026-06-16
+
+### Added
+
+- **Tiptap form layouts** - custom node overlay forms now support `form_layout:` with `:aside_attachments` as the default, explicit `nil` for flat forms, and custom `rows` / `columns` layouts for arranging fields.
+- **Tiptap nested nodes** — repeatable nested custom node rows with console overlay form components, virtual nested fields support, and a dummy card group example for testing.
+- **Tiptap `url_json` fields** — node attribute configs can set `disable_label` to hide the link label field in the console URL picker while keeping the remaining URL controls available.
+- **Tiptap color fields** — custom node structures can now declare `:color` attributes, rendered as color inputs in the console overlay and persisted as normalized `#rrggbb` values.
+
+### Fixed
+
+- **Console file picker**: Single file pickers now render placement validation messages and expose an invalid BEM modifier for styling the picker border.
+- **Tiptap `url_json` fields**: `record_id` values are now normalized and persisted as integers, including nested nodes sanitized through Tiptap content.
+- **Tiptap attachment fields**: Blank, zero, and invalid `file_id` values are ignored for single and multiple attachment attributes instead of persisting placeholder placements.
+- **URL inputs**: `url_json` custom link controls now render before SimpleForm hints, including dynamically initialized URL inputs, so `.form-text` appears after the visible control. It also turns the button red when invalid.
+- **Console atoms editor overlay clipping**: The atom-editing overlay (`.f-c-simple-form-with-atoms__overlay`, `position: fixed`) and its dismiss element are now rendered outside of the editor's scroll wrap. Previously they were nested inside `.f-c-simple-form-with-atoms__scroll`, which uses `overflow: hidden` in the horizontal layout — browsers that clip fixed-position descendants of overflow-hidden ancestors (observed in the wild on macOS Safari) cut the overlay to the scroll box, hiding its header with the Done/close buttons under the layout bars above (e.g. the "page is being edited" warning) and making the open atom impossible to save or close. Rendering the overlay as a direct child of the form root removes any clipping ancestor; no visual change in browsers that were not affected.
+- **Console "page is being edited" warning**: The warning no longer lingers for users who already left and no longer requires a page reload to go away. Closing the tab or navigating away from the console now clears the user's `console_url` via `navigator.sendBeacon` on `pagehide` (new `console_url_clear` API endpoint; the clear is conditional server-side — it only applies when the stored `console_url` still matches the leaving page, so regular console navigation is unaffected; `pageshow` from back/forward cache re-pings to restore the lock). Previously the lock persisted until its 5 minute expiry, showing a false collision warning to other editors. Additionally, `console_url_ping` now responds with `other_user_at_url` and the warning bar's Stimulus controller removes the plain presence variant once the other user leaves — previously the server-rendered bar stayed visible until a full page reload even after the collision ended. Revision-based variants (takeover, outdated) are unaffected.
+- **Console "page is being edited" presence heartbeat**: The presence ping now runs even when the editor is alone on the page. Previously the ping lived only inside the warning bar, which renders only once another user (or a conflicting revision) is already detected — so a lone editor never pinged and silently dropped out of the presence window after 5 minutes without a full page reload, leaving them invisible to anyone who opened the same record later. The heartbeat is extracted into a dedicated `Folio::Console::CurrentUsers::PresencePingComponent`, rendered on every console `edit`/`update` independently of the warning bar, and it re-pings on tab `visibilitychange` to refresh presence when returning to a backgrounded tab. The warning bar no longer pings itself; it reacts to the heartbeat's broadcast (`folio:console:presence-ping`) to remove the plain presence variant once the other user leaves. The heartbeat also asks the server for a rendered warning bar (`bar_html`) when another editor appears and injects it live, so the editor who opened the page first is warned without a page reload (previously they only found out on their next navigation). Presence is now tracked under a canonical record URL (the edit URL, exposed via `folio_console_presence_url` and the `folio-console-presence-url` meta) consistently across the server-side write, the heartbeat ping, the warning-bar lookup, and the `pagehide`/`pageshow` beacon — previously the edit page (`/…/edit`) and a form re-rendered after a failed update (`/…`) were tracked as different URLs, so two editors could still miss each other after a failed submit. The canonical URL is derived via `safe_url_for` and falls back to the request URL when the edit URL cannot be generated (e.g. a nested route whose parent id is not in scope, or a resource without an edit route), so presence degrades gracefully instead of raising on every edit/update of such a resource.
+- **Console remote selects**: Match Select2 arrow and fade overlays to the disabled selection background so long values no longer show white patches.
+- **Input character counter**: Count exact plain-text length including repeated internal spaces and trailing spaces.
+- **Console validation box Tiptap focus**: Focus the visible Tiptap editor after scrolling to invalid Tiptap content and skip the hidden-input danger blink.
 
 ## [7.7.0] - 2026-06-02
 

@@ -5,21 +5,29 @@ window.Folio.Stimulus.register('f-c-private-attachments-fields', class extends w
     'template',
     'attachment',
     'attachmentsWrap',
-    'addButton',
     'destroyed',
     'positionInput'
   ]
 
   static values = {
     fileType: String,
-    fileHumanType: String,
     baseKey: String,
     single: { type: Boolean, default: false }
   }
 
+  static ERROR_MESSAGES = {
+    en: {
+      failedToProcessFile: 'Failed to process file',
+      failedToFinishUploading: 'Failed to finish uploading file'
+    },
+    cs: {
+      failedToProcessFile: 'Nepodařilo se zpracovat soubor',
+      failedToFinishUploading: 'Nepodařilo se dokončit nahrávání souboru'
+    }
+  }
+
   connect () {
     this.initFromLoaderData()
-    this.addDropzone()
   }
 
   disconnect () {
@@ -27,10 +35,7 @@ window.Folio.Stimulus.register('f-c-private-attachments-fields', class extends w
       delete this.templateNode
     }
 
-    if (this.dropzone) {
-      window.Folio.S3Upload.destroyDropzone(this.dropzone)
-      delete this.dropzone
-    }
+    this.clearS3AfterTimeouts()
   }
 
   initFromLoaderData () {
@@ -99,66 +104,163 @@ window.Folio.Stimulus.register('f-c-private-attachments-fields', class extends w
     this.templateNode = node
   }
 
-  addDropzone () {
-    this.dropzone = window.Folio.S3Upload.createDropzone({
-      element: this.addButtonTarget,
-      fileType: this.fileTypeValue,
-      fileHumanType: this.fileHumanTypeValue,
-      dropzoneOptions: { disablePreviews: true },
-      onStart: (s3Path, fileAttributes) => {
-        if (this.singleValue && this.keptAttachmentsCount && this.keptAttachmentsCount > 0) return
+  onUppyUploadStart (event) {
+    const { file } = event.detail
 
-        const hash = {
-          s3Path,
-          id: null,
-          type: 'private_attachment',
-          attributes: {
-            id: null,
-            file_size: fileAttributes.file_size,
-            file_name: fileAttributes.file_name,
-            title: fileAttributes.file_name,
-            type: null,
-            expiring_url: null
-          }
-        }
+    if (!file || !file.s3_path) return
+    if (this.singleValue && this.keptAttachmentsCount && this.keptAttachmentsCount > 0) return
 
-        this.addAttachment(hash)
-        this.afterCountUpdate()
-      },
-      onSuccess: (s3Path, fileFromApi) => {
-        this.attachmentTargets.forEach((attachmentTarget) => {
-          if (attachmentTarget.dataset.s3Path === s3Path) {
-            this.updateAttachment(attachmentTarget, fileFromApi)
-            const progress = attachmentTarget.querySelector('.f-c-private-attachments-fields__attachment-progress')
-            progress.classList.add('f-c-private-attachments-fields__attachment-progress--fresh')
-            progress.style.width = '100%'
-          }
-        })
-
-        this.triggerChange()
-      },
-      onFailure: (s3Path) => {
-        if (!s3Path) return
-
-        this.attachmentTargets.forEach((attachmentTarget) => {
-          if (attachmentTarget.dataset.s3Path === s3Path) {
-            attachmentTarget.remove()
-          }
-        })
-
-        this.afterCountUpdate()
-      },
-      onProgress: (s3Path, roundedProgress, text) => {
-        this.attachmentTargets.forEach((attachmentTarget) => {
-          if (attachmentTarget.dataset.s3Path === s3Path) {
-            attachmentTarget
-              .querySelector('.f-c-private-attachments-fields__attachment-progress')
-              .style
-              .width = `${roundedProgress}%`
-          }
-        })
+    const hash = {
+      s3Path: file.s3_path,
+      id: null,
+      type: 'private_attachment',
+      attributes: {
+        id: null,
+        file_size: file.size,
+        file_name: file.name,
+        title: file.name,
+        type: null,
+        expiring_url: null
       }
+    }
+
+    this.addAttachment(hash)
+    this.afterCountUpdate()
+  }
+
+  onUppyUploadSuccess (event) {
+    const { file } = event.detail
+
+    if (!file || !file.s3_path) return
+    if (!this.findAttachmentByS3Path(file.s3_path)) return
+
+    this.pingS3After(file)
+  }
+
+  onUppyUploadError (event) {
+    const { error, file } = event.detail
+    const message = error && error.message ? error.message : window.Folio.i18n(this.constructor.ERROR_MESSAGES, 'failedToProcessFile')
+
+    this.removePendingAttachment(file && file.s3_path)
+    this.errorFlashMessage(message)
+  }
+
+  onMessage (event) {
+    const message = event.detail && event.detail.message
+
+    if (!message || message.type !== 'Folio::S3::CreateFileJob') return
+    if (!message.data || message.data.file_type !== this.fileTypeValue) return
+
+    switch (message.data.type) {
+      case 'success':
+        this.messageBusSuccess(message.data)
+        break
+      case 'failure':
+        this.messageBusFailure(message.data)
+        break
+    }
+  }
+
+  pingS3After (file) {
+    const data = {
+      jwt: file.jwt,
+      s3_path: file.s3_path,
+      type: this.fileTypeValue,
+      message_bus_client_id: window.MessageBus.clientId
+    }
+
+    window.Folio.Api.apiPost('/folio/api/s3/after', data).catch((error) => {
+      this.s3AfterCatchCounters = this.s3AfterCatchCounters || {}
+      this.s3AfterCatchCounters[file.s3_path] = this.s3AfterCatchCounters[file.s3_path] || 0
+      this.s3AfterCatchCounters[file.s3_path] += 1
+
+      if (this.s3AfterCatchCounters[file.s3_path] > 10) {
+        this.clearS3AfterState(file.s3_path)
+        this.removePendingAttachment(file.s3_path)
+        this.errorFlashMessage(`${window.Folio.i18n(this.constructor.ERROR_MESSAGES, 'failedToProcessFile')}: ${error.message}`)
+        return
+      }
+
+      this.s3AfterTimeouts = this.s3AfterTimeouts || {}
+      if (this.s3AfterTimeouts[file.s3_path]) window.clearTimeout(this.s3AfterTimeouts[file.s3_path])
+
+      this.s3AfterTimeouts[file.s3_path] = window.setTimeout(() => {
+        this.pingS3After(file)
+      }, this.s3AfterCatchCounters[file.s3_path] * 500)
     })
+  }
+
+  messageBusSuccess (data) {
+    const attachment = this.findAttachmentByS3Path(data.s3_path)
+
+    if (!attachment) return
+
+    this.updateAttachment(attachment, data.file)
+    attachment.classList.add('f-c-private-attachments-fields__attachment--fresh')
+    this.clearS3AfterState(data.s3_path)
+    this.triggerChange()
+  }
+
+  messageBusFailure (data) {
+    const message = window.Folio.i18n(this.constructor.ERROR_MESSAGES, 'failedToFinishUploading')
+    const errors = data.errors && data.errors.length ? data.errors.join(', ') : null
+
+    this.removePendingAttachment(data.s3_path)
+    this.clearS3AfterState(data.s3_path)
+    this.errorFlashMessage(errors ? `${message}: ${errors}` : message)
+  }
+
+  findAttachmentByS3Path (s3Path) {
+    if (!s3Path) return null
+
+    return this.attachmentTargets.find((attachmentTarget) => attachmentTarget.dataset.s3Path === s3Path)
+  }
+
+  removePendingAttachment (s3Path) {
+    const attachment = this.findAttachmentByS3Path(s3Path)
+
+    if (!attachment) return
+
+    attachment.remove()
+    this.afterCountUpdate()
+  }
+
+  clearS3AfterState (s3Path) {
+    if (!s3Path) return
+
+    if (this.s3AfterTimeouts && this.s3AfterTimeouts[s3Path]) {
+      window.clearTimeout(this.s3AfterTimeouts[s3Path])
+      delete this.s3AfterTimeouts[s3Path]
+    }
+
+    if (this.s3AfterCatchCounters && this.s3AfterCatchCounters[s3Path]) {
+      delete this.s3AfterCatchCounters[s3Path]
+    }
+  }
+
+  clearS3AfterTimeouts () {
+    if (this.s3AfterTimeouts) {
+      Object.keys(this.s3AfterTimeouts).forEach((s3Path) => {
+        window.clearTimeout(this.s3AfterTimeouts[s3Path])
+      })
+
+      delete this.s3AfterTimeouts
+    }
+
+    if (!this.s3AfterCatchCounters) return
+    delete this.s3AfterCatchCounters
+  }
+
+  errorFlashMessage (content) {
+    this.element.dispatchEvent(new CustomEvent('folio:flash', {
+      bubbles: true,
+      detail: {
+        flash: {
+          content,
+          variant: 'danger'
+        }
+      }
+    }))
   }
 
   destroyAttachment (attachment) {
@@ -216,3 +318,17 @@ window.Folio.Stimulus.register('f-c-private-attachments-fields', class extends w
     }
   }
 })
+
+if (window.Folio && window.Folio.MessageBus && window.Folio.MessageBus.callbacks) {
+  window.Folio.MessageBus.callbacks['f-c-private-attachments-fields'] = (message) => {
+    if (!message || message.type !== 'Folio::S3::CreateFileJob') return
+    if (!message.data || !message.data.file_type) return
+
+    const selector = `.f-c-private-attachments-fields[data-f-c-private-attachments-fields-file-type-value="${message.data.file_type}"]`
+    const targets = document.querySelectorAll(selector)
+
+    for (const target of targets) {
+      target.dispatchEvent(new CustomEvent('f-c-private-attachments-fields/message', { detail: { message } }))
+    }
+  }
+}

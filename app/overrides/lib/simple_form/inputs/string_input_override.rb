@@ -44,11 +44,8 @@ SimpleForm::Inputs::StringInput.class_eval do
       end
 
       if options[:character_counter]
-        register_stimulus("f-input-character-counter",
-                          values: options[:character_counter].is_a?(Numeric) ? { max: options[:character_counter] } : {})
-        input_html_options["data-action"] = "f-input-character-counter#onInput"
+        register_character_counter
       end
-
 
       if options[:content_templates]
         ct_klass = options[:content_templates].constantize

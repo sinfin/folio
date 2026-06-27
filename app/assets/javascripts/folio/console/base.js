@@ -65,6 +65,7 @@
 //= require folio/console/_data-cocoon-single-nested
 //= require folio/console/_data-destroy-association
 //= require folio/console/modules/event_names
+//= require folio/console/modules/console-url-beacon
 //= require folio/console/modules/danger-box-shadow-blink
 //= require folio/console/modules/popover
 //= require folio/console/modules/with_aside
@@ -99,6 +100,7 @@
 //= require folio/console/console_notes/catalogue_tooltip/catalogue_tooltip
 //= require folio/console/current_users/console_url_bar_component
 //= require folio/console/current_users/preference_toggle_component
+//= require folio/console/current_users/presence_ping_component
 //= require folio/console/current_users/show_component
 //= require folio/console/file/preview_reloader/preview_reloader
 //= require folio/console/file/processing_notifier/processing_notifier

@@ -5,6 +5,7 @@ module Folio::FormsHelper
                           key,
                           collection: nil,
                           add: true,
+                          add_more: false,
                           destroy: true,
                           fully_draggable: false,
                           position: true,
@@ -15,11 +16,15 @@ module Folio::FormsHelper
                           destroy_icon: :close,
                           destroy_icon_height: 24,
                           destroy_label: nil,
+                          virtual: nil,
+                          duplicate: false,
+                          control_tooltips: nil,
                           &block)
     render(Folio::NestedFieldsComponent.new(f:,
                                             key:,
                                             collection:,
                                             add:,
+                                            add_more:,
                                             destroy:,
                                             position:,
                                             fully_draggable:,
@@ -29,8 +34,15 @@ module Folio::FormsHelper
                                             add_label:,
                                             destroy_icon:,
                                             destroy_icon_height:,
-                                            destroy_label:)) do |c|
-      block.call(c.g)
+                                            destroy_label:,
+                                            virtual:,
+                                            duplicate:,
+                                            control_tooltips:)) do |c|
+      if block.arity == 1
+        block.call(c.g)
+      else
+        block.call(c.g, c.row_key)
+      end
     end
   end
 

@@ -15,6 +15,8 @@ class Folio::Console::Tiptap::SimpleFormWrapComponent < Folio::Console::Applicat
 
     class_names << "f-c-tiptap-simple-form-wrap__form"
 
+    @form_partial_name = @simple_form_options.delete(:form_partial_name) || "form"
+
     @simple_form_options[:html] ||= {}
     @simple_form_options[:html][:class] = class_names.join(" ")
   end

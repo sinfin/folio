@@ -53,6 +53,21 @@ class Folio::Console::Api::LinksControllerTest < Folio::Console::BaseControllerT
     assert response.parsed_body["data"].include?("f-c-links-modal-form")
   end
 
+  test "modal_form can hide url_json label input" do
+    get modal_form_console_api_links_path(format: :json), params: {
+      url_json: { href: "/foo", label: "Foo" }.to_json,
+      disable_label: true,
+    }
+
+    assert_response :ok
+
+    html = response.parsed_body["data"]
+
+    assert html.include?("f-c-links-modal-form")
+    assert_not html.include?('name="label"')
+    assert html.include?('name="rel"')
+  end
+
   test "value" do
     get value_console_api_links_path(format: :json), params: {
       url_json: "{}",

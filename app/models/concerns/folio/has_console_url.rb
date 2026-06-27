@@ -25,7 +25,11 @@ module Folio::HasConsoleUrl
                    console_url_updated_at: Time.current)
   end
 
-  def clear_console_url!
+  def clear_console_url!(only_if_url: nil)
+    if only_if_url.present?
+      return if console_url != Folio::HasConsoleUrl.rewrite_console_url(only_if_url)
+    end
+
     update_columns(console_url: nil, console_url_updated_at: nil)
   end
 end
