@@ -1,7 +1,10 @@
 import React from 'react'
 
-const FileUploadProgress = ({ progress, progressText }) => {
+const FileUploadProgress = ({ progress, progressText, uploadState }) => {
   if (typeof progress === 'undefined') return null
+
+  const classNames = ['f-c-r-file-upload-progress']
+  if (uploadState) classNames.push(`f-c-r-file-upload-progress--${uploadState}`)
 
   let message
 
@@ -14,7 +17,7 @@ const FileUploadProgress = ({ progress, progressText }) => {
   }
 
   return (
-    <span className='f-c-r-file-upload-progress'>
+    <span className={classNames.join(' ')}>
       <span
         className='f-c-r-file-upload-progress__slider'
         style={{ width: `${progress || 0}%` }}

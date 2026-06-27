@@ -61,7 +61,11 @@ const FileTableRow = ({
 
       {fileTypeIsImage ? (
         <div className='f-c-file-table__td f-c-file-table__td--image py-0'>
-          <FileUploadProgress progress={file.attributes.progress} progressText={file.attributes.progressText} />
+          <FileUploadProgress
+            progress={file.attributes.progress}
+            progressText={file.attributes.progressText}
+            uploadState={file.attributes.uploadState}
+          />
 
           <div className='f-c-file-table__img-wrap'>
             {(file.attributes.thumb || file.attributes.dataThumbnail) && (
@@ -75,7 +79,11 @@ const FileTableRow = ({
         </div>
       ) : (
         <div className='f-c-file-table__td f-c-file-table__td--extension'>
-          <FileUploadProgress progress={file.attributes.progress} progressText={file.attributes.progressText} />
+          <FileUploadProgress
+            progress={file.attributes.progress}
+            progressText={file.attributes.progressText}
+            uploadState={file.attributes.uploadState}
+          />
           <span className='f-c-file-table__extension'>{file.attributes.extension}</span>
         </div>
       )}

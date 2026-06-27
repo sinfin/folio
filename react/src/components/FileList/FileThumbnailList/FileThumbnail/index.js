@@ -37,7 +37,11 @@ const FileThumbnail = ({ file, fileType, onClick, openFileModalOnClick, selectin
         )}
       </div>
 
-      <FileUploadProgress progress={file.attributes.progress} />
+      <FileUploadProgress
+        progress={file.attributes.progress}
+        progressText={file.attributes.progressText}
+        uploadState={file.attributes.uploadState}
+      />
 
       {massSelect ? (
         <React.Fragment>
