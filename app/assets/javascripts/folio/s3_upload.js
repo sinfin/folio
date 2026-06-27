@@ -6,14 +6,34 @@ window.Folio.S3Upload = {}
 
 window.Folio.S3Upload.i18n = {
   cs: {
+    uploadingToS3: 'Nahrávám do S3…',
+    uploadedToS3: 'Nahráno do S3…',
     finalizing: 'Dokončuji…',
-    processing: 'Probíhá zpracování souboru…'
+    processing: 'Probíhá zpracování souboru…',
+    saved: 'Uloženo',
+    failed: 'Selhalo'
   },
   en: {
+    uploadingToS3: 'Uploading to S3…',
+    uploadedToS3: 'Uploaded to S3…',
     finalizing: 'Finalizing…',
-    processing: 'The file is being processed…'
+    processing: 'The file is being processed…',
+    saved: 'Saved',
+    failed: 'Failed'
   }
 }
+
+window.Folio.S3Upload.UPLOAD_STATE_UPLOADING_TO_S3 = 'uploading_to_s3'
+window.Folio.S3Upload.UPLOAD_STATE_UPLOADED_TO_S3 = 'uploaded_to_s3'
+window.Folio.S3Upload.UPLOAD_STATE_PROCESSING = 'processing'
+window.Folio.S3Upload.UPLOAD_STATE_SAVED = 'saved'
+window.Folio.S3Upload.UPLOAD_STATE_FAILED = 'failed'
+
+window.Folio.S3Upload.uploadProgressAttributes = ({ progress, progressTextKey, uploadState }) => ({
+  progress,
+  progressText: window.Folio.i18n(window.Folio.S3Upload.i18n, progressTextKey),
+  uploadState
+})
 
 window.Folio.S3Upload.newUpload = ({ file }) => {
   return window.Folio.Api.apiPost('/folio/api/s3/before', { file_name: file.name })
@@ -48,6 +68,8 @@ window.Folio.S3Upload.createDropzone = ({
   fileHumanType,
   filterMessageBusMessages,
   onStart,
+  onS3UploadSuccess,
+  onProcessingStart,
   onProgress,
   onSuccess,
   onFailure,
@@ -88,7 +110,17 @@ window.Folio.S3Upload.createDropzone = ({
           onThumbnail(file.s3_path, file.dataURL)
         }
 
-        if (onStart) onStart(file.s3_path, { file_name: result.file_name, file_size: file.size })
+        if (onStart) {
+          onStart(file.s3_path, {
+            file_name: result.file_name,
+            file_size: file.size,
+            ...window.Folio.S3Upload.uploadProgressAttributes({
+              progress: 0,
+              progressTextKey: 'uploadingToS3',
+              uploadState: window.Folio.S3Upload.UPLOAD_STATE_UPLOADING_TO_S3
+            })
+          })
+        }
 
         done()
 
@@ -103,9 +135,25 @@ window.Folio.S3Upload.createDropzone = ({
     },
 
     success: function (file) {
+      if (onS3UploadSuccess) {
+        onS3UploadSuccess(file.s3_path, window.Folio.S3Upload.uploadProgressAttributes({
+          progress: 100,
+          progressTextKey: 'uploadedToS3',
+          uploadState: window.Folio.S3Upload.UPLOAD_STATE_UPLOADED_TO_S3
+        }))
+      }
+
       window.Folio.S3Upload.finishedUpload({
         s3Path: file.s3_path,
         type: fileType
+      }).then(() => {
+        if (onProcessingStart) {
+          onProcessingStart(file.s3_path, window.Folio.S3Upload.uploadProgressAttributes({
+            progress: 100,
+            progressTextKey: 'processing',
+            uploadState: window.Folio.S3Upload.UPLOAD_STATE_PROCESSING
+          }))
+        }
       }).catch((err) => {
         this.options.error(file, err.message)
       })
@@ -139,7 +187,16 @@ window.Folio.S3Upload.createDropzone = ({
         setTimeout(() => { dropzone.removeFile(file) }, 0)
       }
 
-      if (onFailure) onFailure(file.s3_path, message)
+      if (onFailure) {
+        onFailure(file.s3_path, message, {
+          ...window.Folio.S3Upload.uploadProgressAttributes({
+            progress: 100,
+            progressTextKey: 'failed',
+            uploadState: window.Folio.S3Upload.UPLOAD_STATE_FAILED
+          }),
+          errorMessage: message
+        })
+      }
     },
 
     processing: function (file) {
@@ -238,7 +295,13 @@ window.Folio.S3Upload.createDropzone = ({
           })
         }
 
-        if (onSuccess) onSuccess(msg.data.s3_path, msg.data.file)
+        if (onSuccess) {
+          onSuccess(msg.data.s3_path, msg.data.file, window.Folio.S3Upload.uploadProgressAttributes({
+            progress: 100,
+            progressTextKey: 'saved',
+            uploadState: window.Folio.S3Upload.UPLOAD_STATE_SAVED
+          }))
+        }
 
         return
       }
@@ -257,7 +320,18 @@ window.Folio.S3Upload.createDropzone = ({
           }
         })
 
-        if (onFailure) onFailure(msg.data.s3_path)
+        if (onFailure) {
+          const message = msg.data.errors && msg.data.errors.join(', ')
+
+          onFailure(msg.data.s3_path, message, {
+            ...window.Folio.S3Upload.uploadProgressAttributes({
+              progress: 100,
+              progressTextKey: 'failed',
+              uploadState: window.Folio.S3Upload.UPLOAD_STATE_FAILED
+            }),
+            errorMessage: message
+          })
+        }
       }
     }
   }

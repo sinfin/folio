@@ -18,16 +18,29 @@ const date = new Date()
 let month = date.getMonth() + 1
 if (month < 10) month = `0${month}`
 
+const SUCCESS_REMOVAL_DELAY = 600
+const FAILURE_REMOVAL_DELAY = 6000
+
 export const UploaderContext = React.createContext(() => {})
 
 class Uploader extends Component {
   constructor (props) {
     super(props)
     this.dropzoneDivRef = React.createRef()
+    this.uploadStateRemovalTimers = []
   }
 
   triggerFileInput = () => {
     window.Folio.S3Upload.triggerDropzone(this.dropzone)
+  }
+
+  scheduleUploadStateRemoval = (delay, callback) => {
+    const timer = window.setTimeout(() => {
+      this.uploadStateRemovalTimers = this.uploadStateRemovalTimers.filter((candidate) => candidate !== timer)
+      callback()
+    }, delay)
+
+    this.uploadStateRemovalTimers.push(timer)
   }
 
   componentDidMount () {
@@ -39,17 +52,39 @@ class Uploader extends Component {
       onStart: (s3Path, fileAttributes) => {
         this.props.dispatch(addDropzoneFile(this.props.fileType, s3Path, fileAttributes))
       },
-      onSuccess: (s3Path, fileFromApi) => {
+      onS3UploadSuccess: (s3Path, attributes) => {
         if (!this.props.uploads.dropzoneFiles[s3Path]) return
 
-        this.props.dispatch(removeDropzoneFile(this.props.fileType, s3Path))
-        this.props.dispatch(uploadedFile(this.props.fileType, fileFromApi))
-        this.props.dispatch(showTagger(this.props.fileType, fileFromApi.id))
+        this.props.dispatch(updateDropzoneFile(this.props.fileType, s3Path, attributes))
       },
-      onFailure: (s3Path) => {
+      onProcessingStart: (s3Path, attributes) => {
         if (!this.props.uploads.dropzoneFiles[s3Path]) return
 
-        this.props.dispatch(removeDropzoneFile(this.props.fileType, s3Path))
+        this.props.dispatch(updateDropzoneFile(this.props.fileType, s3Path, attributes))
+      },
+      onSuccess: (s3Path, fileFromApi, attributes) => {
+        if (!this.props.uploads.dropzoneFiles[s3Path]) return
+
+        if (attributes) {
+          this.props.dispatch(updateDropzoneFile(this.props.fileType, s3Path, attributes))
+        }
+
+        this.scheduleUploadStateRemoval(SUCCESS_REMOVAL_DELAY, () => {
+          this.props.dispatch(removeDropzoneFile(this.props.fileType, s3Path))
+          this.props.dispatch(uploadedFile(this.props.fileType, fileFromApi))
+          this.props.dispatch(showTagger(this.props.fileType, fileFromApi.id))
+        })
+      },
+      onFailure: (s3Path, _message, attributes) => {
+        if (!this.props.uploads.dropzoneFiles[s3Path]) return
+
+        if (attributes) {
+          this.props.dispatch(updateDropzoneFile(this.props.fileType, s3Path, attributes))
+        }
+
+        this.scheduleUploadStateRemoval(FAILURE_REMOVAL_DELAY, () => {
+          this.props.dispatch(removeDropzoneFile(this.props.fileType, s3Path))
+        })
       },
       onProgress: (s3Path, progress, progressText) => {
         if (!this.props.uploads.dropzoneFiles[s3Path]) return
@@ -78,6 +113,9 @@ class Uploader extends Component {
   }
 
   componentWillUnmount () {
+    this.uploadStateRemovalTimers.forEach((timer) => window.clearTimeout(timer))
+    this.uploadStateRemovalTimers = []
+
     window.Folio.S3Upload.destroyDropzone(this.dropzone)
     this.dropzone = null
   }
