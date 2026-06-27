@@ -57,6 +57,18 @@ class Folio::S3::BaseJob < Folio::ApplicationJob
     false
   end
 
+  def lock_key_arguments
+    options = arguments.first
+    return arguments unless options.respond_to?(:[])
+
+    s3_path = options[:s3_path] || options["s3_path"]
+    type = options[:type] || options["type"]
+
+    return arguments unless s3_path && type
+
+    [s3_path, type]
+  end
+
   private
     def broadcast_start(s3_path:, file_type:)
       broadcast({ s3_path:, type: "start", started_at: Time.current.to_i * 1000, file_type: })
@@ -87,7 +99,7 @@ class Folio::S3::BaseJob < Folio::ApplicationJob
     end
 
     def broadcast_replace_success(s3_path:, file:, file_type:)
-      broadcast({ type: "replace-success", file_id: file.id, file_type: })
+      broadcast({ s3_path:, type: "replace-success", file_id: file.id, file_type: })
     end
 
     def broadcast_replace_error(s3_path:, file:, error: nil, file_type:)
@@ -99,7 +111,7 @@ class Folio::S3::BaseJob < Folio::ApplicationJob
         errors = nil
       end
 
-      broadcast({ type: "replace-failure", file_id: file&.id, errors:, file_type: })
+      broadcast({ s3_path:, type: "replace-failure", file_id: file&.id, errors:, file_type: })
     end
 
     def register_processed_upload(s3_path:, file:, file_type:, replacing_file:)

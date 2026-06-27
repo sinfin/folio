@@ -10,6 +10,8 @@ window.Folio.Stimulus.register('f-c-files-show', class extends window.Stimulus.C
     aasmState: String
   }
 
+  static PROCESSING_RETRY_DELAYS = [10000, 30000, 60000, 120000]
+
   disconnect () {
     this.abortAjaxRequest()
     delete this.replacingFileData
@@ -60,6 +62,8 @@ window.Folio.Stimulus.register('f-c-files-show', class extends window.Stimulus.C
 
   uppyUploadSuccess (event) {
     this.loadingValue = true
+    this.pingCatchCounter = 0
+    this.processingRetryCounter = 0
 
     this.replacingFileData = {
       s3_path: event.detail.file.s3_path,
@@ -73,7 +77,10 @@ window.Folio.Stimulus.register('f-c-files-show', class extends window.Stimulus.C
   }
 
   pingS3After () {
-    window.Folio.Api.apiPost('/folio/api/s3/after', this.replacingFileData).catch((error) => {
+    window.Folio.Api.apiPost('/folio/api/s3/after', this.replacingFileData).then(() => {
+      this.pingCatchCounter = 0
+      this.scheduleProcessingRetry()
+    }).catch((error) => {
       this.pingCatchCounter = this.pingCatchCounter || 0
       this.pingCatchCounter += 1
 
@@ -92,6 +99,27 @@ window.Folio.Stimulus.register('f-c-files-show', class extends window.Stimulus.C
     })
   }
 
+  scheduleProcessingRetry () {
+    if (!this.replacingFileData) return
+
+    const attempt = this.processingRetryCounter || 0
+    const delay = this.constructor.PROCESSING_RETRY_DELAYS[attempt]
+
+    if (this.pingTimeout) window.clearTimeout(this.pingTimeout)
+
+    if (!delay) {
+      this.loadingValue = false
+      delete this.replacingFileData
+      window.FolioConsole.Ui.Flash.alert('Failed to process file: timed out')
+      return
+    }
+
+    this.pingTimeout = window.setTimeout(() => {
+      this.processingRetryCounter = attempt + 1
+      this.pingS3After()
+    }, delay)
+  }
+
   messageBusCallback (event) {
     const message = event.detail.message
 
@@ -104,6 +132,12 @@ window.Folio.Stimulus.register('f-c-files-show', class extends window.Stimulus.C
     }
 
     if (message.type !== 'Folio::S3::CreateFileJob') return
+
+    if (message.data.s3_path) {
+      if (!this.replacingFileData) return
+      if (message.data.s3_path !== this.replacingFileData.s3_path) return
+    }
+
     switch (message.data.type) {
       case 'replace-success':
         this.messageBusSuccess()
@@ -139,13 +173,21 @@ window.Folio.Stimulus.register('f-c-files-show', class extends window.Stimulus.C
   }
 
   messageBusSuccess (data) {
+    if (this.pingTimeout) window.clearTimeout(this.pingTimeout)
+    this.processingRetryCounter = 0
+    delete this.replacingFileData
     this.reloadFrame()
   }
 
   messageBusFailure (data) {
+    if (this.pingTimeout) window.clearTimeout(this.pingTimeout)
     this.loadingValue = false
+    this.processingRetryCounter = 0
     delete this.replacingFileData
-    window.alert(`Could not replace file: ${data.error}`)
+
+    const error = data.error || (data.errors && data.errors.join(', ')) || 'Unknown error'
+
+    window.alert(`Could not replace file: ${error}`)
   }
 })
 
@@ -154,7 +196,9 @@ if (window.Folio && window.Folio.MessageBus && window.Folio.MessageBus.callbacks
     if (!message) return
 
     if (message.type === 'Folio::S3::CreateFileJob') {
-      const selector = `.f-c-files-show[data-f-c-files-show-id-value="${message.data.file_id}"]`
+      const selector = message.data.file_id
+        ? `.f-c-files-show[data-f-c-files-show-id-value="${message.data.file_id}"]`
+        : '.f-c-files-show'
       const targets = document.querySelectorAll(selector)
 
       for (const target of targets) {

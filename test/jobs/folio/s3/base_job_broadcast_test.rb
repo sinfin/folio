@@ -78,4 +78,48 @@ class Folio::S3::BaseJobBroadcastTest < ActiveJob::TestCase
       job.send(:broadcast_replace_error, s3_path: "test/path", file: nil, error: StandardError.new("test error"), file_type: "Folio::File::Video")
     end
   end
+
+  test "broadcast_replace_success includes S3 path" do
+    file = create(:folio_file_image)
+    job = Folio::S3::CreateFileJob.new
+    job.instance_variable_set(:@message_bus_client_id, "test-client-123")
+    published_payloads = []
+
+    MessageBus.stub(:publish, ->(_channel, payload, client_ids:) { published_payloads << [payload, client_ids] }) do
+      job.send(:broadcast_replace_success,
+               s3_path: "test/path",
+               file:,
+               file_type: file.class.to_s)
+    end
+
+    payload, client_ids = published_payloads.last
+    data = JSON.parse(payload).fetch("data")
+
+    assert_equal ["test-client-123"], client_ids
+    assert_equal "replace-success", data.fetch("type")
+    assert_equal "test/path", data.fetch("s3_path")
+    assert_equal file.id, data.fetch("file_id")
+  end
+
+  test "broadcast_replace_error includes S3 path" do
+    job = Folio::S3::CreateFileJob.new
+    job.instance_variable_set(:@message_bus_client_id, "test-client-123")
+    published_payloads = []
+
+    MessageBus.stub(:publish, ->(_channel, payload, client_ids:) { published_payloads << [payload, client_ids] }) do
+      job.send(:broadcast_replace_error,
+               s3_path: "test/path",
+               file: nil,
+               error: StandardError.new("test error"),
+               file_type: "Folio::File::Image")
+    end
+
+    payload, client_ids = published_payloads.last
+    data = JSON.parse(payload).fetch("data")
+
+    assert_equal ["test-client-123"], client_ids
+    assert_equal "replace-failure", data.fetch("type")
+    assert_equal "test/path", data.fetch("s3_path")
+    assert_equal ["test error"], data.fetch("errors")
+  end
 end

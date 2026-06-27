@@ -95,6 +95,25 @@ class Folio::S3::CreateFileJobTest < ActiveJob::TestCase
     Rails.cache.delete(cache_key) if cache_key
   end
 
+  test "uses S3 path and type as uniqueness scope" do
+    image_job = build_upload_job(s3_path: "tmp/session/a/image.jpg",
+                                 type: "Folio::File::Image",
+                                 message_bus_client_id: "client-1")
+    same_upload_job = build_upload_job(s3_path: "tmp/session/a/image.jpg",
+                                       type: "Folio::File::Image",
+                                       message_bus_client_id: "client-2")
+    other_path_job = build_upload_job(s3_path: "tmp/session/b/image.jpg",
+                                      type: "Folio::File::Image",
+                                      message_bus_client_id: "client-1")
+    other_type_job = build_upload_job(s3_path: "tmp/session/a/image.jpg",
+                                      type: "Folio::File::Video",
+                                      message_bus_client_id: "client-1")
+
+    assert_equal image_job.lock_key_arguments, same_upload_job.lock_key_arguments
+    assert_not_equal image_job.lock_key_arguments, other_path_job.lock_key_arguments
+    assert_not_equal image_job.lock_key_arguments, other_type_job.lock_key_arguments
+  end
+
   test "video upload uses S3 server-side copy when on real S3 storage" do
     site = get_any_site
     s3_path = "uploads/test_video.mp4"
@@ -161,4 +180,9 @@ class Folio::S3::CreateFileJobTest < ActiveJob::TestCase
     assert_not job.send(:save_file_with_slug_retry)
     assert_equal 1, fake.save_calls
   end
+
+  private
+    def build_upload_job(**kwargs)
+      Folio::S3::CreateFileJob.new(attributes: {}, **kwargs)
+    end
 end

@@ -49,6 +49,80 @@ window.Folio.S3Upload.finishedUpload = ({ type, existingId, s3Path }) => {
 }
 
 window.Folio.S3Upload.previousDropzoneId = 0
+window.Folio.S3Upload.processingRetryDelays = [10000, 30000, 60000, 120000]
+window.Folio.S3Upload.processingRetryTimeouts = {}
+
+window.Folio.S3Upload.clearProcessingRetry = (s3Path) => {
+  if (!s3Path) return
+
+  const timeout = window.Folio.S3Upload.processingRetryTimeouts[s3Path]
+
+  if (timeout) {
+    window.clearTimeout(timeout)
+  }
+
+  delete window.Folio.S3Upload.processingRetryTimeouts[s3Path]
+}
+
+window.Folio.S3Upload.processingTimeoutMessage = () => {
+  if (document.documentElement.lang === 'cs') {
+    return 'Zpracování souboru se nepodařilo dokončit včas'
+  }
+
+  return 'The file could not be processed in time'
+}
+
+window.Folio.S3Upload.scheduleProcessingRetry = ({ type, existingId, s3Path, onFailure, attempt = 0 }) => {
+  if (!s3Path || !type) return
+
+  const delay = window.Folio.S3Upload.processingRetryDelays[attempt]
+
+  window.Folio.S3Upload.clearProcessingRetry(s3Path)
+
+  if (!delay) {
+    const message = window.Folio.S3Upload.processingTimeoutMessage()
+
+    if (onFailure) {
+      onFailure(s3Path, message, {
+        ...window.Folio.S3Upload.uploadProgressAttributes({
+          progress: 100,
+          progressTextKey: 'failed',
+          uploadState: window.Folio.S3Upload.UPLOAD_STATE_FAILED
+        }),
+        errorMessage: message
+      })
+    }
+
+    return
+  }
+
+  window.Folio.S3Upload.processingRetryTimeouts[s3Path] = window.setTimeout(() => {
+    window.Folio.S3Upload.finishedUpload({ type, existingId, s3Path }).then(() => {
+      window.Folio.S3Upload.scheduleProcessingRetry({
+        type,
+        existingId,
+        s3Path,
+        onFailure,
+        attempt: attempt + 1
+      })
+    }).catch((err) => {
+      window.Folio.S3Upload.clearProcessingRetry(s3Path)
+
+      const message = err && err.message ? err.message : window.Folio.S3Upload.processingTimeoutMessage()
+
+      if (onFailure) {
+        onFailure(s3Path, message, {
+          ...window.Folio.S3Upload.uploadProgressAttributes({
+            progress: 100,
+            progressTextKey: 'failed',
+            uploadState: window.Folio.S3Upload.UPLOAD_STATE_FAILED
+          }),
+          errorMessage: message
+        })
+      }
+    })
+  }, delay)
+}
 
 window.Folio.S3Upload.consolePreviewTemplate = () => `
   <div class="f-c-r-dropzone__preview">
@@ -154,6 +228,12 @@ window.Folio.S3Upload.createDropzone = ({
             uploadState: window.Folio.S3Upload.UPLOAD_STATE_PROCESSING
           }))
         }
+
+        window.Folio.S3Upload.scheduleProcessingRetry({
+          s3Path: file.s3_path,
+          type: fileType,
+          onFailure
+        })
       }).catch((err) => {
         this.options.error(file, err.message)
       })
@@ -281,6 +361,8 @@ window.Folio.S3Upload.createDropzone = ({
 
     switch (msg.data.type) {
       case 'success': {
+        window.Folio.S3Upload.clearProcessingRetry(msg.data.s3_path)
+
         if (dontRemoveFileOnSuccess) {
           dropzone.files.forEach((file) => {
             if (file.s3_path === msg.data.s3_path) {
@@ -305,7 +387,14 @@ window.Folio.S3Upload.createDropzone = ({
 
         return
       }
+      case 'replace-success': {
+        window.Folio.S3Upload.clearProcessingRetry(msg.data.s3_path)
+
+        return
+      }
       case 'failure': {
+        window.Folio.S3Upload.clearProcessingRetry(msg.data.s3_path)
+
         if (msg.data.errors && msg.data.errors.length) {
           if (window.FolioConsole && window.FolioConsole.Flash) {
             window.FolioConsole.Ui.Flash.alert(msg.data.errors.join('<br>'))
@@ -332,6 +421,26 @@ window.Folio.S3Upload.createDropzone = ({
             errorMessage: message
           })
         }
+
+        return
+      }
+      case 'replace-failure': {
+        window.Folio.S3Upload.clearProcessingRetry(msg.data.s3_path)
+
+        if (onFailure) {
+          const message = msg.data.errors && msg.data.errors.join(', ')
+
+          onFailure(msg.data.s3_path, message, {
+            ...window.Folio.S3Upload.uploadProgressAttributes({
+              progress: 100,
+              progressTextKey: 'failed',
+              uploadState: window.Folio.S3Upload.UPLOAD_STATE_FAILED
+            }),
+            errorMessage: message
+          })
+        }
+
+        return
       }
     }
   }
