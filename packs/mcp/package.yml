@@ -1,0 +1,7 @@
+# MCP (Model Context Protocol) pack configuration
+# Provides AI assistant integration via MCP server
+
+enforce_dependencies: true
+
+dependencies:
+  - "../.."  # depends on core Folio engine

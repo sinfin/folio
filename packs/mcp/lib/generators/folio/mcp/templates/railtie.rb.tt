@@ -1,0 +1,48 @@
+# frozen_string_literal: true
+
+module <%= application_namespace %>
+  module Mcp
+    class Railtie < ::Rails::Railtie
+      config.to_prepare do
+        next unless defined?(::Folio::Mcp)
+
+        ::Folio::Mcp.configure do |config|
+          # Define accessible resources
+          config.resources = {
+            pages: {
+              model: "Folio::Page",
+              allowed_types: %w[
+                Folio::Page
+              ],
+              fields: %i[title_cs title_en slug_cs slug_en perex_cs perex_en
+                         meta_title_cs meta_title_en meta_description_cs meta_description_en
+                         published locale],
+              tiptap_fields: %i[tiptap_content_cs tiptap_content_en],
+              cover_field: :cover,
+              allowed_actions: %i[read create update],
+              versioned: true,
+            },
+            files: {
+              model: "Folio::File::Image",
+              searchable: true,
+              uploadable: true,
+              allowed_actions: %i[read],
+            },
+            # "..."
+          }
+
+          # Supported locales for translations
+          config.locales = %i[cs en]
+
+          # Rate limiting (requests per minute)
+          config.rate_limit = 100
+
+          # Audit logging
+          config.audit_logger = -> (event) {
+            Rails.logger.tagged("MCP") { Rails.logger.info(event.to_json) }
+          }
+        end
+      end
+    end
+  end
+end

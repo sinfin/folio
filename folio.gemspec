@@ -75,8 +75,9 @@ Gem::Specification.new do |s|
   s.add_dependency "sass-rails"
   s.add_dependency "show_for"
   s.add_dependency "httpparty"
-  s.add_dependency "sidekiq-cron", "~> 1.10.1"
-  s.add_dependency "sidekiq", "~> 6.5"
+  s.add_dependency "connection_pool", "~> 2.5" # Pin to 2.x - connection_pool 3.0.x has breaking changes
+  s.add_dependency "sidekiq-cron", "~> 2.0"
+  s.add_dependency "sidekiq", "~> 7.0"
   s.add_dependency "activejob-uniqueness", ">= 0.3.0"
   s.add_dependency "simple_form"
   s.add_dependency "sitemap_generator"
@@ -92,8 +93,11 @@ Gem::Specification.new do |s|
   s.add_dependency "terser"
   s.add_dependency "view_component", "~> 4.0"
   s.add_dependency "turbo-rails"
+  # MCP (Model Context Protocol) server for AI integration
+  s.add_dependency "mcp"
 
   s.add_development_dependency "packwerk"
+
   s.add_development_dependency "better_errors"
   s.add_development_dependency "binding_of_caller" # used by BetterErrors
   s.add_development_dependency "capybara"

@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 
 - date_time input time format to match backend HH:mm -> H:mm
 - position controls in paginated catalogues now work across page boundaries - items can be moved to adjacent pages and the view automatically scrolls to show the moved item
+- MCP Streamable HTTP notifications now return `202 Accepted` without a JSON body, fixing Codex startup handshake failures after `notifications/initialized`
 
 ## [7.1.2] - 2026-01-12
 

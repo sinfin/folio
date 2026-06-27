@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "folio-<%= application_namespace_path.dasherize %>-local": {
+      "type": "http",
+      "url": "http://localhost:3000/folio/api/mcp",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    }
+  }
+}

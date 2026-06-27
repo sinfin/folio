@@ -2,7 +2,7 @@
 
 module Folio
   mattr_accessor :enabled_packs
-  self.enabled_packs = [:cache]
+  self.enabled_packs ||= [:cache]
 
   LANGUAGES = {
     cs: "CZ",
@@ -11,7 +11,7 @@ module Folio
     pl: "PL",
     es: "ES",
     en: "GB",
-    en_US: "US"
+    en_US: "US",
   }.freeze
 
   EMAIL_REGEXP = URI::MailTo::EMAIL_REGEXP # Devise.email_regexp
