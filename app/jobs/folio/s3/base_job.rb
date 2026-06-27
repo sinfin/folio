@@ -1,13 +1,34 @@
 # frozen_string_literal: true
 
+require "digest"
+
 class Folio::S3::BaseJob < Folio::ApplicationJob
   include Folio::S3::Client
+
+  PROCESSED_UPLOAD_CACHE_EXPIRES_IN = 1.hour
+  PROCESSED_UPLOAD_CACHE_PREFIX = "folio/s3/processed_upload"
 
   queue_as :default
 
   retry_on StandardError, wait: :exponentially_longer, attempts: 1
 
   unique :until_and_while_executing
+
+  def self.processed_upload_cache_key(s3_path)
+    "#{PROCESSED_UPLOAD_CACHE_PREFIX}/#{Digest::SHA256.hexdigest(s3_path)}"
+  end
+
+  def self.processed_upload_data(s3_path:, type:)
+    data = Rails.cache.read(processed_upload_cache_key(s3_path))
+    return unless data
+    return unless data["file_type"] == type
+
+    data
+  end
+
+  def self.processed_upload?(s3_path:, type:)
+    processed_upload_data(s3_path:, type:).present?
+  end
 
   def perform(s3_path:, type:, message_bus_client_id: nil, existing_id: nil, web_session_id: nil, user_id: nil, attributes: {})
     return unless s3_path
@@ -16,12 +37,10 @@ class Folio::S3::BaseJob < Folio::ApplicationJob
     @message_bus_client_id = message_bus_client_id
 
     if !self.class.multipart? && !test_aware_s3_exists?(s3_path:)
-      # S3 file doesn't exist - broadcast failure so frontend can update UI
-      if existing_id.present?
-        broadcast_replace_error(s3_path:, file: nil, error: StandardError.new("File not found on S3"), file_type: type)
-      else
-        broadcast_error(file: nil, s3_path:, error: StandardError.new("File not found on S3"), file_type: type)
-      end
+      return if broadcast_processed_upload_success(s3_path:, type:)
+
+      log_missing_s3_upload(s3_path:, type:, existing_id:, web_session_id:, user_id:, message_bus_client_id:)
+      broadcast_missing_s3_upload_error(s3_path:, existing_id:, type:)
       return
     end
 
@@ -81,6 +100,59 @@ class Folio::S3::BaseJob < Folio::ApplicationJob
       end
 
       broadcast({ type: "replace-failure", file_id: file&.id, errors:, file_type: })
+    end
+
+    def register_processed_upload(s3_path:, file:, file_type:, replacing_file:)
+      Rails.cache.write(processed_upload_cache_key(s3_path),
+                        {
+                          "file_id" => file.id,
+                          "file_type" => file_type,
+                          "replacing_file" => replacing_file,
+                        },
+                        expires_in: PROCESSED_UPLOAD_CACHE_EXPIRES_IN)
+    end
+
+    def processed_upload_cache_key(s3_path)
+      self.class.processed_upload_cache_key(s3_path)
+    end
+
+    def broadcast_processed_upload_success(s3_path:, type:)
+      data = self.class.processed_upload_data(s3_path:, type:)
+      return false unless data
+
+      file = type.safe_constantize&.find_by(id: data["file_id"])
+      return false unless file
+
+      if data["replacing_file"]
+        broadcast_replace_success(file:, s3_path:, file_type: type)
+      else
+        broadcast_success(file:, s3_path:, file_type: type)
+      end
+
+      true
+    end
+
+    def log_missing_s3_upload(s3_path:, type:, existing_id:, web_session_id:, user_id:, message_bus_client_id:)
+      details = {
+        s3_path:,
+        type:,
+        existing_id:,
+        web_session_id:,
+        user_id:,
+        message_bus_client_id:,
+      }.compact
+
+      Rails.logger.warn("[Folio::S3::CreateFileJob] File not found on S3 #{details.to_json}")
+    end
+
+    def broadcast_missing_s3_upload_error(s3_path:, existing_id:, type:)
+      error = StandardError.new("File not found on S3")
+
+      if existing_id.present?
+        broadcast_replace_error(s3_path:, file: nil, error:, file_type: type)
+      else
+        broadcast_error(file: nil, s3_path:, error:, file_type: type)
+      end
     end
 
     def broadcast(hash)

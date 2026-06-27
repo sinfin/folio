@@ -104,7 +104,7 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
       message_bus_client_id = params.require(:message_bus_client_id)
       file_klass = type.safe_constantize
 
-      if file_klass && allowed_klass?(file_klass) && test_aware_s3_exists?(s3_path: @s3_path)
+      if file_klass && allowed_klass?(file_klass) && s3_upload_ready_for_after?(job_klass, type)
         job_klass.perform_later(s3_path: @s3_path,
                                 type:,
                                 message_bus_client_id:,
@@ -116,6 +116,11 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
       else
         render json: {}, status: 422
       end
+    end
+
+    def s3_upload_ready_for_after?(job_klass, type)
+      test_aware_s3_exists?(s3_path: @s3_path) ||
+        job_klass.processed_upload?(s3_path: @s3_path, type:)
     end
 
     def site_for_new_files

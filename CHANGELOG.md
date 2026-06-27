@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- **Direct S3 upload retries**: `Folio::S3::CreateFileJob` now records successful temp S3 uploads in a short-lived cache so late `/folio/api/s3/after` retries can rebroadcast success for an already-created file instead of surfacing a misleading `File not found on S3`. Real missing temp objects now include user/session/path diagnostics in the Rails log.
 - **Embed dark-mode background**: the embed now derives its background from the page's actual color mode (`data-bs-theme`) on load instead of relying on the OS `prefers-color-scheme`. The iframe reads the embedder's theme directly (`data/embed/source/embed.js`; falls back to `prefers-color-scheme` for cross-origin embedders) — fixes the reversed background on Safari, which does not propagate the embedder's color-scheme into same-origin iframes. The `f-embed-box` wrapper and loader now also sync to the current theme on `connect` (`box_component.js`) instead of staying on the server-rendered light color until the user toggles.
 - **AI current form snapshots**: Keep full atom payloads under `record_class.atom_keys` instead of only atom `data` leaves, so host apps using direct atom attributes can build prompt context from unsaved atom-backed forms.
 

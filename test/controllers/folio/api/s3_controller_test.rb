@@ -37,6 +37,29 @@ class Folio::Api::S3ControllerTest < Folio::BaseControllerTest
       end
     end
 
+    test "#{klass} - after enqueues job for already processed missing S3 upload" do
+      file = create(klass.model_name.singular)
+      s3_path = "tmp_folio_file_uploads/session/test/already-processed/#{klass.model_name.singular}.gif"
+      job = Folio::S3::CreateFileJob.new
+
+      Rails.cache.write(job.send(:processed_upload_cache_key, s3_path),
+                        { "file_id" => file.id, "file_type" => klass.to_s, "replacing_file" => false },
+                        expires_in: 1.hour)
+
+      assert_enqueued_jobs(1, only: Folio::S3::CreateFileJob) do
+        post after_folio_api_s3_path,
+             params: {
+               s3_path:,
+               type: klass.to_s,
+               existing_id: nil,
+               message_bus_client_id: "foo",
+             }
+        assert_response(:ok)
+      end
+    ensure
+      Rails.cache.delete(job.send(:processed_upload_cache_key, s3_path)) if job && s3_path
+    end
+
     test "#{klass} - after with existing id" do
       file = create(klass.model_name.singular, file_name: "foo.gif")
 

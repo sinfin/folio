@@ -67,6 +67,34 @@ class Folio::S3::CreateFileJobTest < ActiveJob::TestCase
     FileUtils.rm_f(source_path) if source_path
   end
 
+  test "successful image upload registers processed S3 path" do
+    s3_path = "processed_upload/test_image.gif"
+    source_path = "#{Folio::S3::Client::LOCAL_TEST_PATH}/#{s3_path}"
+    FileUtils.mkdir_p(File.dirname(source_path))
+    FileUtils.cp(Folio::Engine.root.join("test/fixtures/folio/test.gif"), source_path)
+
+    site = get_any_site
+
+    assert_difference("Folio::File::Image.count", 1) do
+      Folio::S3::CreateFileJob.perform_now(
+        s3_path:,
+        type: "Folio::File::Image",
+        attributes: { site_id: site.id }
+      )
+    end
+
+    file = Folio::File::Image.order(:created_at).last
+    cache_key = Folio::S3::CreateFileJob.new.send(:processed_upload_cache_key, s3_path)
+    cached = Rails.cache.read(cache_key)
+
+    assert_equal file.id, cached["file_id"]
+    assert_equal file.class.to_s, cached["file_type"]
+    assert_equal false, cached["replacing_file"]
+  ensure
+    FileUtils.rm_f(source_path) if source_path
+    Rails.cache.delete(cache_key) if cache_key
+  end
+
   test "video upload uses S3 server-side copy when on real S3 storage" do
     site = get_any_site
     s3_path = "uploads/test_video.mp4"

@@ -28,6 +28,8 @@ class Folio::S3::CreateFileJob < Folio::S3::BaseJob
       end
 
       if save_file_with_slug_retry
+        register_processed_upload(s3_path:, file: @file, file_type: klass.to_s, replacing_file:)
+
         # Trigger async metadata extraction for image files if not already extracted synchronously
         if @file.is_a?(Folio::File::Image)
           trigger_metadata_extraction(@file, replacing_file: replacing_file)
@@ -73,6 +75,8 @@ class Folio::S3::CreateFileJob < Folio::S3::BaseJob
       @file.file_mime_type = head.content_type.presence || Marcel::MimeType.for(name: sanitized_name)
 
       if save_file_with_slug_retry
+        register_processed_upload(s3_path:, file: @file, file_type: klass.to_s, replacing_file:)
+
         if replacing_file
           broadcast_replace_success(file: @file, s3_path:, file_type: klass.to_s)
         else
