@@ -12,7 +12,7 @@ class Folio::S3::BaseJob < Folio::ApplicationJob
 
   retry_on StandardError, wait: :exponentially_longer, attempts: 1
 
-  unique :until_and_while_executing
+  unique :while_executing, lock_ttl: 10.minutes
 
   def self.processed_upload_cache_key(s3_path)
     "#{PROCESSED_UPLOAD_CACHE_PREFIX}/#{Digest::SHA256.hexdigest(s3_path)}"

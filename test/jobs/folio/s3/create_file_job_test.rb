@@ -114,6 +114,17 @@ class Folio::S3::CreateFileJobTest < ActiveJob::TestCase
     assert_not_equal image_job.lock_key_arguments, other_type_job.lock_key_arguments
   end
 
+  test "uses runtime-only uniqueness lock for direct uploads" do
+    assert_equal ActiveJob::Uniqueness::Strategies::WhileExecuting,
+                 Folio::S3::CreateFileJob.lock_strategy_class
+    assert_equal 10.minutes, Folio::S3::CreateFileJob.lock_options[:lock_ttl]
+  end
+
+  test "keeps delete jobs locked from enqueue to execution" do
+    assert_equal ActiveJob::Uniqueness::Strategies::UntilAndWhileExecuting,
+                 Folio::S3::DeleteJob.lock_strategy_class
+  end
+
   test "video upload uses S3 server-side copy when on real S3 storage" do
     site = get_any_site
     s3_path = "uploads/test_video.mp4"
