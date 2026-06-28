@@ -12,7 +12,13 @@ window.FolioConsole = window.FolioConsole || {}
 
 window.FolioConsole.ConsoleUrlBeacon = {
   currentUrl () {
-    return window.location.href.split('?')[0]
+    // prefer the canonical record presence URL (rendered server-side) so the
+    // edit page and a form re-rendered after a failed update share one URL;
+    // fall back to the location for non-record console pages
+    const meta = document.querySelector('meta[name="folio-console-presence-url"]')
+    const presenceUrl = meta && meta.getAttribute('content')
+
+    return presenceUrl || window.location.href.split('?')[0]
   },
 
   apiUrl (name) {
