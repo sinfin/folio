@@ -456,6 +456,16 @@ class Folio::File < Folio::ApplicationRecord
     update_columns(updates) if updates.any?
   end
 
+  # A purely numeric slug (e.g. derived from a file named "349444.jpg") would be
+  # resolved by FriendlyId ahead of the file whose primary key equals that number
+  # — friendly.find("349444") would return the slug owner instead of id 349444.
+  # Force a neutral, non-numeric slug so the slug and id namespaces never overlap.
+  # NOTE: must stay public — FriendlyId::Candidates calls it on the record.
+  def normalize_friendly_id(value)
+    normalized = super
+    normalized.to_s.match?(/\A\d+\z/) ? neutral_slug : normalized
+  end
+
   private
     def file_presigned_url(expires_in: 1.hour.to_i)
       s3_object_key = [dragonfly_s3_root_path, file_uid].compact_blank.join("/")
