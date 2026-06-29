@@ -11,6 +11,11 @@ class Folio::Console::Files::UsageConstraintsComponent < Folio::Console::Applica
 
   def allowed_sites_collection
     collection = [[I18n.t("folio.console.files.usage_constraints_component.allowed_sites_blank"), ""]]
-    collection + Folio::Site.ordered.map { |site| [site.to_label, site.id] }
+    collection + Folio::Site.ordered.map { |site| [allowed_site_label(site), site.id] }
   end
+
+  private
+    def allowed_site_label(site)
+      @file.media_source&.site_label_with_max_usage_override(site) || site.to_label
+    end
 end
