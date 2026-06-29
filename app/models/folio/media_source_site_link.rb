@@ -8,14 +8,6 @@ class Folio::MediaSourceSiteLink < ApplicationRecord
   validates :media_source_id, uniqueness: { scope: :site_id }
   validates :max_usage_count, numericality: { greater_than: 0, allow_nil: true }
 
-  def effective_licence
-    licence.presence || media_source.licence
-  end
-
-  def effective_copyright_text
-    copyright_text.presence || media_source.copyright_text
-  end
-
   def effective_max_usage_count
     max_usage_count.presence || media_source.max_usage_count
   end

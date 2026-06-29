@@ -152,6 +152,33 @@ class Folio::File::HasUsageConstraintsTest < ActiveSupport::TestCase
     assert_equal 5, image.attribution_max_usage_count
   end
 
+  test "prefills current site max usage count and global metadata when media source is assigned" do
+    with_sharing(true) do
+      ms = media_source(title: "Getty Images")
+      ms.update!(
+        licence: "Commercial License",
+        copyright_text: "© 2024 Getty Images",
+        max_usage_count: 5
+      )
+      ms.media_source_site_links.create!(
+        site: @site,
+        max_usage_count: 3
+      )
+
+      image = img(
+        attribution_source: ms.title,
+        attribution_licence: nil,
+        attribution_copyright: nil,
+        attribution_max_usage_count: nil
+      )
+
+      assert_equal ms, image.media_source
+      assert_equal "Commercial License", image.attribution_licence
+      assert_equal "© 2024 Getty Images", image.attribution_copyright
+      assert_equal 3, image.attribution_max_usage_count
+    end
+  end
+
   test "assigns media source by normalized attribution source without changing stored source" do
     ms = media_source(title: "Zdrój")
     image = img(attribution_source: "Zdroj")

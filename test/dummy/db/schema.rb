@@ -400,8 +400,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_19_104318) do
     t.bigint "site_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "licence"
-    t.string "copyright_text"
     t.integer "max_usage_count"
     t.index ["media_source_id", "site_id"], name: "index_folio_media_source_site_links_unique", unique: true
     t.index ["media_source_id"], name: "index_folio_media_source_site_links_on_media_source_id"

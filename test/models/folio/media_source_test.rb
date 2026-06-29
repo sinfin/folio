@@ -36,36 +36,24 @@ class Folio::MediaSourceTest < ActiveSupport::TestCase
     assert_equal 2, source_with_count.assigned_media_count
   end
 
-  test "site rules inherit blank values from media source" do
+  test "site rules inherit max usage count from media source" do
     site = create(:dummy_site)
-    media_source = create(:folio_media_source,
-                          licence: "Parent licence",
-                          copyright_text: "Parent copyright",
-                          max_usage_count: 3)
+    media_source = create(:folio_media_source, max_usage_count: 3)
 
     media_source.media_source_site_links.create!(site:)
 
-    assert_equal "Parent licence", media_source.effective_licence(site:)
-    assert_equal "Parent copyright", media_source.effective_copyright_text(site:)
     assert_equal 3, media_source.effective_max_usage_count(site:)
   end
 
-  test "site rules can override media source values" do
+  test "site rules can override max usage count" do
     site = create(:dummy_site)
-    media_source = create(:folio_media_source,
-                          licence: "Parent licence",
-                          copyright_text: "Parent copyright",
-                          max_usage_count: 3)
+    media_source = create(:folio_media_source, max_usage_count: 3)
 
     media_source.media_source_site_links.create!(
       site:,
-      licence: "Site licence",
-      copyright_text: "Site copyright",
       max_usage_count: 1
     )
 
-    assert_equal "Site licence", media_source.effective_licence(site:)
-    assert_equal "Site copyright", media_source.effective_copyright_text(site:)
     assert_equal 1, media_source.effective_max_usage_count(site:)
   end
 
@@ -82,7 +70,7 @@ class Folio::MediaSourceTest < ActiveSupport::TestCase
       site: oldest_site,
       created_at: 2.hours.ago
     )
-    oldest_link.update!(licence: "Edited licence")
+    oldest_link.update!(max_usage_count: 2)
 
     assert_equal [oldest_link, newest_link], media_source.reload.media_source_site_links.to_a
   end

@@ -188,14 +188,6 @@ module Folio::File::HasUsageConstraints
     end
   end
 
-  def effective_attribution_licence(site: Folio::Current.site)
-    media_source&.effective_licence(site:) || attribution_licence
-  end
-
-  def effective_attribution_copyright(site: Folio::Current.site)
-    media_source&.effective_copyright_text(site:) || attribution_copyright
-  end
-
   def effective_attribution_max_usage_count(site: Folio::Current.site)
     media_source&.effective_max_usage_count(site:) || attribution_max_usage_count
   end
@@ -260,12 +252,12 @@ module Folio::File::HasUsageConstraints
 
     def copy_media_source_data
       {
-        attribution_licence: :licence,
-        attribution_copyright: :copyright_text,
-        attribution_max_usage_count: :max_usage_count
-      }.each do |file_attr, media_source_attr|
-        if media_source.send(media_source_attr).present?
-          self.send("#{file_attr}=", media_source.send(media_source_attr))
+        attribution_licence: media_source.licence,
+        attribution_copyright: media_source.copyright_text,
+        attribution_max_usage_count: media_source.effective_max_usage_count(site: Folio::Current.site)
+      }.each do |file_attr, value|
+        if value.present?
+          self.send("#{file_attr}=", value)
         end
       end
 

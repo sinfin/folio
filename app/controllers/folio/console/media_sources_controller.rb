@@ -19,7 +19,7 @@ class Folio::Console::MediaSourcesController < Folio::Console::BaseController
                       :licence,
                       :copyright_text,
                       :max_usage_count,
-                      media_source_site_links_attributes: %w[id _destroy site_id licence copyright_text max_usage_count])
+                      media_source_site_links_attributes: %w[id _destroy site_id max_usage_count])
       else
         params.require(:media_source)
               .permit(:title,
