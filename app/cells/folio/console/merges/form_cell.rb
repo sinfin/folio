@@ -8,8 +8,8 @@ class Folio::Console::Merges::FormCell < Folio::ConsoleCell
   def form(&block)
     opts = {
       url: controller.console_merge_path(model.klass,
-                                         model.original,
-                                         model.duplicate,
+                                         model.original.id,
+                                         model.duplicate.id,
                                          url: params[:url]),
       html: { class: "f-c-merges-form__form" },
       method: :post,

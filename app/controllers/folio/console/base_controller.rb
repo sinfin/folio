@@ -11,6 +11,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
   before_action :authenticate_user!
   before_action :custom_authorize_user!
 
+  before_action :redirect_legacy_friendly_id_console_url
   before_action :add_root_breadcrumb
 
   before_action :update_current_user_console_url
@@ -525,16 +526,14 @@ class Folio::Console::BaseController < Folio::ApplicationController
       name = folio_console_record_variable_name(plural: false)
       return if instance_variable_get(name).present?
 
-      if @klass.respond_to?(:friendly)
-        instance_variable_set(name, @klass.by_site(allowed_record_sites).friendly.find(params[:id]))
-      else
-        instance_variable_set(name, @klass.by_site(allowed_record_sites).find(params[:id]))
-      end
+      record = find_console_resource(@klass.by_site(allowed_record_sites), params[:id])
+      instance_variable_set(name, record)
     end
 
     def load_belongs_to_site_through_resource
       through_record_name = folio_console_controller_for_through.constantize.model_name.element
-      param = params["#{through_record_name}_id".to_sym]
+      param_name = :"#{through_record_name}_id"
+      param = params[param_name]
 
       return unless param.present?
 
@@ -543,10 +542,46 @@ class Folio::Console::BaseController < Folio::ApplicationController
 
       through_klass = folio_console_controller_for_through.constantize
 
-      if through_klass.respond_to?(:friendly)
-        instance_variable_set(name, through_klass.by_site(allowed_record_sites).friendly.find(param))
+      record = find_console_resource(through_klass.by_site(allowed_record_sites), param)
+      instance_variable_set(name, record)
+    end
+
+    def find_console_resource(scope, param)
+      raise ActiveRecord::RecordNotFound unless console_numeric_id?(param)
+
+      scope.find_by!(id: param)
+    end
+
+    def console_numeric_id?(param)
+      param.to_s.match?(/\A\d+\z/)
+    end
+
+    def legacy_friendly_id_console_url_request?
+      request.get? && !request.format.json?
+    end
+
+    def redirect_legacy_friendly_id_console_url
+      return unless legacy_friendly_id_console_url_request?
+      return unless params[:id].present?
+      return if console_numeric_id?(params[:id])
+      return unless @klass&.respond_to?(:friendly)
+
+      record = console_resource_scope.friendly.find(params[:id])
+
+      url_options = request.query_parameters.symbolize_keys.merge(action: action_name,
+                                                                  id: record.id,
+                                                                  only_path: false)
+      location = safe_url_for(url_options)
+      raise ActionController::UrlGenerationError, url_options.inspect unless location
+
+      redirect_to location
+    end
+
+    def console_resource_scope
+      if @klass.try(:has_belongs_to_site?)
+        @klass.by_site(allowed_record_sites)
       else
-        instance_variable_set(name, through_klass.by_site(allowed_record_sites).find(param))
+        @klass.all
       end
     end
 

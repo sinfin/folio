@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- **Console record URLs**: Console/admin member URLs now use immutable database IDs instead of FriendlyId slugs, including nested route arrays and merge URLs. Public/frontend URLs continue to use FriendlyId slugs, and legacy slug-based console GET URLs redirect to the ID URL.
 - **Console private attachments**: Replace the Dropzone/S3Upload add flow with `Folio::UppyComponent`, preserving nested attachment ordering/destroy behavior and hiding move arrows in single-attachment mode.
 
 ### Fixed

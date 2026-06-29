@@ -7,7 +7,7 @@ class Folio::Console::MergesControllerTest < Folio::Console::BaseControllerTest
     original = create(:folio_page)
     duplicate = create(:folio_page)
 
-    get new_console_merge_path("Folio::Page", original, duplicate)
+    get new_console_merge_path("Folio::Page", original.id, duplicate.id)
 
     assert_select ".f-c-merges-form__form"
     assert_select ".f-c-merges-form__invalid", false
@@ -19,7 +19,7 @@ class Folio::Console::MergesControllerTest < Folio::Console::BaseControllerTest
     original.update_column(:title, nil)
     assert_not(original.valid?)
 
-    get new_console_merge_path("Folio::Page", original, duplicate)
+    get new_console_merge_path("Folio::Page", original.id, duplicate.id)
 
     assert_select ".f-c-merges-form__form", false
     assert_select ".f-c-merges-form__invalid"
@@ -29,7 +29,7 @@ class Folio::Console::MergesControllerTest < Folio::Console::BaseControllerTest
     original = create(:folio_page, title: "foo")
     duplicate = create(:folio_page, title: "bar")
 
-    post console_merge_path("Folio::Page", original, duplicate), params: {
+    post console_merge_path("Folio::Page", original.id, duplicate.id), params: {
       merge: {
         title: Folio::Merger::DUPLICATE,
       }
@@ -45,7 +45,7 @@ class Folio::Console::MergesControllerTest < Folio::Console::BaseControllerTest
     duplicate = create(:folio_page, title: "bar")
 
     url = "/foo/bar/baz"
-    post console_merge_path("Folio::Page", original, duplicate, url:), params: {
+    post console_merge_path("Folio::Page", original.id, duplicate.id, url:), params: {
       merge: {
         title: Folio::Merger::DUPLICATE,
       }
@@ -57,7 +57,7 @@ class Folio::Console::MergesControllerTest < Folio::Console::BaseControllerTest
     original = create(:folio_page, title: "foo")
 
     url = "/foo/bar/baz"
-    get new_console_merge_path("Folio::Page", original, original, url:)
+    get new_console_merge_path("Folio::Page", original.id, original.id, url:)
     assert_redirected_to console_pages_path
   end
 end
