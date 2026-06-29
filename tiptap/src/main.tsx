@@ -87,6 +87,7 @@ window.Folio.Tiptap.init = (props) => {
             : folioTiptapConfigDefaults
         }
         readonly={props.readonly}
+        defaultResponsivePreview={props.defaultResponsivePreview}
         initialScrollTop={props.scrollTop || null}
         autosaveIndicatorInfo={props.autosaveIndicatorInfo}
       />
@@ -143,6 +144,7 @@ window.addEventListener("message", (e) => {
         folioTiptapConfig: e.data.folioTiptapConfig,
         content: e.data.content,
         readonly: !!e.data.readonly,
+        defaultResponsivePreview: !!e.data.defaultResponsivePreview,
         scrollTop: e.data.tiptapScrollTop || 0,
         autosaveIndicatorInfo: e.data.autosaveIndicatorInfo,
       });

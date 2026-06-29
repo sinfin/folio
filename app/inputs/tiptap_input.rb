@@ -22,6 +22,7 @@ class TiptapInput < SimpleForm::Inputs::StringInput
                         latest_revision_at: latest_revision_at&.iso8601,
                         has_unsaved_changes: has_unsaved_changes?,
                         readonly: @builder.template.instance_variable_get(:@audited_audit).present?,
+                        default_responsive_preview: default_responsive_preview,
                         tiptap_config_json:,
                         tiptap_content_json_structure_json: Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE.to_json,
                       }.compact,
@@ -66,6 +67,13 @@ class TiptapInput < SimpleForm::Inputs::StringInput
   end
 
   private
+    # When the current user opted into "mobile first" editing, start the editor
+    # in the responsive (mobile) preview. Returns nil when unset so the value is
+    # compacted away and the JS controller falls back to its desktop default.
+    def default_responsive_preview
+      Folio::Current.user&.console_preferences&.dig("mobile_first")
+    end
+
     def tiptap_config_json
       (@builder.object.try(:tiptap_config, attribute_name: attribute_name) || Folio::Tiptap.config).to_input_json
     end

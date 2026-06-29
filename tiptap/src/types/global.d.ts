@@ -173,6 +173,7 @@ declare global {
           onUpdate?: (content: { editor: TiptapEditor }) => void;
           content?: import("@tiptap/react").JSONContent;
           readonly: boolean;
+          defaultResponsivePreview?: boolean;
           scrollTop?: number;
           autosaveIndicatorInfo?: FolioTiptapAutosaveIndicatorInfo;
         }) => ReturnType<typeof import("react-dom/client").createRoot>;

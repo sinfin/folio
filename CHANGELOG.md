@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- **Tiptap default responsive preview**: the block editor can start in the mobile (responsive) preview when the host app sets the current user's `mobile_first` console preference. The value flows from `TiptapInput` through the Stimulus controller to the editor's initial responsive-preview state; the toolbar toggle still switches back and the manual choice is not persisted. Applies only to the block editor (rich-text fields have no responsive toggle).
 - **Console collection selects**: Add `filterable: true` for local Select2 filtering over pre-rendered collection options and grouped selects, preserving existing `remote:` autocomplete behavior.
 - **React ordered multi-select**: Support local `collection:` options, including grouped options, for ordered relation pickers that should filter without remote autocomplete.
 
