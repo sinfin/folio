@@ -50,6 +50,16 @@ class Folio::MediaSource < Folio::ApplicationRecord
     rule_for_site(site)&.effective_max_usage_count || max_usage_count
   end
 
+  def site_label_with_max_usage_override(site)
+    max_usage_count = rule_for_site(site)&.max_usage_count
+
+    if max_usage_count.present?
+      "#{site.to_label} (#{max_usage_count})"
+    else
+      site.to_label
+    end
+  end
+
   def indestructible_reason
     return nil unless assigned_media_count.positive?
     I18n.t("folio.media_source.cannot_destroy_with_assigned_media", count: assigned_media_count)

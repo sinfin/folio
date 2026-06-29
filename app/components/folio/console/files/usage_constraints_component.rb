@@ -16,12 +16,6 @@ class Folio::Console::Files::UsageConstraintsComponent < Folio::Console::Applica
 
   private
     def allowed_site_label(site)
-      max_usage_count = @file.media_source&.rule_for_site(site)&.max_usage_count
-
-      if max_usage_count.present?
-        "#{site.to_label} (#{max_usage_count})"
-      else
-        site.to_label
-      end
+      @file.media_source&.site_label_with_max_usage_override(site) || site.to_label
     end
 end
