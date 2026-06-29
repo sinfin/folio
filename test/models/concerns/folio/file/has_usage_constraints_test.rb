@@ -250,7 +250,7 @@ class Folio::File::HasUsageConstraintsTest < ActiveSupport::TestCase
     end
   end
 
-  test "site-specific media source max usage blocks second published usage on same site" do
+  test "site-specific media source max usage applies current site override when validating" do
     with_sharing(true) do
       ms = media_source(title: "Wire")
       ms.media_source_site_links.create!(site: @site, max_usage_count: 1)
@@ -264,7 +264,14 @@ class Folio::File::HasUsageConstraintsTest < ActiveSupport::TestCase
       second_article.published = true
 
       assert_not second_article.valid?
-      assert second_article.errors[:base].any? { |error| error.include?(image.file_name) }
+      assert_includes second_article.errors[:base],
+                      I18n.t("errors.messages.cannot_publish_with_files_over_usage_limit",
+                             name: image.file_name,
+                             limit: 1)
+      assert_not_includes second_article.errors[:base],
+                          I18n.t("errors.messages.cannot_publish_with_files_over_usage_limit",
+                                 name: image.file_name,
+                                 limit: ms.max_usage_count)
     end
   end
 
