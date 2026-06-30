@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- **Nested fields**: `folio_nested_fields` now supports `hide_selected_value_for:` to hide values already selected in visible sibling rows. The media-source site rules form uses it for `site_id`.
+
 ### Changed
 
 - **Console private attachments**: Replace the Dropzone/S3Upload add flow with `Folio::UppyComponent`, preserving nested attachment ordering/destroy behavior and hiding move arrows in single-attachment mode.
