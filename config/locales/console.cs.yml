@@ -82,7 +82,7 @@ cs:
         form:
           add_site_rule: Přidat pravidlo pro titul
           site_rules: Pravidla podle titulu
-          site_rules_hint: Nevyplněná pole dědí hodnotu z hlavního zdroje. Pokud nejsou vyplněné žádné řádky, zdroj je použitelný všude.
+          site_rules_hint: Nevyplněné pole dědí hodnotu z hlavního zdroje. Pokud nejsou přidány žádné tituly, zdroj je použitelný všude.
       boolean:
         "yes": "Ano"
         "no": "Ne"

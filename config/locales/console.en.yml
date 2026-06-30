@@ -81,7 +81,7 @@ en:
         form:
           add_site_rule: Add site rule
           site_rules: Site rules
-          site_rules_hint: Blank fields inherit from the main source. If no rows are configured, the source is usable everywhere.
+          site_rules_hint: Blank field inherits from the main source. If no sites are selected, the source is usable everywhere.
       boolean:
         "yes": "Yes"
         "no": "No"
