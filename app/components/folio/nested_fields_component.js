@@ -8,7 +8,7 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
     hideSelectedValueFor: String
   }
 
-  static targets = ['template', 'fieldsWrap', 'destroyedWrap', 'fields', 'sortableHandle']
+  static targets = ['template', 'fieldsWrap', 'destroyedWrap', 'fields', 'sortableHandle', 'addButton']
 
   connect () {
     this.fieldsTargets.forEach((fieldsTarget) => {
@@ -49,6 +49,9 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
 
   onAddClick (e) {
     e.preventDefault()
+
+    if (this.addButtonDisabled()) return
+
     this.add()
   }
 
@@ -342,6 +345,8 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
         option.disabled = hidden
       })
     })
+
+    this.refreshAddButtonDisabled()
   }
 
   selectFirstAvailableHiddenSelectedValue (field) {
@@ -371,13 +376,48 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
       .filter((value) => value !== '')
   }
 
-  hideSelectedValueSelects (root = this.fieldsWrapTarget) {
+  refreshAddButtonDisabled () {
+    if (!this.hasAddButtonTarget) return
+
+    const disabled = this.addButtonDisabled()
+    const button = this.addButtonTarget.querySelector('button')
+
+    this.addButtonTarget.classList.toggle('f-nested-fields__add--disabled', disabled)
+    this.addButtonTarget.setAttribute('aria-disabled', disabled ? 'true' : 'false')
+
+    if (button) button.disabled = disabled
+  }
+
+  addButtonDisabled () {
+    if (!this.hasHideSelectedValueForValue) return false
+
+    return this.availableHiddenSelectedValues().length === 0
+  }
+
+  availableHiddenSelectedValues () {
+    const selectedValues = this.selectedValues(this.hideSelectedValueSelects())
+
+    return this.allHiddenSelectedOptionValues().filter((value) => {
+      return !selectedValues.includes(value)
+    })
+  }
+
+  allHiddenSelectedOptionValues () {
+    const select = this.hideSelectedValueSelects()[0] || this.hideSelectedValueSelects(this.templateTarget, false)[0]
+
+    if (!select) return []
+
+    return Array.from(new Set(Array.from(select.options)
+      .map((option) => option.value)
+      .filter((value) => value !== '')))
+  }
+
+  hideSelectedValueSelects (root = this.fieldsWrapTarget, visibleOnly = true) {
     return Array.from(root.querySelectorAll('select')).filter((select) => {
       const fields = select.closest('.f-nested-fields__fields')
 
       return fields &&
-             !fields.hidden &&
-             this.fieldsWrapTarget.contains(fields) &&
+             (!visibleOnly || !fields.hidden) &&
              select.name.endsWith(`[${this.hideSelectedValueForValue}]`)
     })
   }

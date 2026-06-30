@@ -62,6 +62,7 @@ class Folio::NestedFieldsComponentTest < Folio::ComponentTest
 
     assert_selector('[data-f-nested-fields-hide-selected-value-for-value="title"]')
     assert_selector('[data-action*="change->f-nested-fields#onHideSelectedValueSelectChange"]')
+    assert_selector('.f-nested-fields__add[data-f-nested-fields-target="addButton"]')
   end
 
   test "renders control tooltips when enabled" do

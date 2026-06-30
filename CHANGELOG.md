@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- **Nested fields**: `folio_nested_fields` now supports `hide_selected_value_for:` to hide values already selected in visible sibling rows. The media-source site rules form uses it for `site_id`.
+- **Nested fields**: `folio_nested_fields` now supports `hide_selected_value_for:` to hide values already selected in visible sibling rows. The media-source site rules form uses it for `site_id`, disables the add button when no site value remains, and newly added rules offer the next available site instead of duplicating an existing selection.
 
 ### Changed
 
