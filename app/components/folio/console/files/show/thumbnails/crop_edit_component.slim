@@ -2,19 +2,24 @@
   data=data
   class="f-c-files-show-thumbnails-crop-edit--mode-#{mode}"
 ]
-  .f-c-files-show-thumbnails-crop-edit__top
-    - if @can_update
-      = buttons
-
-  .f-c-files-show-thumbnails-crop-edit__img-wrap.mt-3
+  .f-c-files-show-thumbnails-crop-edit__thumb[style=thumb_style]
     - if image_url
-      img.f-c-files-show-thumbnails-crop-edit__img[
+      img.f-c-files-show-thumbnails-crop-edit__thumb-img[
         loading="lazy"
         src=image_url
         data=image_data
       ]
     - else
-      = folio_icon(:close)
+      .f-c-files-show-thumbnails-crop-edit__thumb-empty
+        = folio_icon(:close)
+
+    - if @can_update
+      button.f-c-files-show-thumbnails-crop-edit__crop-btn[
+        type="button"
+        title=t('.edit')
+        data=stimulus_action(click: "startEditing")
+      ]
+        = folio_icon(:crop)
 
   .f-c-files-show-thumbnails-crop-edit__overlay
     .f-c-files-show-thumbnails-crop-edit__backdrop[
@@ -23,7 +28,7 @@
     .f-c-files-show-thumbnails-crop-edit__modal
       .f-c-files-show-thumbnails-crop-edit__modal-header
         h4.f-c-files-show-thumbnails-crop-edit__title.m-0
-          = @ratio
+          = label
         button.f-c-files-show-thumbnails-crop-edit__close[
           type="button"
           data=stimulus_action(click: "cancelEditing")

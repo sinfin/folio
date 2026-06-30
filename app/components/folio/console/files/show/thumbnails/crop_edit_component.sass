@@ -1,25 +1,44 @@
 .f-c-files-show-thumbnails-crop-edit
-  &__top
-    align-items: center
-    display: flex
-    flex-wrap: wrap
-    gap: $grid-gutter-base
-    justify-content: space-between
-    min-height: 28px
+  &__thumb
+    background: $medium-gray
+    height: px-to-rem(120px)
+    overflow: hidden
+    position: relative
 
-  &__img-wrap
+  &__thumb-img
+    display: block
+    height: 100%
+    object-fit: cover
+    width: 100%
+
+  &__thumb-empty
     align-items: center
-    background: $gray
+    color: $text-muted
+    display: flex
+    height: 100%
+    justify-content: center
+
+  &__crop-btn
+    align-items: center
+    background: rgba($white, 0.85)
+    border: none
+    border-radius: $border-radius
+    color: $dark-gray
+    cursor: pointer
     display: flex
     justify-content: center
-    position: relative
-    width: 290px
-    height: 290px
+    padding: px-to-rem(4px)
+    position: absolute
+    right: px-to-rem(4px)
+    top: px-to-rem(4px)
 
-  &__img
-    display: block
-    max-height: 100%
-    max-width: 100%
+    &:hover
+      background: $white
+
+    svg
+      display: block
+      height: px-to-rem(16px)
+      width: px-to-rem(16px)
 
   &__editor
     align-items: center
@@ -88,14 +107,6 @@
   // Hide overlay in viewing/waiting-for-thumbnail states
   &[data-f-c-files-show-thumbnails-crop-edit-state-value="viewing"] &__overlay,
   &[data-f-c-files-show-thumbnails-crop-edit-state-value="waiting-for-thumbnail"] &__overlay
-    display: none
-
-  // Hide trigger button while not in viewing state
-  &:not([data-f-c-files-show-thumbnails-crop-edit-state-value="viewing"]) &__buttons
-    display: none
-
-  // Hide img-wrap while not in viewing state
-  &:not([data-f-c-files-show-thumbnails-crop-edit-state-value="viewing"]) &__img-wrap
     display: none
 
   // Hide buttons-while-editing when not editing

@@ -1,49 +1,11 @@
 .f-c-files-show-thumbnails-ratio
-  margin: $grid-gutter-half 0
+  align-items: flex-start
+  display: flex
+  flex-direction: column
+  justify-content: center
 
-  &__summary
-    background: $medium-gray
-    border-radius: $border-radius
-    display: flex
-    flex-wrap: wrap
-    gap: $grid-gutter-width
-    padding: $grid-gutter-half
-
-  &__summary-thumbnail
-    flex: 0 0 auto
-
-  &__summary-thumbnail-img
-    display: block
-    max-height: 48px
-    max-width: 96px
-    object-fit: contain
-    border-radius: $border-radius
-
-  &__summary-meta
-    display: flex
-    align-items: center
-    gap: $grid-gutter-half
-    flex: 1 0 auto
-
-  &__summary-label
-    font-weight: bold
-
-  &__summary-count
+  &__label
     color: $text-muted
-
-  &__detail
-    padding: $grid-gutter-half
-    padding-top: 0
-
-  &__detail-summary
-    cursor: pointer
-    min-height: 28px
-    display: flex
-    align-items: center
-    color: $text-muted
-    padding: $grid-gutter-half 0
-
-  &__thumbs-flex
-    display: flex
-    flex-wrap: wrap
-    gap: $grid-gutter-half
+    font-size: px-to-rem(12px)
+    line-height: 1.4
+    margin: 0

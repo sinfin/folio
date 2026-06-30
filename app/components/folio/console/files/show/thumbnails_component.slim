@@ -1,14 +1,21 @@
 .f-c-files-show-thumbnails
-  h2.mt-0 = t('.title')
-
   - if @file.thumbnail_sizes.present?
-    - self.class.group_thumbnail_size_keys(@file.thumbnail_sizes.keys).each do |type, ratios|
-      h3 = t(".type/#{type}")
+    - if crop_ratios.present?
+      h3.f-c-files-show-thumbnails__heading.mt-0 = t('.crops_title')
 
-      - ratios.each do |ratio, thumbnail_size_keys|
-        = render(Folio::Console::Files::Show::Thumbnails::RatioComponent.new(file: @file,
-                                                                             ratio:,
-                                                                             thumbnail_size_keys:))
+      .f-c-files-show-thumbnails__tiles
+        - crop_ratios.each do |ratio, thumbnail_size_keys|
+          = render(Folio::Console::Files::Show::Thumbnails::RatioComponent.new(file: @file,
+                                                                               ratio:,
+                                                                               thumbnail_size_keys:))
 
+    details.f-c-files-show-thumbnails__all
+      summary.f-c-files-show-thumbnails__all-summary = t('.show_all_thumbnails')
+
+      .f-c-files-show-thumbnails__all-list
+        - all_size_keys.each do |thumbnail_size_key|
+          = render(Folio::Console::Files::Show::Thumbnails::Ratio::ThumbnailComponent.new(thumbnail_size_key:,
+                                                                                          thumbnail: @file.thumbnail_sizes[thumbnail_size_key],
+                                                                                          file: @file))
   - else
     p = t('.no_thumbnails_yet')

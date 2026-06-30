@@ -50,6 +50,8 @@ cs:
 
           thumbnails_component:
             title: Verze a velikosti
+            crops_title: Ořezy do různých poměrů stran
+            show_all_thumbnails: Všechny vygenerované náhledy
             type/regular: Verze bez ořezu
             type/crop: Verze s ořezem (#)
             type/shrink: Verze pouze se zmenšením (>)
@@ -57,15 +59,6 @@ cs:
             no_thumbnails_yet: Zatím nebyly vygenerovány žádné verze
 
           thumbnails:
-            ratio_component:
-              all_versions: "Všechny vygenerované verze:"
-              show_all_thumbnails: "Všechny vygenerované náhledy"
-              variants_count:
-                one: "%{count} velikost"
-                few: "%{count} velikosti"
-                many: "%{count} velikosti"
-                other: "%{count} velikostí"
-
             crop_edit_component:
               edit: Upravit ořez
 

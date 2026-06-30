@@ -6,8 +6,8 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - **Console private attachments**: Replace the Dropzone/S3Upload add flow with `Folio::UppyComponent`, preserving nested attachment ordering/destroy behavior and hiding move arrows in single-attachment mode.
-- **Console image thumbnails**: Group generated crop thumbnails into per-aspect-ratio cards (representative preview + variant count) with a collapsible "all generated thumbnails" detail. Near-duplicate aspect ratios are clustered by proximity (configurable `RATIO_TOLERANCE`) instead of one card per exact ratio. Add an overridable `Folio::File#thumbnail_ratio_label(ratio, thumbnail_size_keys)` hook (default `nil`) so host apps can label groups by their on-site usage.
-- **Console crop editor**: Present the per-ratio crop editor as a modal overlay (close via ESC, backdrop, or Cancel) and preserve the group's expand state after saving.
+- **Console image thumbnails**: Group generated crop thumbnails by aspect ratio, shown as a row of per-ratio preview tiles labelled with the ratio (e.g. `16×9`), with a single collapsible "all generated thumbnails" list below. Near-duplicate aspect ratios are clustered by proximity (configurable `RATIO_TOLERANCE`) instead of one tile per exact ratio. Add an overridable `Folio::File#thumbnail_ratio_label(ratio, thumbnail_size_keys)` hook (default `nil`) so host apps can relabel groups (e.g. by on-site usage).
+- **Console crop editor**: Open the per-ratio crop editor in a modal overlay (close via ESC, backdrop, or Cancel) from a crop button on each ratio tile.
 
 ### Fixed
 

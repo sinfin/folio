@@ -8,6 +8,20 @@ class Folio::Console::Files::Show::ThumbnailsComponent < Folio::Console::Applica
     @file = file
   end
 
+  # Crop aspect-ratio groups (proximity-clustered), keyed by reduced ratio label.
+  def crop_ratios
+    grouped["crop"] || {}
+  end
+
+  # All generated thumbnail size keys in a stable order: crop ratios first
+  # (ascending), then the non-cropped "regular" sizes. Used for the
+  # "All generated thumbnails" disclosure.
+  def all_size_keys
+    crop_keys = crop_ratios.values.flatten
+    regular_keys = grouped.dig("regular", "regular") || []
+    crop_keys + regular_keys
+  end
+
   # Returns the "cleanest" reduced-fraction label for a bucket of [key, w, h] entries:
   # the one with the smallest numerator+denominator after gcd reduction.
   def self.cleanest_ratio_label(entries)
@@ -108,6 +122,10 @@ class Folio::Console::Files::Show::ThumbnailsComponent < Folio::Console::Applica
   end
 
   private
+    def grouped
+      @grouped ||= self.class.group_thumbnail_size_keys(@file.thumbnail_sizes.keys)
+    end
+
     def before_render
       @readonly = !can_now?(:update, @file)
     end

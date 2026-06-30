@@ -8,33 +8,59 @@ class Folio::Console::Files::Show::Thumbnails::CropEditComponent < Folio::Consol
     @updated_thumbnails_crop = updated_thumbnails_crop
   end
 
+  # Reduced aspect-ratio label using the multiplication sign, e.g. "16×9".
+  def label
+    @ratio.tr(":", "×")
+  end
+
   private
     def before_render
       @can_update = can_now?(:update, @file) && @file.file_width.present? && @file.file_height.present?
     end
 
+    # Representative preview URL for the tile thumbnail. Picks the largest
+    # already-generated size of this ratio and resolves it through the same
+    # CDN / temporary-url rewriting the detail thumbnails use, so the preview
+    # is not a raw (and on review unreachable) Dragonfly/doader URL.
     def image_url
-      return @image_url if @image_url
-      return nil if @thumbnail_size_keys.empty?
+      return @image_url if defined?(@image_url)
 
-      valid_keys = if @updated_thumbnails_crop
-        @thumbnail_size_keys
-      else
-        @thumbnail_size_keys.reject do |key|
-          url = @file.thumb(key).url
-          url&.start_with?("https://doader")
-        end
+      candidates = @thumbnail_size_keys.select do |key|
+        thumb = @file.thumbnail_sizes[key]
+        next false unless thumb.is_a?(Hash) && thumb[:url].present?
+
+        @updated_thumbnails_crop || !thumb[:url].include?("doader.com")
       end
 
-      return nil if valid_keys.empty?
+      @image_url = if candidates.empty?
+        nil
+      else
+        key = Folio::Console::Files::Show::Thumbnails::RepresentativeImage.representative_thumbnail_size_key(candidates)
+        resolve_thumbnail_url(@file.thumbnail_sizes[key], key)
+      end
+    end
 
-      highest_area_key = Folio::Console::Files::Show::Thumbnails::RepresentativeImage.representative_thumbnail_size_key(valid_keys)
+    def resolve_thumbnail_url(thumb, key)
+      url = thumb[:url]
 
-      @image_url = @file.thumb(highest_area_key).url
+      if url.include?("doader.com")
+        @file.temporary_url(key)
+      else
+        Folio::S3.cdn_url_rewrite(url)
+      end
     end
 
     def image_data
       stimulus_thumbnail(src: image_url)
+    end
+
+    # Inline aspect-ratio for the tile box so a 16:9 crop renders wide and a
+    # 3:4 crop tall, at a fixed height (set in CSS).
+    def thumb_style
+      width, height = @ratio.split(":", 2).map(&:to_i)
+      return "" if width.zero? || height.zero?
+
+      "aspect-ratio: #{width} / #{height};"
     end
 
     def buttons_while_editing
@@ -51,17 +77,6 @@ class Folio::Console::Files::Show::Thumbnails::CropEditComponent < Folio::Consol
                                                         icon: :close,
                                                         data: stimulus_action(click: "cancelEditing"),
                                                         label: t("folio.console.actions.cancel")
-                                                      }]))
-    end
-
-    def buttons
-      render(Folio::Console::Ui::ButtonsComponent.new(class_name: "f-c-files-show-thumbnails-crop-edit__buttons",
-                                                      buttons: [{
-                                                        variant: :warning,
-                                                        size: :sm,
-                                                        icon: :crop,
-                                                        data: stimulus_action(click: "startEditing"),
-                                                        label: t(".edit")
                                                       }]))
     end
 

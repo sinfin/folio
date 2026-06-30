@@ -76,15 +76,10 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
     this.stateValue = 'saving'
 
     const ratioEl = this.element.closest('.f-c-files-show-thumbnails-ratio')
-    const parent = ratioEl.parentElement
-    const idx = Array.prototype.indexOf.call(parent.children, ratioEl)
-    const wasOpen = !!ratioEl.querySelector('details')?.open
 
     window.Folio.Api.apiPatch(this.apiUrlValue, data).then((res) => {
       if (res && res.data) {
         ratioEl.outerHTML = res.data
-        const newDetails = parent.children[idx]?.querySelector('details')
-        if (newDetails) newDetails.open = wasOpen
       } else {
         throw new Error('Invalid response from server')
       }

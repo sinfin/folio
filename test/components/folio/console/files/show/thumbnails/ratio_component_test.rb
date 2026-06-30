@@ -22,35 +22,21 @@ class Folio::Console::Files::Show::Thumbnails::RatioComponentTest < Folio::Conso
     end
   end
 
-  test "collapsed card shows label fallback (ratio), variant count, and a collapsed detail" do
+  test "tile shows the aspect-ratio label (× form) and a crop editor, without summary/count/per-tile disclosure" do
     with_controller_class(Folio::Console::File::ImagesController) do
       with_request_url "/console/file/images" do
         file = create(:folio_file_image)
         render_inline(Folio::Console::Files::Show::Thumbnails::RatioComponent.new(
           file:, ratio: "2:1", thumbnail_size_keys: %w[200x100# 400x200#]))
 
-        # summary
-        assert_selector ".f-c-files-show-thumbnails-ratio__summary"
-        assert_text "2:1"                      # label fallback (hook returns nil)
-        assert_text "2"                        # variant count
-        # representative thumbnail preview in summary
-        assert_selector ".f-c-files-show-thumbnails-ratio__summary-thumbnail"
-        # detail collapsed by default (native <details> without `open`)
-        assert_selector "details.f-c-files-show-thumbnails-ratio__detail"
-        assert_no_selector "details.f-c-files-show-thumbnails-ratio__detail[open]"
-        assert_selector "summary.f-c-files-show-thumbnails-ratio__detail-summary",
-                        text: I18n.t("folio.console.files.show.thumbnails.ratio_component.show_all_thumbnails")
-      end
-    end
-  end
+        # aspect-ratio label uses the multiplication sign
+        assert_selector ".f-c-files-show-thumbnails-ratio__label", text: "2×1"
+        # the crop editor tile is rendered
+        assert_selector ".f-c-files-show-thumbnails-crop-edit"
 
-  test "regular group renders no crop editor" do
-    with_controller_class(Folio::Console::File::ImagesController) do
-      with_request_url "/console/file/images" do
-        file = create(:folio_file_image)
-        render_inline(Folio::Console::Files::Show::Thumbnails::RatioComponent.new(
-          file:, ratio: "regular", thumbnail_size_keys: %w[250x250 500x500]))
-        assert_no_selector ".f-c-files-show-thumbnails-crop-edit"
+        # the old summary / variant count / per-tile disclosure are gone
+        assert_no_selector ".f-c-files-show-thumbnails-ratio__summary"
+        assert_no_selector "details.f-c-files-show-thumbnails-ratio__detail"
       end
     end
   end

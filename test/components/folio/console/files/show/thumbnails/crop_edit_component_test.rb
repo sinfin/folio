@@ -22,7 +22,7 @@ class Folio::Console::Files::Show::Thumbnails::CropEditComponentTest < Folio::Co
     end
   end
 
-  test "renders an edit trigger and an overlay container holding the editor" do
+  test "renders the tile thumbnail with a crop trigger and an overlay holding the editor" do
     superadmin = create(:folio_user, :superadmin)
     Folio::Current.user = superadmin
     Folio::Current.reset_ability!
@@ -33,8 +33,9 @@ class Folio::Console::Files::Show::Thumbnails::CropEditComponentTest < Folio::Co
         render_inline(Folio::Console::Files::Show::Thumbnails::CropEditComponent.new(
           file:, ratio: "2:1", thumbnail_size_keys: %w[200x100#]))
 
-        # trigger stays in the (compact) view
-        assert_selector ".f-c-files-show-thumbnails-crop-edit__buttons"
+        # the tile box and its corner crop trigger
+        assert_selector ".f-c-files-show-thumbnails-crop-edit__thumb"
+        assert_selector ".f-c-files-show-thumbnails-crop-edit__crop-btn"
         # editor lives inside an overlay/modal container
         assert_selector ".f-c-files-show-thumbnails-crop-edit__overlay [data-f-c-files-show-thumbnails-crop-edit-target='editorImage']"
       end

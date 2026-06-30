@@ -1,11 +1,27 @@
 .f-c-files-show-thumbnails
-  &__table
-    width: 100%
+  &__heading
+    color: $dark-gray
+    font-size: px-to-rem(14px)
+    font-weight: bold
 
-    td:first-child
-      padding-left: 0
+  &__tiles
+    align-items: flex-start
+    display: flex
+    flex-wrap: wrap
+    gap: $grid-gutter-base
 
-    td:last-child
-      padding-right: 0
+  &__all
+    margin-top: $grid-gutter-width
 
-  .f-c-files-show-thumbnails-table__type-title
+  &__all-summary
+    color: $text-muted
+    cursor: pointer
+    display: inline-flex
+    align-items: center
+    min-height: 28px
+
+  &__all-list
+    display: flex
+    flex-direction: column
+    gap: $grid-gutter-half
+    margin-top: $grid-gutter-half

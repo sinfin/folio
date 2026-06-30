@@ -50,19 +50,14 @@ en:
 
           thumbnails_component:
             title: Versions and sizes
+            crops_title: Crops to various aspect ratios
+            show_all_thumbnails: All generated thumbnails
             type/regular: Versions without crop
             type/crop: Versions with crop (#)
             type/shrink: Versions with shrink only (>)
             type/cover: Versions with fit (^)
 
           thumbnails:
-            ratio_component:
-              all_versions: "All generated versions:"
-              show_all_thumbnails: "All generated thumbnails"
-              variants_count:
-                one: "%{count} size"
-                other: "%{count} sizes"
-
             crop_edit_component:
               edit: Edit crop
 

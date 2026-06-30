@@ -8,16 +8,10 @@ class Folio::Console::Files::Show::Thumbnails::RatioComponent < Folio::Console::
     @updated_thumbnails_crop = updated_thumbnails_crop
   end
 
+  # Group label. Defaults to the reduced aspect ratio in "W×H" form (e.g.
+  # "16×9"); host apps may override Folio::File#thumbnail_ratio_label to name
+  # the group differently.
   def label
-    @file.thumbnail_ratio_label(@ratio, @thumbnail_size_keys).presence || @ratio
-  end
-
-  def variants_count
-    @thumbnail_size_keys.size
-  end
-
-  def representative_key
-    Folio::Console::Files::Show::Thumbnails::RepresentativeImage
-      .representative_thumbnail_size_key(@thumbnail_size_keys)
+    @file.thumbnail_ratio_label(@ratio, @thumbnail_size_keys).presence || @ratio.tr(":", "×")
   end
 end
