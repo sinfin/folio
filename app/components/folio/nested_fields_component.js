@@ -403,7 +403,7 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
   }
 
   allHiddenSelectedOptionValues () {
-    const select = this.hideSelectedValueSelects()[0] || this.hideSelectedValueSelects(this.templateTarget, false)[0]
+    const select = this.hideSelectedValueSelects()[0] || this.hideSelectedValueSelects(this.templateTarget.content, false)[0]
 
     if (!select) return []
 
