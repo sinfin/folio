@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- **Media source site rules**: Persisted rules can now be removed and re-added for the same site in one edit without tripping uniqueness validation.
 - **Uppy drag-and-drop**: Only the first active uploader handles window-level file drops, preventing duplicate uploads when a page renders multiple `Folio::UppyComponent` instances.
 
 ## [7.7.1] - 2026-06-16
