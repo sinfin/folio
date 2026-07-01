@@ -22,6 +22,11 @@ div class=classes
 div class=wrapper_class_name
 ```
 
+When a plain view still needs several Ruby setup lines, prefer one `ruby:`
+block over repeated `-` lines. In ViewComponent templates, move that setup to
+private component methods whenever practical; in Rails views, a short `ruby:`
+block is acceptable and clearer than multi-line `-` control flow.
+
 ## Multi-line attributes
 
 When an element has **multiple attributes**, use bracket syntax **without a space** before `[`:
