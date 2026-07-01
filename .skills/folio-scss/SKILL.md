@@ -91,6 +91,12 @@ If a child needs to look different in a specific context, pass attributes to it 
 - Use Bootstrap breakpoint mixins (`+media-breakpoint-down(sm)`) only for viewport-level concerns.
 - Use `$f-c-state-colors` map and `@each` for color variants when applicable.
 
+## CSS custom properties
+
+- Name component custom properties with the component BEM block plus `__property`, e.g. `--e-web-hn-tiptap-node-contents-related-article__border-left`.
+- When a parent component must affect child component styling, prefer overriding the child's documented CSS custom properties over selecting child internals.
+- Define overridable child defaults on `#{":root"}` inside the child component stylesheet, not on the child block itself; block-level defaults override inherited parent values.
+
 ## File format
 
 - Both **indented Sass** (`.sass`) and **SCSS** (`.scss`) are used — match the convention of sibling components in the same directory.
