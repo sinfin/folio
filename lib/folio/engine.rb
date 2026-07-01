@@ -310,6 +310,8 @@ module Folio
     end
 
     config.to_prepare do
+      require Folio::Engine.root.join("app/lib/folio/console/route_ids").to_s
+      Folio::Console::RouteIds.install!
     end
 
     def atoms_deprecations

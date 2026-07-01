@@ -25,8 +25,8 @@ class Folio::Console::MergesController < Folio::Console::BaseController
           @klass
         end
 
-        @merger = merger_klass.new(scope.find(original_id),
-                                   scope.find(duplicate_id),
+        @merger = merger_klass.new(scope.find_by!(id: original_id),
+                                   scope.find_by!(id: duplicate_id),
                                    klass: @klass)
 
         add_breadcrumb @klass.model_name.human(count: 2),
