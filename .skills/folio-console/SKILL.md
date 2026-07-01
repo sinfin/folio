@@ -120,3 +120,9 @@ assert_includes response.body, set_positions_console_app_project_items_path(proj
 Prefer assertions against rendered links, forms, and URLs over controller
 instance variables; Folio Console behavior often crosses controller, view, cell,
 and route-helper boundaries.
+
+## Related Skills
+
+- Use [`.skills/folio-file-placement/SKILL.md`](../folio-file-placement/SKILL.md)
+  when Console forms, catalogues, or tests involve custom file pickers,
+  `Folio::FilePlacement` subclasses, placement strong params, or placement I18n.
