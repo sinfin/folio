@@ -27,6 +27,41 @@ Folio derives the through route param from the parent model name, usually the
 demodulized element such as `project_id`. Check `Parent.model_name.element` and
 `rails routes` when the parent is namespaced or the route uses a custom param.
 
+## Nested Route Names
+
+When a nested Console resource model is namespaced under the parent model, make
+the route helper prefix match the child model route key. Otherwise Folio and
+Rails polymorphic helpers can infer impossible names such as
+`console_project_project_item_path`, and generated helpers inside catalogue
+actions, form actions, toggles, or redirects will fail.
+
+For `App::Project::Item`, `model_name.route_key` is usually
+`app_project_items`, so the nested route should override `as:`:
+
+```ruby
+resources :projects do
+  resources :items,
+            as: :app_project_items,
+            controller: "project/items" do
+    post :set_positions, on: :collection
+  end
+end
+```
+
+After adding or changing nested Console routes, run:
+
+```bash
+rails routes -g project_items
+```
+
+Verify the generated prefixes line up with the model route key and with the
+polymorphic calls used by the views, for example:
+
+```ruby
+url_for([:console, record.project, record])
+url_for([:set_positions, :console, record.project, App::Project::Item])
+```
+
 ## Scaffold Generator
 
 For new Console CRUD resources, start with the scaffold generator instead of
@@ -46,7 +81,8 @@ rendered-output verification guidance below.
 The block passed to `catalogue(...)` is evaluated inside
 `Folio::Console::CatalogueCell`, not in the original controller/view instance.
 Controller instance variables can be unavailable or nil there even when
-`through:` loaded them correctly.
+`through:` loaded them correctly. Prefer route helpers that can be generated
+from `record` and its parent when the route `as:` is aligned correctly.
 
 Pass needed parent/through records explicitly to the catalogue and read them
 from the cell model:
@@ -54,21 +90,20 @@ from the cell model:
 ```slim
 = catalogue(@items, project: @project)
   ruby:
-    attribute(:to_label) do
-      link_to(record.to_label, edit_console_app_project_item_path(model[:project], record))
-    end
+    edit_link :to_label
 
-    published_toggle url: console_app_project_item_path(model[:project], record)
+    published_toggle url: url_for([:console, record.project, record])
 
-    position_controls url: set_positions_console_app_project_items_path(model[:project])
+    position_controls url: url_for([:set_positions, :console, record.project, App::Project::Item])
 
-    actions edit: edit_console_app_project_item_path(model[:project], record),
-            destroy: console_app_project_item_path(model[:project], record)
+    actions
 ```
 
-Do not rely on `@project` or `@parent` inside the catalogue DSL. Use
-`model[:project]` or another explicitly passed key for nested route helpers,
-`position_controls`, `published_toggle`, and `actions`.
+Do not rely on `@project` or `@parent` inside the catalogue DSL. Either use
+`record.project` or pass the parent explicitly to `catalogue` and read it as
+`model[:project]`. For nested resources, first fix the route `as:` so standard
+Folio/polymorphic helpers work; explicit helper paths in catalogue blocks should
+be the fallback, not the first solution.
 
 ## Verification
 
