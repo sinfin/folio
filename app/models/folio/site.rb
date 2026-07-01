@@ -59,6 +59,10 @@ class Folio::Site < Folio::ApplicationRecord
     []
   end
 
+  def self.additional_strong_params
+    additional_params
+  end
+
   def self.social_link_sites
     # class method is better than a constant as one might want to override it
     %i[facebook
