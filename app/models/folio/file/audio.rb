@@ -7,6 +7,8 @@ class Folio::File::Audio < Folio::File
     audio/mpeg
     audio/mp3
     audio/aac
+    audio/x-aac
+    audio/vnd.dlna.adts
     audio/x-hx-aac-adts
     audio/mp4
     audio/x-m4a
