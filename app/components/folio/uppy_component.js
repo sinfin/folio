@@ -83,6 +83,12 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
           allowedTypes.push('.mov')
         }
 
+        // Add .aac extension if audio/aac is allowed - Chromium reports
+        // application/octet-stream for dragged .aac files
+        if (allowedTypes.includes('audio/aac') && !allowedTypes.includes('.aac')) {
+          allowedTypes.push('.aac')
+        }
+
         restrictions.allowedFileTypes = allowedTypes
       }
 
