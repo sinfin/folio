@@ -53,6 +53,27 @@ class Folio::Console::Dummy::Blog::TopicsControllerTest < Folio::Console::BaseCo
     assert_redirected_to url_for([:edit, :console, model])
   end
 
+  test "old slug console redirect preserves query params without letting them hijack the host" do
+    model = create(:dummy_blog_topic, slug: "hijack-topic")
+
+    get "/console/dummy/blog/topics/hijack-topic/edit",
+        params: { foo: "bar", host: "evil.example.com" }
+
+    assert_response :redirect
+    redirect_uri = URI.parse(@response.location)
+
+    assert_equal(URI.parse(url_for([:edit, :console, model, only_path: true])).path,
+                 redirect_uri.path,
+                 "redirects to the id-based path")
+    assert_not_equal("evil.example.com", redirect_uri.host,
+                     "a query :host must not hijack the redirect target")
+
+    query = Rack::Utils.parse_query(redirect_uri.query)
+    assert_equal("bar", query["foo"], "preserves genuine query params")
+    assert_equal("evil.example.com", query["host"],
+                 "keeps the injected value as a harmless query param, not a url_for option")
+  end
+
   test "create" do
     params = build(:dummy_blog_topic).serializable_hash
     assert_equal(0, Dummy::Blog::Topic.count)

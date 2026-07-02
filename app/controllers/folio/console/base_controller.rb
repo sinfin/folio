@@ -568,11 +568,15 @@ class Folio::Console::BaseController < Folio::ApplicationController
 
       record = console_resource_scope.friendly.find(params[:id])
 
-      url_options = request.query_parameters.symbolize_keys.merge(action: action_name,
-                                                                  id: record.id,
-                                                                  only_path: false)
-      location = safe_url_for(url_options)
-      raise ActionController::UrlGenerationError, url_options.inspect unless location
+      # Generate a same-host path (never an absolute URL) so incoming query
+      # params can't hijack the redirect target through url_for options such as
+      # :host, :port or :script_name. The original query string is preserved
+      # verbatim as an actual query string on the id-based URL.
+      path = safe_url_for(action: action_name, id: record.id, only_path: true)
+      raise ActionController::UrlGenerationError, { action: action_name, id: record.id }.inspect unless path
+
+      query = request.query_parameters
+      location = query.present? ? "#{path}?#{query.to_query}" : path
 
       redirect_to location
     end
