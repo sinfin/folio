@@ -40,6 +40,10 @@ Instead, exercise the behavior through one of:
   usually prove only implementation shape. Exercise the behavior instead.
 - Avoid pinning private method names, asset contents, exact implementation
   snippets, or incidental markup that is not part of the user-facing contract.
+- Avoid asserting exact URLs in component tests when link presence or label is
+  enough to prove the behavior. URL generation is often brittle in component
+  specs; assert exact hrefs only when the target URL itself is the behavior
+  under test.
 - Do not test static presentation details that are always present and not part
   of conditional behavior, such as a fixed CSS utility class (`cell--compact`) or
   non-interactive styling option. Let the template/component code carry that.
