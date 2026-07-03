@@ -17,6 +17,10 @@ Keep tests behavior-facing and close to the code they protect.
 Never test JavaScript or asset-pipeline behavior by asserting that an asset
 file contains a string or implementation snippet.
 
+Do not add rake task tests in this repository. Cover the underlying behavior
+through the model, service, component, or integration code the task calls
+instead.
+
 Instead, exercise the behavior through one of:
 - rendered DOM assertions
 - ViewComponent/component tests
