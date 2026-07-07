@@ -5,26 +5,29 @@ require "test_helper"
 class Folio::FriendlyIdAndSimpleFormTest < Folio::CapybaraTest
   test "changing slug should not change form URL" do
     sign_in_to_console_and_go_to_pages_index
-    create(:folio_page, slug: "changing-slug-should-not-change-form-url")
+    page_record = create(:folio_page, slug: "changing-slug-should-not-change-form-url")
 
     visit "/console/pages/changing-slug-should-not-change-form-url/edit"
+    assert_current_path("/console/pages/#{page_record.id}/edit")
+
     form = find('.simple_form[action*="/console/pages"]')
-    assert_equal "/console/pages/changing-slug-should-not-change-form-url", form[:action], "form action points to the slug saved in the database"
+    assert_equal "/console/pages/#{page_record.id}", form[:action], "form action points to the database id"
 
     fill_in "Název stránky", with: ""
     fill_in "Varianta názvu pro odkazy", with: "changing-slug-should-not-change-form-url-changed"
     find('[data-test-id="submit-button"]').click
 
-    assert_current_path("/console/pages/changing-slug-should-not-change-form-url")
+    assert_current_path("/console/pages/#{page_record.id}")
     assert page.has_css?(".invalid-feedback", text: "Název stránky je povinná položka")
     form = find('.simple_form[action*="/console/pages"]')
-    assert_equal "/console/pages/changing-slug-should-not-change-form-url", form[:action], "form action points to the slug saved in the database"
+    assert_equal "/console/pages/#{page_record.id}", form[:action], "form action points to the database id"
 
     fill_in "Název stránky", with: "should not break now"
     fill_in "Varianta názvu pro odkazy", with: "changing-slug-should-not-change-form-url-changed"
     find('[data-test-id="submit-button"]').click
 
-    assert_current_path("/console/pages/changing-slug-should-not-change-form-url-changed/edit")
+    assert_current_path("/console/pages/#{page_record.id}/edit")
+    assert_equal "changing-slug-should-not-change-form-url-changed", page_record.reload.slug
   end
 
   private
