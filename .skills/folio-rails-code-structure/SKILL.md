@@ -47,6 +47,12 @@ implementation across incidental private helpers there.
 
 - When a method takes more than two arguments, use keyword arguments instead of
   positional arguments. This applies to private helpers as well as public APIs.
+- For Ruby helper methods that use keywords, keep related calls keyword-only
+  throughout the class. Do not mix one positional argument with keyword
+  arguments, such as `foo(path, bar:)`; prefer `foo(path:, bar:)`.
+- When a set of related helper methods all accept the same argument, use the
+  same keyword form for that argument across the set, even if an individual
+  helper currently takes only that one argument.
 
 ## Jobs
 
