@@ -52,6 +52,16 @@ Instead, exercise the behavior through one of:
 
 - Do not mutate `ENV` in tests for application behavior. Avoid save/delete/
   restore patterns around environment keys.
+- Do not mutate `Folio::Current` values directly in tests when the code only
+  reads them. Prefer a scoped block stub so global request state cannot leak
+  past the example:
+
+  ```ruby
+  Folio::Current.stub(:ip_address, "::1") do
+    # exercise behavior
+  end
+  ```
+
 - If production behavior depends on `ENV`, expose a small app-owned accessor and
   stub that in tests. Prefer a method returning related values together when it
   makes tests cleaner.
