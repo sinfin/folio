@@ -48,6 +48,14 @@ implementation across incidental private helpers there.
 - When a method takes more than two arguments, use keyword arguments instead of
   positional arguments. This applies to private helpers as well as public APIs.
 
+## Method extraction
+
+- Do not add local helper or predicate methods that only call another similarly
+  named helper and add no behavior. Call the existing method directly instead.
+- Extract a method when it combines conditions, names a distinct domain concept,
+  removes real duplication, or provides a framework-required entrypoint such as
+  `render?`.
+
 ## Jobs
 
 Jobs are already focused classes that perform one unit of work. Do not extract
