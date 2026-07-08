@@ -1,0 +1,7 @@
+# Folio AI suggestions pack.
+
+enforce_dependencies: true
+
+dependencies:
+  - "../.."
+  - "."
