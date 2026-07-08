@@ -17,6 +17,14 @@ class Folio::Console::ReactHelperTest < ActionView::TestCase
     assert_nil wrap["data-input-name"]
   end
 
+  test "react_ordered_multiselect passes default scope to remote autocomplete" do
+    wrap = ordered_multiselect_wrap(build(:dummy_blog_article),
+                                    default_scope: :featured)
+    params = Rack::Utils.parse_nested_query(URI.parse(wrap["data-url"]).query)
+
+    assert_equal "featured", params["default_scope"]
+  end
+
   test "react_ordered_multiselect renders virtual remote array data" do
     author = create(:dummy_blog_author,
                     first_name: "Ada",

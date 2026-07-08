@@ -139,6 +139,7 @@ module Folio::Console::ReactHelper
                                 relation_name,
                                 atom_setting: nil,
                                 scope: nil,
+                                default_scope: nil,
                                 order_scope: :ordered,
                                 sortable: true,
                                 required: nil,
@@ -231,6 +232,7 @@ module Folio::Console::ReactHelper
     url = unless options
       react_ordered_multiselect_url(class_names:,
                                     scope:,
+                                    default_scope:,
                                     order_scope:,
                                     label_method:)
     end
@@ -360,11 +362,13 @@ module Folio::Console::ReactHelper
 
     def react_ordered_multiselect_url(class_names:,
                                       scope:,
+                                      default_scope:,
                                       order_scope:,
                                       label_method:)
       options = {
         class_names:,
         scope:,
+        default_scope:,
         order_scope:,
         only_path: true,
       }
