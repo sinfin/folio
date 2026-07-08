@@ -11,7 +11,7 @@ class Folio::Ai::Availability
                  integration_key:,
                  field_key:,
                  host_eligible: true,
-                 global_enabled: Folio::Ai.enabled?)
+                 global_enabled: Folio::Ai.config.enabled?)
     @site = site
     @integration_key = integration_key
     @field_key = field_key
@@ -47,7 +47,7 @@ class Folio::Ai::Availability
     end
 
     def provider_available?
-      Folio::Ai.eligible_provider?(provider_config.provider)
+      Folio::Ai.config.eligible_provider?(provider_config.provider)
     rescue Folio::Ai::UnknownProviderError, ArgumentError
       false
     end

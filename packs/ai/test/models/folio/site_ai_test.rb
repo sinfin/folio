@@ -52,10 +52,8 @@ module Folio
                                      fields: %i[title])
       site = build(:folio_site)
 
-      Folio::Ai.stub(:provider_api_key_env_values, {}) do
-        with_ai_config(enabled: true) do
-          assert_includes site.console_form_tabs, :ai_prompts
-        end
+      with_ai_config(enabled: true) do
+        assert_includes site.console_form_tabs, :ai_prompts
       end
     ensure
       Folio::Ai.reset_registry!

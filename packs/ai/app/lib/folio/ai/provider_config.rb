@@ -15,7 +15,7 @@ class Folio::Ai::ProviderConfig
 
   def call
     provider, model = resolve_provider_model
-    raise Folio::Ai::UnknownProviderError, "Unknown AI provider: #{provider}" unless Folio::Ai.known_provider?(provider)
+    raise Folio::Ai::UnknownProviderError, "Unknown AI provider: #{provider}" unless Folio::Ai.config.known_provider?(provider)
     raise ArgumentError, "AI model is blank for provider: #{provider}" if model.blank?
 
     Result.new(provider: provider.to_sym,
@@ -31,7 +31,7 @@ class Folio::Ai::ProviderConfig
 
     def resolve_provider_model
       site_provider = normalize_provider(ai_settings["default_provider"].presence ||
-                                         Folio::Ai.default_provider)
+                                         Folio::Ai.config.default_provider)
       site_model = ai_settings["default_model"].presence || default_model_for(site_provider)
 
       integration_provider_override = integration_settings["default_provider"].presence
@@ -59,9 +59,9 @@ class Folio::Ai::ProviderConfig
     end
 
     def default_model_for(provider)
-      return unless Folio::Ai.known_provider?(provider)
+      return unless Folio::Ai.config.known_provider?(provider)
 
-      Folio::Ai.default_model(provider)
+      Folio::Ai.config.default_model(provider)
     end
 
     def normalize_provider(provider)

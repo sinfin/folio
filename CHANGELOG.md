@@ -12,6 +12,9 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- **AI pack configuration**: Move runtime configuration readers and provider
+  helpers onto `Folio::Ai.config`, keeping `Folio::Ai.configure` as the setup
+  API.
 - **Console private attachments**: Replace the Dropzone/S3Upload add flow with `Folio::UppyComponent`, preserving nested attachment ordering/destroy behavior and hiding move arrows in single-attachment mode.
 
 ### Fixed

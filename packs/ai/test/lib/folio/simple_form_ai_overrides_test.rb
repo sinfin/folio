@@ -346,8 +346,8 @@ class Folio::Ai::SimpleFormOverridesTest < ActionView::TestCase
 
   private
     def with_ai_enabled(provider_api_key_env_values: { openai: "secret" }, &)
-      Folio::Ai.stub(:provider_api_key_env_values, provider_api_key_env_values) do
-        with_ai_config(enabled: true, &)
+      with_ai_config(enabled: true) do
+        Folio::Ai.config.stub(:provider_api_key_env_values, provider_api_key_env_values, &)
       end
     end
 

@@ -120,11 +120,9 @@ class Folio::Ai::SuggestionGeneratorTest < ActiveSupport::TestCase
       end
     end
 
-    result = with_ai_enabled do
-      with_ai_config(model_fallback_enabled: true) do
-        Folio::Ai.stub(:provider_adapter, provider_factory) do
-          generator.call
-        end
+    result = with_ai_enabled(model_fallback_enabled: true) do
+      Folio::Ai.config.stub(:provider_adapter, provider_factory) do
+        generator.call
       end
     end
 
@@ -157,11 +155,9 @@ class Folio::Ai::SuggestionGeneratorTest < ActiveSupport::TestCase
   test "does not call provider when cost guard rejects prompt" do
     adapter = FakeProviderAdapter.new
 
-    result = with_ai_enabled do
-      with_ai_config(max_prompt_chars: 5) do
-        generator(provider_adapter: adapter,
-                  context: { body: "Long context" }).call
-      end
+    result = with_ai_enabled(max_prompt_chars: 5) do
+      generator(provider_adapter: adapter,
+                context: { body: "Long context" }).call
     end
 
     assert_not result.success?
@@ -194,9 +190,9 @@ class Folio::Ai::SuggestionGeneratorTest < ActiveSupport::TestCase
   end
 
   private
-    def with_ai_enabled(provider_api_key_env_values: { openai: "secret" }, &)
-      Folio::Ai.stub(:provider_api_key_env_values, provider_api_key_env_values) do
-        with_ai_config(enabled: true, &)
+    def with_ai_enabled(provider_api_key_env_values: { openai: "secret" }, **config_overrides, &)
+      with_ai_config(**{ enabled: true }.merge(config_overrides)) do
+        Folio::Ai.config.stub(:provider_api_key_env_values, provider_api_key_env_values, &)
       end
     end
 

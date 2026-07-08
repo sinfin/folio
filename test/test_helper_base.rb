@@ -103,19 +103,10 @@ class ActiveSupport::TestCase
     end
   end
 
-  def with_ai_config(**config_overrides)
-    original_values = {}
+  def with_ai_config(**config_overrides, &block)
+    config = Folio::Ai::Config.new(**Folio::Ai.config.to_h.merge(config_overrides))
 
-    config_overrides.each do |key, value|
-      original_values[key] = Folio::Ai.public_send(key)
-      Folio::Ai.public_send("#{key}=", value)
-    end
-
-    yield
-  ensure
-    original_values.each do |key, value|
-      Folio::Ai.public_send("#{key}=", value)
-    end
+    Folio::Ai.stub(:config, config, &block)
   end
 
   def reset_folio_current(site_user_link)

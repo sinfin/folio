@@ -163,8 +163,8 @@ class Folio::Ai::SuggestionGenerator
     end
 
     def generate_with_tracking(prompt:, field:, provider_config:, user_instruction:, started_at:)
-      adapter = provider_adapter || Folio::Ai.provider_adapter(provider: provider_config.provider,
-                                                               model: provider_config.model)
+      adapter = provider_adapter || Folio::Ai.config.provider_adapter(provider: provider_config.provider,
+                                                                      model: provider_config.model)
 
       Folio::Ai.track(:suggestion_generation_requested, tracking_payload(provider_config:,
                                                                          suggestion_count:))
@@ -183,9 +183,9 @@ class Folio::Ai::SuggestionGenerator
 
     def fallback_provider_config(provider_config)
       return if provider_adapter.present?
-      return unless Folio::Ai.model_fallback_enabled?
+      return unless Folio::Ai.config.model_fallback_enabled?
 
-      fallback_model = Folio::Ai.default_model(provider_config.provider)
+      fallback_model = Folio::Ai.config.default_model(provider_config.provider)
       return if fallback_model.blank? || fallback_model == provider_config.model
 
       Folio::Ai::ProviderConfig::Result.new(provider: provider_config.provider,

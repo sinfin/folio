@@ -40,6 +40,6 @@ class Folio::Ai::RequestGuard
     end
 
     def max_prompt_chars
-      Folio::Ai.max_prompt_chars
+      Folio::Ai.config.max_prompt_chars
     end
 end

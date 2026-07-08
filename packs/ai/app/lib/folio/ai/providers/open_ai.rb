@@ -60,7 +60,7 @@ class Folio::Ai::Providers::OpenAi < Folio::Ai::Providers::Base
     def request_body(prompt:, field:, suggestion_count:)
       {
         model:,
-        store: Folio::Ai.provider_request_storage?,
+        store: Folio::Ai.config.provider_request_storage?,
         input: [
           { role: "system", content: json_schema_instruction(suggestion_count) },
           { role: "user", content: prompt },

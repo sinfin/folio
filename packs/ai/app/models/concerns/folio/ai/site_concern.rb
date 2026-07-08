@@ -12,7 +12,7 @@ module Folio::Ai::SiteConcern
              inverse_of: :site,
              dependent: :destroy
 
-    validate :ai_settings_should_be_valid, if: -> { Folio::Ai.enabled? }
+    validate :ai_settings_should_be_valid, if: -> { Folio::Ai.config.enabled? }
     before_validation :set_default_ai_settings
   end
 
@@ -111,7 +111,7 @@ module Folio::Ai::SiteConcern
 
     def validate_ai_provider(provider)
       return if provider.blank?
-      return if Folio::Ai.known_provider?(provider)
+      return if Folio::Ai.config.known_provider?(provider)
 
       errors.add(:ai_settings, :unknown_ai_provider, provider:)
     end

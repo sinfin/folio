@@ -48,14 +48,14 @@ class Folio::Ai::ModelCatalogTest < ActiveSupport::TestCase
   test "uses provider model options as metadata" do
     catalog = Folio::Ai::ModelCatalog.new(provider: :openai, api_key: "secret")
 
-    with_provider_models_env_values(openai: "gpt-5.5-pro") do
-      with_ai_config(provider_models: { openai: "gpt-5.5" },
-                     provider_model_options: {
-                       openai: {
-                         "gpt-5.5" => { label: "gpt-5.5" },
-                         "gpt-5.5-pro" => { label: "GPT 5.5 Pro", cost_tier: "premium" },
-                       },
-                     }) do
+    with_ai_config(provider_models: { openai: "gpt-5.5" },
+                   provider_model_options: {
+                     openai: {
+                       "gpt-5.5" => { label: "gpt-5.5" },
+                       "gpt-5.5-pro" => { label: "GPT 5.5 Pro", cost_tier: "premium" },
+                     },
+                   }) do
+      with_provider_models_env_values(openai: "gpt-5.5-pro") do
         result = catalog.result
 
         assert_equal ["gpt-5.5", "GPT 5.5 Pro - Premium - gpt-5.5-pro"],
@@ -66,6 +66,6 @@ class Folio::Ai::ModelCatalogTest < ActiveSupport::TestCase
 
   private
     def with_provider_models_env_values(values, &)
-      Folio::Ai.stub(:provider_models_env_values, values, &)
+      Folio::Ai.config.stub(:provider_models_env_values, values, &)
     end
 end

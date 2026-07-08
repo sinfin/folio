@@ -109,7 +109,7 @@ class Folio::Ai::AvailabilityTest < ActiveSupport::TestCase
 
   private
     def availability(provider_api_key_env_values: { openai: "secret" })
-      Folio::Ai.stub(:provider_api_key_env_values, provider_api_key_env_values) do
+      Folio::Ai.config.stub(:provider_api_key_env_values, provider_api_key_env_values) do
         Folio::Ai::Availability.new(site: @site,
                                     integration_key: :articles,
                                     field_key: :title,

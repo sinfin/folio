@@ -203,7 +203,7 @@ module Folio::Ai::SimpleFormInputExtension
         component_id: ai_text_suggestions_component_id,
         show_meta: config.fetch(:show_meta, false),
         current_state_policy: config[:current_state_policy],
-        request_timeout_ms: config.fetch(:request_timeout_ms, Folio::Ai.client_request_timeout_ms),
+        request_timeout_ms: config.fetch(:request_timeout_ms, Folio::Ai.config.client_request_timeout_ms),
         loading_text: ai_text_suggestions_translation(:loading_text, config:),
         generic_error_text: ai_text_suggestions_translation(:generic_error_text, config:),
         request_timeout_text: ai_text_suggestions_translation(:request_timeout_text, config:),

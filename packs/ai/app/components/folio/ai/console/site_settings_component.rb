@@ -9,7 +9,7 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
   end
 
   def render?
-    Folio::Ai.enabled? && integrations.present?
+    Folio::Ai.config.enabled? && integrations.present?
   end
 
   private
@@ -22,7 +22,7 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
     end
 
     def providers
-      Folio::Ai.eligible_provider_models.keys.map(&:to_s)
+      Folio::Ai.config.eligible_provider_models.keys.map(&:to_s)
     end
 
     def provider_configuration_available?
@@ -35,7 +35,7 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
 
     def model_options(provider:, selected:, blank_label:)
       options = [[blank_label, ""]]
-      return options unless Folio::Ai.eligible_provider?(provider)
+      return options unless Folio::Ai.config.eligible_provider?(provider)
 
       options += model_catalog_result(provider, selected).models.map do |option|
         [option.select_label, option.id]
@@ -222,9 +222,9 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
     end
 
     def provider_default_model(provider)
-      return unless Folio::Ai.eligible_provider?(provider)
+      return unless Folio::Ai.config.eligible_provider?(provider)
 
-      Folio::Ai.default_model(provider)
+      Folio::Ai.config.default_model(provider)
     end
 
     def provider_default_model_label(provider)
@@ -257,7 +257,7 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
 
     def raw_default_provider
       (site_setting("default_provider").presence ||
-        Folio::Ai.default_provider).to_s
+        Folio::Ai.config.default_provider).to_s
     end
 
     def raw_integration_provider(integration)
@@ -270,7 +270,7 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
 
     def eligible_provider_or_nil(provider)
       provider = provider.to_s
-      provider if Folio::Ai.eligible_provider?(provider)
+      provider if Folio::Ai.config.eligible_provider?(provider)
     end
 
     def field_hint(field)

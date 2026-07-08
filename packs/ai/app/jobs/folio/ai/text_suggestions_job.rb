@@ -3,7 +3,7 @@
 class Folio::Ai::TextSuggestionsJob < Folio::ApplicationJob
   MAX_SUGGESTION_COUNT = 10
 
-  queue_as { Folio::Ai.text_suggestions_queue }
+  queue_as { Folio::Ai.config.text_suggestions_queue }
 
   def perform(request_id:, message_bus_client_id:, user_id:, site_id:, params:)
     @request_id = request_id

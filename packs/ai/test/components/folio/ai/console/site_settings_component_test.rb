@@ -32,9 +32,9 @@ class Folio::Ai::Console::SiteSettingsComponentTest < Folio::Console::ComponentT
                        provider_api_key_env_values: { openai: "secret" },
                        provider_models_env_values: {},
                        **ai_config)
-    Folio::Ai.stub(:provider_api_key_env_values, provider_api_key_env_values) do
-      Folio::Ai.stub(:provider_models_env_values, provider_models_env_values) do
-        with_ai_config(**{ enabled: true }.merge(ai_config)) do
+    with_ai_config(**{ enabled: true }.merge(ai_config)) do
+      Folio::Ai.config.stub(:provider_api_key_env_values, provider_api_key_env_values) do
+        Folio::Ai.config.stub(:provider_models_env_values, provider_models_env_values) do
           vc_test_controller.view_context.simple_form_for(site, url: "/") do |form|
             render_inline(Folio::Ai::Console::SiteSettingsComponent.new(form:))
           end

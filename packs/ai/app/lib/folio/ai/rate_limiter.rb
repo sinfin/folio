@@ -65,6 +65,6 @@ class Folio::Ai::RateLimiter
     end
 
     def rate_limit
-      Folio::Ai.rate_limit
+      Folio::Ai.config.rate_limit
     end
 end

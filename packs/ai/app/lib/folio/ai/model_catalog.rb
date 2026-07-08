@@ -85,7 +85,7 @@ class Folio::Ai::ModelCatalog
   end
 
   def fallback_model_for(model)
-    fallback_model = Folio::Ai.default_model(provider)
+    fallback_model = Folio::Ai.config.default_model(provider)
     return if fallback_model.blank? || fallback_model == model
 
     fallback_status = status(fallback_model)
@@ -126,7 +126,7 @@ class Folio::Ai::ModelCatalog
 
     def configured_model_metadata
       metadata = normalized_provider_model_options
-      default_model = Folio::Ai.provider_models[provider]
+      default_model = Folio::Ai.config.provider_models[provider]
 
       configured_model_ids.each_with_object({}) do |id, configured|
         configured[id] = metadata.fetch(id, {}).dup
@@ -140,19 +140,19 @@ class Folio::Ai::ModelCatalog
 
     def configured_model_ids
       [
-        Folio::Ai.provider_models[provider],
+        Folio::Ai.config.provider_models[provider],
         *env_model_ids,
       ].filter_map { |id| id.to_s.presence }.uniq
     end
 
     def env_model_ids
-      Folio::Ai.provider_models_env_value(provider).to_s.split(",").filter_map do |id|
+      Folio::Ai.config.provider_models_env_value(provider).to_s.split(",").filter_map do |id|
         id.strip.presence
       end
     end
 
     def normalized_provider_model_options
-      raw_options = Folio::Ai.provider_model_options
+      raw_options = Folio::Ai.config.provider_model_options
       provider_options = raw_options[provider] || raw_options[provider.to_s] || {}
 
       case provider_options

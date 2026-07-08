@@ -85,18 +85,17 @@ class Folio::Ai::TextSuggestionsJobTest < ActiveJob::TestCase
     @site.update!(ai_settings: enabled_ai_settings(integration_key: :folio_pages,
                                                   field_keys: %i[title]))
 
-    Folio::Ai.stub(:provider_adapter, provider_factory) do
-      message = perform_text_suggestions_job(params: job_params(integration_key: :folio_pages,
-                                                                field_key: :title,
-                                                                context: {
-                                                                  current_form_snapshot: {
-                                                                    "page[title]" => "Unsaved title",
-                                                                  },
+    message = perform_text_suggestions_job(params: job_params(integration_key: :folio_pages,
+                                                              field_key: :title,
+                                                              context: {
+                                                                current_form_snapshot: {
+                                                                  "page[title]" => "Unsaved title",
                                                                 },
-                                                                provider_adapter_class_name: nil))
+                                                              },
+                                                              provider_adapter_class_name: nil),
+                                           provider_adapter_factory: provider_factory)
 
-      assert_includes message[:payload]["data"]["html"], "Fallback snapshot suggestion"
-    end
+    assert_includes message[:payload]["data"]["html"], "Fallback snapshot suggestion"
 
     assert_equal 1, adapter.calls.length
     assert_includes adapter.calls.first[:prompt], '"current_form_snapshot": {'
@@ -146,20 +145,30 @@ class Folio::Ai::TextSuggestionsJobTest < ActiveJob::TestCase
   end
 
   private
-    def perform_text_suggestions_job(params: job_params)
+    def perform_text_suggestions_job(params: job_params, provider_adapter_factory: nil)
       messages = capture_message_bus do
         with_ai_config(enabled: true,
                        default_provider: :demo,
                        provider_models: { demo: "demo" }) do
-          Folio::Ai::TextSuggestionsJob.perform_now(request_id: "request-hash",
-                                                    message_bus_client_id: "message-bus-client",
-                                                    user_id: @user.id,
-                                                    site_id: @site.id,
-                                                    params:)
+          if provider_adapter_factory
+            Folio::Ai.config.stub(:provider_adapter, provider_adapter_factory) do
+              perform_job(params:)
+            end
+          else
+            perform_job(params:)
+          end
         end
       end
 
       messages.fetch(0)
+    end
+
+    def perform_job(params:)
+      Folio::Ai::TextSuggestionsJob.perform_now(request_id: "request-hash",
+                                                message_bus_client_id: "message-bus-client",
+                                                user_id: @user.id,
+                                                site_id: @site.id,
+                                                params:)
     end
 
     def capture_message_bus(&block)

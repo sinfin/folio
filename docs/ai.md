@@ -57,8 +57,8 @@ Folio AI lives in `packs/ai` and is opt-in through `Folio.enabled_packs`. The
 root Folio engine only provides pack loading, pack asset inclusion, shared
 routes, and generic SimpleForm and Stimulus extension points. AI-specific
 behavior stays under the `Folio::Ai` namespace. Once the pack is loaded, the
-runtime `Folio::Ai.enabled` flag defaults to true unless host configuration or
-`FOLIO_AI_DISABLED` turns it off.
+runtime `Folio::Ai.config.enabled` flag defaults to true unless host
+configuration or `FOLIO_AI_DISABLED` turns it off.
 
 The pack is designed around reusable text suggestions:
 
@@ -92,8 +92,8 @@ Folio.enabled_packs = [:ai]
 The default is `[]`. When the pack is disabled, its runtime code, migrations,
 views, locales, pack assets, and Console AI API routes are not part of the
 enabled Folio feature set.
-`Folio::Ai.enabled` is a separate runtime feature flag inside the loaded pack and
-defaults to true.
+`Folio::Ai.config.enabled` is a separate runtime feature flag inside the loaded
+pack and defaults to true.
 
 ### Run migrations
 
@@ -153,8 +153,8 @@ Important defaults:
 
 Set provider credentials with `FOLIO_AI_OPENAI_API_KEY` and/or
 `FOLIO_AI_ANTHROPIC_API_KEY`.
-`FOLIO_AI_DISABLED` is a global kill switch and makes `Folio::Ai.enabled?`
-false even when configuration enables the feature.
+`FOLIO_AI_DISABLED` is a global kill switch and makes
+`Folio::Ai.config.enabled?` false even when configuration enables the feature.
 Console settings and editor controls only expose eligible providers. OpenAI and
 Anthropic are eligible when their `FOLIO_AI_*_API_KEY` is present; custom
 providers configured in `provider_models` are eligible by default.
@@ -212,9 +212,9 @@ one integration.
 
 ## Site Settings
 
-When the AI pack is enabled, `Folio::Ai.enabled?` is true, and at least one
-integration is registered, the Console site form gets an `ai_prompts` tab. The
-tab renders `Folio::Ai::Console::SiteSettingsComponent`.
+When the AI pack is enabled, `Folio::Ai.config.enabled?` is true, and at least
+one integration is registered, the Console site form gets an `ai_prompts` tab.
+The tab renders `Folio::Ai::Console::SiteSettingsComponent`.
 
 The settings are stored on `folio_sites.ai_settings`:
 
@@ -240,7 +240,7 @@ The settings are stored on `folio_sites.ai_settings`:
 }
 ```
 
-Site settings are validated while `Folio::Ai.enabled?` is true. Unknown
+Site settings are validated while `Folio::Ai.config.enabled?` is true. Unknown
 integrations, unknown fields, invalid nested structures, and unknown providers
 are rejected. Blank prompts remain valid settings but keep that field
 unavailable to editors. Saved model ids are not rejected by validation; the site
@@ -333,12 +333,12 @@ before passing it as the text suggestion job argument.
 The server-side snapshot filter keeps only the context roots that are useful for
 prompt generation:
 
-- configured top-level roots from `Folio::Ai.current_form_snapshot_field_roots`
+- configured top-level roots from `Folio::Ai.config.current_form_snapshot_field_roots`
 - all fields declared by `record_class.folio_tiptap_fields`, converted with
   `Folio::Tiptap::PlainText.from_value`
 - all atom payload leaves under roots derived from `record_class.atom_keys`
 - configured file placement text leaves from
-  `Folio::Ai.current_form_snapshot_file_placement_text_keys` for normal
+  `Folio::Ai.config.current_form_snapshot_file_placement_text_keys` for normal
   placement roots derived from `record_class.folio_attachment_keys`
 
 Nested atom or file placement records marked with `_destroy` values of `1`,
@@ -487,7 +487,8 @@ arguments. Folio does not persist them separately; host queue backends such as
 Sidekiq may still expose job arguments in operational tooling. Record class/id
 and CanCanCan authorization stay in the controller and are not job inputs.
 
-`Folio::Ai::TextSuggestionsJob` runs on `Folio::Ai.text_suggestions_queue`.
+`Folio::Ai::TextSuggestionsJob` runs on
+`Folio::Ai.config.text_suggestions_queue`.
 The job does not use `Folio::Current`; it only loads the already selected
 `user` and AI `site` by id, then:
 

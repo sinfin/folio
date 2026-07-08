@@ -175,10 +175,10 @@ class Folio::Ai::CurrentFormSnapshot
     end
 
     def field_roots
-      Folio::Ai.current_form_snapshot_field_roots
+      Folio::Ai.config.current_form_snapshot_field_roots
     end
 
     def file_placement_text_keys
-      Folio::Ai.current_form_snapshot_file_placement_text_keys
+      Folio::Ai.config.current_form_snapshot_file_placement_text_keys
     end
 end
