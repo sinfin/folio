@@ -13,11 +13,13 @@
       .col-md-auto
         = file_picker_for_cover(f)
       .col-md
-        = f.input :title, atom_setting: :title
+        = f.input :title, atom_setting: :title,
+                          ai: true
         = f.input :slug
         = f.input :perex, character_counter: true,
                           autosize: true,
-                          atom_setting: :perex
+                          atom_setting: :perex,
+                          ai: true
 
         = f.input :locale, collection: Dummy::Blog.available_locales,
                           include_blank: false,
@@ -27,7 +29,9 @@
 
         = react_ordered_multiselect(f, :topics, atom_setting: :topics)
 
-        = f.input :meta_title, character_counter: true
+        = f.input :meta_title, character_counter: true,
+                               ai: true
 
         = f.input :meta_description, autosize: true,
-                                    character_counter: true
+                                    character_counter: true,
+                                    ai: true

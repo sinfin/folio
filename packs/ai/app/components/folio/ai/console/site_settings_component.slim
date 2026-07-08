@@ -1,0 +1,42 @@
+.f-ai-c-site-settings
+  - if provider_configuration_available?
+    = boolean_input(:enabled,
+                    label: enabled_label,
+                    checked: site_enabled?)
+
+    .row
+      .col-md-6
+        = provider_input(:provider,
+                         label: provider_input_label,
+                         selected: selected_provider)
+
+      .col-md-6
+        = model_input(:model,
+                      label: model_input_label,
+                      provider: selected_provider,
+                      selected: model_value)
+
+    - records.each do |record|
+      .f-ai-c-site-settings__record.card.mb-g
+        .card-header
+          .f-ai-c-site-settings__record-title = record[:label]
+
+        .card-body
+          - fields(record).each do |field|
+            .f-ai-c-site-settings__field
+              .f-ai-c-site-settings__field-header
+                .f-ai-c-site-settings__field-title = field[:label]
+
+                - if field_hint(field)
+                  small.f-ai-c-site-settings__field-hint = field_hint(field)
+
+              = text_area_input(:integrations,
+                                record[:key],
+                                :fields,
+                                field[:key],
+                                :prompt,
+                                label: prompt_label,
+                                value: field_prompt(record, field))
+  - else
+    .alert.alert-danger
+      = no_providers_text

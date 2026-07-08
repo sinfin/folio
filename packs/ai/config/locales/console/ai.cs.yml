@@ -1,0 +1,23 @@
+---
+cs:
+  folio:
+    console:
+      tabs:
+        ai_prompts: AI prompty
+    ai:
+      console:
+        site_settings_component:
+          enabled_label: Povolit AI návrhy pro tento web
+          provider: Provider
+          model: Model
+          model_placeholder: "Výchozí: %{model}"
+          model_placeholder_blank: Výchozí model providera
+          no_providers: Před úpravou AI nastavení pro tento web nastavte AI providera.
+          prompt_label: Prompt
+          character_limit:
+            one: "Limit: %{count} znak"
+            few: "Limit: %{count} znaky"
+            other: "Limit: %{count} znaků"
+          providers:
+            dummy: Dummy
+            openai: OpenAI

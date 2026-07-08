@@ -2,7 +2,6 @@
 
 require "test_helper"
 require Folio::Engine.root.join("packs/ai/lib/folio/ai")
-load Folio::Engine.root.join("packs/ai/app/overrides/lib/simple_form/inputs/base_ai_override.rb")
 
 class Folio::Ai::SimpleFormInputExtensionTest < ActionView::TestCase
   include SimpleForm::ActionViewExtensions::FormHelper
@@ -17,7 +16,7 @@ class Folio::Ai::SimpleFormInputExtensionTest < ActionView::TestCase
                               ])
 
     @site = create(Rails.application.config.folio_site_default_test_factory,
-                   ai_settings: { "provider" => "dummy" })
+                   ai_settings: { "enabled" => true, "provider" => "dummy" })
     @page = create(:folio_page, site: @site)
   end
 
@@ -60,6 +59,20 @@ class Folio::Ai::SimpleFormInputExtensionTest < ActionView::TestCase
 
   test "does not render controls when no provider is available" do
     html = Folio::Ai.stub(:provider_for, ->(**) { raise Folio::Ai::ProviderError }) do
+      simple_form_for @page, url: "/" do |f|
+        concat(f.input :title, ai: true)
+      end
+    end
+
+    page = Capybara.string(html)
+
+    assert page.has_no_css?(".f-ai-input__controls")
+  end
+
+  test "does not render controls when site AI is disabled" do
+    @site.update!(ai_settings: { "enabled" => false, "provider" => "dummy" })
+
+    html = with_dummy_provider do
       simple_form_for @page, url: "/" do |f|
         concat(f.input :title, ai: true)
       end

@@ -1,0 +1,22 @@
+---
+en:
+  folio:
+    console:
+      tabs:
+        ai_prompts: AI prompts
+    ai:
+      console:
+        site_settings_component:
+          enabled_label: Enable AI suggestions for this site
+          provider: Provider
+          model: Model
+          model_placeholder: "Default: %{model}"
+          model_placeholder_blank: Provider default
+          no_providers: Configure an AI provider before editing AI suggestion settings for this site.
+          prompt_label: Prompt
+          character_limit:
+            one: "Limit: %{count} character"
+            other: "Limit: %{count} characters"
+          providers:
+            dummy: Dummy
+            openai: OpenAI

@@ -24,6 +24,23 @@ class Folio::Ai::ProvidersTest < ActiveSupport::TestCase
     end
   end
 
+  test "defines dummy model options" do
+    assert_equal [Folio::Ai::DEFAULT_DUMMY_MODEL], Folio::Ai::Providers::Dummy.models
+    assert_equal Folio::Ai::DEFAULT_DUMMY_MODEL, Folio::Ai::Providers::Dummy.default_model
+  end
+
+  test "defines OpenAI model options from Folio-prefixed ENV with fallback" do
+    Folio::Ai::Providers::OpenAi.stub(:models_env_value, " gpt-5.5, gpt-5.5-pro, gpt-5.5 ") do
+      assert_equal %w[gpt-5.5 gpt-5.5-pro], Folio::Ai::Providers::OpenAi.models
+      assert_equal "gpt-5.5", Folio::Ai::Providers::OpenAi.default_model
+    end
+
+    Folio::Ai::Providers::OpenAi.stub(:models_env_value, " ") do
+      assert_equal [Folio::Ai::DEFAULT_OPENAI_MODEL], Folio::Ai::Providers::OpenAi.models
+      assert_equal Folio::Ai::DEFAULT_OPENAI_MODEL, Folio::Ai::Providers::OpenAi.default_model
+    end
+  end
+
   test "reads OpenAI API key from Folio-prefixed ENV" do
     ENV.stub(:[], ->(key) { key == "FOLIO_AI_OPENAI_API_KEY" ? "secret" : nil }) do
       assert_equal "secret", Folio::Ai.openai_api_key

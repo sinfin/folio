@@ -15,6 +15,14 @@ class Folio::Ai::Providers::Base
     false
   end
 
+  def self.default_model
+    models.first
+  end
+
+  def self.models
+    [const_get(:DEFAULT_MODEL)]
+  end
+
   attr_reader :model
 
   def initialize(model: nil, timeout_ms: Folio::Ai.config.client_request_timeout_ms)
@@ -30,7 +38,7 @@ class Folio::Ai::Providers::Base
     attr_reader :timeout_ms
 
     def default_model
-      Folio::Ai.config.provider_models[self.class.key] || self.class::DEFAULT_MODEL
+      self.class.default_model
     end
 
     def post_json(uri:, headers:, body:)

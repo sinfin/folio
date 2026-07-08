@@ -4,6 +4,7 @@
 class Folio::Ai::Providers::OpenAi < Folio::Ai::Providers::Base
   DEFAULT_MODEL = Folio::Ai::DEFAULT_OPENAI_MODEL
   ENDPOINT = "https://api.openai.com/v1/responses"
+  MODELS_ENV_KEY = "FOLIO_AI_OPENAI_MODELS"
 
   def self.key
     :openai
@@ -11,6 +12,18 @@ class Folio::Ai::Providers::OpenAi < Folio::Ai::Providers::Base
 
   def self.available?
     Folio::Ai.openai_api_key.present?
+  end
+
+  def self.models
+    models_from_env.presence || super
+  end
+
+  def self.models_env_value
+    ENV[MODELS_ENV_KEY]
+  end
+
+  def self.models_from_env
+    models_env_value.to_s.split(",").filter_map { |model| model.strip.presence }.uniq
   end
 
   def initialize(api_key: Folio::Ai.openai_api_key, **kwargs)

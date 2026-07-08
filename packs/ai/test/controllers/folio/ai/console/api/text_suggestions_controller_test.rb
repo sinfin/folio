@@ -18,7 +18,7 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
                                 { key: :title, character_limit: 80 },
                               ])
 
-    @site.update!(ai_settings: { "provider" => "dummy" })
+    @site.update!(ai_settings: { "enabled" => true, "provider" => "dummy" })
     @page = create(:folio_page, site: @site)
   end
 

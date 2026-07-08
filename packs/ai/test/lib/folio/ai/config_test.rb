@@ -10,7 +10,7 @@ class Folio::Ai::ConfigTest < ActiveSupport::TestCase
 
       assert_predicate config, :enabled?
       assert_equal :openai, config.default_provider
-      assert_equal({ openai: Folio::Ai::DEFAULT_OPENAI_MODEL }, config.provider_models)
+      assert_equal Folio::Ai::DEFAULT_OPENAI_MODEL, config.default_model(:openai)
       assert_equal :default, config.text_suggestions_queue
       assert_equal 45_000, config.client_request_timeout_ms
     end
@@ -22,14 +22,12 @@ class Folio::Ai::ConfigTest < ActiveSupport::TestCase
     end
   end
 
-  test "normalizes configured providers and queue" do
-    config = Folio::Ai::Config.new(provider_models: { "dummy" => "dummy-model" },
-                                   text_suggestions_queue: "critical",
+  test "normalizes queue and timeout" do
+    config = Folio::Ai::Config.new(text_suggestions_queue: "critical",
                                    client_request_timeout_ms: 12_000)
 
-    assert_equal({ dummy: "dummy-model" }, config.provider_models)
-    assert_equal "dummy-model", config.default_model(:dummy)
     assert config.known_provider?(:dummy)
+    assert_not config.known_provider?(:unknown)
     assert_equal :critical, config.text_suggestions_queue
     assert_equal 12_000, config.client_request_timeout_ms
   end

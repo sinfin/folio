@@ -47,9 +47,16 @@ module Folio::Ai::SimpleFormInputExtension
     def ai_text_suggestions_available?(config)
       Folio::Ai.config.enabled? &&
         persisted_ai_record?(config[:record]) &&
+        ai_site_enabled?(config[:record]) &&
         Folio::Ai.registry.field(config[:record_key], config[:field_key]).present? &&
         !ai_input_disabled? &&
         ai_provider_available?(config[:record])
+    end
+
+    def ai_site_enabled?(record)
+      site = record.respond_to?(:site) ? record.site : Folio::Current.site
+
+      !site.respond_to?(:ai_enabled?) || site.ai_enabled?
     end
 
     def ai_provider_available?(record)

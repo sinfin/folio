@@ -13,7 +13,7 @@ class Folio::Ai::TextSuggestionsJobTest < ActiveJob::TestCase
     Folio::Site.include(Folio::Ai::SiteConcern) unless Folio::Site < Folio::Ai::SiteConcern
 
     @site = create(Rails.application.config.folio_site_default_test_factory,
-                   ai_settings: { "provider" => "dummy" })
+                   ai_settings: { "enabled" => true, "provider" => "dummy" })
     @page = create(:folio_page, site: @site)
   end
 

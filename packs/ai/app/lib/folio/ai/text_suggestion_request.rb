@@ -106,6 +106,7 @@ class Folio::Ai::TextSuggestionRequest
     return :missing_message_bus_client_id if message_bus_client_id.blank?
     return :missing_key if key.blank?
     return :record_not_found unless record
+    return :site_disabled unless site_ai_enabled?
     return :field_not_registered unless field
     :provider_unavailable unless provider_available?
   end
@@ -139,6 +140,10 @@ class Folio::Ai::TextSuggestionRequest
 
     def record_site_allowed?
       record_site.blank? || current_site.blank? || record_site == current_site
+    end
+
+    def site_ai_enabled?
+      !site.respond_to?(:ai_enabled?) || site.ai_enabled?
     end
 
     def parsed_form_snapshot

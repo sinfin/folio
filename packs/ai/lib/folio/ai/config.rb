@@ -19,7 +19,6 @@ class Folio::Ai::Config
     {
       enabled:,
       default_provider:,
-      provider_models:,
       text_suggestions_queue:,
       client_request_timeout_ms:,
     }
@@ -29,20 +28,17 @@ class Folio::Ai::Config
     ActiveModel::Type::Boolean.new.cast(enabled)
   end
 
-  def provider_models
-    (@provider_models || {}).to_h.transform_keys(&:to_sym)
-  end
-
-  def provider_models=(value)
-    @provider_models = (value || {}).to_h
-  end
-
   def default_model(provider = default_provider)
-    provider_models.fetch(provider.to_sym)
+    Folio::Ai.provider_class(provider).default_model
   end
 
   def known_provider?(provider)
-    provider.present? && provider_models.key?(provider.to_sym)
+    return false if provider.blank?
+
+    Folio::Ai.provider_class(provider)
+    true
+  rescue ArgumentError
+    false
   end
 
   def text_suggestions_queue
@@ -59,7 +55,6 @@ class Folio::Ai::Config
       {
         enabled: !Folio::Ai.disabled_by_env?,
         default_provider: :openai,
-        provider_models: { openai: Folio::Ai::DEFAULT_OPENAI_MODEL },
         text_suggestions_queue: :default,
         client_request_timeout_ms: 45_000,
       }

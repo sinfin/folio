@@ -21,7 +21,7 @@ class Folio::Ai::TextSuggestionRequestTest < ActiveSupport::TestCase
 
   test "resolves one registered field request" do
     site = create(Rails.application.config.folio_site_default_test_factory,
-                  ai_settings: { "provider" => "dummy" })
+                  ai_settings: { "enabled" => true, "provider" => "dummy" })
     user = create(:folio_user)
     page = create(:folio_page, site:)
 
@@ -79,7 +79,7 @@ class Folio::Ai::TextSuggestionRequestTest < ActiveSupport::TestCase
 
   test "uses site provider and model with dummy fallback model" do
     site = create(Rails.application.config.folio_site_default_test_factory,
-                  ai_settings: { "provider" => "dummy" })
+                  ai_settings: { "enabled" => true, "provider" => "dummy" })
     page = create(:folio_page, site:)
     request = build_request(site:,
                             page:,
@@ -100,6 +100,20 @@ class Folio::Ai::TextSuggestionRequestTest < ActiveSupport::TestCase
     request = build_request(params: { key: "title" })
 
     assert_equal :missing_message_bus_client_id, request.error_code
+  end
+
+  test "reports disabled site" do
+    site = create(Rails.application.config.folio_site_default_test_factory,
+                  ai_settings: { "enabled" => false, "provider" => "dummy" })
+    page = create(:folio_page, site:)
+    request = build_request(site:,
+                            page:,
+                            params: {
+                              key: "title",
+                              message_bus_client_id: "client-1",
+                            })
+
+    assert_equal :site_disabled, request.error_code
   end
 
   private
