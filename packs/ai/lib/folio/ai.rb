@@ -5,6 +5,8 @@
 
 module Folio::Ai
   module Console
+    module Api
+    end
   end
 
   DEFAULT_DUMMY_MODEL = "dummy"
@@ -90,6 +92,7 @@ require_relative "../../app/lib/folio/ai/providers/open_ai"
 require_relative "../../app/lib/folio/ai/text_suggestion_generator"
 require_relative "../../app/lib/folio/ai/text_suggestion_request"
 require_relative "../../app/components/folio/ai/console/text_suggestions_component"
+require_relative "../../app/controllers/folio/ai/console/api/text_suggestions_controller"
 require_relative "../../app/models/concerns/folio/ai/site_concern"
 require_relative "../../app/models/concerns/folio/ai/user_concern"
 require_relative "../../app/models/folio/ai/user_instruction"
