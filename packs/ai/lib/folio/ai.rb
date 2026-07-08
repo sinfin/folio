@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 module Folio::Ai
+  DEFAULT_DUMMY_MODEL = "dummy"
   DEFAULT_OPENAI_MODEL = "gpt-5.4-mini"
+  ProviderError = Class.new(StandardError)
 
   PACK_ASSETS = {
     javascripts: [],
@@ -40,11 +42,44 @@ module Folio::Ai
     def disabled_by_env?
       ENV.key?("FOLIO_AI_DISABLED")
     end
+
+    def openai_api_key
+      ENV["FOLIO_AI_OPENAI_API_KEY"].presence
+    end
+
+    def available_providers
+      provider_classes.select { |_key, provider_class| provider_class.available? }
+    end
+
+    def provider_class(key)
+      provider_classes.fetch(key.to_sym)
+    rescue KeyError
+      raise ArgumentError, "Unknown AI provider: #{key}"
+    end
+
+    def provider_for(key: config.default_provider, model: nil)
+      key = key.to_sym
+      provider_class = available_providers[key]
+      raise ProviderError, "AI provider is not available: #{key}" unless provider_class
+
+      provider_class.new(model:)
+    end
+
+    private
+      def provider_classes
+        {
+          dummy: Folio::Ai::Providers::Dummy,
+          openai: Folio::Ai::Providers::OpenAi,
+        }
+      end
   end
 end
 
 require_relative "ai/config"
 require_relative "../../app/lib/folio/ai/registry"
+require_relative "../../app/lib/folio/ai/providers/base"
+require_relative "../../app/lib/folio/ai/providers/dummy"
+require_relative "../../app/lib/folio/ai/providers/open_ai"
 
 Folio::Ai.reset_configuration!
 Folio::Ai.reset_registry!

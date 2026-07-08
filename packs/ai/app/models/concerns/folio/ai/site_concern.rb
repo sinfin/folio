@@ -28,7 +28,9 @@ module Folio::Ai::SiteConcern
   end
 
   def ai_model
-    ai_settings_data["model"].presence || Folio::Ai.config.default_model(ai_provider)
+    ai_settings_data["model"].presence ||
+      Folio::Ai.config.provider_models[ai_provider.to_sym] ||
+      Folio::Ai.provider_class(ai_provider)::DEFAULT_MODEL
   end
 
   def ai_prompt_for(record_key:, field_key:)
