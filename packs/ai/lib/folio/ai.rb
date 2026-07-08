@@ -1,9 +1,19 @@
 # frozen_string_literal: true
 
+#
+# Entry point for AI pack configuration, registry access, providers, and core
+# suggestion classes.
+
 module Folio::Ai
+  module Console
+    module Api
+    end
+  end
+
   DEFAULT_DUMMY_MODEL = "dummy"
   DEFAULT_OPENAI_MODEL = "gpt-5.4-mini"
   ProviderError = Class.new(StandardError)
+  ResponseError = Class.new(StandardError)
 
   PACK_ASSETS = {
     javascripts: [],
@@ -80,6 +90,14 @@ require_relative "../../app/lib/folio/ai/registry"
 require_relative "../../app/lib/folio/ai/providers/base"
 require_relative "../../app/lib/folio/ai/providers/dummy"
 require_relative "../../app/lib/folio/ai/providers/open_ai"
+require_relative "../../app/lib/folio/ai/text_suggestion_generator"
+require_relative "../../app/lib/folio/ai/text_suggestion_request"
+require_relative "../../app/components/folio/ai/console/text_suggestions_component"
+require_relative "../../app/controllers/folio/ai/console/api/text_suggestions_controller"
+require_relative "../../app/models/concerns/folio/ai/site_concern"
+require_relative "../../app/models/concerns/folio/ai/user_concern"
+require_relative "../../app/models/folio/ai/user_instruction"
+require_relative "../../app/jobs/folio/ai/text_suggestions_job"
 
 Folio::Ai.reset_configuration!
 Folio::Ai.reset_registry!
