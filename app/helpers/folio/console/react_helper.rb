@@ -149,6 +149,7 @@ module Folio::Console::ReactHelper
                                 group_label_method: nil,
                                 label_method: :to_console_label,
                                 value_method: :id,
+                                selected_through_records: nil,
                                 virtual: nil)
     class_name = "folio-react-wrap folio-react-wrap--ordered-multiselect"
 
@@ -201,7 +202,7 @@ module Folio::Console::ReactHelper
       foreign_key = reflection.foreign_key
       class_names = through_klass.to_s
 
-      f.object.send(through).each do |record|
+      (selected_through_records || f.object.send(through)).each do |record|
         through_record = through_klass.find(record.send(reflection.foreign_key))
         hash = {
           id: record.id,

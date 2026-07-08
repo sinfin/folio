@@ -171,6 +171,63 @@ class Folio::Console::ReactHelperTest < ActionView::TestCase
     assert_equal first_author.id, items[0]["value"]
   end
 
+  test "react_ordered_multiselect uses explicit selected through records for items" do
+    article = create(:dummy_blog_article)
+    first_author = create(:dummy_blog_author,
+                          site: article.site,
+                          locale: article.locale,
+                          first_name: "Ada",
+                          last_name: "Lovelace")
+    second_author = create(:dummy_blog_author,
+                           site: article.site,
+                           locale: article.locale,
+                           first_name: "Grace",
+                           last_name: "Hopper")
+    article.authors << first_author
+    article.authors << second_author
+
+    first_link = article.author_article_links.find_by!(author: first_author)
+
+    wrap = ordered_multiselect_wrap(article,
+                                    selected_through_records: [first_link])
+    items = data_json(wrap, "items")
+
+    assert_equal "#{article.model_name.param_key}[author_article_links_attributes]",
+                 wrap["data-param-base"]
+    assert_equal "dummy_blog_author_id", wrap["data-foreign-key"]
+    assert_equal [first_author.id], items.map { |item| item["value"] }
+    assert_equal ["Ada Lovelace"], items.map { |item| item["label"] }
+  end
+
+  test "react_ordered_multiselect keeps selected through records marked for destruction as removed items" do
+    article = create(:dummy_blog_article)
+    kept_author = create(:dummy_blog_author,
+                         site: article.site,
+                         locale: article.locale,
+                         first_name: "Ada",
+                         last_name: "Lovelace")
+    removed_author = create(:dummy_blog_author,
+                            site: article.site,
+                            locale: article.locale,
+                            first_name: "Grace",
+                            last_name: "Hopper")
+    article.authors << kept_author
+    article.authors << removed_author
+
+    kept_link = article.author_article_links.find_by!(author: kept_author)
+    removed_link = article.author_article_links.find_by!(author: removed_author)
+    removed_link.mark_for_destruction
+
+    wrap = ordered_multiselect_wrap(article,
+                                    selected_through_records: [kept_link, removed_link])
+    items = data_json(wrap, "items")
+    removed_items = data_json(wrap, "removed-items")
+
+    assert_equal [kept_author.id], items.map { |item| item["value"] }
+    assert_equal [removed_link.id], removed_items.map { |item| item["id"] }
+    assert_equal [removed_author.id], removed_items.map { |item| item["value"] }
+  end
+
   test "react_ordered_multiselect keeps selected items with local options" do
     article = create(:dummy_blog_article)
     author = create(:dummy_blog_author,
