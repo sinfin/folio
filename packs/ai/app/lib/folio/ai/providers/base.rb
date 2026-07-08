@@ -101,6 +101,10 @@ class Folio::Ai::Providers::Base
     raise NotImplementedError, "#{self.class.name} must implement #build_request"
   end
 
+  def build_batch_request(prompt:, field:, fields:, suggestion_count:)
+    raise NotImplementedError, "#{self.class.name} must implement #build_batch_request"
+  end
+
   def generate_suggestions(prompt:, field:, suggestion_count: Folio::Ai::ResponseNormalizer::DEFAULT_SUGGESTION_COUNT)
     request = build_request(prompt:, field:, suggestion_count:)
     response_body = perform_request(request)
@@ -108,10 +112,26 @@ class Folio::Ai::Providers::Base
     normalize_response(response_body:, field:, suggestion_count:)
   end
 
+  def generate_batch_suggestions(prompt:,
+                                 field:,
+                                 fields:,
+                                 suggestion_count: Folio::Ai::BatchSuggestionGenerator::DEFAULT_BATCH_SUGGESTION_COUNT)
+    request = build_batch_request(prompt:, field:, fields:, suggestion_count:)
+    response_body = perform_request(request)
+
+    normalize_batch_response(response_body:, fields:, suggestion_count:)
+  end
+
   def normalize_response(response_body:, field:, suggestion_count:)
     Folio::Ai::ResponseNormalizer.new(raw_response: extract_response_text(response_body),
                                       field:,
                                       suggestion_count:).call
+  end
+
+  def normalize_batch_response(response_body:, fields:, suggestion_count:)
+    Folio::Ai::BatchResponseNormalizer.new(raw_response: extract_response_text(response_body),
+                                           fields: normalizer_fields(fields),
+                                           suggestion_count:).call
   end
 
   private
@@ -155,5 +175,32 @@ class Folio::Ai::Providers::Base
         Generate #{suggestion_count} suggestions.
         Each suggestion must contain "text" and may contain "key" and "meta".
       TEXT
+    end
+
+    def batch_json_schema_instruction(fields, suggestion_count)
+      <<~TEXT.squish
+        Return only valid JSON with a top-level "suggestions_by_field" object.
+        Include exactly these output fields: #{JSON.generate(field_descriptions(fields))}.
+        Each value must be an array with exactly #{suggestion_count} suggestion(s).
+        Each suggestion must contain "text" and may contain "key" and "meta".
+      TEXT
+    end
+
+    def field_keys(fields)
+      Array(fields).map { |field| field.key.to_s }
+    end
+
+    def field_descriptions(fields)
+      Array(fields).map do |field|
+        {
+          key: field.key.to_s,
+          label: field.label.presence,
+          character_limit: field.field&.character_limit,
+        }.compact
+      end
+    end
+
+    def normalizer_fields(fields)
+      Array(fields).index_by { |field| field.key.to_s }.transform_values(&:field)
     end
 end

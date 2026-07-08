@@ -24,6 +24,13 @@ en:
           chars_label: chars
           instructions_placeholder: Custom AI instructions (optional) ...
           regenerate_label: Save custom instructions
+        text_suggestions_group_component:
+          generate_all_label: AI suggestions for all variants
+          close_all_label: Close
+          instructions_placeholder: Custom AI instructions (optional) ...
+          regenerate_all_label: Save custom instructions for all variants
+          generic_error_text: AI suggestions could not be generated. Please try again.
+          request_timeout_text: AI suggestions are taking too long. Please try again.
         site_settings_component:
           intro: Configure AI suggestions per site and registered field. A field is available in editor forms only when the site is enabled, the field is enabled, and its default prompt is not blank.
           no_eligible_providers: Configure AI provider credentials before editing AI suggestions settings for this site.

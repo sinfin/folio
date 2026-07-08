@@ -45,6 +45,12 @@ class Folio::Ai::Providers::OpenAi < Folio::Ai::Providers::Base
                 body: request_body(prompt:, field:, suggestion_count:))
   end
 
+  def build_batch_request(prompt:, field:, fields:, suggestion_count:)
+    Request.new(uri: URI(endpoint),
+                headers:,
+                body: batch_request_body(prompt:, field:, fields:, suggestion_count:))
+  end
+
   private
     def endpoint
       "https://api.openai.com/v1/responses"
@@ -67,6 +73,21 @@ class Folio::Ai::Providers::OpenAi < Folio::Ai::Providers::Base
         ],
         metadata: {
           folio_ai_field_key: field.key,
+        },
+      }
+    end
+
+    def batch_request_body(prompt:, field:, fields:, suggestion_count:)
+      {
+        model:,
+        store: Folio::Ai.config.provider_request_storage?,
+        input: [
+          { role: "system", content: batch_json_schema_instruction(fields, suggestion_count) },
+          { role: "user", content: prompt },
+        ],
+        metadata: {
+          folio_ai_field_key: field.key,
+          folio_ai_batch_field_keys: field_keys(fields).join(","),
         },
       }
     end

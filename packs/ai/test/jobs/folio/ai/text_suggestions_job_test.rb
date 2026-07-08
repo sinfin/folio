@@ -61,6 +61,24 @@ class Folio::Ai::TextSuggestionsJobTest < ActiveJob::TestCase
     assert_includes message[:payload]["data"]["html"], "Neutral"
   end
 
+  test "broadcasts rendered batch suggestions to the message bus client" do
+    message = perform_batch_text_suggestions_job
+    panels = message[:payload]["data"]["panels"]
+    page = Capybara.string(panels.values.join)
+
+    assert_equal Folio::MESSAGE_BUS_CHANNEL, message[:channel]
+    assert_equal({ client_ids: ["message-bus-client"] }, message[:options])
+    assert_equal "Folio::Ai::BatchTextSuggestionsJob", message[:payload]["type"]
+    assert_equal "request-hash", message[:payload]["data"]["request_id"]
+    assert_equal "dummy_blog_articles", message[:payload]["data"]["integration_key"]
+    assert_equal "all_ai_inputs", message[:payload]["data"]["field_key"]
+    assert_equal %w[ai_title ai_perex], panels.keys
+    assert page.has_css?(".f-ai-c-text-suggestions__suggestion", text: "Demo AI headline focused on the main editorial hook")
+    assert page.has_css?(".f-ai-c-text-suggestions__suggestion", text: "Demo AI perex summarizing the article angle")
+    assert page.has_no_css?(".f-ai-c-text-suggestions__close")
+    assert page.has_no_css?(".f-ai-c-text-suggestions__instructions")
+  end
+
   test "broadcasts prompt_missing in rendered component html" do
     @site.update!(ai_settings: enabled_ai_settings(prompt: ""))
 
@@ -163,12 +181,32 @@ class Folio::Ai::TextSuggestionsJobTest < ActiveJob::TestCase
       messages.fetch(0)
     end
 
+    def perform_batch_text_suggestions_job(params: batch_job_params)
+      messages = capture_message_bus do
+        with_ai_config(enabled: true,
+                       default_provider: :demo,
+                       provider_models: { demo: "demo" }) do
+          perform_batch_job(params:)
+        end
+      end
+
+      messages.fetch(0)
+    end
+
     def perform_job(params:)
       Folio::Ai::TextSuggestionsJob.perform_now(request_id: "request-hash",
                                                 message_bus_client_id: "message-bus-client",
                                                 user_id: @user.id,
                                                 site_id: @site.id,
                                                 params:)
+    end
+
+    def perform_batch_job(params:)
+      Folio::Ai::BatchTextSuggestionsJob.perform_now(request_id: "request-hash",
+                                                     message_bus_client_id: "message-bus-client",
+                                                     user_id: @user.id,
+                                                     site_id: @site.id,
+                                                     params:)
     end
 
     def capture_message_bus(&block)
@@ -197,6 +235,7 @@ class Folio::Ai::TextSuggestionsJobTest < ActiveJob::TestCase
         ai_field(:perex, character_limit: 400),
         ai_field(:meta_title, character_limit: 120),
         ai_field(:meta_description, character_limit: 400),
+        ai_field(:all_ai_inputs),
       ]
     end
 
@@ -207,8 +246,10 @@ class Folio::Ai::TextSuggestionsJobTest < ActiveJob::TestCase
 
     def job_params(integration_key: :dummy_blog_articles,
                    field_key: :title,
+                   component_id: "ai_#{field_key}",
                    instructions: nil,
                    show_meta: "1",
+                   suggestion_count: 3,
                    context: article_context,
                    host_eligible: true,
                    provider_adapter_class_name: "Dummy::Ai::DemoProviderAdapter",
@@ -216,16 +257,42 @@ class Folio::Ai::TextSuggestionsJobTest < ActiveJob::TestCase
       {
         integration_key: integration_key.to_s,
         field_key: field_key.to_s,
-        component_id: "ai_#{field_key}",
+        component_id:,
         field_label: field_key.to_s.humanize,
         instructions:,
         show_meta:,
-        suggestion_count: 3,
+        suggestion_count:,
         context:,
         host_eligible:,
         provider_adapter_class_name:,
         error_code:,
       }.compact
+    end
+
+    def batch_job_params
+      {
+        integration_key: "dummy_blog_articles",
+        field_key: "all_ai_inputs",
+        instructions: nil,
+        context: article_context,
+        provider_adapter_class_name: "Dummy::Ai::DemoProviderAdapter",
+        fields: [
+          job_params(field_key: :title,
+                     component_id: "ai_title",
+                     suggestion_count: nil).except(:instructions,
+                                                   :suggestion_count,
+                                                   :context,
+                                                   :host_eligible,
+                                                   :provider_adapter_class_name),
+          job_params(field_key: :perex,
+                     component_id: "ai_perex",
+                     suggestion_count: nil).except(:instructions,
+                                                   :suggestion_count,
+                                                   :context,
+                                                   :host_eligible,
+                                                   :provider_adapter_class_name),
+        ],
+      }
     end
 
     def article_context
@@ -236,7 +303,7 @@ class Folio::Ai::TextSuggestionsJobTest < ActiveJob::TestCase
     end
 
     def enabled_ai_settings(integration_key: :dummy_blog_articles,
-                            field_keys: %i[title perex meta_title meta_description],
+                            field_keys: %i[title perex meta_title meta_description all_ai_inputs],
                             prompt: "Write a safe demo suggestion.")
       {
         enabled: true,

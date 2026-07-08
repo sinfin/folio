@@ -11,6 +11,14 @@ module Dummy
         end
       end
 
+      def generate_batch_suggestions(prompt:, field:, fields:, suggestion_count:)
+        fields.index_with do |field_request|
+          generate_suggestions(prompt:,
+                               field: field_request.field,
+                               suggestion_count:)
+        end.transform_keys { |field_request| field_request.key.to_s }
+      end
+
       private
         def suggestion_text(field, index)
           text = base_texts(field.key).fetch(index % 3)

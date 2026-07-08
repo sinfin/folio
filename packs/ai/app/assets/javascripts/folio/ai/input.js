@@ -12,14 +12,6 @@
   const CLIENT_ERROR_STATUSES = [STATUS_WAITING_FOR_SUGGESTIONS, STATUS_SUBMITTING_INSTRUCTIONS]
   let openController = null
 
-  const cssEscape = (value) => {
-    value = value.toString()
-
-    if (window.CSS?.escape) return window.CSS.escape(value)
-
-    return value.replace(/["\\]/g, '\\$&')
-  }
-
   const registerAiInputController = () => {
     window.Folio.Stimulus.register(CONTROLLER_NAME, class extends window.Stimulus.Controller {
       static targets = ['input', 'button', 'customHtml', 'undo', 'instructions']
@@ -43,14 +35,10 @@
       }
 
       connect () {
-        this.requestSequence = 0
-        this.requestTimeoutId = null
-        this.requestTimedOut = false
-        this.pendingTextSuggestionsRequestId = null
-        this.cancelledTextSuggestionsRequestIds = new Set()
-        this.textSuggestionsMessages = {}
-        this.abortController = null
-        this.awaitingTextSuggestionsResult = false
+        this.request = new window.Folio.Ai.AsyncJobRequest({
+          timeoutMs: () => this.requestTimeoutMsValue,
+          onTimeout: () => this.handleTimeout()
+        })
         this.setStatus(STATUS_IDLE)
         this.syncControls()
       }
@@ -96,6 +84,45 @@
         if (openController === this) openController = null
 
         this.syncControls()
+      }
+
+      openFromBatch (event) {
+        if (!this.input || !this.hasCustomHtmlTarget) return
+
+        this.abortRequest({ resetStatus: false })
+        if (openController === this) openController = null
+
+        this.startSession()
+        this.handleHtml(event?.detail?.html || '')
+
+        if (event?.detail?.pending) {
+          this.setStatus(STATUS_WAITING_FOR_SUGGESTIONS)
+        } else {
+          this.finishLoading()
+        }
+      }
+
+      handleBatchHtml (event) {
+        if (!this.input || !this.hasCustomHtmlTarget) return
+
+        this.abortRequest({ resetStatus: false })
+        this.handleHtml(event?.detail?.html || '')
+        this.finishLoading()
+      }
+
+      handleBatchClientError (event) {
+        const html = event?.detail?.html
+
+        if (html && this.hasCustomHtmlTarget) {
+          this.handleHtml(html)
+        }
+
+        this.showClientError(event?.detail?.message || this.genericErrorTextValue)
+        this.finishLoading()
+      }
+
+      closeFromBatch (event) {
+        this.close(event)
       }
 
       regenerate (event) {
@@ -159,63 +186,32 @@
 
       onMessage (event) {
         const message = event?.detail?.message
-        if (!message || !message.data || !message.data.request_id) return
-        if (this.cancelledTextSuggestionsRequestIds.delete(message.data.request_id)) return
-        if (!this.awaitingTextSuggestionsResult) return
-        if (!this.pendingTextSuggestionsRequestId) {
-          this.textSuggestionsMessages[message.data.request_id] = message
-          return
-        }
-        if (message.data.request_id !== this.pendingTextSuggestionsRequestId) return
 
-        this.applyMessageBusResult(message)
+        this.request.receiveMessage(message, (message) => this.applyMessageBusResult(message))
       }
 
       loadHtml ({ url, instructions = null }) {
-        const requestId = this.nextRequestId()
         const body = this.requestPayload({ instructions })
-        this.abortRequest()
-        this.abortController = new AbortController()
-        this.requestTimedOut = false
-        this.awaitingTextSuggestionsResult = true
-        this.setRequestTimeout(requestId)
         this.setLoadingStatus(instructions === null ? STATUS_INITIAL_LOADING : STATUS_SUBMITTING_INSTRUCTIONS)
 
-        const request = window.Folio.Api.apiPost(url, body, this.abortController.signal)
-
-        request
-          .then((response) => {
-            if (this.staleRequest(requestId)) return
-
+        this.request.post({
+          url,
+          body,
+          onResponse: (response, { pending, applyBufferedMessage }) => {
             this.handleHtml(response.data)
-            this.pendingTextSuggestionsRequestId = response.meta?.request_id || null
-            const receivedBufferedResult = this.applyBufferedMessageBusMessage()
+            const receivedBufferedResult = applyBufferedMessage((message) => this.applyMessageBusResult(message))
             if (receivedBufferedResult) return
 
-            if (this.pendingTextSuggestionsRequestId) {
-              this.setStatus(STATUS_WAITING_FOR_SUGGESTIONS)
-            }
-          })
-          .catch((error) => {
-            if (this.staleRequest(requestId)) return
-
-            if (error.name === 'AbortError') {
-              if (this.requestTimedOut) this.handleTimeout()
-              return
-            }
-
+            if (pending) this.setStatus(STATUS_WAITING_FOR_SUGGESTIONS)
+          },
+          onError: (error) => {
             this.handleError(error)
             this.finishLoading()
-          })
-          .finally(() => {
-            if (this.staleRequest(requestId)) return
-
-            this.abortController = null
-
-            if (!this.pendingTextSuggestionsRequestId) {
-              this.finishLoading()
-            }
-          })
+          },
+          onFinally: ({ pending }) => {
+            if (!pending) this.finishLoading()
+          }
+        })
       }
 
       requestPayload ({ instructions }) {
@@ -235,7 +231,7 @@
         }
 
         if (this.usesCurrentFormSnapshot) {
-          payload.current_form_snapshot_json = JSON.stringify(this.currentFormSnapshot())
+          payload.current_form_snapshot_json = JSON.stringify(window.Folio.Ai.formSnapshot(this.input?.form))
         }
 
         return payload
@@ -278,24 +274,11 @@
       }
 
       handleError (error) {
-        this.showClientError(this.errorMessage(error))
+        this.showClientError(window.Folio.Ai.errorMessage(error, this.genericErrorTextValue))
       }
 
       handleTimeout () {
-        this.showClientError(this.timeoutErrorText())
-      }
-
-      errorMessage (error) {
-        const responseData = error.responseData || {}
-        const detail = responseData.message || this.errorDetail(responseData)
-
-        return detail || error.message || this.genericErrorTextValue
-      }
-
-      errorDetail (responseData) {
-        if (!responseData.errors || responseData.errors.length === 0) return null
-
-        return responseData.errors[0].detail || responseData.errors[0].title
+        this.showClientError(window.Folio.Ai.timeoutErrorText(this, this.genericErrorTextValue))
       }
 
       setLoadingStatus (status) {
@@ -330,17 +313,7 @@
         window.alert(message)
       }
 
-      applyBufferedMessageBusMessage () {
-        const message = this.textSuggestionsMessages[this.pendingTextSuggestionsRequestId]
-        if (!message) return false
-
-        this.applyMessageBusResult(message)
-        return true
-      }
-
       applyMessageBusResult (message) {
-        delete this.textSuggestionsMessages[message.data.request_id]
-
         if (message.data.html) {
           this.handleHtml(message.data.html)
         } else {
@@ -350,104 +323,16 @@
         this.finishLoading()
       }
 
-      nextRequestId () {
-        this.requestSequence += 1
-        return this.requestSequence
-      }
-
-      staleRequest (requestId) {
-        return requestId !== this.requestSequence
-      }
-
       abortRequest ({ resetStatus = true } = {}) {
-        this.cancelPendingTextSuggestionsRequest()
-        this.clearRequestTimeout()
-        this.requestTimedOut = false
-        this.pendingTextSuggestionsRequestId = null
-        this.textSuggestionsMessages = {}
-        this.awaitingTextSuggestionsResult = false
+        this.request.abort()
         if (resetStatus) this.setStatus(STATUS_IDLE)
-
-        if (!this.abortController) return
-
-        this.abortController.abort()
-        this.abortController = null
-      }
-
-      cancelPendingTextSuggestionsRequest () {
-        if (!this.pendingTextSuggestionsRequestId) return
-
-        this.cancelledTextSuggestionsRequestIds.add(this.pendingTextSuggestionsRequestId)
-      }
-
-      setRequestTimeout (requestId) {
-        if (this.requestTimeoutMsValue <= 0) return
-
-        this.requestTimeoutId = window.setTimeout(() => {
-          if (this.staleRequest(requestId)) return
-
-          this.requestTimedOut = true
-
-          if (this.abortController) {
-            this.abortController.abort()
-            return
-          }
-
-          this.pendingTextSuggestionsRequestId = null
-          this.handleTimeout()
-          this.finishLoading()
-        }, this.requestTimeoutMsValue)
-      }
-
-      clearRequestTimeout () {
-        if (!this.requestTimeoutId) return
-
-        window.clearTimeout(this.requestTimeoutId)
-        this.requestTimeoutId = null
-      }
-
-      timeoutErrorText () {
-        if (this.hasRequestTimeoutTextValue && this.requestTimeoutTextValue) {
-          return this.requestTimeoutTextValue
-        }
-
-        return this.genericErrorTextValue
       }
 
       finishLoading () {
-        this.clearRequestTimeout()
-        this.requestTimedOut = false
-        this.pendingTextSuggestionsRequestId = null
-        this.awaitingTextSuggestionsResult = false
+        this.request.finish()
         this.setStatus(STATUS_IDLE)
         if (!this.isOpen) this.element.classList.remove(INPUT_OPEN_CLASS)
         this.syncControls()
-      }
-
-      currentFormSnapshot () {
-        const form = this.input?.form
-        if (!form) return {}
-
-        const snapshot = {}
-        const formData = new FormData(form)
-
-        formData.forEach((value, key) => {
-          if (value instanceof File) return
-
-          this.addSnapshotValue(snapshot, key, value.toString())
-        })
-
-        return snapshot
-      }
-
-      addSnapshotValue (snapshot, key, value) {
-        if (Object.prototype.hasOwnProperty.call(snapshot, key)) {
-          snapshot[key] = Array.isArray(snapshot[key])
-            ? [...snapshot[key], value]
-            : [snapshot[key], value]
-        } else {
-          snapshot[key] = value
-        }
       }
 
       startSession () {
@@ -571,7 +456,7 @@
       if (message.type !== TEXT_SUGGESTIONS_JOB_TYPE) return
       if (!message.data || !message.data.component_id) return
 
-      const selector = `.${INPUT_CLASS_NAME}[data-f-ai-input-component-id-value="${cssEscape(message.data.component_id)}"]`
+      const selector = `.${INPUT_CLASS_NAME}[data-f-ai-input-component-id-value="${window.Folio.Ai.cssEscape(message.data.component_id)}"]`
       const inputs = document.querySelectorAll(selector)
 
       for (const input of inputs) {

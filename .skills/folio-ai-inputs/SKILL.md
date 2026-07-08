@@ -3,8 +3,9 @@ name: folio-ai-inputs
 description: >-
   Wire Folio AI prompts and text suggestions to concrete Console inputs in a
   Folio-based host application. Use when registering AI promptable fields,
-  adding field-level SimpleForm `ai:` options, implementing model context
-  methods for the centralized pack API, or preparing QA for this feature.
+  adding field-level SimpleForm `ai:` options or grouped generate-all wrappers,
+  implementing model context methods for the centralized pack API, or preparing
+  QA for this feature.
 ---
 
 # Folio AI input wiring
@@ -73,38 +74,63 @@ record.
    `integration_key` defaults to the form object's table name and `field_key`
    defaults to the input attribute. `ai: true` uses both defaults. `ai: false`
    or a missing `ai:` option renders the normal input.
-5. `ai: true` uses `current_state_policy: :current_form_snapshot` by default.
+5. For one global "generate all" action, register a virtual field for the
+   wrapper prompt/settings and wrap existing AI-enabled inputs with
+   `Folio::Ai::Console::TextSuggestionsGroupComponent`:
+
+   ```ruby
+   Folio::Ai::Field.new(key: :all_ai_inputs,
+                        label: "All AI inputs")
+   ```
+
+   ```slim
+   = render(Folio::Ai::Console::TextSuggestionsGroupComponent.new(integration_key: :articles,
+                                                                  field_key: :all_ai_inputs)) do
+     = f.input :title, ai: true
+     = f.input :perex, ai: true
+   ```
+
+   The wrapper component does not need a title prop. The wrapper virtual field
+   owns shared prompt/provider/tracking/instructions and grouped-generation
+   context. Child inputs are output targets for grouped generation; their own
+   `ai: true` assistants, prompts, context, accept, stale-selection, and undo
+   behavior still apply to standalone field-level generation.
+6. `ai: true` uses `current_state_policy: :current_form_snapshot` by default.
    Use `:persisted_record` when generation should use saved server state.
-6. Keep current-form filtering server-side. The Stimulus controller should keep
+7. Keep current-form filtering server-side. The Stimulus controller should keep
    sending all non-file successful form controls; `Folio::Ai::CurrentFormSnapshot`
    filters before the AI context is built.
-7. Do not add per-integration context field configuration for the reusable pack
+8. Do not add per-integration context field configuration for the reusable pack
    snapshot. Use pack configuration for the generic top-level text roots and
    file-placement text keys.
-8. Current-form snapshots keep only text-bearing context:
+9. Current-form snapshots keep only text-bearing context:
    configured top-level roots; all `record_class.folio_tiptap_fields` converted
    with `Folio::Tiptap::PlainText.from_value`; atom `data` leaves under
    `record_class.atom_keys`; and configured file-placement text leaves under
    `record_class.folio_attachment_keys`, including placement attributes nested
    inside atoms. Drop records marked with `_destroy` values of `1`, `"1"`,
    `true`, or `"true"`.
-9. Keep custom inputs, composite components, rich-text wrappers, or unusual
+10. Keep custom inputs, composite components, rich-text wrappers, or unusual
    placement on explicit host-app wiring until their input ownership and undo
    contract is reviewed.
-10. Model methods are optional extension points. Without them, Folio uses
+11. Model methods are optional extension points. Without them, Folio uses
    `{ current_form_snapshot: }` as context, requires a persisted record, falls
    through to the configured provider adapter, and resolves site from
    `folio_ai_site`, `site`, or `Folio::Current.site`.
-11. Build context from safe plain text. For TipTap content prefer
+12. Build context from safe plain text. For TipTap content prefer
    `Folio::Tiptap::PlainText.from_value(...)` or an existing stored plain-text
    projection before falling back to JSON traversal.
-12. Configure provider models and optional cost labels through
+13. Configure provider models and optional cost labels through
    `Folio::Ai.provider_models` and `Folio::Ai.provider_model_options`. Let Folio
    use live provider catalogs when API credentials are present and keep fallback
    enabled for unavailable saved models.
-13. Add Console site prompts for each site and field. Editor controls must stay
-   hidden until the field has a non-blank site prompt and the record is eligible.
-14. Cover visible and hidden gates, HTML API success and errors, context
+14. Add Console site prompts for each site and field. For grouped wrappers,
+   configure a prompt for the wrapper virtual field. Child field prompts are
+   still needed for their standalone `ai: true` assistants, but grouped
+   generation does not read child prompts or child contexts. Editor controls
+   must stay hidden until the relevant field has a non-blank site prompt and the
+   record is eligible.
+15. Cover visible and hidden gates, HTML API success and errors, context
    serialization, instruction persistence, timeout/rate-limit handling, model
    fallback warnings, and the full panel lifecycle in tests.
 
@@ -128,6 +154,11 @@ record.
 - Loading, missing context, provider error, variants, copy, accept, manual edit
   detach, ghost undo, close, save instructions, and regenerate states all match
   the reusable Folio component behavior.
+- Grouped wrappers use one browser POST, one queued batch job, and one provider
+  batch call from the wrapper prompt/context. Batch endpoints and MessageBus
+  payloads return keyed rendered child panel HTML under `data.panels`; the
+  wrapper distributes those panels back into existing field inputs by component
+  id.
 - Closing the panel clears the temporary undo snapshot; accepting a suggestion
   never auto-saves the record.
 - Warnings from the backend are visible enough for editors/admins to notice

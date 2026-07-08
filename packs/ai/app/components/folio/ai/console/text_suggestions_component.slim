@@ -5,12 +5,13 @@
     aria-label=panel_title
     data=panel_data
   ]
-    button.f-ai-c-text-suggestions__close[
-      type="button"
-      aria-label=close_label
-      data=close_data
-    ]
-      = folio_icon(:close, height: 16)
+    - if close_visible?
+      button.f-ai-c-text-suggestions__close[
+        type="button"
+        aria-label=close_label
+        data=close_data
+      ]
+        = folio_icon(:close, height: 16)
 
     .f-ai-c-text-suggestions__body
       .f-ai-c-text-suggestions__status[

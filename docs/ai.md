@@ -47,6 +47,28 @@ end
 = f.input :perex, as: :text, ai: true
 ```
 
+For a shared "generate all" action, register an additional virtual field for
+the wrapper prompt/settings and wrap the normal AI-enabled fields:
+
+```ruby
+Folio::Ai.register_integration(record_class_name: "Article",
+                               fields: [
+                                 Folio::Ai::Field.new(key: :title,
+                                                      character_limit: 120),
+                                 Folio::Ai::Field.new(key: :perex,
+                                                      character_limit: 400),
+                                 Folio::Ai::Field.new(key: :all_ai_inputs,
+                                                      label: "All AI inputs"),
+                               ])
+```
+
+```slim
+= render(Folio::Ai::Console::TextSuggestionsGroupComponent.new(integration_key: :articles,
+                                                               field_key: :all_ai_inputs)) do
+  = f.input :title, ai: true
+  = f.input :perex, as: :text, ai: true
+```
+
 For the default flow, registered persisted records do not need model methods.
 Folio sends the current form snapshot as context, uses the record's persisted
 state for eligibility, and falls through to the configured provider adapter.
@@ -205,6 +227,8 @@ The rendered SimpleForm input must match the registered attribute type:
 inputs. For translated models, localized columns returned by
 `record_class.locale_columns(field_key)` are considered when inferring the input
 type. Other attribute types are ignored.
+Virtual fields used by wrapper components do not need a backing database
+attribute when they are not attached directly to a SimpleForm input.
 
 The registry rejects blank or non-ActiveRecord class names, blank integration
 keys, duplicate integrations, blank field keys, and duplicate field keys inside
@@ -314,6 +338,31 @@ AI controls are not attached on new records, disabled inputs, readonly inputs,
 unsupported input types, unregistered fields, disabled sites, missing prompts,
 or host-ineligible records.
 
+### Batch wrapper
+
+`Folio::Ai::Console::TextSuggestionsGroupComponent` wraps existing `ai: true`
+inputs and renders one global action for the child output fields in the wrapper.
+The component does not render a title. It takes the wrapper
+`integration_key` and virtual `field_key`; that field owns the shared prompt,
+provider/model settings, tracking key, saved user instructions, and grouped
+generation context. Each child input still keeps its own field key, prompt,
+label, context, eligibility, accept, copy, stale-selection, and undo behavior
+for standalone field-level generation. Grouped generation does not read child
+prompts or child contexts.
+
+On click, the wrapper posts one request to
+`batch_text_suggestions_console_api_ai_text_suggestions_path`. The browser sends
+the wrapper record identity, one form snapshot for the shared form, and an array
+of child output field descriptors. The response contains one loading panel per
+child output field, each with one loading suggestion under `data.panels`, keyed
+by child `component_id`. When the background job finishes, the MessageBus
+payload uses the same keyed `panels` shape and the wrapper distributes each
+panel back into the matching `f-ai-input`.
+
+Use the matching `batch_instructions` endpoint when the wrapper instructions
+textarea is saved. The saved instruction belongs to the wrapper virtual field,
+not to the individual child fields.
+
 ### Current state policy
 
 `current_state_policy` controls what context the browser sends:
@@ -417,6 +466,8 @@ API:
 ```text
 POST /console/api/ai_text_suggestions/text_suggestions
 POST /console/api/ai_text_suggestions/instructions
+POST /console/api/ai_text_suggestions/batch_text_suggestions
+POST /console/api/ai_text_suggestions/batch_instructions
 ```
 
 Both actions are handled by
@@ -487,6 +538,15 @@ arguments. Folio does not persist them separately; host queue backends such as
 Sidekiq may still expose job arguments in operational tooling. Record class/id
 and CanCanCan authorization stay in the controller and are not job inputs.
 
+Batch requests use the wrapper field for authorization, availability, prompt,
+provider/model settings, user instructions, and context. Child fields are output
+slots only. The wrapper field is checked through the same availability gates and
+must have a non-blank site prompt. The async job is
+`Folio::Ai::BatchTextSuggestionsJob`; it calls the provider once and renders
+child `Folio::Ai::Console::TextSuggestionsComponent` panels into `data.panels`.
+The MessageBus payload includes the wrapper integration/field keys so multiple
+wrappers on a page ignore unrelated batch results.
+
 `Folio::Ai::TextSuggestionsJob` runs on
 `Folio::Ai.config.text_suggestions_queue`.
 The job does not use `Folio::Current`; it only loads the already selected
@@ -536,6 +596,15 @@ user/site/integration/field when the editor uses the save/regenerate action,
 then passes the effective instruction to the job with `persist_instructions:
 false`.
 
+`Folio::Ai::BatchSuggestionGenerator` follows the same gates for the wrapper
+field, composes a batch prompt from the wrapper prompt and wrapper context, runs
+the same request guard under the wrapper key, and calls
+`generate_batch_suggestions` once. Child field prompts and contexts are not part
+of the grouped prompt; child fields are only output slots. When the wrapper
+instructions textarea is saved, that instruction replaces the wrapper prompt
+for the generated batch request. The normalized response is mapped back to child
+`Folio::Ai::SuggestionGenerator::Result` objects for rendering.
+
 ## Providers and Models
 
 Built-in adapters live under `Folio::Ai::Providers`:
@@ -553,6 +622,12 @@ Host-provided adapters must respond to
 `generate_suggestions(prompt:, field:, suggestion_count:)` and return
 `Folio::Ai::Suggestion` objects. Adapters that call external providers can use
 `Folio::Ai::ResponseNormalizer` before returning.
+Adapters used by the batch wrapper must also respond to
+`generate_batch_suggestions(prompt:, field:, fields:, suggestion_count:)`.
+`field` is the wrapper field and `fields` are child output field descriptors.
+The built-in OpenAI and Anthropic adapters send one provider request and
+normalize a JSON response with a top-level `suggestions_by_field` object through
+`Folio::Ai::BatchResponseNormalizer`.
 
 Provider model selection is resolved in this order:
 
@@ -587,6 +662,9 @@ pack is enabled.
 
 - `f-ai-input` for the input wrapper and API lifecycle
 - `f-ai-c-text-suggestions` for the rendered suggestions component
+- `f-ai-c-text-suggestions-group` for the global batch wrapper
+- `f-ai-c-text-suggestions-group-controls` for the generate/close controls
+- `f-ai-c-text-suggestions-group-instructions` for wrapper instructions
 
 Optional pack controllers register immediately when `window.Folio.Stimulus`
 exists or wait for the `folio:stimulus-ready` event from the root Stimulus
@@ -638,6 +716,14 @@ the form.
 close, regenerate, and accept. Copying uses the shared Console clipboard
 component and never mutates the target field.
 
+`f-ai-c-text-suggestions-group` collects descendant `.f-ai-input` elements with
+the same integration key, requires them to belong to one form, serializes one
+form snapshot for wrapper context when any child uses `current_form_snapshot`,
+and dispatches keyed `data.panels` HTML into the existing input controller.
+Batch-opened fields keep individual accept/undo behavior. The controls and
+instructions child components own their local button/textarea behavior and
+dispatch events to the wrapper.
+
 ## Tracking and Safety
 
 `Folio::Ai.track` instruments `ActiveSupport::Notifications` events under
@@ -675,19 +761,22 @@ credentials.
 The dummy blog article form uses:
 
 ```slim
-= f.input :title, ai: true
-= f.input :perex, ai: true
-= f.input :meta_title, ai: true
-= f.input :meta_description, ai: true
+= render(Folio::Ai::Console::TextSuggestionsGroupComponent.new(integration_key: :dummy_blog_articles,
+                                                               field_key: :all_ai_inputs)) do
+  = f.input :title, ai: true
+  = f.input :perex, ai: true
+  = f.input :meta_title, ai: true
+  = f.input :meta_description, ai: true
 ```
 
 Manual check:
 
 1. Start the dummy app in development.
 2. Open Console site settings and enable AI prompts for the current site.
-3. Fill non-blank prompts for the dummy blog article fields.
+3. Fill non-blank prompts for the dummy blog article fields and the `all_ai_inputs`
+   wrapper field.
 4. Open an existing dummy blog article with a title or perex.
-5. Click the AI action beside a configured field.
+5. Click either a field-level AI action or the wrapper generate-all action.
 6. Verify loading, variants, copy, accept, undo, close, instructions, and
    regenerate.
 

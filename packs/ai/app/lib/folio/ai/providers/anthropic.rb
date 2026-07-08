@@ -42,6 +42,12 @@ class Folio::Ai::Providers::Anthropic < Folio::Ai::Providers::Base
                 body: request_body(prompt:, field:, suggestion_count:))
   end
 
+  def build_batch_request(prompt:, field:, fields:, suggestion_count:)
+    Request.new(uri: URI(endpoint),
+                headers:,
+                body: batch_request_body(prompt:, fields:, suggestion_count:))
+  end
+
   private
     def endpoint
       "https://api.anthropic.com/v1/messages"
@@ -66,9 +72,27 @@ class Folio::Ai::Providers::Anthropic < Folio::Ai::Providers::Base
       }
     end
 
+    def batch_request_body(prompt:, fields:, suggestion_count:)
+      {
+        model:,
+        max_tokens: batch_max_tokens_for(fields:, suggestion_count:),
+        system: batch_json_schema_instruction(fields, suggestion_count),
+        messages: [
+          { role: "user", content: prompt },
+        ],
+      }
+    end
+
     def max_tokens_for(field:, suggestion_count:)
       limit = field.character_limit.presence || 1_000
       [limit * suggestion_count * 2, 1_000].max
+    end
+
+    def batch_max_tokens_for(fields:, suggestion_count:)
+      Array(fields).sum do |field|
+        limit = field.field.character_limit.presence || 1_000
+        [limit * suggestion_count * 2, 1_000].max
+      end
     end
 
     def extract_response_text(response_body)

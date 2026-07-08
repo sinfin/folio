@@ -20,6 +20,8 @@ if Rails.env.development?
                                                           character_limit: 120),
                                      Folio::Ai::Field.new(key: :meta_description,
                                                           character_limit: 400),
+                                     Folio::Ai::Field.new(key: :all_ai_inputs,
+                                                          label: "All AI inputs"),
                                    ])
   rescue ArgumentError => e
     raise unless e.message.include?("already registered")

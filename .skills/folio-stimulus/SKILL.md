@@ -109,6 +109,14 @@ private component method and keep Slim concise:
 button data=suggestion_data(suggestion)
 ```
 
+### Composed child components
+
+When a parent ViewComponent extracts a visible child component, do not pass the
+parent controller name or parent-built Stimulus data hashes into that child. A
+passive child should render plain markup. If the child has behavior, give it its
+own controller on its own root and communicate upward with `this.dispatch(...)`;
+the parent listens with `stimulus_action("child-controller:event": "handler")`.
+
 ### Multiple controllers — `stimulus_merge_data`
 
 When one node needs data from multiple controllers (e.g. a lightbox + a feature controller):
@@ -149,6 +157,9 @@ All utility helpers use `inline: true` internally — they are designed to be me
   ```
 
 - **Controller-to-controller communication** — use `this.dispatch('eventName', { detail })` which bubbles by default. Parent controllers listen via `stimulus_action("child-controller:event-name": "handler")`.
+- When a controller needs to notify a specific element, still prefer Stimulus'
+  `this.dispatch('eventName', { target: element, detail })` over manual
+  `element.dispatchEvent(new CustomEvent(...))`.
 - Use `connect()` / `disconnect()` for setup/teardown — no global `$(document).on`.
 
 ## Pitfalls

@@ -11,7 +11,10 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
                  show_meta: false,
                  integration_key: nil,
                  field_key: nil,
-                 loading: false)
+                 loading: false,
+                 loading_suggestion_count: LOADING_SUGGESTION_COUNT,
+                 show_close: true,
+                 show_instructions: true)
     @result = result
     @component_id = component_id
     @field_label = field_label
@@ -19,6 +22,9 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
     @integration_key = integration_key
     @field_key = field_key
     @loading = loading
+    @loading_suggestion_count = loading_suggestion_count
+    @show_close = show_close
+    @show_instructions = show_instructions
   end
 
   private
@@ -79,11 +85,15 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
     end
 
     def loading_suggestions
-      Array.new(LOADING_SUGGESTION_COUNT)
+      Array.new(@loading_suggestion_count)
     end
 
     def instructions_visible?
-      loading? || successful? || status_message.blank?
+      @show_instructions && (loading? || successful? || status_message.blank?)
+    end
+
+    def close_visible?
+      @show_close
     end
 
     def suggestion_params(suggestion)

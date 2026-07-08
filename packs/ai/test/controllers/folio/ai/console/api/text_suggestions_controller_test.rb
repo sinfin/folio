@@ -69,6 +69,53 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
     assert_not_includes response_component_html, "Alternative demo summary"
   end
 
+  test "renders batch loading panels and enqueues one batch job" do
+    with_ai_provider_available do
+      assert_enqueued_jobs 1, only: Folio::Ai::BatchTextSuggestionsJob do
+        post batch_text_suggestions_console_api_ai_text_suggestions_path,
+             params: batch_request_params(field_keys: %i[title perex],
+                                          show_meta: "1"),
+             as: :json
+      end
+    end
+
+    panels = response_batch_panels
+    page = Capybara.string(panels.values.join)
+
+    assert_response :success
+    assert_equal %w[ai_title ai_perex], panels.keys
+    assert page.has_css?(".f-ai-c-text-suggestions__suggestion--loading", count: 2)
+    assert page.has_no_css?(".f-ai-c-text-suggestions__close")
+    assert page.has_no_css?(".f-ai-c-text-suggestions__instructions")
+    assert response.parsed_body.dig("meta", "request_id").present?
+
+    job_params = enqueued_batch_text_suggestions_job_arguments[:params].with_indifferent_access
+    assert_equal "dummy_blog_articles", job_params[:integration_key]
+    assert_equal "all_ai_inputs", job_params[:field_key]
+    assert_equal %w[title perex], job_params[:fields].map { |field| field[:field_key] }
+    assert_equal "Dummy::Ai::DemoProviderAdapter", job_params[:provider_adapter_class_name]
+    assert_includes job_params[:context].keys.map(&:to_s), "title"
+  end
+
+  test "persists batch instructions on wrapper field before enqueueing batch job" do
+    with_ai_provider_available do
+      assert_enqueued_jobs 1, only: Folio::Ai::BatchTextSuggestionsJob do
+        post batch_instructions_console_api_ai_text_suggestions_path,
+             params: batch_request_params(field_keys: %i[title perex],
+                                          instructions: "Make every variant concise."),
+             as: :json
+      end
+    end
+
+    instruction = Folio::Ai::UserInstruction.find_or_initialize_for(user: @superadmin,
+                                                                    site: @site,
+                                                                    integration_key: :dummy_blog_articles,
+                                                                    field_key: :all_ai_inputs)
+
+    assert_response :success
+    assert_equal "Make every variant concise.", instruction.instruction
+  end
+
   test "filters current form snapshot before enqueueing job" do
     snapshot = {
       "dummy_blog_article[title]" => "Unsaved title",
@@ -195,8 +242,20 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
       response.parsed_body["data"]
     end
 
+    def response_batch_panels
+      response.parsed_body.dig("data", "panels")
+    end
+
     def enqueued_text_suggestions_job_arguments
       job = enqueued_jobs.reverse.find { |enqueued_job| enqueued_job[:job] == Folio::Ai::TextSuggestionsJob }
+      args = job[:args]
+      args = ActiveJob::Arguments.deserialize(args) if args.first.is_a?(Hash) && args.first.key?("_aj_symbol_keys")
+
+      args.first.with_indifferent_access
+    end
+
+    def enqueued_batch_text_suggestions_job_arguments
+      job = enqueued_jobs.reverse.find { |enqueued_job| enqueued_job[:job] == Folio::Ai::BatchTextSuggestionsJob }
       args = job[:args]
       args = ActiveJob::Arguments.deserialize(args) if args.first.is_a?(Hash) && args.first.key?("_aj_symbol_keys")
 
@@ -214,6 +273,7 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
         ai_field(:perex, character_limit: 400),
         ai_field(:meta_title, character_limit: 120),
         ai_field(:meta_description, character_limit: 400),
+        ai_field(:all_ai_inputs),
       ]
     end
 
@@ -241,8 +301,40 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
       }.compact
     end
 
+    def batch_request_params(field_keys:,
+                             record: @article,
+                             integration_key: :dummy_blog_articles,
+                             field_key: :all_ai_inputs,
+                             instructions: nil,
+                             show_meta: nil,
+                             current_form_snapshot_json: nil)
+      {
+        klass: record.class.name,
+        id: record.id,
+        integration_key: integration_key.to_s,
+        field_key: field_key.to_s,
+        instructions:,
+        message_bus_client_id: "message-bus-client",
+        current_form_snapshot_json:,
+        fields: field_keys.map do |child_field_key|
+          request_params(field_key: child_field_key,
+                         show_meta:).except(:instructions,
+                                            :klass,
+                                            :id,
+                                            :message_bus_client_id,
+                                            :current_form_snapshot_json)
+        end,
+      }.compact
+    end
+
+    def with_ai_provider_available(&)
+      with_ai_config(enabled: true) do
+        Folio::Ai.config.stub(:provider_api_key_env_values, { openai: "secret" }, &)
+      end
+    end
+
     def enabled_ai_settings(integration_key: :dummy_blog_articles,
-                            field_keys: %i[title perex meta_title meta_description],
+                            field_keys: %i[title perex meta_title meta_description all_ai_inputs],
                             prompt: "Write a safe demo suggestion.")
       {
         enabled: true,

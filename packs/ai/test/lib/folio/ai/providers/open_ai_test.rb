@@ -19,6 +19,27 @@ class Folio::Ai::Providers::OpenAiTest < ActiveSupport::TestCase
     assert_includes request.body[:input].first[:content], "suggestions"
   end
 
+  test "builds batch responses API request" do
+    provider = Folio::Ai::Providers::OpenAi.new(api_key: "secret", model: "gpt-5.5")
+    field = Folio::Ai::Field.new(key: :all_titles)
+    fields = [
+      provider_field(:title),
+      provider_field(:perex),
+    ]
+
+    request = provider.build_batch_request(prompt: "Write all variants.",
+                                           field:,
+                                           fields:,
+                                           suggestion_count: 1)
+
+    assert_equal "https://api.openai.com/v1/responses", request.uri.to_s
+    assert_equal "all_titles", request.body.dig(:metadata, :folio_ai_field_key)
+    assert_equal "title,perex", request.body.dig(:metadata, :folio_ai_batch_field_keys)
+    assert_includes request.body[:input].first[:content], "suggestions_by_field"
+    assert_includes request.body[:input].first[:content], '"key":"title"'
+    assert_includes request.body[:input].first[:content], '"label":"Title"'
+  end
+
   test "allows explicit opt in to provider request storage" do
     provider = Folio::Ai::Providers::OpenAi.new(api_key: "secret", model: "gpt-5.5")
     field = Folio::Ai::Field.new(key: :title)
@@ -99,6 +120,33 @@ class Folio::Ai::Providers::OpenAiTest < ActiveSupport::TestCase
     assert_equal ["Generated title"], suggestions.map(&:text)
   end
 
+  test "normalizes batch responses API output text" do
+    provider = Folio::Ai::Providers::OpenAi.new(api_key: "secret", model: "gpt-5.5")
+    fields = [
+      provider_field(:title),
+      provider_field(:perex),
+    ]
+    response_body = {
+      output_text: {
+        suggestions_by_field: {
+          title: [
+            { text: "Generated title" },
+          ],
+          perex: [
+            { text: "Generated perex" },
+          ],
+        },
+      }.to_json,
+    }.to_json
+
+    suggestions = provider.normalize_batch_response(response_body:,
+                                                    fields:,
+                                                    suggestion_count: 1)
+
+    assert_equal ["Generated title"], suggestions.fetch("title").map(&:text)
+    assert_equal ["Generated perex"], suggestions.fetch("perex").map(&:text)
+  end
+
   test "generates suggestions through responses API with VCR" do
     cassette = "folio/ai/providers/open_ai/generate_suggestions"
     skip_without_openai_key_or_cassette(cassette)
@@ -123,6 +171,14 @@ class Folio::Ai::Providers::OpenAiTest < ActiveSupport::TestCase
   end
 
   private
+    def provider_field(key)
+      field = Folio::Ai::Field.new(key:)
+
+      Folio::Ai::BatchSuggestionGenerator::ProviderField.new(key: key.to_s,
+                                                             label: key.to_s.humanize,
+                                                             field:)
+    end
+
     def skip_without_openai_key_or_cassette(cassette)
       return if ENV["FOLIO_AI_OPENAI_API_KEY"].present?
       return if File.exist?(File.join("test/fixtures/vcr_cassettes", "#{cassette}.yml"))

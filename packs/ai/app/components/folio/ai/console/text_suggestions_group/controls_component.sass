@@ -1,0 +1,49 @@
+$f-ai-c-text-suggestions-group-controls-accent-light: #D3B3E8 !default
+
+.f-ai-c-text-suggestions-group-controls
+  display: flex
+  gap: px-to-rem(8px)
+  justify-content: flex-end
+  margin-bottom: px-to-rem(12px)
+
+  &__button,
+  &__close
+    align-items: center
+    background: $f-ai-c-text-suggestions-group-controls-accent-light
+    border: 0
+    border-radius: px-to-rem(4px)
+    color: $black
+    cursor: pointer
+    display: inline-flex
+    font: inherit
+    gap: px-to-rem(6px)
+    line-height: 1
+    min-height: px-to-rem(32px)
+
+  &__button
+    padding: px-to-rem(8px) px-to-rem(10px)
+
+    &:disabled
+      cursor: wait
+
+  &__close
+    display: none
+    justify-content: center
+    padding: 0
+    width: px-to-rem(32px)
+
+  &__loader
+    display: none
+    position: static
+
+  .f-ai-c-text-suggestions-group[data-f-ai-c-text-suggestions-group-state-value="active"] &,
+  .f-ai-c-text-suggestions-group[data-f-ai-c-text-suggestions-group-state-value="loading"] &
+    &__close
+      display: inline-flex
+
+  .f-ai-c-text-suggestions-group[data-f-ai-c-text-suggestions-group-state-value="loading"] &
+    &__loader
+      display: block
+
+    &__icon
+      display: none

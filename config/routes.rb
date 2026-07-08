@@ -284,6 +284,8 @@ Folio::Engine.routes.draw do
                  controller: "/folio/ai/console/api/text_suggestions" do
           post :text_suggestions
           post :instructions
+          post :batch_text_suggestions
+          post :batch_instructions
         end
       end
 

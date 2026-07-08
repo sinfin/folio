@@ -18,6 +18,27 @@ class Folio::Ai::Providers::AnthropicTest < ActiveSupport::TestCase
     assert_includes request.body[:system], "suggestions"
   end
 
+  test "builds batch messages API request" do
+    provider = Folio::Ai::Providers::Anthropic.new(api_key: "secret", model: "claude-opus-4-7")
+    field = Folio::Ai::Field.new(key: :all_titles)
+    fields = [
+      provider_field(:title, character_limit: 120),
+      provider_field(:perex, character_limit: 400),
+    ]
+
+    request = provider.build_batch_request(prompt: "Write all variants.",
+                                           field:,
+                                           fields:,
+                                           suggestion_count: 1)
+
+    assert_equal "https://api.anthropic.com/v1/messages", request.uri.to_s
+    assert_equal "claude-opus-4-7", request.body[:model]
+    assert_equal 2_000, request.body[:max_tokens]
+    assert_includes request.body[:system], "suggestions_by_field"
+    assert_includes request.body[:system], '"key":"title"'
+    assert_includes request.body[:system], '"label":"Title"'
+  end
+
   test "lists claude models" do
     stub_request(:get, "https://api.anthropic.com/v1/models")
       .with(headers: {
@@ -63,4 +84,14 @@ class Folio::Ai::Providers::AnthropicTest < ActiveSupport::TestCase
 
     assert_equal ["Generated summary"], suggestions.map(&:text)
   end
+
+  private
+    def provider_field(key, character_limit: nil)
+      field = Folio::Ai::Field.new(key:,
+                                   character_limit:)
+
+      Folio::Ai::BatchSuggestionGenerator::ProviderField.new(key: key.to_s,
+                                                             label: key.to_s.humanize,
+                                                             field:)
+    end
 end

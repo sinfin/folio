@@ -36,6 +36,10 @@ module Folio::Ai::SimpleFormInputExtension
                         "f-ai-c-text-suggestions:close": "close",
                         "f-ai-c-text-suggestions:regenerate": "regenerate",
                         "f-ai-c-text-suggestions:accept": "acceptSuggestion",
+                        "f-ai-c-text-suggestions-group:open": "openFromBatch",
+                        "f-ai-c-text-suggestions-group:html": "handleBatchHtml",
+                        "f-ai-c-text-suggestions-group:clientError": "handleBatchClientError",
+                        "f-ai-c-text-suggestions-group:close": "closeFromBatch",
                       },
                       values: ai_text_suggestions_values(config))
 
