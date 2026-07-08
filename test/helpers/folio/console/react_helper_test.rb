@@ -17,6 +17,14 @@ class Folio::Console::ReactHelperTest < ActionView::TestCase
     assert_nil wrap["data-input-name"]
   end
 
+  test "react_ordered_multiselect passes default scope to remote autocomplete" do
+    wrap = ordered_multiselect_wrap(build(:dummy_blog_article),
+                                    default_scope: :featured)
+    params = Rack::Utils.parse_nested_query(URI.parse(wrap["data-url"]).query)
+
+    assert_equal "featured", params["default_scope"]
+  end
+
   test "react_ordered_multiselect renders virtual remote array data" do
     author = create(:dummy_blog_author,
                     first_name: "Ada",
@@ -131,6 +139,101 @@ class Folio::Console::ReactHelperTest < ActionView::TestCase
     assert_equal first_author.id, options[0]["options"][0]["id"]
     assert_equal "Second group", options[1]["label"]
     assert_equal second_author.id, options[1]["options"][0]["id"]
+  end
+
+  test "react_ordered_multiselect renders virtual grouped local collection options" do
+    first_author = create(:dummy_blog_author,
+                          first_name: "Ada",
+                          last_name: "Lovelace")
+    second_author = create(:dummy_blog_author,
+                           first_name: "Grace",
+                           last_name: "Hopper")
+    collection = [
+      Group.new("First group", [first_author]),
+      Group.new("Second group", [second_author]),
+    ]
+
+    wrap = ordered_multiselect_wrap(build(:dummy_blog_article),
+                                    relation_name: :issue_ids,
+                                    virtual: {
+                                      class_name: "Dummy::Blog::Author",
+                                      selected: [first_author],
+                                      input_name: "dummy_blog_article[issue_ids][]",
+                                    },
+                                    label_method: :full_name,
+                                    collection:,
+                                    group_method: :records,
+                                    group_label_method: :label)
+    options = data_json(wrap, "options")
+    items = data_json(wrap, "items")
+
+    assert_nil wrap["data-url"]
+    assert_equal "array", wrap["data-serialization"]
+    assert_equal "dummy_blog_article[issue_ids][]", wrap["data-input-name"]
+    assert_equal "First group", options[0]["label"]
+    assert_equal first_author.id, options[0]["options"][0]["id"]
+    assert_equal "Ada Lovelace", options[0]["options"][0]["label"]
+    assert_equal "Dummy::Blog::Author", options[0]["options"][0]["type"]
+    assert_equal "Second group", options[1]["label"]
+    assert_equal second_author.id, options[1]["options"][0]["id"]
+    assert_equal first_author.id, items[0]["value"]
+  end
+
+  test "react_ordered_multiselect uses explicit selected through records for items" do
+    article = create(:dummy_blog_article)
+    first_author = create(:dummy_blog_author,
+                          site: article.site,
+                          locale: article.locale,
+                          first_name: "Ada",
+                          last_name: "Lovelace")
+    second_author = create(:dummy_blog_author,
+                           site: article.site,
+                           locale: article.locale,
+                           first_name: "Grace",
+                           last_name: "Hopper")
+    article.authors << first_author
+    article.authors << second_author
+
+    first_link = article.author_article_links.find_by!(author: first_author)
+
+    wrap = ordered_multiselect_wrap(article,
+                                    selected_through_records: [first_link])
+    items = data_json(wrap, "items")
+
+    assert_equal "#{article.model_name.param_key}[author_article_links_attributes]",
+                 wrap["data-param-base"]
+    assert_equal "dummy_blog_author_id", wrap["data-foreign-key"]
+    assert_equal [first_author.id], items.map { |item| item["value"] }
+    assert_equal ["Ada Lovelace"], items.map { |item| item["label"] }
+  end
+
+  test "react_ordered_multiselect keeps selected through records marked for destruction as removed items" do
+    article = create(:dummy_blog_article)
+    kept_author = create(:dummy_blog_author,
+                         site: article.site,
+                         locale: article.locale,
+                         first_name: "Ada",
+                         last_name: "Lovelace")
+    removed_author = create(:dummy_blog_author,
+                            site: article.site,
+                            locale: article.locale,
+                            first_name: "Grace",
+                            last_name: "Hopper")
+    article.authors << kept_author
+    article.authors << removed_author
+
+    kept_link = article.author_article_links.find_by!(author: kept_author)
+    removed_link = article.author_article_links.find_by!(author: removed_author)
+    removed_link.mark_for_destruction
+
+    wrap = ordered_multiselect_wrap(article,
+                                    selected_through_records: [kept_link, removed_link])
+    items = data_json(wrap, "items")
+    removed_items = data_json(wrap, "removed-items")
+
+    assert_equal [kept_author.id], items.map { |item| item["value"] }
+    assert_equal [removed_link.id], removed_items.map { |item| item["id"] }
+    assert_equal [removed_author.id], removed_items.map { |item| item["value"] }
   end
 
   test "react_ordered_multiselect keeps selected items with local options" do

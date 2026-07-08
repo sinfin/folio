@@ -121,6 +121,32 @@ class Folio::Console::Api::AutocompletesControllerTest < Folio::Console::BaseCon
     end
   end
 
+  test "react_select applies default scope only for blank query" do
+    default_page = create(:folio_page, title: "Default page")
+    searchable_page = create(:folio_page, title: "Searchable page")
+
+    Folio::Page.define_singleton_method(:folio_test_default_options) do
+      where(id: default_page.id)
+    end
+
+    begin
+      get react_select_console_api_autocomplete_path(class_names: "Folio::Page",
+                                                     default_scope: "folio_test_default_options")
+      json = JSON.parse(response.body)
+
+      assert_equal [default_page.id], json["data"].map { |item| item["id"] }
+
+      get react_select_console_api_autocomplete_path(class_names: "Folio::Page",
+                                                     default_scope: "folio_test_default_options",
+                                                     q: "Searchable")
+      json = JSON.parse(response.body)
+
+      assert_equal [searchable_page.id], json["data"].map { |item| item["id"] }
+    ensure
+      Folio::Page.singleton_class.remove_method(:folio_test_default_options)
+    end
+  end
+
   test "show pagination" do
     # Create 30 pages matching query to test pagination
     30.times { |i| create(:folio_page, title: "Foo page #{i + 1}") }

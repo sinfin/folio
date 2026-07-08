@@ -292,6 +292,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
             scope = scope.by_label_query(q)
           else
             scope = scope.all
+            scope = default_apply_param_scope(scope, param_key: :default_scope)
           end
 
           if klass.respond_to?(:filter_by_atom_form_fields)
@@ -350,6 +351,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
               scope = scope.by_label_query(q)
             else
               scope = scope.all
+              scope = default_apply_param_scope(scope, param_key: :default_scope)
             end
 
             if klass.respond_to?(:filter_by_atom_form_fields)
@@ -452,8 +454,8 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
       scope
     end
 
-    def default_apply_param_scope(scope)
-      p_scope = params[:scope]
+    def default_apply_param_scope(scope, param_key: :scope)
+      p_scope = params[param_key]
 
       if p_scope.present? && scope.respond_to?(p_scope)
         scope = scope.send(p_scope)

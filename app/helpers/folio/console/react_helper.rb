@@ -139,6 +139,7 @@ module Folio::Console::ReactHelper
                                 relation_name,
                                 atom_setting: nil,
                                 scope: nil,
+                                default_scope: nil,
                                 order_scope: :ordered,
                                 sortable: true,
                                 required: nil,
@@ -149,6 +150,7 @@ module Folio::Console::ReactHelper
                                 group_label_method: nil,
                                 label_method: :to_console_label,
                                 value_method: :id,
+                                selected_through_records: nil,
                                 virtual: nil)
     class_name = "folio-react-wrap folio-react-wrap--ordered-multiselect"
 
@@ -165,8 +167,6 @@ module Folio::Console::ReactHelper
     foreign_key = nil
 
     if virtual
-      raise ArgumentError, "Cannot combine virtual ordered multiselect with collection" if collection
-
       class_names = virtual.fetch(:class_name)
       data_serialization = "array"
       data_input_name = virtual.fetch(:input_name)
@@ -182,6 +182,13 @@ module Folio::Console::ReactHelper
           _destroy: false,
         }
       end
+
+      options = react_ordered_multiselect_options(collection,
+                                                  group_method:,
+                                                  group_label_method:,
+                                                  label_method:,
+                                                  value_method:,
+                                                  through_klass: nil) if collection
     else
       klass = f.object.class
       reflection = klass.reflections[relation_name.to_s]
@@ -196,7 +203,7 @@ module Folio::Console::ReactHelper
       foreign_key = reflection.foreign_key
       class_names = through_klass.to_s
 
-      f.object.send(through).each do |record|
+      (selected_through_records || f.object.send(through)).each do |record|
         through_record = through_klass.find(record.send(reflection.foreign_key))
         hash = {
           id: record.id,
@@ -225,6 +232,7 @@ module Folio::Console::ReactHelper
     url = unless options
       react_ordered_multiselect_url(class_names:,
                                     scope:,
+                                    default_scope:,
                                     order_scope:,
                                     label_method:)
     end
@@ -354,11 +362,13 @@ module Folio::Console::ReactHelper
 
     def react_ordered_multiselect_url(class_names:,
                                       scope:,
+                                      default_scope:,
                                       order_scope:,
                                       label_method:)
       options = {
         class_names:,
         scope:,
+        default_scope:,
         order_scope:,
         only_path: true,
       }
