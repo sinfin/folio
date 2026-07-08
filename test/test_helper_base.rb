@@ -103,12 +103,6 @@ class ActiveSupport::TestCase
     end
   end
 
-  def with_ai_config(**config_overrides, &block)
-    config = Folio::Ai::Config.new(**Folio::Ai.config.to_h.merge(config_overrides))
-
-    Folio::Ai.stub(:config, config, &block)
-  end
-
   def reset_folio_current(site_user_link)
     ::Folio::Current.reset
     ::Folio::Current.nillify_site_records

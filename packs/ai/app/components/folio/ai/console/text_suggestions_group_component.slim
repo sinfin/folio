@@ -1,9 +1,0 @@
-.f-ai-c-text-suggestions-group data=component_data
-  - if render_controls?
-    = render(Folio::Ai::Console::TextSuggestionsGroup::ControlsComponent.new)
-
-  .f-ai-c-text-suggestions-group__content
-    = content
-
-  - if render_controls?
-    = render(Folio::Ai::Console::TextSuggestionsGroup::InstructionsComponent.new(stored_instruction:))

@@ -15,8 +15,8 @@ description: >-
   use `Folio::Ai::*`; console-facing code uses `Folio::Ai::Console::*`, not
   `Folio::Console::*`.
 - Match file paths to constants inside the pack. Example:
-  `packs/ai/app/controllers/folio/ai/console/api/text_suggestions_controller.rb`
-  defines `Folio::Ai::Console::Api::TextSuggestionsController`.
+  `packs/reports/app/controllers/folio/reports/console/api/items_controller.rb`
+  defines `Folio::Reports::Console::Api::ItemsController`.
 - A pack may expose engine routes in normal Folio URL space, but route entries
   must explicitly point to the pack controller namespace when it differs from
   the URL namespace.

@@ -61,10 +61,10 @@ asset file presence on each request.
 Pack-owned asset names should use `folio_pack_<pack_name>`:
 
 ```ruby
-module Folio::Ai
+module Folio::Reports
   PACK_ASSETS = {
-    javascripts: %w[folio_pack_ai],
-    stylesheets: %w[folio_pack_ai],
+    javascripts: %w[folio_pack_reports],
+    stylesheets: %w[folio_pack_reports],
   }.freeze
 
   def self.pack_assets
@@ -104,29 +104,3 @@ rails generate folio:console:scaffold folio/ai/report --pack=ai
 
 Configuration files, root files and host-app setup files intentionally stay in
 the application root unless a generator explicitly supports packing them.
-
-## AI Pack
-
-`packs/ai` owns the reusable AI prompt/suggestion functionality. The canonical
-technical integration guide is [`docs/ai.md`](ai.md). The original design record
-is preserved in [`docs/plans/ai_prompts_plan.md`](plans/ai_prompts_plan.md). Agent
-workflows should use
-[`folio-ai-inputs`](../.skills/folio-ai-inputs/SKILL.md) when wiring concrete
-Console inputs.
-
-The AI pack is disabled by default. Host applications opt in with
-`Folio.enabled_packs = [:ai]` and configure the feature through
-`Folio::Ai.configure`.
-
-- prompt registry, provider adapters, prompt composition and response handling
-- site prompt settings and validation
-- user instruction persistence
-- console site settings component
-- reusable text suggestions component and Stimulus controller
-- SimpleForm text-input decoration through a generic root hook
-- centralized HTML-over-wire console API
-- TipTap/plain-text context helper
-
-Host applications own field registration, concrete form placement, model
-context methods, prompt copy, rollout decisions and domain-specific aggregate
-actions.

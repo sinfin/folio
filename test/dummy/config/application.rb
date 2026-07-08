@@ -7,8 +7,6 @@ require "rails/all"
 Bundler.require(*Rails.groups)
 require "folio"
 
-Folio.enabled_packs = [:ai] if Rails.env.development? || Rails.env.test?
-
 module Dummy
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.

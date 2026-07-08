@@ -15,11 +15,7 @@ Folio often serves **UI fragments** from API-style controllers by rendering a
 **ViewComponent** into JSON: the envelope is JSON, but **`data` is an HTML
 string**, not a typed payload for JavaScript to interpret as business objects.
 
-Reference flow in the codebase: AI text suggestions
-(`Folio::Ai::Console::Api::TextSuggestionsController` and
-`packs/ai/app/assets/javascripts/folio/ai/input.js`).
-
-## Example: AI text suggestions
+## Example: suggestions panel
 
 Do **not** expose suggestions as a JSON array for the browser to turn into DOM
 nodes (duplicate templates, I18n, and error UI in JavaScript):
@@ -33,20 +29,14 @@ chips, errors, meta, and loading state from a Ruby result object. The controller
 returns that markup inside the usual envelope—**`data` is one HTML string**:
 
 ```ruby
-# Folio::Ai::Console::Api::TextSuggestionsController (simplified)
 render_component_json(
-  Folio::Ai::Console::TextSuggestionsComponent.new(
-    result: suggestion_result(instructions:, persist_instructions:),
-    component_id: component_id,
-    field_label: field_label,
-    # …other display-only args
-  )
+  MyFeature::SuggestionsComponent.new(result: suggestion_result)
 )
 ```
 
 The Stimulus side fetches with **`Folio.Api.apiGet` / `apiPost`** and mounts
-**`response.data`** (for example `handleHtml(response.data)` in
-`folio/ai/input.js`)—no client-side loop over suggestion strings to build HTML.
+**`response.data`** as rendered HTML; no client-side loop over suggestion
+strings to build HTML.
 
 ## When to use
 

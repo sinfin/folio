@@ -67,7 +67,7 @@ Instead, exercise the behavior through one of:
   makes tests cleaner.
 
   ```ruby
-  Folio::Ai.stub(:provider_api_key_env_values, { openai: "secret" }) do
+  MyFeature.stub(:provider_env_values, { primary: "secret" }) do
     # exercise behavior
   end
   ```
@@ -75,7 +75,7 @@ Instead, exercise the behavior through one of:
 - For one-off flags, stub the value method directly:
 
   ```ruby
-  Folio::Ai.stub(:env_disabled_value, "1") do
+  MyFeature.stub(:disabled_env_value, "1") do
     # exercise disabled behavior
   end
   ```
