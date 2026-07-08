@@ -8,11 +8,16 @@ class Folio::Ai::Console::TextSuggestionsComponentTest < Folio::Console::Compone
     render_inline(component)
 
     assert_selector(".f-ai-c-text-suggestions")
+    assert_selector(".f-ai-c-text-suggestions__panel")
+    assert_selector(".f-ai-c-text-suggestions__close")
     assert_selector(".f-ai-c-text-suggestions__suggestion", count: 2)
+    assert_selector(".f-ai-c-text-suggestions__suggestions")
+    assert_selector(".f-ai-c-text-suggestions__suggestion-accept")
     assert_text "First title"
     assert_text "12 characters"
     assert_text "> 10"
     assert_selector("textarea", text: "Use short words.")
+    assert_selector(".f-ai-c-text-suggestions__regenerate")
   end
 
   test "renders loading state" do

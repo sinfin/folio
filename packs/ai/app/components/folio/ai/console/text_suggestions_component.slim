@@ -3,24 +3,28 @@
     id=@component_id
     role="region"
     aria-label=panel_title
+    data=panel_data
   ]
     - if show_close?
       button.f-ai-c-text-suggestions__close[
         type="button"
         aria-label=close_label
+        data=close_data
       ]
         = folio_icon(:close, height: 16)
 
     .f-ai-c-text-suggestions__body
-      - if status_message.present?
-        .f-ai-c-text-suggestions__status
-          = folio_icon(:alert,
-                       height: 16,
-                       class: "text-danger flex-shrink-0 flex-grow-0")
-          span = status_message
+      .f-ai-c-text-suggestions__status[
+        hidden=status_hidden?
+        data=status_data
+      ]
+        = folio_icon(:alert,
+                     height: 16,
+                     class: "text-danger flex-shrink-0 flex-grow-0")
+        span data=status_message_data = status_message
 
       - if loading?
-        .f-ai-c-text-suggestions__suggestions
+        .f-ai-c-text-suggestions__suggestions data=suggestions_data
           - loading_suggestions.each do
             .f-ai-c-text-suggestions__suggestion.f-ai-c-text-suggestions__suggestion--loading
               span.f-ai-c-text-suggestions__suggestion-body
@@ -36,7 +40,7 @@
                   ]
 
       - elsif successful?
-        .f-ai-c-text-suggestions__suggestions
+        .f-ai-c-text-suggestions__suggestions data=suggestions_data
           - @suggestions.each do |suggestion|
             .f-ai-c-text-suggestions__suggestion[
               role="button"
@@ -52,7 +56,7 @@
                 span.f-ai-c-text-suggestions__suggestion-text = suggestion[:text]
 
               span.f-ai-c-text-suggestions__suggestion-actions
-                span.f-ai-c-text-suggestions__suggestion-copy-wrap
+                span.f-ai-c-text-suggestions__suggestion-copy-wrap data=stimulus_action(click: "stopPropagation")
                   = render(Folio::Console::Ui::ClipboardComponent.new(text: suggestion[:text],
                                                                       class_name: "f-ai-c-text-suggestions__suggestion-copy",
                                                                       icon_height: 16))
@@ -61,7 +65,7 @@
                   type="button"
                   aria-label=accept_label
                   title=accept_label
-                  data=suggestion_data(suggestion)
+                  data=accept_suggestion_data(suggestion)
                 ]
                   = folio_icon(:check, height: 16)
 
@@ -71,11 +75,13 @@
             class="form-control"
             rows="2"
             placeholder=instructions_placeholder
+            data=instructions_data
           ]
             = @instructions
 
           button.f-ai-c-text-suggestions__regenerate[
             type="button"
             class="btn btn-sm btn-medium-dark"
+            data=regenerate_data
           ]
             = regenerate_label

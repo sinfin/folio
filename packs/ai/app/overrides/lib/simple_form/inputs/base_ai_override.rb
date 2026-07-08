@@ -105,6 +105,9 @@ module Folio::Ai::SimpleFormInputExtension
       {
         "f-ai-c-input-controls:toggle": "toggle",
         "f-ai-c-input-controls:undo": "undoSuggestion",
+        "f-ai-c-text-suggestions:close": "close",
+        "f-ai-c-text-suggestions:regenerate": "regenerate",
+        "f-ai-c-text-suggestions:accept": "acceptSuggestion",
         "f-ai-input/message": "onMessage",
       }
     end
@@ -118,7 +121,6 @@ module Folio::Ai::SimpleFormInputExtension
         group: config[:group],
         suggestion_count: config[:suggestion_count],
         component_id: ai_text_suggestions_component_id,
-        request_timeout_ms: Folio::Ai.config.client_request_timeout_ms,
       }
     end
 

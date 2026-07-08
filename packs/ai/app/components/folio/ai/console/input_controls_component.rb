@@ -2,8 +2,6 @@
 
 # Renders the AI input button, undo button, and suggestion mount point.
 class Folio::Ai::Console::InputControlsComponent < Folio::Console::ApplicationComponent
-  CONTROLLER_NAME = "f-ai-c-input-controls"
-
   def initialize(component_id:, label:, undo_label: nil)
     @component_id = component_id
     @label = label

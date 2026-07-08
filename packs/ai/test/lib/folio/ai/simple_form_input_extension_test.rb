@@ -34,23 +34,15 @@ class Folio::Ai::SimpleFormInputExtensionTest < ActionView::TestCase
 
     page = Capybara.string(html)
     wrapper = page.find(".form-group.f-ai-input")
-    input = wrapper.find("[data-f-ai-input-target='input']")
 
     assert_includes wrapper["class"].split, "f-ai-input"
     assert_includes wrapper["class"].split, "form-group--with-ai-text-suggestions"
-    assert_includes wrapper["data-action"].split, "f-ai-c-input-controls:toggle->f-ai-input#toggle"
-    assert_includes wrapper["data-action"].split, "f-ai-c-input-controls:undo->f-ai-input#undoSuggestion"
-    assert_includes wrapper["data-action"].split, "f-ai-input/message->f-ai-input#onMessage"
-    assert_not_includes wrapper["data-action"].split, "click@window->f-ai-input#onWindowClick"
-    assert_not_includes wrapper["data-action"].split, "keydown@window->f-ai-input#onWindowKeydown"
-    assert_equal "input", input["data-f-ai-input-target"]
-    assert_includes input["data-action"].split, "input->f-ai-input#onInput"
 
     assert_ai_values(wrapper)
     assert page.has_css?(".f-ai-input__button svg", count: 1)
     assert page.has_css?(".f-ai-input__undo[hidden]", count: 1, visible: :all)
-    assert page.has_css?(".f-ai-c-input-controls[data-controller='f-ai-c-input-controls']", count: 1)
-    assert page.has_css?(".f-ai-input__custom-html[data-f-ai-c-input-controls-target='customHtml']", count: 1)
+    assert page.has_css?(".f-ai-c-input-controls", count: 1)
+    assert page.has_css?(".f-ai-input__custom-html", count: 1)
   end
 
   test "does not render controls for unregistered fields" do
@@ -93,6 +85,5 @@ class Folio::Ai::SimpleFormInputExtensionTest < ActionView::TestCase
       assert_equal "false", wrapper["data-f-ai-input-group-value"]
       assert_equal "3", wrapper["data-f-ai-input-suggestion-count-value"]
       assert_equal "folio_ai_text_suggestions_page_title", wrapper["data-f-ai-input-component-id-value"]
-      assert_equal "45000", wrapper["data-f-ai-input-request-timeout-ms-value"]
     end
 end

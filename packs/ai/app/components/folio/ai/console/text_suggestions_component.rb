@@ -25,9 +25,53 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
 
   private
     def component_data
-      {
-        field_key: @field[:key],
-      }.compact
+      stimulus_controller("f-ai-c-text-suggestions",
+                          values: {
+                            key: @field[:key],
+                          }.compact,
+                          action: {
+                            "f-ai-input:suggestionStale" => "clearSuggestionSelection",
+                            "f-ai-input:clientError" => "showClientError",
+                          })
+    end
+
+    def panel_data
+      stimulus_action(click: "stopPropagation")
+    end
+
+    def close_data
+      stimulus_action(click: "close")
+    end
+
+    def suggestion_data(suggestion)
+      stimulus_data(action: { click: "accept" },
+                    params: suggestion_params(suggestion),
+                    target: "suggestion")
+    end
+
+    def suggestions_data
+      stimulus_target("suggestions")
+    end
+
+    def status_data
+      stimulus_target("status")
+    end
+
+    def status_message_data
+      stimulus_target("statusMessage")
+    end
+
+    def accept_suggestion_data(suggestion)
+      stimulus_action({ click: "accept" }, suggestion_params(suggestion).slice(:text))
+    end
+
+    def instructions_data
+      stimulus_merge(stimulus_controller("f-input-autosize", inline: true),
+                     stimulus_target("instructions"))
+    end
+
+    def regenerate_data
+      stimulus_action(click: "regenerate")
     end
 
     def panel_title
@@ -56,6 +100,10 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
 
       t(".errors.#{@error_code}",
         default: t(".errors.generic", default: "AI suggestions could not be generated."))
+    end
+
+    def status_hidden?
+      status_message.blank?
     end
 
     def loading_label
@@ -94,7 +142,7 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
       @show_close
     end
 
-    def suggestion_data(suggestion)
+    def suggestion_params(suggestion)
       {
         text: suggestion[:text],
         key: suggestion[:key],
