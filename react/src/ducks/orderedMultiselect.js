@@ -61,6 +61,7 @@ const initialState = {
   paramBase: null,
   foreignKey: null,
   url: null,
+  options: null,
   sortable: true,
   atomSetting: false
 }

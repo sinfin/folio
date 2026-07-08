@@ -137,8 +137,14 @@ class Folio::File < Folio::ApplicationRecord
     return none if query.blank?
 
     sanitized = sanitize_filename_for_search(query)
+    like = "%#{sanitize_sql_like(query.to_s)}%"
+
+    # tsearch splits dotted filenames (e.g. "name.com_123.mp4") into ANDed terms
+    # that never match the single `host` lexeme stored in the tsvector, so a raw
+    # file_name substring match is needed as a fallback.
     where(id: by_query_raw(sanitized).reselect("folio_files.id"))
-      .or(where("folio_files.slug ILIKE ?", "%#{sanitize_sql_like(query.to_s)}%"))
+      .or(where("folio_files.file_name ILIKE ?", like))
+      .or(where("folio_files.slug ILIKE ?", like))
       .or(where(id: tagged_with(query, wild: true, any: true).reselect("folio_files.id")))
   end
 
@@ -427,6 +433,16 @@ class Folio::File < Folio::ApplicationRecord
     updates[:file_placements_count] = placements_count if file_placements_count != placements_count
 
     update_columns(updates) if updates.any?
+  end
+
+  # A purely numeric slug (e.g. derived from a file named "349444.jpg") would be
+  # resolved by FriendlyId ahead of the file whose primary key equals that number
+  # — friendly.find("349444") would return the slug owner instead of id 349444.
+  # Force a neutral, non-numeric slug so the slug and id namespaces never overlap.
+  # NOTE: must stay public — FriendlyId::Candidates calls it on the record.
+  def normalize_friendly_id(value)
+    normalized = super
+    normalized.to_s.match?(/\A\d+\z/) ? neutral_slug : normalized
   end
 
   private

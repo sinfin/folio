@@ -525,10 +525,22 @@ class Folio::Console::BaseController < Folio::ApplicationController
       name = folio_console_record_variable_name(plural: false)
       return if instance_variable_get(name).present?
 
-      if @klass.respond_to?(:friendly)
-        instance_variable_set(name, @klass.by_site(allowed_record_sites).friendly.find(params[:id]))
+      instance_variable_set(name, find_console_resource(@klass.by_site(allowed_record_sites), params[:id]))
+    end
+
+    # The console addresses records by the :id param. For FriendlyId models a
+    # numeric param is the primary key, but FriendlyId would resolve it against
+    # the slug column first — so a record whose slug happens to equal another
+    # record's id (e.g. a file uploaded as "349444.jpg" gets slug "349444",
+    # colliding with id 349444) would hijack the lookup. Prefer the primary key
+    # for numeric params; fall back to FriendlyId for genuine (non-numeric) slugs.
+    def find_console_resource(scope, id)
+      return scope.find(id) unless scope.respond_to?(:friendly)
+
+      if id.to_s.match?(/\A\d+\z/)
+        scope.find_by(id:) || scope.friendly.find(id)
       else
-        instance_variable_set(name, @klass.by_site(allowed_record_sites).find(params[:id]))
+        scope.friendly.find(id)
       end
     end
 
@@ -591,8 +603,25 @@ class Folio::Console::BaseController < Folio::ApplicationController
       return if request.path.start_with?("/console/api")
       return if request.path.start_with?("/console/atoms")
 
-      Folio::Current.user.update_console_url!(request.url)
+      Folio::Current.user.update_console_url!(folio_console_presence_url)
     end
+
+    # Canonical URL used for "who is editing this record" presence. Derived from
+    # the record so the edit page (GET /…/edit) and a form re-rendered after a
+    # failed update (PATCH /…) resolve to the SAME presence URL — otherwise the
+    # two requests track the editor under different URLs and other editors stop
+    # seeing them. Falls back to the request URL when there is no record or when
+    # the edit URL cannot be generated (e.g. a nested route whose parent id is
+    # not in scope, or a resource without an edit route) — better a slightly
+    # less canonical URL than a 500 on every edit/update of such a resource.
+    def folio_console_presence_url
+      if %w[edit update].include?(action_name) && params[:id].present?
+        safe_url_for(action: :edit, id: params[:id], only_path: false) || request.url
+      else
+        request.url
+      end
+    end
+    helper_method :folio_console_presence_url
 
     def set_show_current_user_console_url_bar
       @show_current_user_console_url_bar = %w[edit update].include?(action_name)
