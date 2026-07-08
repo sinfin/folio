@@ -133,6 +133,44 @@ class Folio::Console::ReactHelperTest < ActionView::TestCase
     assert_equal second_author.id, options[1]["options"][0]["id"]
   end
 
+  test "react_ordered_multiselect renders virtual grouped local collection options" do
+    first_author = create(:dummy_blog_author,
+                          first_name: "Ada",
+                          last_name: "Lovelace")
+    second_author = create(:dummy_blog_author,
+                           first_name: "Grace",
+                           last_name: "Hopper")
+    collection = [
+      Group.new("First group", [first_author]),
+      Group.new("Second group", [second_author]),
+    ]
+
+    wrap = ordered_multiselect_wrap(build(:dummy_blog_article),
+                                    relation_name: :issue_ids,
+                                    virtual: {
+                                      class_name: "Dummy::Blog::Author",
+                                      selected: [first_author],
+                                      input_name: "dummy_blog_article[issue_ids][]",
+                                    },
+                                    label_method: :full_name,
+                                    collection:,
+                                    group_method: :records,
+                                    group_label_method: :label)
+    options = data_json(wrap, "options")
+    items = data_json(wrap, "items")
+
+    assert_nil wrap["data-url"]
+    assert_equal "array", wrap["data-serialization"]
+    assert_equal "dummy_blog_article[issue_ids][]", wrap["data-input-name"]
+    assert_equal "First group", options[0]["label"]
+    assert_equal first_author.id, options[0]["options"][0]["id"]
+    assert_equal "Ada Lovelace", options[0]["options"][0]["label"]
+    assert_equal "Dummy::Blog::Author", options[0]["options"][0]["type"]
+    assert_equal "Second group", options[1]["label"]
+    assert_equal second_author.id, options[1]["options"][0]["id"]
+    assert_equal first_author.id, items[0]["value"]
+  end
+
   test "react_ordered_multiselect keeps selected items with local options" do
     article = create(:dummy_blog_article)
     author = create(:dummy_blog_author,

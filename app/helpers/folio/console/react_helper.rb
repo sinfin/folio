@@ -165,8 +165,6 @@ module Folio::Console::ReactHelper
     foreign_key = nil
 
     if virtual
-      raise ArgumentError, "Cannot combine virtual ordered multiselect with collection" if collection
-
       class_names = virtual.fetch(:class_name)
       data_serialization = "array"
       data_input_name = virtual.fetch(:input_name)
@@ -182,6 +180,13 @@ module Folio::Console::ReactHelper
           _destroy: false,
         }
       end
+
+      options = react_ordered_multiselect_options(collection,
+                                                  group_method:,
+                                                  group_label_method:,
+                                                  label_method:,
+                                                  value_method:,
+                                                  through_klass: nil) if collection
     else
       klass = f.object.class
       reflection = klass.reflections[relation_name.to_s]
