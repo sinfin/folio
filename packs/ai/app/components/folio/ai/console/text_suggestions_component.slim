@@ -27,12 +27,13 @@
                 span.f-ai-c-text-suggestions__suggestion-text = loading_label
 
               span.f-ai-c-text-suggestions__suggestion-actions
-                span[
-                  class="f-ai-c-text-suggestions__suggestion-loader"
-                  class="folio-loader"
-                  class="folio-loader--tiny"
-                  class="folio-loader--transparent"
-                ]
+                span.f-ai-c-text-suggestions__suggestion-loader-wrap
+                  span[
+                    class="f-ai-c-text-suggestions__suggestion-loader"
+                    class="folio-loader"
+                    class="folio-loader--tiny"
+                    class="folio-loader--transparent"
+                  ]
 
       - elsif successful?
         .f-ai-c-text-suggestions__suggestions

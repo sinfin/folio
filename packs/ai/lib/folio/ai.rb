@@ -16,7 +16,7 @@ module Folio::Ai
 
   PACK_ASSETS = {
     javascripts: [],
-    stylesheets: [],
+    stylesheets: %w[folio_pack_ai],
   }.freeze
 
   class << self

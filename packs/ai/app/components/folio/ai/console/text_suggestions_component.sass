@@ -1,0 +1,163 @@
+$f-ai-c-text-suggestions-accent: #9637D3 !default
+$f-ai-c-text-suggestions-accent-light: #D3B3E8 !default
+$f-ai-c-text-suggestions-background: #F3EBFC !default
+$f-ai-c-text-suggestions-text: $gray-600 !default
+$f-ai-c-text-suggestions-border-ui: $gray-300 !default
+$f-ai-c-text-suggestions-button-bg: $gray-500 !default
+$f-ai-c-text-suggestions-inner-gap: px-to-rem(12px)
+
+.f-ai-c-text-suggestions
+  --folio-loader-background: #{rgba($f-ai-c-text-suggestions-background, 0.9)}
+  --folio-loader-foreground-transparent: #{$f-ai-c-text-suggestions-accent-light}
+  --folio-loader-foreground: #{$f-ai-c-text-suggestions-accent}
+
+  margin-top: px-to-rem(8px)
+
+  .f-input-character-counter-wrap + .form-group__custom-html &
+    margin-top: px-to-rem(8px + 20px)
+
+  &__panel
+    background: $f-ai-c-text-suggestions-background
+    border: 1px solid $f-ai-c-text-suggestions-accent-light
+    border-radius: px-to-rem(4px)
+    display: flex
+    flex-direction: column
+    z-index: 1
+
+  .f-ai-input[data-f-ai-input-status-value="waiting-for-suggestions"] &__suggestions,
+  .f-ai-input[data-f-ai-input-status-value="submitting-instructions"] &__suggestions
+    pointer-events: none
+
+  &__title
+    color: $f-ai-c-text-suggestions-text
+    flex: 1 1 auto
+    font-size: $font-size-base
+    font-weight: $font-weight-normal
+    line-height: $line-height-base
+    margin: 0
+    min-width: 0
+
+  &__close
+    +unbutton
+    align-items: center
+    box-sizing: content-box
+    cursor: pointer
+    display: flex
+    justify-content: flex-end
+    min-height: px-to-rem(24px)
+    padding: px-to-rem(4px) px-to-rem(8px)
+
+  &__status
+    align-items: center
+    color: $f-ai-c-text-suggestions-text
+    display: flex
+    font-size: $font-size-sm
+    gap: px-to-rem(4px)
+    line-height: 1
+    margin: 0
+
+    &:only-child
+      margin-top: -1 * px-to-rem(24px + 4 + 4)
+      padding-top: px-to-rem(20px)
+
+  &__body
+    display: flex
+    flex-direction: column
+    gap: $f-ai-c-text-suggestions-inner-gap
+    padding: 0 px-to-rem(20px) px-to-rem(20px)
+    position: relative
+
+  &__suggestions
+    display: flex
+    flex-direction: column
+    gap: $f-ai-c-text-suggestions-inner-gap
+    margin: 0
+
+  &__suggestion
+    align-items: center
+    background: $f-ai-c-text-suggestions-background
+    border: 1px solid $f-ai-c-text-suggestions-accent-light
+    border-radius: px-to-rem(4px)
+    cursor: pointer
+    display: flex
+    gap: px-to-rem(16px)
+    outline: 0
+    padding: px-to-rem(12px)
+    width: 100%
+
+    &:hover
+      border-color: $f-ai-c-text-suggestions-accent
+
+    &--selected
+      &, &:hover
+        background: $green-background
+        border-color: $green
+
+    &--loading
+      cursor: wait
+
+      &:hover
+        border-color: $f-ai-c-text-suggestions-accent-light
+
+  &__suggestion-body
+    display: flex
+    flex: 1 1 auto
+    flex-direction: column
+    gap: px-to-rem(4px)
+    min-width: 0
+
+  &__suggestion-meta
+    color: $gray-500
+    display: flex
+    flex-wrap: wrap
+    font-size: $font-size-sm
+    gap: px-to-rem(8px)
+    line-height: $line-height-base
+
+  &__suggestion-text
+    color: $f-ai-c-text-suggestions-text
+    font-size: $font-size-base
+    line-height: $line-height-base
+    margin: 0
+    text-align: left
+    white-space: pre-wrap
+    word-break: break-word
+
+  &__suggestion-actions
+    align-items: center
+    display: inline-flex
+    flex-shrink: 0
+    gap: px-to-rem(4px)
+
+  &__suggestion-loader-wrap
+    display: block
+    flex: 0 0 px-to-rem(16px)
+    height: px-to-rem(16px)
+    position: relative
+    width: px-to-rem(16px)
+
+  &__suggestion-copy-wrap
+    display: inline-flex
+
+  &__suggestion-copy,
+  &__suggestion-accept
+    align-items: center
+    background: transparent
+    border: 0
+    border-radius: px-to-rem(4px)
+    color: $f-ai-c-text-suggestions-text
+    cursor: pointer
+    display: inline-flex
+    flex-shrink: 0
+    justify-content: center
+    margin: 0
+    padding: px-to-rem(4px)
+
+    &:hover
+      opacity: 0.75
+
+  &__instructions
+    align-items: flex-start
+    display: flex
+    flex-direction: column
+    gap: px-to-rem(8px)
