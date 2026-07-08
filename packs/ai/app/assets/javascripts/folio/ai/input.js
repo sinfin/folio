@@ -13,6 +13,17 @@
 
   let openController = null
 
+  const messageComponentIds = (message) => {
+    return [...new Set([
+      message.data.component_id,
+      ...Object.keys(message.data.fragments || {})
+    ].filter(Boolean))]
+  }
+
+  const dispatchMessageToInput = (input, message) => {
+    input.dispatchEvent(new CustomEvent(`${CONTROLLER_NAME}/message`, { detail: { message } }))
+  }
+
   const registerAiInputController = () => {
     window.Folio.Stimulus.register(CONTROLLER_NAME, class extends window.Stimulus.Controller {
       static targets = ['input']
@@ -348,13 +359,12 @@
     window.Folio.MessageBus.callbacks[CONTROLLER_NAME] = (message) => {
       if (!message) return
       if (message.type !== TEXT_SUGGESTIONS_JOB_TYPE) return
-      if (!message.data?.component_id) return
 
-      const selector = `.${INPUT_CLASS_NAME}[data-f-ai-input-component-id-value="${window.Folio.Ai.cssEscape(message.data.component_id)}"]`
-      const inputs = document.querySelectorAll(selector)
+      for (const componentId of messageComponentIds(message)) {
+        const selector = `.${INPUT_CLASS_NAME}[data-f-ai-input-component-id-value="${window.Folio.Ai.cssEscape(componentId)}"]`
+        const inputs = document.querySelectorAll(selector)
 
-      for (const input of inputs) {
-        input.dispatchEvent(new CustomEvent(`${CONTROLLER_NAME}/message`, { detail: { message } }))
+        for (const input of inputs) dispatchMessageToInput(input, message)
       }
     }
   }
