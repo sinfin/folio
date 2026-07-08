@@ -55,7 +55,8 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
     end
 
     assert_response :unprocessable_entity
-    assert_includes response.parsed_body["data"], "AI suggestions could not be generated."
+    assert_includes response.parsed_body["data"],
+                    I18n.t("folio.ai.console.text_suggestions_component.errors.missing_message_bus_client_id")
   end
 
   private

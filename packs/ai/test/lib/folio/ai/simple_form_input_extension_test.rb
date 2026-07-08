@@ -44,6 +44,18 @@ class Folio::Ai::SimpleFormInputExtensionTest < ActionView::TestCase
     assert page.has_css?(".f-ai-input__custom-html", count: 1)
   end
 
+  test "renders localized ai control label" do
+    html = I18n.with_locale(:cs) do
+      with_dummy_provider do
+        simple_form_for @page, url: "/" do |f|
+          concat(f.input :title, ai: true)
+        end
+      end
+    end
+
+    assert Capybara.string(html).has_css?(".f-ai-input__button", text: "AI návrhy")
+  end
+
   test "does not render controls for unregistered fields" do
     html = with_dummy_provider do
       simple_form_for @page, url: "/" do |f|

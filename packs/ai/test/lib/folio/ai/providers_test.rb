@@ -29,6 +29,22 @@ class Folio::Ai::ProvidersTest < ActiveSupport::TestCase
     assert_equal Folio::Ai::DEFAULT_DUMMY_MODEL, Folio::Ai::Providers::Dummy.default_model
   end
 
+  test "returns field-aware dummy suggestions without prompt text" do
+    prompt = <<~TEXT.squish
+      Generate suggestions.
+      #{Folio::Ai::TextSuggestionGenerator::CONTEXT_MARKER}
+      {"field":{"key":"perex"}}
+    TEXT
+
+    response = JSON.parse(Folio::Ai::Providers::Dummy.new.complete(prompt:, suggestion_count: 3))
+    texts = response.fetch("suggestions").map { |suggestion| suggestion.fetch("text") }
+
+    assert_equal "Dummy perex summarizing the article angle so editors can test copy, accept and undo states without a real AI request.",
+                 texts.first
+    assert_equal 3, texts.size
+    assert texts.none? { |text| text.include?("Generate suggestions") }
+  end
+
   test "defines OpenAI model options from Folio-prefixed ENV with fallback" do
     Folio::Ai::Providers::OpenAi.stub(:models_env_value, " gpt-5.5, gpt-5.5-pro, gpt-5.5 ") do
       assert_equal %w[gpt-5.5 gpt-5.5-pro], Folio::Ai::Providers::OpenAi.models

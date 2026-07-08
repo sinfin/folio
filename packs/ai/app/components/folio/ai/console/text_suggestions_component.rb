@@ -75,7 +75,7 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
     end
 
     def panel_title
-      t(".panel_title", field: field_label, default: "AI suggestions for %{field}")
+      t(".panel_title", field: field_label)
     end
 
     def field_label
@@ -98,8 +98,7 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
       return loading_label if loading?
       return unless error?
 
-      t(".errors.#{@error_code}",
-        default: t(".errors.generic", default: "AI suggestions could not be generated."))
+      t(".errors.#{@error_code}")
     end
 
     def status_hidden?
@@ -107,27 +106,23 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
     end
 
     def loading_label
-      t(".loading", default: "Preparing suggestions")
+      t(".loading")
     end
 
     def close_label
-      t(".close", default: "Close")
+      t(".close")
     end
 
     def accept_label
-      t(".accept", default: "Use suggestion")
-    end
-
-    def characters_label
-      t(".characters", default: "characters")
+      t(".accept")
     end
 
     def instructions_placeholder
-      t(".instructions_placeholder", default: "Optional instructions")
+      t(".instructions_placeholder")
     end
 
     def regenerate_label
-      t(".regenerate", default: "Regenerate")
+      t(".regenerate")
     end
 
     def loading_suggestions
@@ -147,18 +142,5 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
         text: suggestion[:text],
         key: suggestion[:key],
       }.compact
-    end
-
-    def character_count_label(suggestion)
-      [
-        suggestion[:character_count],
-        characters_label,
-      ].compact.join(" ")
-    end
-
-    def character_limit_label(suggestion)
-      return unless suggestion[:over_character_limit] && suggestion[:character_limit].present?
-
-      "> #{suggestion[:character_limit]}"
     end
 end

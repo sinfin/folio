@@ -5,6 +5,7 @@
 
 class Folio::Ai::TextSuggestionGenerator
   DEFAULT_SUGGESTION_COUNT = 3
+  CONTEXT_MARKER = "Context JSON:"
 
   def initialize(record:, site:, record_key:, field:, form_snapshot:, provider:, user_instruction: nil, suggestion_count: DEFAULT_SUGGESTION_COUNT)
     @record = record
@@ -26,6 +27,7 @@ class Folio::Ai::TextSuggestionGenerator
       Generate #{suggestion_count} text suggestions for the requested form field.
       Return only valid JSON in this shape: {"suggestions":[{"text":"..."}]}.
       Use the form snapshot as the source of truth.
+      #{CONTEXT_MARKER}
       #{JSON.pretty_generate(prompt_data)}
     TEXT
   end

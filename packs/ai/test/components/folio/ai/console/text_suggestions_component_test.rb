@@ -5,7 +5,9 @@ require Folio::Engine.root.join("packs/ai/lib/folio/ai")
 
 class Folio::Ai::Console::TextSuggestionsComponentTest < Folio::Console::ComponentTest
   test "renders suggestions" do
-    render_inline(component)
+    I18n.with_locale(:en) do
+      render_inline(component)
+    end
 
     assert_selector(".f-ai-c-text-suggestions")
     assert_selector(".f-ai-c-text-suggestions__panel")
@@ -14,24 +16,38 @@ class Folio::Ai::Console::TextSuggestionsComponentTest < Folio::Console::Compone
     assert_selector(".f-ai-c-text-suggestions__suggestions")
     assert_selector(".f-ai-c-text-suggestions__suggestion-accept")
     assert_text "First title"
-    assert_text "12 characters"
-    assert_text "> 10"
+    assert_no_selector(".f-ai-c-text-suggestions__suggestion-meta")
+    assert_no_text "12 characters"
+    assert_no_text "> 10"
     assert_selector("textarea", text: "Use short words.")
     assert_selector(".f-ai-c-text-suggestions__regenerate")
   end
 
   test "renders loading state" do
-    render_inline(component(suggestions: [], loading: true))
+    I18n.with_locale(:en) do
+      render_inline(component(suggestions: [], loading: true))
+    end
 
     assert_selector(".f-ai-c-text-suggestions__suggestion--loading", count: 3)
     assert_text "Preparing suggestions"
   end
 
   test "renders error state without instructions" do
-    render_inline(component(suggestions: [], error_code: :provider_unavailable))
+    I18n.with_locale(:en) do
+      render_inline(component(suggestions: [], error_code: :provider_unavailable))
+    end
 
-    assert_text "AI suggestions could not be generated."
+    assert_text "Configure an AI provider before using AI suggestions."
     assert_no_selector(".f-ai-c-text-suggestions__instructions")
+  end
+
+  test "renders czech labels" do
+    I18n.with_locale(:cs) do
+      render_inline(component)
+    end
+
+    assert_selector(".f-ai-c-text-suggestions__close[aria-label='Zavřít']")
+    assert_selector(".f-ai-c-text-suggestions__regenerate", text: "Uložit vlastní instrukce")
   end
 
   private

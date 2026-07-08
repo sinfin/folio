@@ -151,8 +151,7 @@ module Folio::Ai::SimpleFormInputExtension
     def ai_text_suggestions_label(config)
       field = Folio::Ai.registry.field(config[:record_key], config[:field_key])
       I18n.t("folio.ai.input.button",
-             field: field[:label],
-             default: "Suggest")
+             field: field[:label])
     end
 
     def ai_text_suggestions_url

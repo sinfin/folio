@@ -23,8 +23,10 @@ class Folio::Ai::TextSuggestionsJobTest < ActiveJob::TestCase
 
   test "broadcasts rendered suggestion fragment to message bus client" do
     message = capture_message do
-      Folio::Ai::Providers::Dummy.stub(:available?, true) do
-        perform_job
+      I18n.with_locale(:en) do
+        Folio::Ai::Providers::Dummy.stub(:available?, true) do
+          perform_job
+        end
       end
     end
 
@@ -33,8 +35,9 @@ class Folio::Ai::TextSuggestionsJobTest < ActiveJob::TestCase
     assert_equal "Folio::Ai::TextSuggestionsJob", message[:payload]["type"]
     assert_equal "request-1", message[:payload].dig("data", "request_id")
     assert_equal "ai_title", message[:payload].dig("data", "component_id")
-    assert_includes message[:payload].dig("data", "html"), "Dummy suggestion 1"
-    assert_includes message[:payload].dig("data", "fragments", "ai_title"), "Dummy suggestion 1"
+    assert_includes message[:payload].dig("data", "html"), "Dummy title for testing AI suggestions"
+    assert_includes message[:payload].dig("data", "fragments", "ai_title"), "Dummy title for testing AI suggestions"
+    assert_not_includes message[:payload].dig("data", "html"), "Return only valid JSON"
   end
 
   test "broadcasts rendered provider errors" do
@@ -44,8 +47,10 @@ class Folio::Ai::TextSuggestionsJobTest < ActiveJob::TestCase
     end
 
     message = capture_message do
-      Folio::Ai.stub(:provider_for, provider) do
-        perform_job
+      I18n.with_locale(:en) do
+        Folio::Ai.stub(:provider_for, provider) do
+          perform_job
+        end
       end
     end
 

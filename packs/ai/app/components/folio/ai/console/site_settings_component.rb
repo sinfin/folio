@@ -91,27 +91,27 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
     end
 
     def provider_label(provider)
-      t(".providers.#{provider}", default: provider.to_s.humanize)
+      t(".providers.#{provider}")
     end
 
     def enabled_label
-      t(".enabled_label", default: "Enable AI suggestions for this site")
+      t(".enabled_label")
     end
 
     def provider_input_label
-      t(".provider", default: "Provider")
+      t(".provider")
     end
 
     def model_input_label
-      t(".model", default: "Model")
+      t(".model")
     end
 
     def prompt_label
-      t(".prompt_label", default: "Prompt")
+      t(".prompt_label")
     end
 
     def no_providers_text
-      t(".no_providers", default: "Configure an AI provider before editing AI suggestion settings for this site.")
+      t(".no_providers")
     end
 
     def site_enabled?
@@ -141,9 +141,9 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
 
     def model_placeholder(provider)
       model = provider_default_model(provider)
-      return t(".model_placeholder_blank", default: "Provider default") if model.blank?
+      return t(".model_placeholder_blank") if model.blank?
 
-      t(".model_placeholder", model:, default: "Default: %{model}")
+      t(".model_placeholder", model:)
     end
 
     def field_prompt(record, field)
@@ -159,8 +159,7 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
       return unless field[:character_limit].present?
 
       t(".character_limit",
-        count: field[:character_limit],
-        default: "Limit: %{count} characters")
+        count: field[:character_limit])
     end
 
     def provider_default_model(provider)

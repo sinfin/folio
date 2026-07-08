@@ -48,11 +48,6 @@
               data=suggestion_data(suggestion)
             ]
               span.f-ai-c-text-suggestions__suggestion-body
-                span.f-ai-c-text-suggestions__suggestion-meta
-                  span = character_count_label(suggestion)
-                  - if character_limit_label(suggestion)
-                    span = character_limit_label(suggestion)
-
                 span.f-ai-c-text-suggestions__suggestion-text = suggestion[:text]
 
               span.f-ai-c-text-suggestions__suggestion-actions

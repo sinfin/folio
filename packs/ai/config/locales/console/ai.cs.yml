@@ -5,7 +5,26 @@ cs:
       tabs:
         ai_prompts: AI prompty
     ai:
+      input:
+        button: AI návrhy
+        undo: Zpět
       console:
+        text_suggestions_component:
+          panel_title: "AI návrhy: %{field}"
+          loading: Připravuji návrhy
+          close: Zavřít
+          accept: Použít návrh
+          instructions_placeholder: Vlastní instrukce pro AI
+          regenerate: Uložit vlastní instrukce
+          errors:
+            disabled: AI návrhy jsou vypnuté.
+            missing_message_bus_client_id: AI návrhy se nepodařilo vygenerovat.
+            missing_key: AI návrhy se nepodařilo vygenerovat.
+            record_not_found: Před použitím AI návrhů záznam uložte.
+            site_disabled: AI návrhy jsou pro tento web vypnuté.
+            field_not_registered: AI návrhy nejsou pro toto pole nakonfigurované.
+            provider_unavailable: Před použitím AI návrhů nastavte AI providera.
+            provider_error: AI návrhy se nepodařilo vygenerovat.
         site_settings_component:
           enabled_label: Povolit AI návrhy pro tento web
           provider: Provider
