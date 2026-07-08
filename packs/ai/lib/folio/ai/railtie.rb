@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Attaches AI site and user concerns when the pack is loaded.
 module Folio
   module Ai
     class Railtie < ::Rails::Railtie

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Shared provider behavior for model defaults, timeouts, and JSON HTTP requests.
 require "net/http"
 
 module Folio::Ai::Providers

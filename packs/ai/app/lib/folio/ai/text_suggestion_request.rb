@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-#
 # Resolves one console AI suggestion request into record, site, field, provider,
 # form snapshot, instructions, and job parameters.
 

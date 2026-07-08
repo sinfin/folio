@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Persists per-user prompt instructions for one registered record field.
 class Folio::Ai::UserInstruction < Folio::ApplicationRecord
   self.table_name = "folio_ai_user_instructions"
 

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# Adds AI settings, provider/model lookup, prompt lookup, and instruction
+# associations to Folio sites.
 module Folio::Ai::SiteConcern
   extend ActiveSupport::Concern
 

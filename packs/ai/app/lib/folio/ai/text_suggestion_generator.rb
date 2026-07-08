@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-#
 # Builds provider prompts from the current form snapshot and normalizes provider
 # JSON into suggestion hashes the console UI can render.
 

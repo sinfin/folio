@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# Stores AI pack runtime configuration, including provider defaults, job queue,
+# and request timeout settings.
 class Folio::Ai::Config
   attr_accessor :enabled,
                 :default_provider

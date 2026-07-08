@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-#
 # Entry point for AI pack configuration, registry access, providers, and core
 # suggestion classes.
 

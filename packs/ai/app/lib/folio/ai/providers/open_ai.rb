@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Calls OpenAI Responses API and extracts text output for suggestion generation.
 class Folio::Ai::Providers::OpenAi < Folio::Ai::Providers::Base
   DEFAULT_MODEL = Folio::Ai::DEFAULT_OPENAI_MODEL
   ENDPOINT = "https://api.openai.com/v1/responses"

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Adds the AI instruction association to Folio users.
 module Folio::Ai::UserConcern
   extend ActiveSupport::Concern
 

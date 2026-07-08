@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Stores record and field metadata used by AI-enabled form inputs.
 class Folio::Ai::Registry
   def initialize
     @records = {}
