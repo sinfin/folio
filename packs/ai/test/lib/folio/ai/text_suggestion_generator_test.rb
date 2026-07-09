@@ -39,6 +39,17 @@ class Folio::Ai::TextSuggestionGeneratorTest < ActiveSupport::TestCase
     end
   end
 
+  test "resolves missing field label in the current locale" do
+    provider = CapturingProvider.new(response: { suggestions: [{ text: "Suggestion" }] }.to_json)
+
+    I18n.with_locale(:cs) do
+      generator(provider:,
+                field: { key: "title" }).call
+    end
+
+    assert_includes provider.prompt, "Název stránky"
+  end
+
   private
     def generator(site: Dummy::Site.new,
                   record: Folio::Page.new,

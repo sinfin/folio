@@ -18,20 +18,25 @@ class Folio::Ai::RegistryTest < ActiveSupport::TestCase
                                  label: "Meta",
                                  fields: %i[title slug],
                                },
+                               {
+                                 key: :seo,
+                                 fields: %i[title],
+                               },
                              ])
 
     record = registry.record("folio_pages")
 
     assert_equal "folio_pages", record[:key]
     assert_equal "Folio::Page", record[:record_class_name]
-    assert_equal Folio::Page.model_name.human(count: 2), record[:label]
-    assert_equal Folio::Page.human_attribute_name("title"),
-                 registry.field("folio_pages", :title)[:label]
+    assert_nil record[:label]
+    assert_nil registry.field("folio_pages", :title)[:label]
     assert_nil registry.field("folio_pages", :title)[:character_limit]
     assert_equal "Slug", registry.field("folio_pages", :slug)[:label]
     assert_equal 120, registry.field("folio_pages", :slug)[:character_limit]
     assert_equal "Meta", registry.group("folio_pages", :meta)[:label]
     assert_equal %w[title slug], registry.group("folio_pages", :meta)[:fields]
+    assert_nil registry.group("folio_pages", :seo)[:label]
+    assert_equal %w[title], registry.group("folio_pages", :seo)[:fields]
   end
 
   test "rejects invalid record classes and duplicate fields or groups" do

@@ -97,6 +97,24 @@ class Folio::Ai::TextSuggestionRequestTest < ActiveSupport::TestCase
     assert_equal "Write title and perex as a set.", request.job_params[:site_prompt]
   end
 
+  test "resolves missing field labels in the current locale" do
+    site = create(Rails.application.config.folio_site_default_test_factory,
+                  ai_settings: ai_settings)
+    page = create(:folio_page, site:)
+
+    request = build_request(site:,
+                            page:,
+                            params: {
+                              key: "title",
+                              message_bus_client_id: "client-1",
+                            })
+
+    I18n.with_locale(:cs) do
+      assert_equal "Název stránky", request.field[:label]
+      assert_equal "Název stránky", request.job_params[:field][:label]
+    end
+  end
+
   test "keeps group site prompt separate from user instructions" do
     site = create(Rails.application.config.folio_site_default_test_factory,
                   ai_settings: ai_settings(group_prompt: "Write title and perex together."))

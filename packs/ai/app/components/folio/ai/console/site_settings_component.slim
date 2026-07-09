@@ -19,7 +19,7 @@
     - records.each do |record|
       .f-ai-c-site-settings__record.card.mb-g
         .card-header
-          .f-ai-c-site-settings__record-title = record[:label]
+          .f-ai-c-site-settings__record-title = record_label(record)
 
         .card-body
           - fields(record).each do |field|
@@ -30,7 +30,7 @@
                                 :fields,
                                 field[:key],
                                 :enabled,
-                                label: field[:label],
+                                label: field_label(record, field),
                                 checked: field_enabled?(record, field))
 
                 - if field_hint(field)
@@ -52,7 +52,7 @@
                                 :groups,
                                 group[:key],
                                 :enabled,
-                                label: group[:label],
+                                label: group_label(group),
                                 checked: group_enabled?(record, group))
 
               = text_area_input(:integrations,

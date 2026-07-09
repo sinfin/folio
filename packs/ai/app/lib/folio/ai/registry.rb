@@ -16,7 +16,6 @@ class Folio::Ai::Registry
     @records[key] = {
       key:,
       record_class_name: record_class.name,
-      label: record_class.model_name.human(count: 2),
       fields: normalized_fields,
       groups: normalize_groups(groups, fields: normalized_fields),
     }
@@ -67,7 +66,7 @@ class Folio::Ai::Registry
 
       {
         key:,
-        label: attributes[:label].presence || record_class.human_attribute_name(key),
+        label: attributes[:label].presence,
         character_limit: attributes[:character_limit],
       }
     end
@@ -100,7 +99,7 @@ class Folio::Ai::Registry
 
       {
         key:,
-        label: attributes[:label].presence || key.humanize,
+        label: attributes[:label].presence,
         fields: field_keys,
       }
     end

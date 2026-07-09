@@ -126,7 +126,7 @@ class Folio::Ai::TextSuggestionsJob < Folio::ApplicationJob
     end
 
     def field
-      params.fetch(:field).to_h.symbolize_keys
+      @field ||= field_with_label(params.fetch(:field).to_h.symbolize_keys)
     end
 
     def primary_field
@@ -146,7 +146,17 @@ class Folio::Ai::TextSuggestionsJob < Folio::ApplicationJob
       field_hash = field_config.to_h.symbolize_keys
       return if field_hash[:key].blank? || field_hash[:component_id].blank?
 
-      field_hash
+      field_with_label(field_hash)
+    end
+
+    def field_with_label(field_hash)
+      field_hash.merge(label: field_label(field_hash))
+    end
+
+    def field_label(field_hash)
+      field_hash[:label].presence ||
+        record_class&.human_attribute_name(field_hash.fetch(:key)) ||
+        field_hash.fetch(:key).humanize
     end
 
     def provider

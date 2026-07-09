@@ -82,6 +82,14 @@ class Folio::Ai::Console::SiteSettingsComponentTest < Folio::Console::ComponentT
     assert_no_selector(".f-ai-c-site-settings textarea")
   end
 
+  test "resolves missing labels in the current locale" do
+    I18n.with_locale(:cs) do
+      render_component(build(:folio_site))
+    end
+
+    assert_text("Název stránky")
+  end
+
   test "does not render when AI config is disabled" do
     Folio::Ai.config.stub(:enabled?, false) do
       render_component(build(:folio_site))

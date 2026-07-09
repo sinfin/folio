@@ -197,7 +197,13 @@ module Folio::Ai::SimpleFormInputExtension
     def ai_text_suggestions_label(config)
       field = Folio::Ai.registry.field(config[:record_key], config[:field_key])
       I18n.t("folio.ai.input.button",
-             field: field[:label])
+             field: ai_field_label(config, field))
+    end
+
+    def ai_field_label(config, field)
+      field[:label].presence ||
+        config[:record].class.human_attribute_name(config[:field_key]) ||
+        config[:field_key].humanize
     end
 
     def ai_text_suggestions_url

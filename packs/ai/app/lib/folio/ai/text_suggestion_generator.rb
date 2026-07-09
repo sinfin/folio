@@ -45,12 +45,22 @@ class Folio::Ai::TextSuggestionGenerator
 
     def prompt_data
       {
-        field: field.slice(:key, :label, :character_limit),
+        field: field_data,
         prompt: site_prompt,
         instructions:,
         form_snapshot:,
         additional_data: additional_data.presence,
       }.compact
+    end
+
+    def field_data
+      field.slice(:key, :character_limit).merge(label: field_label).compact
+    end
+
+    def field_label
+      field[:label].presence ||
+        record.class.human_attribute_name(field.fetch(:key)) ||
+        field.fetch(:key).humanize
     end
 
     def additional_data

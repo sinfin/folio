@@ -37,7 +37,8 @@ class Folio::Ai::TextSuggestionRequest
     return primary_field if grouped?
     return if record_key.blank? || key.blank?
 
-    Folio::Ai.registry.field(record_key, key)
+    field_with_component_id(Folio::Ai.registry.field(record_key, key),
+                            component_id)
   end
 
   def group
@@ -259,7 +260,14 @@ class Folio::Ai::TextSuggestionRequest
     def field_with_component_id(registered_field, component_id)
       return unless registered_field
 
-      registered_field.merge(component_id:)
+      registered_field.merge(label: field_label(registered_field),
+                             component_id:)
+    end
+
+    def field_label(field)
+      field[:label].presence ||
+        record_class.human_attribute_name(field.fetch(:key)) ||
+        field.fetch(:key).humanize
     end
 
     def primary_field

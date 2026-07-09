@@ -20,12 +20,26 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
       Folio::Ai.registry.records
     end
 
+    def record_label(record)
+      record[:label].presence || record_class(record)&.model_name&.human(count: 2)
+    end
+
     def fields(record)
       record.fetch(:fields).values
     end
 
+    def field_label(record, field)
+      field[:label].presence ||
+        record_class(record)&.human_attribute_name(field.fetch(:key)) ||
+        field.fetch(:key).humanize
+    end
+
     def groups(record)
       record.fetch(:groups).values
+    end
+
+    def group_label(group)
+      group[:label].presence || group.fetch(:key).humanize
     end
 
     def boolean_input(*path, label:, checked:)
@@ -84,6 +98,10 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
 
     def field_id(*path)
       "#{@form.object_name}_ai_settings_#{path.join('_')}".parameterize(separator: "_")
+    end
+
+    def record_class(record)
+      record[:record_class_name].to_s.safe_constantize
     end
 
     def provider_options
