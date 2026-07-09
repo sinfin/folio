@@ -65,7 +65,8 @@ class Folio::Ai::TextSuggestionRequest
   end
 
   def form_snapshot
-    @form_snapshot ||= parsed_form_snapshot
+    @form_snapshot ||= Folio::Ai::FormSnapshotSanitizer.call(record:,
+                                                             snapshot: parsed_form_snapshot)
   end
 
   def instructions

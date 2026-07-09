@@ -45,7 +45,10 @@ class Folio::Ai::TextSuggestionRequestTest < ActiveSupport::TestCase
                             params: {
                               key: " title ",
                               message_bus_client_id: "client-1",
-                              current_form_snapshot_json: { "folio_page[title]" => "Draft title" }.to_json,
+                              current_form_snapshot_json: {
+                                "authenticity_token" => "secret",
+                                "folio_page[title]" => "<strong>Draft title</strong>",
+                              }.to_json,
                             })
 
     Folio::Ai::Providers::Dummy.stub(:available?, true) do
@@ -57,7 +60,7 @@ class Folio::Ai::TextSuggestionRequestTest < ActiveSupport::TestCase
     assert_equal page, request.record
     assert_equal site, request.site
     assert_equal 80, request.field[:character_limit]
-    assert_equal({ "folio_page[title]" => "Draft title" }, request.form_snapshot)
+    assert_equal({ "title" => "Draft title" }, request.form_snapshot)
     assert_equal "Use short words.", request.instructions
     assert_equal "client-1", request.message_bus_client_id
   end

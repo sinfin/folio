@@ -99,7 +99,7 @@ class Folio::Ai::TextSuggestionsJobTest < ActiveJob::TestCase
         grouped: false,
         message_bus_client_id: "client-1",
         component_id: "ai_title",
-        form_snapshot: { "folio_page[title]" => "Draft title" },
+        form_snapshot: { "title" => "Draft title" },
         instructions: "Be direct.",
         suggestion_count: 3,
         record_key: "folio_pages",

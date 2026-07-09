@@ -86,6 +86,7 @@ end
 
 require_relative "ai/config"
 require_relative "../../app/lib/folio/ai/component_ids"
+require_relative "../../app/lib/folio/ai/form_snapshot_sanitizer"
 require_relative "../../app/lib/folio/ai/registry"
 require_relative "../../app/lib/folio/ai/providers/base"
 require_relative "../../app/lib/folio/ai/providers/dummy"

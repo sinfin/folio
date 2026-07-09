@@ -23,6 +23,24 @@
     }
   }
 
+  const ignoredSnapshotKeys = [
+    '_destroy',
+    '_method',
+    'authenticity_token',
+    'commit',
+    'id',
+    'lock_version',
+    'utf8'
+  ]
+
+  const snapshotAttributeName = (key) => {
+    const matches = key.toString().match(/[^\][]+/g)
+
+    return matches ? matches[matches.length - 1] : key.toString()
+  }
+
+  const skipSnapshotKey = (key) => ignoredSnapshotKeys.includes(snapshotAttributeName(key))
+
   const errorDetail = (responseData) => {
     if (!responseData.errors || responseData.errors.length === 0) return null
 
@@ -45,6 +63,7 @@
 
     formData.forEach((value, key) => {
       if (value instanceof File) return
+      if (skipSnapshotKey(key)) return
 
       addSnapshotValue(snapshot, key, value.toString())
     })
