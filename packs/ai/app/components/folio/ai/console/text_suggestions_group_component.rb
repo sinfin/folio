@@ -37,6 +37,7 @@ class Folio::Ai::Console::TextSuggestionsGroupComponent < Folio::Console::Applic
                           },
                           action: {
                             "f-ai-c-text-suggestions-group/message": "onMessage",
+                            "f-ai-input:closeGroup": "close",
                           })
     end
 

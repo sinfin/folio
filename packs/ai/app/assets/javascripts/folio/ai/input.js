@@ -61,6 +61,12 @@
       toggle (event) {
         this.stopEvent(event)
 
+        if (this.groupedSuggestionsOpen) {
+          this.dispatch('closeGroup', { bubbles: true, detail: this.trackingDetail() })
+          this.open()
+          return
+        }
+
         if (this.isOpen) {
           this.close()
         } else {
@@ -365,6 +371,10 @@
 
       get textSuggestionsElement () {
         return this.customHtmlElement?.querySelector(`.${PANEL_CLASS_NAME}`)
+      }
+
+      get groupedSuggestionsOpen () {
+        return this.textSuggestionsElement?.classList.contains(`${PANEL_CLASS_NAME}--grouped`)
       }
 
       get instructionsElement () {
