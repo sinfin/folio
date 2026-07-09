@@ -161,3 +161,26 @@ $f-ai-c-text-suggestions-inner-gap: px-to-rem(12px)
     display: flex
     flex-direction: column
     gap: px-to-rem(8px)
+
+  &--grouped &__panel
+    background: transparent
+    border: 0
+
+  &--grouped &__body
+    gap: 0
+    padding: 0
+
+  &--grouped &__suggestions
+    gap: px-to-rem(8px)
+
+  &--grouped &__status
+    margin: 0
+    padding: px-to-rem(12px)
+
+  &--grouped &__suggestion
+    min-height: px-to-rem(44px)
+
+  &--grouped &__suggestion-text
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap

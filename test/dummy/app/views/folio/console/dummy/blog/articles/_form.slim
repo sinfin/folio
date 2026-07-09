@@ -29,9 +29,10 @@
 
         = react_ordered_multiselect(f, :topics, atom_setting: :topics)
 
-        = f.input :meta_title, character_counter: true,
-                               ai: true
-
-        = f.input :meta_description, autosize: true,
-                                    character_counter: true,
-                                    ai: true
+        = render Folio::Ai::Console::TextSuggestionsGroupComponent.new(form: f,
+                                                                       key: :meta) do
+          = f.input :meta_title, character_counter: true,
+                                 ai: true
+          = f.input :meta_description, autosize: true,
+                                      character_counter: true,
+                                      ai: true

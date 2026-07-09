@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Persists per-user prompt instructions for one registered record field.
+# Persists per-user prompt instructions for one registered record field or group.
 class Folio::Ai::UserInstruction < Folio::ApplicationRecord
   self.table_name = "folio_ai_user_instructions"
 
@@ -19,15 +19,15 @@ class Folio::Ai::UserInstruction < Folio::ApplicationRecord
 
   before_validation :normalize_values
 
-  def self.find_or_initialize_for(user:, site:, record_key:, field_key:)
+  def self.find_or_initialize_for(user:, site:, record_key:, key:)
     find_or_initialize_by(user:,
                           site:,
                           integration_key: normalize_key(record_key),
-                          field_key: normalize_key(field_key))
+                          field_key: normalize_key(key))
   end
 
-  def self.upsert_instruction!(user:, site:, record_key:, field_key:, instruction:)
-    find_or_initialize_for(user:, site:, record_key:, field_key:).tap do |record|
+  def self.upsert_instruction!(user:, site:, record_key:, key:, instruction:)
+    find_or_initialize_for(user:, site:, record_key:, key:).tap do |record|
       record.instruction = instruction.to_s
       record.save!
     end

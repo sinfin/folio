@@ -24,6 +24,10 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
       record.fetch(:fields).values
     end
 
+    def groups(record)
+      record.fetch(:groups).values
+    end
+
     def boolean_input(*path, label:, checked:)
       @form.input(input_attribute(*path),
                   as: :boolean,
@@ -83,35 +87,11 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
     end
 
     def provider_options
-      providers.keys.map { |provider| [provider_label(provider), provider.to_s] }
+      providers.keys.map { |provider| [t(".providers.#{provider}"), provider.to_s] }
     end
 
     def providers
       Folio::Ai.available_providers
-    end
-
-    def provider_label(provider)
-      t(".providers.#{provider}")
-    end
-
-    def enabled_label
-      t(".enabled_label")
-    end
-
-    def provider_input_label
-      t(".provider")
-    end
-
-    def model_input_label
-      t(".model")
-    end
-
-    def prompt_label
-      t(".prompt_label")
-    end
-
-    def no_providers_text
-      t(".no_providers")
     end
 
     def site_enabled?
@@ -148,7 +128,13 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
 
     def field_prompt(record, field)
       @site.ai_prompt_for(record_key: record.fetch(:key),
-                          field_key: field.fetch(:key))
+                          key: field.fetch(:key))
+    end
+
+    def group_prompt(record, group)
+      @site.ai_prompt_for(record_key: record.fetch(:key),
+                          key: group.fetch(:key),
+                          grouped: true)
     end
 
     def site_setting(key)

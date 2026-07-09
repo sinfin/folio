@@ -74,12 +74,21 @@ Full conventions in **[`.skills/folio-stimulus/SKILL.md`](../folio-stimulus/SKIL
 - Keep Slim concise: complex `data` hashes, Stimulus params, and multi-action
   helper calls belong in private component methods such as
   `data=suggestion_data(suggestion)`.
+- Do not extract one-line pass-through methods just to wrap component-owned
+  translations or simple Stimulus helpers. Prefer inline `t(".button")`,
+  `stimulus_action(click: "toggle")`, and `stimulus_target("panel")` in Slim.
+  Extract a component method only when the value has logic, params, merging,
+  multiple actions, reuse, or enough length to make the template harder to scan.
 - JS file beside the component; register with **`window.Folio.Stimulus.register(...)`**; wire into the asset manifest.
 
 ## Rendering
 
 - From views/controllers: **`render MyComponent.new(foo: bar)`** (or helper wrappers your app uses).
 - From inside a ViewComponent: **`render OtherComponent.new(...)`** or **`helpers.render(...)`** as in nearby Folio examples.
+- Prefer component-scoped translations inside ViewComponents, such as
+  `t(".button")`, with locale keys under the component's i18n scope. Avoid
+  full-path translation calls like `t("folio.some_component.button")` when the
+  key belongs to the component itself.
 
 ## Testing
 

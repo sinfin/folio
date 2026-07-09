@@ -10,7 +10,7 @@ class Folio::Ai::ConfigTest < ActiveSupport::TestCase
 
       assert_predicate config, :enabled?
       assert_equal :openai, config.default_provider
-      assert_equal Folio::Ai::DEFAULT_OPENAI_MODEL, config.default_model(:openai)
+      assert_equal Folio::Ai::Providers::OpenAi::DEFAULT_MODEL, config.default_model(:openai)
       assert_equal :default, config.text_suggestions_queue
       assert_equal 45_000, config.client_request_timeout_ms
     end

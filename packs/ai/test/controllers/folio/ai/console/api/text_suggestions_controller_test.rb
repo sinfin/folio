@@ -16,6 +16,14 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
     Folio::Ai.register_record(record_class_name: "Folio::Page",
                               fields: [
                                 { key: :title, character_limit: 80 },
+                                { key: :perex, character_limit: 400 },
+                              ],
+                              groups: [
+                                {
+                                  key: :meta,
+                                  label: "Meta fields",
+                                  fields: %i[title perex],
+                                },
                               ])
 
     @site.update!(ai_settings: { "enabled" => true, "provider" => "dummy" })
@@ -32,7 +40,7 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
     Folio::Ai::Providers::Dummy.stub(:available?, true) do
       assert_enqueued_jobs 1, only: Folio::Ai::TextSuggestionsJob do
         post console_api_ai_text_suggestions_path(format: :json),
-             params: request_params(group: "1", instructions: "Keep it short."),
+             params: request_params(instructions: "Keep it short."),
              as: :json
       end
     end
@@ -40,9 +48,37 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
     assert_response :ok
     assert_includes response.parsed_body["data"], "f-ai-c-text-suggestions__suggestion--loading"
     assert_equal "ai_title", response.parsed_body.dig("meta", "component_id")
-    assert_equal true, response.parsed_body.dig("meta", "group")
+    assert_equal false, response.parsed_body.dig("meta", "grouped")
     assert response.parsed_body.dig("meta", "request_id").present?
     assert_equal "Keep it short.", stored_instruction.instruction
+  end
+
+  test "creates grouped loading fragments and enqueues job" do
+    Folio::Ai::Providers::Dummy.stub(:available?, true) do
+      assert_enqueued_jobs 1, only: Folio::Ai::TextSuggestionsJob do
+        post console_api_ai_text_suggestions_path(format: :json),
+             params: request_params(grouped: true,
+                                    key: "meta",
+                                    component_id: "ai_group",
+                                    fields: [
+                                      { key: "title", component_id: "ai_title" },
+                                      { key: "perex", component_id: "ai_perex" },
+                                    ]),
+             as: :json
+      end
+    end
+
+    assert_response :ok
+    assert_equal true, response.parsed_body.dig("meta", "grouped")
+    assert_equal "ai_group", response.parsed_body.dig("meta", "component_id")
+
+    title_fragment = response.parsed_body.dig("meta", "fragments", "ai_title")
+    assert_includes title_fragment, "f-ai-c-text-suggestions--grouped"
+    assert_equal 1, title_fragment.scan("f-ai-c-text-suggestions__suggestion--loading").size
+    assert_not_includes title_fragment, "f-ai-c-text-suggestions__close"
+    assert_not_includes title_fragment, "f-ai-c-text-suggestions__instructions"
+    assert_includes response.parsed_body.dig("meta", "fragments", "ai_perex"),
+                    "f-ai-c-text-suggestions__suggestion--loading"
   end
 
   test "renders component error and does not enqueue job for invalid request" do
@@ -65,7 +101,7 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
         klass: "Folio::Page",
         id: @page.id,
         key: "title",
-        group: false,
+        grouped: false,
         message_bus_client_id: "client-1",
         component_id: "ai_title",
         current_form_snapshot_json: {

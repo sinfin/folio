@@ -25,8 +25,8 @@ class Folio::Ai::ProvidersTest < ActiveSupport::TestCase
   end
 
   test "defines dummy model options" do
-    assert_equal [Folio::Ai::DEFAULT_DUMMY_MODEL], Folio::Ai::Providers::Dummy.models
-    assert_equal Folio::Ai::DEFAULT_DUMMY_MODEL, Folio::Ai::Providers::Dummy.default_model
+    assert_equal [Folio::Ai::Providers::Dummy::DEFAULT_MODEL], Folio::Ai::Providers::Dummy.models
+    assert_equal Folio::Ai::Providers::Dummy::DEFAULT_MODEL, Folio::Ai::Providers::Dummy.default_model
   end
 
   test "returns field-aware dummy suggestions without prompt text" do
@@ -52,8 +52,8 @@ class Folio::Ai::ProvidersTest < ActiveSupport::TestCase
     end
 
     Folio::Ai::Providers::OpenAi.stub(:models_env_value, " ") do
-      assert_equal [Folio::Ai::DEFAULT_OPENAI_MODEL], Folio::Ai::Providers::OpenAi.models
-      assert_equal Folio::Ai::DEFAULT_OPENAI_MODEL, Folio::Ai::Providers::OpenAi.default_model
+      assert_equal [Folio::Ai::Providers::OpenAi::DEFAULT_MODEL], Folio::Ai::Providers::OpenAi.models
+      assert_equal Folio::Ai::Providers::OpenAi::DEFAULT_MODEL, Folio::Ai::Providers::OpenAi.default_model
     end
   end
 
@@ -73,7 +73,7 @@ class Folio::Ai::ProvidersTest < ActiveSupport::TestCase
         provider = Folio::Ai.provider_for(key: :dummy)
 
         assert_instance_of Folio::Ai::Providers::Dummy, provider
-        assert_equal Folio::Ai::DEFAULT_DUMMY_MODEL, provider.model
+        assert_equal Folio::Ai::Providers::Dummy::DEFAULT_MODEL, provider.model
       end
     end
   end

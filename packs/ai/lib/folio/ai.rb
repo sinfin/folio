@@ -9,8 +9,8 @@ module Folio::Ai
     end
   end
 
-  DEFAULT_DUMMY_MODEL = "dummy"
-  DEFAULT_OPENAI_MODEL = "gpt-5.4-mini"
+  DEFAULT_SUGGESTION_COUNT = 3
+  GROUPED_SUGGESTION_COUNT = 1
   ProviderError = Class.new(StandardError)
   ResponseError = Class.new(StandardError)
 

@@ -16,18 +16,4 @@ class Folio::Ai::Console::InputControlsComponent < Folio::Console::ApplicationCo
     def undo_id
       "#{@component_id}_undo"
     end
-
-    def button_data
-      stimulus_data(action: { click: "toggle" },
-                    target: "button")
-    end
-
-    def undo_data
-      stimulus_data(action: { click: "undo" },
-                    target: "undo")
-    end
-
-    def custom_html_data
-      stimulus_data(target: "customHtml")
-    end
 end

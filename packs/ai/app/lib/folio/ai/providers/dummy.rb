@@ -2,7 +2,7 @@
 
 # Development-only provider returning deterministic fake suggestions.
 class Folio::Ai::Providers::Dummy < Folio::Ai::Providers::Base
-  DEFAULT_MODEL = Folio::Ai::DEFAULT_DUMMY_MODEL
+  DEFAULT_MODEL = "dummy"
 
   def self.key
     :dummy

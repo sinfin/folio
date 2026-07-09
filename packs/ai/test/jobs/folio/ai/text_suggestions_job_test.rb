@@ -9,6 +9,7 @@ class Folio::Ai::TextSuggestionsJobTest < ActiveJob::TestCase
     Folio::Ai.register_record(record_class_name: "Folio::Page",
                               fields: [
                                 { key: :title, character_limit: 80 },
+                                { key: :perex, character_limit: 400 },
                               ])
     Folio::Site.include(Folio::Ai::SiteConcern) unless Folio::Site < Folio::Ai::SiteConcern
 
@@ -40,6 +41,33 @@ class Folio::Ai::TextSuggestionsJobTest < ActiveJob::TestCase
     assert_not_includes message[:payload].dig("data", "html"), "Return only valid JSON"
   end
 
+  test "broadcasts grouped child fragments" do
+    message = capture_message do
+      I18n.with_locale(:en) do
+        Folio::Ai::Providers::Dummy.stub(:available?, true) do
+          perform_job(job_params.merge(grouped: true,
+                                       key: "meta",
+                                       component_id: "ai_group",
+                                       fields: [
+                                         { key: "title", label: "Title", component_id: "ai_title" },
+                                         { key: "perex", label: "Perex", component_id: "ai_perex" },
+                                       ]))
+        end
+      end
+    end
+
+    assert_equal true, message[:payload].dig("data", "grouped")
+    assert_equal "ai_group", message[:payload].dig("data", "component_id")
+
+    title_fragment = message[:payload].dig("data", "fragments", "ai_title")
+    assert_includes title_fragment, "f-ai-c-text-suggestions--grouped"
+    assert_includes title_fragment, "Dummy title for testing AI suggestions"
+    assert_not_includes title_fragment, "f-ai-c-text-suggestions__close"
+    assert_not_includes title_fragment, "f-ai-c-text-suggestions__instructions"
+    assert_includes message[:payload].dig("data", "fragments", "ai_perex"),
+                    "Dummy perex summarizing the article angle"
+  end
+
   test "broadcasts rendered provider errors" do
     provider = Object.new
     provider.define_singleton_method(:complete) do |prompt:, suggestion_count:|
@@ -58,9 +86,9 @@ class Folio::Ai::TextSuggestionsJobTest < ActiveJob::TestCase
   end
 
   private
-    def perform_job
+    def perform_job(params = job_params)
       Folio::Ai::TextSuggestionsJob.perform_now(request_id: "request-1",
-                                                params: job_params)
+                                                params:)
     end
 
     def job_params
@@ -68,7 +96,7 @@ class Folio::Ai::TextSuggestionsJobTest < ActiveJob::TestCase
         klass: "Folio::Page",
         id: @page.id,
         key: "title",
-        group: false,
+        grouped: false,
         message_bus_client_id: "client-1",
         component_id: "ai_title",
         form_snapshot: { "folio_page[title]" => "Draft title" },

@@ -11,7 +11,7 @@ en:
       console:
         text_suggestions_component:
           panel_title: "AI suggestions: %{field}"
-          loading: Preparing suggestions
+          loading: Preparing ...
           close: Close
           accept: Use suggestion
           instructions_placeholder: Optional instructions
@@ -25,6 +25,12 @@ en:
             field_not_registered: AI suggestions are not configured for this field.
             provider_unavailable: Configure an AI provider before using AI suggestions.
             provider_error: AI suggestions could not be generated.
+        text_suggestions_group_component:
+          button: AI suggestions for all variants
+          close: Close
+          instructions_placeholder: Custom AI instructions (optional) ...
+          submit: Save custom instructions for all variants
+          loading: Preparing ...
         site_settings_component:
           enabled_label: Enable AI suggestions for this site
           provider: Provider

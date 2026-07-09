@@ -2,7 +2,7 @@
 
 # Calls OpenAI Responses API and extracts text output for suggestion generation.
 class Folio::Ai::Providers::OpenAi < Folio::Ai::Providers::Base
-  DEFAULT_MODEL = Folio::Ai::DEFAULT_OPENAI_MODEL
+  DEFAULT_MODEL = "gpt-5.4-mini"
   ENDPOINT = "https://api.openai.com/v1/responses"
   MODELS_ENV_KEY = "FOLIO_AI_OPENAI_MODELS"
 

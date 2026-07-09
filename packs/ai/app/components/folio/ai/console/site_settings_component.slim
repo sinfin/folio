@@ -1,18 +1,18 @@
 .f-ai-c-site-settings
   - if provider_configuration_available?
     = boolean_input(:enabled,
-                    label: enabled_label,
+                    label: t(".enabled_label"),
                     checked: site_enabled?)
 
     .row
       .col-md-6
         = provider_input(:provider,
-                         label: provider_input_label,
+                         label: t(".provider"),
                          selected: selected_provider)
 
       .col-md-6
         = model_input(:model,
-                      label: model_input_label,
+                      label: t(".model"),
                       provider: selected_provider,
                       selected: model_value)
 
@@ -35,8 +35,21 @@
                                 :fields,
                                 field[:key],
                                 :prompt,
-                                label: prompt_label,
+                                label: t(".prompt_label"),
                                 value: field_prompt(record, field))
+
+          - groups(record).each do |group|
+            .f-ai-c-site-settings__field
+              .f-ai-c-site-settings__field-header
+                .f-ai-c-site-settings__field-title = group[:label]
+
+              = text_area_input(:integrations,
+                                record[:key],
+                                :groups,
+                                group[:key],
+                                :prompt,
+                                label: t(".prompt_label"),
+                                value: group_prompt(record, group))
   - else
     .alert.alert-danger
-      = no_providers_text
+      = t(".no_providers")

@@ -59,6 +59,10 @@ button data=stimulus_action({ click: "accept", keydown: "acceptFromKeyboard" },
 button data=suggestion_data(suggestion)
 ```
 
+Do not split a single Slim attribute value expression across lines. If an
+attribute value is too long or complex, extract it to a component method instead
+of wrapping the Ruby call inside the attribute.
+
 ## Multiple `class` attributes
 
 Use **separate `class` attributes** instead of string concatenation or array joining:

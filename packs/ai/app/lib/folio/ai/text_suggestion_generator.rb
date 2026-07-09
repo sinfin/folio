@@ -1,21 +1,20 @@
 # frozen_string_literal: true
 
-# Builds provider prompts from the current form snapshot and normalizes provider
-# JSON into suggestion hashes the console UI can render.
+# Builds provider prompts from form state, instructions, and model data, then
+# normalizes provider JSON into suggestion hashes the console UI can render.
 
 class Folio::Ai::TextSuggestionGenerator
-  DEFAULT_SUGGESTION_COUNT = 3
   CONTEXT_MARKER = "Context JSON:"
 
-  def initialize(record:, site:, record_key:, field:, form_snapshot:, provider:, user_instruction: nil, suggestion_count: DEFAULT_SUGGESTION_COUNT)
+  def initialize(record:, site:, record_key:, field:, form_snapshot:, provider:, instructions: nil, suggestion_count: Folio::Ai::DEFAULT_SUGGESTION_COUNT)
     @record = record
     @site = site
     @record_key = record_key.to_s
     @field = field.symbolize_keys
     @form_snapshot = normalize_form_snapshot(form_snapshot)
     @provider = provider
-    @user_instruction = user_instruction.to_s.strip.presence
-    @suggestion_count = suggestion_count.to_i.positive? ? suggestion_count.to_i : DEFAULT_SUGGESTION_COUNT
+    @instructions = instructions.to_s.strip.presence
+    @suggestion_count = suggestion_count.to_i.positive? ? suggestion_count.to_i : Folio::Ai::DEFAULT_SUGGESTION_COUNT
   end
 
   def call
@@ -39,23 +38,16 @@ class Folio::Ai::TextSuggestionGenerator
                 :field,
                 :form_snapshot,
                 :provider,
-                :user_instruction,
+                :instructions,
                 :suggestion_count
 
     def prompt_data
       {
         field: field.slice(:key, :label, :character_limit),
-        site_instruction: site_instruction,
-        user_instruction:,
+        instructions:,
         form_snapshot:,
         additional_data: additional_data.presence,
       }.compact
-    end
-
-    def site_instruction
-      return unless site.respond_to?(:ai_prompt_for)
-
-      site.ai_prompt_for(record_key:, field_key: field.fetch(:key))
     end
 
     def additional_data

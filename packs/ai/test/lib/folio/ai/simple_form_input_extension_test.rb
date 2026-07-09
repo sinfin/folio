@@ -107,7 +107,7 @@ class Folio::Ai::SimpleFormInputExtensionTest < ActionView::TestCase
       assert_equal "Folio::Page", wrapper["data-f-ai-input-klass-value"]
       assert_equal @page.id.to_s, wrapper["data-f-ai-input-record-id-value"]
       assert_equal "title", wrapper["data-f-ai-input-key-value"]
-      assert_equal "false", wrapper["data-f-ai-input-group-value"]
+      assert_equal "false", wrapper["data-f-ai-input-grouped-value"]
       assert_equal "3", wrapper["data-f-ai-input-suggestion-count-value"]
       assert_equal "folio_ai_text_suggestions_page_title", wrapper["data-f-ai-input-component-id-value"]
     end

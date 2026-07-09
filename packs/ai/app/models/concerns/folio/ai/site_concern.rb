@@ -33,11 +33,13 @@ module Folio::Ai::SiteConcern
     ai_settings_data["model"].presence || Folio::Ai.provider_class(ai_provider).default_model
   end
 
-  def ai_prompt_for(record_key:, field_key:)
+  def ai_prompt_for(record_key:, key:, grouped: false)
+    collection_key = grouped ? "groups" : "fields"
+
     ai_settings_data.dig("integrations",
                          record_key.to_s,
-                         "fields",
-                         field_key.to_s,
+                         collection_key,
+                         key.to_s,
                          "prompt").to_s.strip.presence
   end
 

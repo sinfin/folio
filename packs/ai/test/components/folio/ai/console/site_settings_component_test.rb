@@ -11,6 +11,14 @@ class Folio::Ai::Console::SiteSettingsComponentTest < Folio::Console::ComponentT
     Folio::Ai.register_record(record_class_name: "Folio::Page",
                               fields: [
                                 { key: :title, character_limit: 80 },
+                                { key: :perex, character_limit: 400 },
+                              ],
+                              groups: [
+                                {
+                                  key: :meta,
+                                  label: "Meta fields",
+                                  fields: %i[title perex],
+                                },
                               ])
   end
 
@@ -31,6 +39,11 @@ class Folio::Ai::Console::SiteSettingsComponentTest < Folio::Console::ComponentT
                            "prompt" => "Write a short title.",
                          },
                        },
+                       "groups" => {
+                         "meta" => {
+                           "prompt" => "Write title and perex as a set.",
+                         },
+                       },
                      },
                    },
                  })
@@ -44,8 +57,11 @@ class Folio::Ai::Console::SiteSettingsComponentTest < Folio::Console::ComponentT
                     text: "dummy")
     assert_selector("textarea[name$='[ai_settings][integrations][folio_pages][fields][title][prompt]']",
                     text: "Write a short title.")
+    assert_selector("textarea[name$='[ai_settings][integrations][folio_pages][groups][meta][prompt]']",
+                    text: "Write title and perex as a set.")
     assert_text(Folio::Page.model_name.human(count: 2))
     assert_text(Folio::Page.human_attribute_name(:title))
+    assert_text("Meta fields")
     assert_text("Limit: 80")
   end
 

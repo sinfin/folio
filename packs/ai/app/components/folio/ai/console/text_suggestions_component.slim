@@ -1,34 +1,37 @@
-.f-ai-c-text-suggestions data=component_data
+.f-ai-c-text-suggestions[
+  class=class_name
+  data=component_data
+]
   .f-ai-c-text-suggestions__panel[
     id=@component_id
     role="region"
-    aria-label=panel_title
-    data=panel_data
+    aria-label=t(".panel_title", field: field_label)
+    data=stimulus_action(click: "stopPropagation")
   ]
     - if show_close?
       button.f-ai-c-text-suggestions__close[
         type="button"
-        aria-label=close_label
-        data=close_data
+        aria-label=t(".close")
+        data=stimulus_action(click: "close")
       ]
         = folio_icon(:close, height: 16)
 
     .f-ai-c-text-suggestions__body
       .f-ai-c-text-suggestions__status[
         hidden=status_hidden?
-        data=status_data
+        data=stimulus_target("status")
       ]
         = folio_icon(:alert,
                      height: 16,
                      class: "text-danger flex-shrink-0 flex-grow-0")
-        span data=status_message_data = status_message
+        span data=stimulus_target("statusMessage") = status_message
 
       - if loading?
-        .f-ai-c-text-suggestions__suggestions data=suggestions_data
+        .f-ai-c-text-suggestions__suggestions data=stimulus_target("suggestions")
           - loading_suggestions.each do
             .f-ai-c-text-suggestions__suggestion.f-ai-c-text-suggestions__suggestion--loading
               span.f-ai-c-text-suggestions__suggestion-body
-                span.f-ai-c-text-suggestions__suggestion-text = loading_label
+                span.f-ai-c-text-suggestions__suggestion-text = t(".loading")
 
               span.f-ai-c-text-suggestions__suggestion-actions
                 span.f-ai-c-text-suggestions__suggestion-loader-wrap
@@ -40,7 +43,7 @@
                   ]
 
       - elsif successful?
-        .f-ai-c-text-suggestions__suggestions data=suggestions_data
+        .f-ai-c-text-suggestions__suggestions data=stimulus_target("suggestions")
           - @suggestions.each do |suggestion|
             .f-ai-c-text-suggestions__suggestion[
               role="button"
@@ -58,8 +61,8 @@
 
                 button.f-ai-c-text-suggestions__suggestion-accept[
                   type="button"
-                  aria-label=accept_label
-                  title=accept_label
+                  aria-label=t(".accept")
+                  title=t(".accept")
                   data=accept_suggestion_data(suggestion)
                 ]
                   = folio_icon(:check, height: 16)
@@ -69,7 +72,7 @@
           textarea.f-ai-c-text-suggestions__instructions-input.align-self-stretch[
             class="form-control"
             rows="2"
-            placeholder=instructions_placeholder
+            placeholder=t(".instructions_placeholder")
             data=instructions_data
           ]
             = @instructions
@@ -77,6 +80,6 @@
           button.f-ai-c-text-suggestions__regenerate[
             type="button"
             class="btn btn-sm btn-medium-dark"
-            data=regenerate_data
+            data=stimulus_action(click: "regenerate")
           ]
-            = regenerate_label
+            = t(".regenerate")

@@ -29,7 +29,25 @@ class Folio::Ai::Console::TextSuggestionsComponentTest < Folio::Console::Compone
     end
 
     assert_selector(".f-ai-c-text-suggestions__suggestion--loading", count: 3)
-    assert_text "Preparing suggestions"
+    assert_text "Preparing ..."
+  end
+
+  test "renders grouped loading row" do
+    I18n.with_locale(:en) do
+      render_inline(component(suggestions: [],
+                              loading: true,
+                              show_close: false,
+                              show_instructions: false,
+                              grouped: true,
+                              loading_suggestion_count: 1))
+    end
+
+    assert_selector(".f-ai-c-text-suggestions--grouped")
+    assert_no_selector(".f-ai-c-text-suggestions__close")
+    assert_no_selector(".f-ai-c-text-suggestions__status")
+    assert_no_selector(".f-ai-c-text-suggestions__instructions")
+    assert_selector(".f-ai-c-text-suggestions__suggestion--loading", count: 1)
+    assert_text "Preparing ..."
   end
 
   test "renders error state without instructions" do

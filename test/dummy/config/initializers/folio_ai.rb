@@ -12,6 +12,13 @@ if Rails.env.development?
                                 { key: :perex, character_limit: 400 },
                                 { key: :meta_title, character_limit: 120 },
                                 { key: :meta_description, character_limit: 400 },
+                              ],
+                              groups: [
+                                {
+                                  key: :meta,
+                                  label: "Meta fields",
+                                  fields: %i[meta_title meta_description],
+                                },
                               ])
   rescue ArgumentError => e
     raise unless e.message.include?("already registered")

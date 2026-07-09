@@ -3,8 +3,6 @@
 # Renders the console suggestion panel for loading, success, and error states.
 
 class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::ApplicationComponent
-  LOADING_SUGGESTION_COUNT = 3
-
   def initialize(component_id:,
                  field:,
                  suggestions: [],
@@ -12,7 +10,9 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
                  loading: false,
                  error_code: nil,
                  show_instructions: true,
-                 show_close: true)
+                 show_close: true,
+                 grouped: false,
+                 loading_suggestion_count: Folio::Ai::DEFAULT_SUGGESTION_COUNT)
     @component_id = component_id
     @field = field.to_h.symbolize_keys
     @suggestions = Array(suggestions).map { |suggestion| suggestion.to_h.symbolize_keys }
@@ -21,9 +21,15 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
     @error_code = error_code&.to_sym
     @show_instructions = show_instructions
     @show_close = show_close
+    @grouped = grouped
+    @loading_suggestion_count = loading_suggestion_count.to_i
   end
 
   private
+    def class_name
+      "f-ai-c-text-suggestions--grouped" if grouped?
+    end
+
     def component_data
       stimulus_controller("f-ai-c-text-suggestions",
                           values: {
@@ -35,30 +41,10 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
                           })
     end
 
-    def panel_data
-      stimulus_action(click: "stopPropagation")
-    end
-
-    def close_data
-      stimulus_action(click: "close")
-    end
-
     def suggestion_data(suggestion)
       stimulus_data(action: { click: "accept" },
                     params: suggestion_params(suggestion),
                     target: "suggestion")
-    end
-
-    def suggestions_data
-      stimulus_target("suggestions")
-    end
-
-    def status_data
-      stimulus_target("status")
-    end
-
-    def status_message_data
-      stimulus_target("statusMessage")
     end
 
     def accept_suggestion_data(suggestion)
@@ -70,20 +56,16 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
                      stimulus_target("instructions"))
     end
 
-    def regenerate_data
-      stimulus_action(click: "regenerate")
-    end
-
-    def panel_title
-      t(".panel_title", field: field_label)
-    end
-
     def field_label
       @field[:label].presence || @field[:key].to_s.humanize
     end
 
     def loading?
       @loading
+    end
+
+    def grouped?
+      @grouped
     end
 
     def successful?
@@ -95,38 +77,20 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
     end
 
     def status_message
-      return loading_label if loading?
+      return t(".loading") if loading?
       return unless error?
 
       t(".errors.#{@error_code}")
     end
 
     def status_hidden?
+      return true if grouped? && loading?
+
       status_message.blank?
     end
 
-    def loading_label
-      t(".loading")
-    end
-
-    def close_label
-      t(".close")
-    end
-
-    def accept_label
-      t(".accept")
-    end
-
-    def instructions_placeholder
-      t(".instructions_placeholder")
-    end
-
-    def regenerate_label
-      t(".regenerate")
-    end
-
     def loading_suggestions
-      Array.new(LOADING_SUGGESTION_COUNT)
+      Array.new(@loading_suggestion_count.positive? ? @loading_suggestion_count : Folio::Ai::DEFAULT_SUGGESTION_COUNT)
     end
 
     def show_instructions?

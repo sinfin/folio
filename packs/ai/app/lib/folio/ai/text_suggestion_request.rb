@@ -17,8 +17,8 @@ class Folio::Ai::TextSuggestionRequest
     params[:key].to_s.strip
   end
 
-  def group?
-    ActiveModel::Type::Boolean.new.cast(params[:group])
+  def grouped?
+    ActiveModel::Type::Boolean.new.cast(params[:grouped])
   end
 
   def message_bus_client_id
@@ -34,9 +34,22 @@ class Folio::Ai::TextSuggestionRequest
   end
 
   def field
+    return primary_field if grouped?
     return if record_key.blank? || key.blank?
 
     Folio::Ai.registry.field(record_key, key)
+  end
+
+  def group
+    return unless grouped? && record_key.present? && key.present?
+
+    Folio::Ai.registry.group(record_key, key)
+  end
+
+  def fields
+    return [field_with_component_id(field, component_id)].compact unless grouped?
+
+    grouped_fields
   end
 
   def record
@@ -67,7 +80,7 @@ class Folio::Ai::TextSuggestionRequest
     Folio::Ai::UserInstruction.upsert_instruction!(user: current_user,
                                                    site:,
                                                    record_key:,
-                                                   field_key: key,
+                                                   key:,
                                                    instruction: instructions).instruction
   end
 
@@ -84,14 +97,15 @@ class Folio::Ai::TextSuggestionRequest
       klass: record_class&.name,
       id: record&.id,
       key:,
-      group: group?,
+      grouped: grouped?,
       message_bus_client_id:,
       component_id:,
       form_snapshot:,
       instructions:,
       suggestion_count: suggestion_count,
       record_key:,
-      field:,
+      field: primary_field,
+      fields:,
       site_id: site&.id,
       user_id: current_user&.id,
     }.compact
@@ -107,7 +121,7 @@ class Folio::Ai::TextSuggestionRequest
     return :missing_key if key.blank?
     return :record_not_found unless record
     return :site_disabled unless site_ai_enabled?
-    return :field_not_registered unless field
+    return :field_not_registered unless registered_key?
     :provider_unavailable unless provider_available?
   end
 
@@ -161,12 +175,20 @@ class Folio::Ai::TextSuggestionRequest
     end
 
     def stored_instruction
-      return "" if current_user.blank? || site.blank? || record_key.blank? || key.blank?
+      return site_prompt.to_s if current_user.blank? || site.blank? || record_key.blank? || key.blank?
 
       Folio::Ai::UserInstruction.find_or_initialize_for(user: current_user,
                                                         site:,
                                                         record_key:,
-                                                        field_key: key).instruction.to_s
+                                                        key:).instruction.to_s.presence || site_prompt.to_s
+    end
+
+    def site_prompt
+      return unless site.respond_to?(:ai_prompt_for)
+
+      site.ai_prompt_for(record_key:,
+                         key:,
+                         grouped: grouped?)
     end
 
     def site_provider
@@ -186,7 +208,56 @@ class Folio::Ai::TextSuggestionRequest
 
     def suggestion_count
       count = params[:suggestion_count].to_i
-      count.positive? ? count : Folio::Ai::TextSuggestionGenerator::DEFAULT_SUGGESTION_COUNT
+      count.positive? ? count : Folio::Ai::DEFAULT_SUGGESTION_COUNT
+    end
+
+    def grouped_fields
+      return [] unless group
+
+      component_ids = grouped_component_ids
+
+      group.fetch(:fields).filter_map do |field_key|
+        registered_field = Folio::Ai.registry.field(record_key, field_key)
+        next unless registered_field
+
+        field_with_component_id(registered_field,
+                                component_ids[field_key].presence || "folio_ai_#{field_key}")
+      end
+    end
+
+    def grouped_component_ids
+      raw_fields.each_with_object({}) do |field_config, hash|
+        field_hash = hash_from(field_config)
+        field_key = field_hash["key"].to_s.strip
+        hash[field_key] = field_hash["component_id"].to_s.strip if field_key.present?
+      end
+    end
+
+    def raw_fields
+      value = params[:fields]
+      value = JSON.parse(value) if value.is_a?(String)
+      Array(value)
+    rescue JSON::ParserError
+      []
+    end
+
+    def hash_from(value)
+      value = value.to_unsafe_h if value.respond_to?(:to_unsafe_h)
+      value.respond_to?(:to_h) ? value.to_h.with_indifferent_access : {}
+    end
+
+    def field_with_component_id(registered_field, component_id)
+      return unless registered_field
+
+      registered_field.merge(component_id:)
+    end
+
+    def primary_field
+      fields.first
+    end
+
+    def registered_key?
+      grouped? ? group.present? && fields.present? : field.present?
     end
 
     def generator
@@ -196,7 +267,7 @@ class Folio::Ai::TextSuggestionRequest
                                              field:,
                                              form_snapshot:,
                                              provider:,
-                                             user_instruction: instructions,
+                                             instructions:,
                                              suggestion_count:)
     end
 end

@@ -5,7 +5,7 @@
       id=button_id
       aria-controls=@component_id
       aria-expanded="false"
-      data=button_data
+      data=stimulus_data(action: { click: "toggle" }, target: "button")
     ]
       span.f-ai-input__icon aria-hidden="true"
         = folio_icon(:creation, height: 16)
@@ -21,10 +21,10 @@
       type="button"
       id=undo_id
       hidden=true
-      data=undo_data
+      data=stimulus_data(action: { click: "undo" }, target: "undo")
     ]
       span.f-ai-input__icon aria-hidden="true"
         = folio_icon(:arrow_u_left_top, height: 16)
       span.f-ai-input__undo-label = @undo_label
 
-  .f-ai-input__custom-html data=custom_html_data
+  .f-ai-input__custom-html data=stimulus_target("customHtml")

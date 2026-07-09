@@ -3,7 +3,6 @@
 # Decorates eligible SimpleForm text inputs with AI suggestion controls.
 module Folio::Ai::SimpleFormInputExtension
   CONTROLLER_NAME = "f-ai-input"
-  DEFAULT_SUGGESTION_COUNT = Folio::Ai::TextSuggestionGenerator::DEFAULT_SUGGESTION_COUNT
 
   def add_text_suggestions(input_type:)
     super if defined?(super)
@@ -28,8 +27,8 @@ module Folio::Ai::SimpleFormInputExtension
         record:,
         record_key: record_key_for(record),
         field_key:,
-        suggestion_count: ai_options.fetch(:suggestion_count, DEFAULT_SUGGESTION_COUNT),
-        group: ai_options.fetch(:group, false),
+        suggestion_count: ai_options.fetch(:suggestion_count, Folio::Ai::DEFAULT_SUGGESTION_COUNT),
+        grouped: ai_options.fetch(:grouped, false),
       }
     end
 
@@ -115,6 +114,8 @@ module Folio::Ai::SimpleFormInputExtension
         "f-ai-c-text-suggestions:close": "close",
         "f-ai-c-text-suggestions:regenerate": "regenerate",
         "f-ai-c-text-suggestions:accept": "acceptSuggestion",
+        "f-ai-c-text-suggestions-group:loading": "showGroupLoading",
+        "f-ai-c-text-suggestions-group:result": "showGroupResult",
         "f-ai-input/message": "onMessage",
       }
     end
@@ -125,7 +126,7 @@ module Folio::Ai::SimpleFormInputExtension
         klass: config[:record].class.name,
         record_id: config[:record].id,
         key: config[:field_key],
-        group: config[:group],
+        grouped: config[:grouped],
         suggestion_count: config[:suggestion_count],
         component_id: ai_text_suggestions_component_id,
       }

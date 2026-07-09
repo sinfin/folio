@@ -28,6 +28,11 @@ class Folio::Ai::SiteConcernTest < ActiveSupport::TestCase
                            "prompt" => "Write a short title.",
                          },
                        },
+                       "groups" => {
+                         "meta" => {
+                           "prompt" => "Write meta variants together.",
+                         },
+                       },
                      },
                    },
                  })
@@ -36,7 +41,9 @@ class Folio::Ai::SiteConcernTest < ActiveSupport::TestCase
     assert_equal "dummy", site.ai_provider
     assert_equal "dummy", site.ai_model
     assert_equal "Write a short title.",
-                 site.ai_prompt_for(record_key: "folio_pages", field_key: "title")
+                 site.ai_prompt_for(record_key: "folio_pages", key: "title")
+    assert_equal "Write meta variants together.",
+                 site.ai_prompt_for(record_key: "folio_pages", key: "meta", grouped: true)
   end
 
   test "adds AI prompts tab when AI is enabled and records are registered" do

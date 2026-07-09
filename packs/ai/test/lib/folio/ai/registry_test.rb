@@ -11,6 +11,13 @@ class Folio::Ai::RegistryTest < ActiveSupport::TestCase
                              fields: [
                                :title,
                                { key: :slug, label: "Slug", character_limit: 120 },
+                             ],
+                             groups: [
+                               {
+                                 key: :meta,
+                                 label: "Meta",
+                                 fields: %i[title slug],
+                               },
                              ])
 
     record = registry.record("folio_pages")
@@ -23,9 +30,11 @@ class Folio::Ai::RegistryTest < ActiveSupport::TestCase
     assert_nil registry.field("folio_pages", :title)[:character_limit]
     assert_equal "Slug", registry.field("folio_pages", :slug)[:label]
     assert_equal 120, registry.field("folio_pages", :slug)[:character_limit]
+    assert_equal "Meta", registry.group("folio_pages", :meta)[:label]
+    assert_equal %w[title slug], registry.group("folio_pages", :meta)[:fields]
   end
 
-  test "rejects invalid record classes and duplicate fields" do
+  test "rejects invalid record classes and duplicate fields or groups" do
     registry = Folio::Ai::Registry.new
 
     assert_raises(ArgumentError) do
@@ -34,6 +43,18 @@ class Folio::Ai::RegistryTest < ActiveSupport::TestCase
 
     assert_raises(ArgumentError) do
       registry.register_record(record_class_name: "Folio::Page", fields: %i[title title])
+    end
+
+    assert_raises(ArgumentError) do
+      registry.register_record(record_class_name: "Folio::Page",
+                               fields: %i[title],
+                               groups: [{ key: :meta, fields: %i[missing] }])
+    end
+
+    assert_raises(ArgumentError) do
+      registry.register_record(record_class_name: "Folio::Page",
+                               fields: %i[title],
+                               groups: [{ key: :title, fields: %i[title] }])
     end
   end
 end

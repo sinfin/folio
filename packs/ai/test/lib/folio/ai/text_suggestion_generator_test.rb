@@ -4,8 +4,7 @@ require "test_helper"
 require Folio::Engine.root.join("packs/ai/lib/folio/ai")
 
 class Folio::Ai::TextSuggestionGeneratorTest < ActiveSupport::TestCase
-  test "builds prompt from form snapshot, site prompt, and model additional data" do
-    site = build_site_with_prompt("Use Czech.")
+  test "builds prompt from form snapshot, instructions, and model additional data" do
     record = build_record_with_additional_data
     provider = CapturingProvider.new(response: {
       suggestions: [
@@ -14,12 +13,11 @@ class Folio::Ai::TextSuggestionGeneratorTest < ActiveSupport::TestCase
       ],
     }.to_json)
 
-    suggestions = generator(site:,
-                            record:,
+    suggestions = generator(record:,
                             provider:,
                             field: { key: "title", label: "Title", character_limit: 10 },
                             form_snapshot: { title: "Draft title" },
-                            user_instruction: "Be direct.").call
+                            instructions: "Use Czech. Be direct.").call
 
     assert_includes provider.prompt, "Draft title"
     assert_includes provider.prompt, "Use Czech."
@@ -40,27 +38,19 @@ class Folio::Ai::TextSuggestionGeneratorTest < ActiveSupport::TestCase
   end
 
   private
-    def generator(site: build_site_with_prompt(nil),
+    def generator(site: Dummy::Site.new,
                   record: Folio::Page.new,
                   provider: CapturingProvider.new(response: { suggestions: [{ text: "Suggestion" }] }.to_json),
                   field: { key: "title", label: "Title" },
                   form_snapshot: {},
-                  user_instruction: nil)
+                  instructions: nil)
       Folio::Ai::TextSuggestionGenerator.new(record:,
                                              site:,
                                              record_key: "folio_pages",
                                              field:,
                                              form_snapshot:,
                                              provider:,
-                                             user_instruction:)
-    end
-
-    def build_site_with_prompt(prompt)
-      Dummy::Site.new.tap do |site|
-        site.define_singleton_method(:ai_prompt_for) do |record_key:, field_key:|
-          prompt if record_key == "folio_pages" && field_key == "title"
-        end
-      end
+                                             instructions:)
     end
 
     def build_record_with_additional_data

@@ -37,7 +37,8 @@ class Folio::Ai::Console::Api::TextSuggestionsController < Folio::Console::Api::
                             meta: {
                               request_id:,
                               component_id: suggestion_request.component_id,
-                              group: suggestion_request.group?,
+                              grouped: suggestion_request.grouped?,
+                              fragments: loading_fragments(suggestion_request),
                             })
     end
 
@@ -46,12 +47,31 @@ class Folio::Ai::Console::Api::TextSuggestionsController < Folio::Console::Api::
                                                        field: component_field(suggestion_request),
                                                        instructions: suggestion_request.instructions,
                                                        loading:,
-                                                       error_code:)
+                                                       error_code:,
+                                                       show_instructions: !suggestion_request.grouped?)
     end
 
     def component_field(suggestion_request)
       suggestion_request.field || {
         key: suggestion_request.key.presence || "unknown",
       }
+    end
+
+    def loading_fragments(suggestion_request)
+      return {} unless suggestion_request.grouped?
+
+      suggestion_request.fields.to_h do |field|
+        [
+          field.fetch(:component_id),
+          render_to_string(Folio::Ai::Console::TextSuggestionsComponent.new(component_id: field.fetch(:component_id),
+                                                                            field:,
+                                                                            loading: true,
+                                                                            show_instructions: false,
+                                                                            show_close: false,
+                                                                            grouped: true,
+                                                                            loading_suggestion_count: Folio::Ai::GROUPED_SUGGESTION_COUNT),
+                           layout: false),
+        ]
+      end
     end
 end

@@ -33,7 +33,7 @@
         klass: String,
         recordId: String,
         key: String,
-        group: Boolean,
+        grouped: Boolean,
         suggestionCount: { type: Number, default: 3 },
         componentId: String,
         status: { type: String, default: STATUS_IDLE }
@@ -135,6 +135,30 @@
         this.request.receiveMessage(event?.detail?.message, (message) => this.applyMessageBusResult(message))
       }
 
+      showGroupLoading (event) {
+        if (!this.input) return
+
+        this.startSession()
+        this.storeGroupRequestId(event?.detail?.requestId)
+        this.setLoadingStatus(STATUS_WAITING_FOR_SUGGESTIONS)
+
+        if (event?.detail?.html) this.handleHtml(event.detail.html)
+      }
+
+      showGroupResult (event) {
+        const detail = event?.detail || {}
+        if (!this.matchesGroupRequest(detail.requestId)) return
+
+        if (detail.html) {
+          this.handleHtml(detail.html)
+        } else {
+          this.handleError(new Error(this.genericErrorText))
+        }
+
+        this.clearGroupRequestId()
+        this.finishLoading()
+      }
+
       loadHtml ({ instructions = null } = {}) {
         this.setLoadingStatus(instructions === null ? STATUS_INITIAL_LOADING : STATUS_SUBMITTING_INSTRUCTIONS)
 
@@ -157,7 +181,7 @@
           klass: this.klassValue,
           id: this.recordIdValue,
           key: this.keyValue,
-          group: this.groupValue,
+          grouped: this.groupedValue,
           component_id: this.componentIdValue,
           suggestion_count: this.suggestionCountValue,
           message_bus_client_id: this.messageBusClientId,
@@ -264,7 +288,21 @@
         delete this.element.dataset.fAiInputSnapshot
         delete this.element.dataset.fAiInputUndoVisible
         delete this.element.dataset.fAiInputSelectedText
+        this.clearGroupRequestId()
         this.hideUndoButton()
+      }
+
+      storeGroupRequestId (requestId) {
+        if (requestId) this.element.dataset.fAiInputGroupRequestId = requestId
+      }
+
+      clearGroupRequestId () {
+        delete this.element.dataset.fAiInputGroupRequestId
+      }
+
+      matchesGroupRequest (requestId) {
+        const storedRequestId = this.element.dataset.fAiInputGroupRequestId
+        return !storedRequestId || !requestId || storedRequestId === requestId
       }
 
       hideUndoButton () {
@@ -359,6 +397,7 @@
     window.Folio.MessageBus.callbacks[CONTROLLER_NAME] = (message) => {
       if (!message) return
       if (message.type !== TEXT_SUGGESTIONS_JOB_TYPE) return
+      if (message.data?.grouped) return
 
       for (const componentId of messageComponentIds(message)) {
         const selector = `.${INPUT_CLASS_NAME}[data-f-ai-input-component-id-value="${window.Folio.Ai.cssEscape(componentId)}"]`

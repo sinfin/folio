@@ -12,14 +12,14 @@ class Folio::Ai::UserInstructionTest < ActiveSupport::TestCase
     Folio::User.include(Folio::Ai::UserConcern) unless Folio::User < Folio::Ai::UserConcern
   end
 
-  test "stores one instruction per user site record and field" do
+  test "stores one instruction per user site record and key" do
     site = create(Rails.application.config.folio_site_default_test_factory)
     user = create(:folio_user)
 
     instruction = Folio::Ai::UserInstruction.upsert_instruction!(user:,
                                                                  site:,
                                                                  record_key: " folio_pages ",
-                                                                 field_key: " title ",
+                                                                 key: " title ",
                                                                  instruction: "Use shorter copy.")
 
     assert_equal "folio_pages", instruction.integration_key
@@ -29,7 +29,7 @@ class Folio::Ai::UserInstructionTest < ActiveSupport::TestCase
     updated = Folio::Ai::UserInstruction.upsert_instruction!(user:,
                                                              site:,
                                                              record_key: "folio_pages",
-                                                             field_key: "title",
+                                                             key: "title",
                                                              instruction: "Try another tone.")
 
     assert_equal instruction.id, updated.id

@@ -1,0 +1,64 @@
+.f-ai-c-text-suggestions-group
+  $accent: #9637D3
+  $accent-light: #D3B3E8
+  $background: #F3EBFC
+
+  &__controls
+    align-items: center
+    display: flex
+    gap: px-to-rem(4px)
+    justify-content: flex-end
+    margin-bottom: px-to-rem(8px)
+
+  &__button,
+  &__close
+    +unbutton
+    align-items: center
+    background: $accent-light
+    border-radius: px-to-rem(4px)
+    color: $gray-900
+    display: inline-flex
+    gap: px-to-rem(4px)
+    justify-content: center
+    line-height: 1
+    min-height: px-to-rem(24px)
+    padding: px-to-rem(4px) px-to-rem(8px)
+    white-space: nowrap
+
+    &:hover
+      color: $gray-900
+      opacity: 0.9
+
+  &__close
+    padding-left: px-to-rem(6px)
+    padding-right: px-to-rem(6px)
+    width: px-to-rem(24px)
+
+    &[hidden]
+      display: none
+
+  &__panel
+    background: $background
+    border: 1px solid $accent-light
+    border-radius: px-to-rem(4px)
+    display: flex
+    flex-direction: column
+    gap: px-to-rem(8px)
+    margin-top: px-to-rem(12px)
+    padding: px-to-rem(16px) px-to-rem(20px) px-to-rem(20px)
+
+    &[hidden]
+      display: none
+
+  &__status
+    align-items: center
+    color: $gray-600
+    display: flex
+    font-size: $font-size-sm
+    gap: px-to-rem(4px)
+
+  &__instructions
+    min-height: px-to-rem(44px)
+
+  &__submit
+    align-self: stretch
