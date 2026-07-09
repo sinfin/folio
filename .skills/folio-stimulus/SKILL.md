@@ -161,6 +161,10 @@ All utility helpers use `inline: true` internally — they are designed to be me
   `this.dispatch('eventName', { target: element, detail })` over manual
   `element.dispatchEvent(new CustomEvent(...))`.
 - Use `connect()` / `disconnect()` for setup/teardown — no global `$(document).on`.
+- Do not have a parent controller infer child component state by querying child
+  BEM selectors or modifier classes. Let the child expose state through
+  Stimulus values, targets, or `this.dispatch(...)` event detail, and let the
+  parent track that explicit state.
 
 ## Pitfalls
 

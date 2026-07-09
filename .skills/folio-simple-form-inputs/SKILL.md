@@ -25,6 +25,11 @@ field-level extensions.
   context.
 - Put below-input HTML in `options[:custom_html]`; append instead of overwriting
   when decorating an existing input.
+- Keep SimpleForm overrides focused on decisions and wiring. For larger
+  `input_controls` or `custom_html`, render ViewComponents instead of building
+  HTML fragments inside the override.
+- Child controls/components should own their own Stimulus controllers and
+  dispatch events upward; do not pass parent controller names into child markup.
 
 ## Assets
 

@@ -103,6 +103,18 @@ Namespace under `window.Folio.*` for engine code, `window.FolioConsole.*` for co
 
 Do not introduce random top-level `const`, `let`, `function`, or class declarations in component JavaScript. Component files are loaded into the shared asset scope, so helper state and constants must live inside the Stimulus controller or the owning namespace object. For Stimulus constants, prefer static getters/methods on the controller class or instance helper methods over file-scope globals.
 
+Keep Stimulus controllers readable by extracting reusable feature helpers to the
+appropriate existing global namespace: `window.Folio.<Feature>` for Folio
+engine/pack code, `window.FolioConsole.<Feature>` for Folio console-specific
+code, or `window.<AppName>.<Feature>` in host apps. Folio skills are copied into
+host apps, so do not hard-code `window.Folio` for app-owned code.
+
+Avoid constants for values used only once; inline one-off controller names, CSS
+classes, or strings unless naming removes real complexity.
+
+Prefer `window.Folio.i18n` for user-facing JS fallback/error text instead of
+passing static copy through Stimulus values.
+
 ## Debounce and throttle
 
 For rapidly firing callbacks (scroll, resize, input, mousemove), **always** debounce or throttle:
