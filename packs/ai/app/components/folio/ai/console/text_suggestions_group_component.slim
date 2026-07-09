@@ -6,7 +6,8 @@
     ]
       span.f-ai-c-text-suggestions-group__icon aria-hidden="true"
         = folio_icon(:creation, height: 16)
-      span.f-ai-c-text-suggestions-group__button-label = button_label
+      span.f-ai-c-text-suggestions-group__button-label.small
+        = button_label
 
     button.f-ai-c-text-suggestions-group__close[
       type="button"
@@ -42,7 +43,7 @@
 
     button.f-ai-c-text-suggestions-group__submit[
       type="button"
-      class="btn btn-sm btn-medium-dark"
+      class="btn btn-medium-dark"
       data=stimulus_action(click: "submit")
     ]
       = t(".submit")
