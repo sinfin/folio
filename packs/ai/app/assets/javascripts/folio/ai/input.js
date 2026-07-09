@@ -155,6 +155,13 @@
         if (event?.detail?.html) this.handleHtml(event.detail.html)
       }
 
+      startGroupSession (event) {
+        if (!this.input) return
+
+        this.startSession()
+        this.storeGroupRequestId(event?.detail?.requestId)
+      }
+
       showGroupResult (event) {
         const detail = event?.detail || {}
         if (!this.matchesGroupRequest(detail.requestId)) return

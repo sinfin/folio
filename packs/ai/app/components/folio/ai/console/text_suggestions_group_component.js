@@ -102,6 +102,8 @@
       }
 
       handleResponse (response, { pending, applyBufferedMessage }) {
+        this.dispatchFragments('session', {}, response.meta?.request_id)
+
         if (applyBufferedMessage((message) => this.applyMessageBusResult(message))) return
 
         if (pending) this.setStatus('waiting')
