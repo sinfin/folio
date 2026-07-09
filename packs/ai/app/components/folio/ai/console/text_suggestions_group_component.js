@@ -38,7 +38,7 @@
 
       submit (event) {
         this.stop(event)
-        this.load()
+        this.load({ instructions: this.instructions })
       }
 
       onMessage (event) {
@@ -59,13 +59,13 @@
         this.openValue = false
       }
 
-      load () {
+      load ({ instructions = null } = {}) {
         this.hideStatus()
         this.setStatus('loading')
 
         this.request.post({
           url: this.urlValue,
-          body: this.requestPayload(),
+          body: this.requestPayload({ instructions }),
           onResponse: (response, request) => this.handleResponse(response, request),
           onError: (error) => {
             this.showStatus(window.Folio.Ai.errorMessage(error, this.genericErrorText))
@@ -77,8 +77,8 @@
         })
       }
 
-      requestPayload () {
-        return {
+      requestPayload ({ instructions }) {
+        const payload = {
           klass: this.klassValue,
           id: this.recordIdValue,
           key: this.keyValue,
@@ -86,10 +86,13 @@
           component_id: this.componentIdValue,
           suggestion_count: this.suggestionCountValue,
           fields: this.fieldsValue,
-          instructions: this.instructions,
           message_bus_client_id: this.messageBusClientId,
           current_form_snapshot_json: JSON.stringify(window.Folio.Ai.formSnapshot(this.form))
         }
+
+        if (instructions !== null) payload.instructions = instructions
+
+        return payload
       }
 
       handleResponse (response, { pending, applyBufferedMessage }) {

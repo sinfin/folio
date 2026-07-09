@@ -6,6 +6,7 @@ require Folio::Engine.root.join("packs/ai/lib/folio/ai")
 class Folio::Ai::Console::TextSuggestionsGroupComponentTest < Folio::Console::ComponentTest
   setup do
     Folio::Site.include(Folio::Ai::SiteConcern) unless Folio::Site < Folio::Ai::SiteConcern
+    Folio::User.include(Folio::Ai::UserConcern) unless Folio::User < Folio::Ai::UserConcern
 
     Folio::Ai.reset_registry!
     Folio::Ai.register_record(record_class_name: "Folio::Page",
@@ -56,11 +57,31 @@ class Folio::Ai::Console::TextSuggestionsGroupComponentTest < Folio::Console::Co
     assert_no_selector(".f-ai-c-text-suggestions-group")
   end
 
+  test "prefills saved group instructions" do
+    user = create(:folio_user)
+    Folio::Ai::UserInstruction.upsert_instruction!(user:,
+                                                   site: @site,
+                                                   record_key: "folio_pages",
+                                                   key: "meta",
+                                                   instruction: "Keep title and perex aligned.")
+
+    render_component(user:) do |form|
+      render_inline(Folio::Ai::Console::TextSuggestionsGroupComponent.new(form:,
+                                                                         key: :meta))
+    end
+
+    assert_selector(".f-ai-c-text-suggestions-group__instructions",
+                    text: "Keep title and perex aligned.",
+                    visible: :all)
+  end
+
   private
-    def render_component(&block)
+    def render_component(user: nil, &block)
       I18n.with_locale(:en) do
-        Folio::Ai::Providers::Dummy.stub(:available?, true) do
-          vc_test_controller.view_context.simple_form_for(@page, url: "/", &block)
+        Folio::Current.stub(:user, user) do
+          Folio::Ai::Providers::Dummy.stub(:available?, true) do
+            vc_test_controller.view_context.simple_form_for(@page, url: "/", &block)
+          end
         end
       end
     end

@@ -8,7 +8,7 @@ class Folio::Ai::Console::TextSuggestionsGroupComponent < Folio::Console::Applic
     @fields = Array(fields)
     @key = key.to_s
     @label = label
-    @instructions = instructions.to_s
+    @instructions = instructions
   end
 
   def render?
@@ -126,6 +126,33 @@ class Folio::Ai::Console::TextSuggestionsGroupComponent < Folio::Console::Applic
 
     def text_suggestions_url
       Folio::Engine.routes.url_helpers.console_api_ai_text_suggestions_path
+    end
+
+    def instructions
+      return @instructions.to_s unless @instructions.nil?
+
+      user_instruction.presence || site_prompt.to_s
+    end
+
+    def user_instruction
+      return if current_user.blank? || site.blank?
+
+      Folio::Ai::UserInstruction.find_or_initialize_for(user: current_user,
+                                                        site:,
+                                                        record_key:,
+                                                        key: group.fetch(:key)).instruction.to_s
+    end
+
+    def current_user
+      Folio::Current.user
+    end
+
+    def site_prompt
+      return unless site.respond_to?(:ai_prompt_for)
+
+      site.ai_prompt_for(record_key:,
+                         key: group.fetch(:key),
+                         grouped: true)
     end
 
     def button_label

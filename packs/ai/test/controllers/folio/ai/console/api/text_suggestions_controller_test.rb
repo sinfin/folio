@@ -81,6 +81,33 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
                     "f-ai-c-text-suggestions__suggestion--loading"
   end
 
+  test "initial grouped request does not overwrite saved instructions" do
+    Folio::Ai::UserInstruction.upsert_instruction!(user: @superadmin,
+                                                   site: @site,
+                                                   record_key: "folio_pages",
+                                                   key: "meta",
+                                                   instruction: "Keep variants aligned.")
+
+    Folio::Ai::Providers::Dummy.stub(:available?, true) do
+      post console_api_ai_text_suggestions_path(format: :json),
+           params: request_params(grouped: true,
+                                  key: "meta",
+                                  component_id: "ai_group",
+                                  fields: [
+                                    { key: "title", component_id: "ai_title" },
+                                    { key: "perex", component_id: "ai_perex" },
+                                  ]),
+           as: :json
+    end
+
+    assert_response :ok
+    assert_equal "Keep variants aligned.",
+                 Folio::Ai::UserInstruction.find_by!(user: @superadmin,
+                                                     site: @site,
+                                                     integration_key: "folio_pages",
+                                                     field_key: "meta").instruction
+  end
+
   test "renders component error and does not enqueue job for invalid request" do
     Folio::Ai::Providers::Dummy.stub(:available?, true) do
       assert_no_enqueued_jobs only: Folio::Ai::TextSuggestionsJob do
