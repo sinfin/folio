@@ -91,6 +91,21 @@ Grouped suggestions wrap normal AI inputs:
 
 The group uses its own prompt and saved user instruction under the group key.
 The child inputs still own accepting, copying, undo, and final field updates.
+When grouped child inputs use custom `input_html[:id]` values, pass matching
+field metadata so grouped results target the rendered inputs:
+
+```slim
+= render Folio::Ai::Console::TextSuggestionsGroupComponent.new(form: f,
+                                                               key: :meta,
+                                                               fields: [
+                                                                 { key: :meta_title, input_id: "custom_meta_title" },
+                                                               ]) do
+  = f.input :meta_title, ai: true,
+                         input_html: { id: "custom_meta_title" }
+```
+
+Use `component_id` instead of `input_id` only when you need to pass the full AI
+suggestion component id directly.
 
 ## Prompts And Data
 

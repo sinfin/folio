@@ -56,6 +56,21 @@ class Folio::Ai::SimpleFormInputExtensionTest < ActionView::TestCase
     assert Capybara.string(html).has_css?(".f-ai-input__button", text: "AI návrhy")
   end
 
+  test "uses custom input id for the ai component id" do
+    html = with_dummy_provider do
+      simple_form_for @page, url: "/" do |f|
+        concat(f.input :title,
+                       ai: true,
+                       input_html: { id: "custom_title_input" })
+      end
+    end
+
+    wrapper = Capybara.string(html).find(".form-group.f-ai-input")
+
+    assert_equal "folio_ai_text_suggestions_custom_title_input",
+                 wrapper["data-f-ai-input-component-id-value"]
+  end
+
   test "does not render controls for unregistered fields" do
     html = with_dummy_provider do
       simple_form_for @page, url: "/" do |f|

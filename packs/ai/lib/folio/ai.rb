@@ -85,6 +85,7 @@ module Folio::Ai
 end
 
 require_relative "ai/config"
+require_relative "../../app/lib/folio/ai/component_ids"
 require_relative "../../app/lib/folio/ai/registry"
 require_relative "../../app/lib/folio/ai/providers/base"
 require_relative "../../app/lib/folio/ai/providers/dummy"

@@ -50,6 +50,32 @@ class Folio::Ai::Console::TextSuggestionsGroupComponentTest < Folio::Console::Co
     ], fields
   end
 
+  test "uses configured input ids for grouped child component ids" do
+    render_component do |form|
+      render_inline(Folio::Ai::Console::TextSuggestionsGroupComponent.new(form:,
+                                                                         key: :meta,
+                                                                         fields: [
+                                                                           { key: :title, input_id: "custom_title_input" },
+                                                                         ])) do
+        vc_test_controller.view_context.safe_join([
+          form.input(:title,
+                     ai: true,
+                     input_html: { id: "custom_title_input" }),
+          form.input(:perex, ai: true),
+        ])
+      end
+    end
+
+    group = page.find(".f-ai-c-text-suggestions-group")
+    fields = JSON.parse(group["data-f-ai-c-text-suggestions-group-fields-value"])
+
+    assert_equal [
+      { "key" => "title", "component_id" => "folio_ai_text_suggestions_custom_title_input" },
+      { "key" => "perex", "component_id" => "folio_ai_text_suggestions_page_perex" },
+    ], fields
+    assert_selector(".f-ai-input[data-f-ai-input-component-id-value='folio_ai_text_suggestions_custom_title_input']")
+  end
+
   test "does not render without registered fields" do
     render_component do |form|
       render_inline(Folio::Ai::Console::TextSuggestionsGroupComponent.new(form:,

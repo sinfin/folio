@@ -58,7 +58,7 @@ class Folio::Ai::Console::TextSuggestionsGroupComponent < Folio::Console::Applic
         field = Folio::Ai.registry.field(record_key, field_key)
         next unless field
 
-        field.merge(component_id: field_hash[:component_id].presence || input_component_id(field_key))
+        field.merge(component_id: component_id_for_field(field_key, field_hash))
       end
     end
 
@@ -84,19 +84,22 @@ class Folio::Ai::Console::TextSuggestionsGroupComponent < Folio::Console::Applic
     end
 
     def component_id
-      @component_id ||= "folio_ai_text_suggestions_group_#{dom_id_token(@form.object_name)}_#{dom_id_token(group.fetch(:key))}"
+      return @component_id if defined?(@component_id)
+
+      form_token = Folio::Ai::ComponentIds.dom_id_token(@form.object_name)
+      group_token = Folio::Ai::ComponentIds.dom_id_token(group.fetch(:key))
+      @component_id = "folio_ai_text_suggestions_group_#{form_token}_#{group_token}"
     end
 
-    def input_component_id(field_key)
-      "folio_ai_text_suggestions_#{input_id(field_key)}"
-    end
+    def component_id_for_field(field_key, field_hash)
+      return field_hash[:component_id] if field_hash[:component_id].present?
 
-    def input_id(field_key)
-      dom_id_token("#{@form.object_name}_#{field_key}")
-    end
+      if field_hash[:input_id].present?
+        return Folio::Ai::ComponentIds.text_suggestions_component_id(input_id: field_hash[:input_id])
+      end
 
-    def dom_id_token(value)
-      value.to_s.gsub(/[^a-zA-Z0-9_-]/, "_")
+      Folio::Ai::ComponentIds.default_text_suggestions_component_id(object_name: @form.object_name,
+                                                                    field_key:)
     end
 
     def record_key

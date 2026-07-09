@@ -95,9 +95,8 @@ module Folio::Ai::SimpleFormInputExtension
     end
 
     def ensure_ai_input_id
-      input_html_options[:id] ||= "#{@builder.object_name}_#{attribute_name}".tr("[]", "_")
-                                                                        .squeeze("_")
-                                                                        .delete_suffix("_")
+      input_html_options[:id] ||= Folio::Ai::ComponentIds.default_input_id(object_name: @builder.object_name,
+                                                                           field_key: attribute_name)
     end
 
     def mark_ai_wrapper
@@ -115,7 +114,6 @@ module Folio::Ai::SimpleFormInputExtension
         "f-ai-c-text-suggestions:regenerate": "regenerate",
         "f-ai-c-text-suggestions:accept": "acceptSuggestion",
         "f-ai-c-text-suggestions-group:loading": "showGroupLoading",
-        "f-ai-c-text-suggestions-group:session": "startGroupSession",
         "f-ai-c-text-suggestions-group:result": "showGroupResult",
         "f-ai-input/close": "close",
         "f-ai-input/message": "onMessage",
@@ -162,7 +160,7 @@ module Folio::Ai::SimpleFormInputExtension
     end
 
     def ai_text_suggestions_component_id
-      "folio_ai_text_suggestions_#{input_html_options[:id].to_s.gsub(/[^a-zA-Z0-9_-]/, '_')}"
+      Folio::Ai::ComponentIds.text_suggestions_component_id(input_id: input_html_options[:id])
     end
 end
 

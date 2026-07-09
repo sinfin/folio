@@ -119,7 +119,7 @@
       }
 
       handleResponse (response, { pending, applyBufferedMessage }) {
-        this.dispatchFragments('session', {}, response.meta?.request_id)
+        this.dispatchFragments('loading', response.meta?.fragments || {}, response.meta?.request_id)
 
         if (applyBufferedMessage((message) => this.applyMessageBusResult(message))) return
 
