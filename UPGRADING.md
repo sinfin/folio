@@ -1,45 +1,5 @@
 # Upgrading
 
-## Unreleased
-
-### AI Configuration Object
-
-**BREAKING CHANGE**: AI runtime configuration readers and helper methods moved
-from `Folio::Ai` to `Folio::Ai.config`.
-
-**Before:**
-```ruby
-Folio::Ai.enabled?
-Folio::Ai.default_model(:openai)
-Folio::Ai.provider_models
-Folio::Ai.text_suggestions_queue
-```
-
-**After:**
-```ruby
-Folio::Ai.config.enabled?
-Folio::Ai.config.default_model(:openai)
-Folio::Ai.config.provider_models
-Folio::Ai.config.text_suggestions_queue
-```
-
-`Folio::Ai.configure` remains unchanged:
-
-```ruby
-Folio::Ai.configure do |config|
-  config.enabled = true
-  config.default_provider = :openai
-end
-```
-
-**Action required:**
-
-1. Replace direct AI config readers and predicates with `Folio::Ai.config.*`.
-2. Update tests that stubbed config helpers, for example
-   `Folio::Ai.stub(:provider_api_key_env_values, values)` becomes
-   `Folio::Ai.config.stub(:provider_api_key_env_values, values)`.
-3. Keep existing `Folio::Ai.configure` initializer blocks as-is.
-
 ## 7.2.* to 7.3.0
 
 ### has_folio_tiptap? Method Change
