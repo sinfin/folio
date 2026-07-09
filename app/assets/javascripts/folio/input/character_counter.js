@@ -1,19 +1,4 @@
-//= require folio/i18n
 //= require folio/word_count
-
-window.Folio = window.Folio || {}
-window.Folio.Input = window.Folio.Input || {}
-
-window.Folio.Input.CharacterCounter = {}
-
-window.Folio.Input.CharacterCounter.i18n = {
-  cs: {
-    shortForCharacter: 'zn.'
-  },
-  en: {
-    shortForCharacter: 'ch.'
-  }
-}
 
 window.Folio.Stimulus.register('f-input-character-counter', class extends window.Stimulus.Controller {
   static values = {
@@ -95,8 +80,6 @@ window.Folio.Stimulus.register('f-input-character-counter', class extends window
 
       this.updateDangerClass(wrap, currentLength)
     }
-
-    wrap.appendChild(document.createTextNode(` ${window.Folio.i18n(window.Folio.Input.CharacterCounter.i18n, 'shortForCharacter')}`))
 
     this.element.insertAdjacentElement('afterend', wrap)
   }
