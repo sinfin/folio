@@ -4,6 +4,32 @@ require "test_helper"
 require Folio::Engine.root.join("packs/ai/lib/folio/ai")
 
 class Folio::Ai::FormSnapshotSanitizerTest < ActiveSupport::TestCase
+  SnapshotColumn = Struct.new(:type)
+
+  class SnapshotRecord
+    COLUMNS_HASH = {
+      "title" => SnapshotColumn.new(:string),
+      "body" => SnapshotColumn.new(:text),
+      "settings" => SnapshotColumn.new(:jsonb),
+      "published" => SnapshotColumn.new(:boolean),
+      "site_id" => SnapshotColumn.new(:integer),
+      "slug" => SnapshotColumn.new(:string),
+      "api_key" => SnapshotColumn.new(:string),
+    }.freeze
+
+    def self.model_name
+      ActiveModel::Name.new(self, nil, "SnapshotRecord")
+    end
+
+    def self.table_name
+      "snapshot_records"
+    end
+
+    def self.columns_hash
+      COLUMNS_HASH
+    end
+  end
+
   test "normalizes form field names and removes framework metadata" do
     result = sanitize({
       "authenticity_token" => "secret",
@@ -11,6 +37,10 @@ class Folio::Ai::FormSnapshotSanitizerTest < ActiveSupport::TestCase
       "folio_page[id]" => "42",
       "folio_page[title]" => "<strong>Draft</strong> <a href=\"https://example.com/source\">source</a>",
       "folio_page[perex]" => "  Short perex.  ",
+      "folio_page[slug]" => "draft-slug",
+      "folio_page[preview_token]" => "secret-token",
+      "folio_page[api_key]" => "secret-api-key",
+      "folio_page[password]" => "secret-password",
     })
 
     assert_equal "Draft source (https://example.com/source)", result["title"]
@@ -18,6 +48,67 @@ class Folio::Ai::FormSnapshotSanitizerTest < ActiveSupport::TestCase
     assert_nil result["id"]
     assert_nil result["authenticity_token"]
     assert_nil result["_method"]
+    assert_nil result["slug"]
+    assert_nil result["preview_token"]
+    assert_nil result["api_key"]
+    assert_nil result["password"]
+  end
+
+  test "keeps safe record columns and drops unsafe form fields" do
+    result = sanitize({
+      "snapshot_record[title]" => "Column title",
+      "snapshot_record[body]" => "<b>Body</b>",
+      "snapshot_record[settings]" => {
+        summary: "<em>JSON</em>",
+        owner_id: 123,
+        api_key: "nested-secret",
+      }.to_json,
+      "snapshot_record[published]" => "1",
+      "snapshot_record[site_id]" => "1",
+      "snapshot_record[slug]" => "private-slug",
+      "snapshot_record[api_key]" => "root-secret",
+    }, record: SnapshotRecord.new)
+
+    assert_equal "Column title", result["title"]
+    assert_equal "Body", result["body"]
+    assert_equal({ "summary" => "JSON" }, result["settings"])
+    assert_nil result["published"]
+    assert_nil result["site_id"]
+    assert_nil result["slug"]
+    assert_nil result["api_key"]
+  end
+
+  test "keeps registered ai fields outside record columns" do
+    Folio::Ai.reset_registry!
+    Folio::Ai.register_record(record_class_name: "Folio::Page",
+                              fields: [:custom_context])
+
+    result = sanitize({
+      "folio_page[custom_context]" => "<strong>Registered</strong> context",
+      "folio_page[unregistered_context]" => "Dropped context",
+    })
+
+    assert_equal "Registered context", result["custom_context"]
+    assert_nil result["unregistered_context"]
+  ensure
+    Folio::Ai.reset_registry!
+  end
+
+  test "allows record override to replace context roots" do
+    record = SnapshotRecord.new
+    record.define_singleton_method(:folio_ai_form_snapshot_context_keys) do |default_keys:|
+      default_keys.without("title") + ["custom_context"]
+    end
+
+    result = sanitize({
+      "snapshot_record[title]" => "Dropped title",
+      "snapshot_record[body]" => "Body kept by default roots",
+      "snapshot_record[custom_context]" => "<em>Custom</em>",
+    }, record:)
+
+    assert_nil result["title"]
+    assert_equal "Body kept by default roots", result["body"]
+    assert_equal "Custom", result["custom_context"]
   end
 
   test "keeps nested atom-like text and url data" do
@@ -37,6 +128,17 @@ class Folio::Ai::FormSnapshotSanitizerTest < ActiveSupport::TestCase
     assert_equal({ "label" => "Atom link", "href" => "https://example.com/atom" },
                  atom_data["url_json"])
     assert_nil result.dig("atoms_attributes", "0", "id")
+  end
+
+  test "drops nested records marked for destruction" do
+    result = sanitize({
+      "folio_page[atoms_attributes][0][_destroy]" => "1",
+      "folio_page[atoms_attributes][0][data][title]" => "Destroyed atom",
+      "folio_page[atoms_attributes][1][data][title]" => "Kept atom",
+    })
+
+    assert_nil result.dig("atoms_attributes", "0")
+    assert_equal "Kept atom", result.dig("atoms_attributes", "1", "data", "title")
   end
 
   test "extracts tiptap text and selected semantic metadata" do
@@ -70,8 +172,8 @@ class Folio::Ai::FormSnapshotSanitizerTest < ActiveSupport::TestCase
   end
 
   private
-    def sanitize(snapshot)
-      Folio::Ai::FormSnapshotSanitizer.call(record: Folio::Page.new,
+    def sanitize(snapshot, record: Folio::Page.new)
+      Folio::Ai::FormSnapshotSanitizer.call(record:,
                                             snapshot:)
     end
 

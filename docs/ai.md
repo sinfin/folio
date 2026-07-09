@@ -113,8 +113,29 @@ Site admins edit provider, model, field prompts, and group prompts in the site
 console AI tab. User instructions are stored per user, site, record key, and
 field or group key.
 
-The form snapshot is the only automatic request data source. A record can add
-structured context by defining:
+The form snapshot is the only automatic request data source. Before it reaches
+the provider, Folio keeps only useful context roots:
+
+- registered AI fields
+- record columns with `string`, `text`, `json`, or `jsonb` types
+- Tiptap fields, atom attributes, and attachment placement attributes
+
+Framework fields, IDs, slugs, timestamps, destroyed nested records, and
+password/token/secret-style keys are dropped. JSON values are sanitized
+recursively.
+
+A record can replace the root allowlist by defining:
+
+```ruby
+def folio_ai_form_snapshot_context_keys(default_keys:)
+  default_keys + %w[custom_context]
+end
+```
+
+Return the final top-level form snapshot keys to keep. Use this when a model
+needs extra safe context, or when a normally allowed column should be excluded.
+
+A record can also add structured context outside the form snapshot by defining:
 
 ```ruby
 def folio_ai_additional_data(field_key:, form_snapshot:)
@@ -124,8 +145,8 @@ def folio_ai_additional_data(field_key:, form_snapshot:)
 end
 ```
 
-Return a small hash that helps generate the requested field. Avoid adding
-alternate data-source APIs for one-off use cases.
+Return a small hash that helps generate the requested field or group. Avoid
+adding alternate data-source APIs for one-off use cases.
 
 ## Request Flow
 

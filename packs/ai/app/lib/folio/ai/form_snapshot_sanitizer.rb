@@ -21,6 +21,25 @@ class Folio::Ai::FormSnapshotSanitizer
     utf8
   ].freeze
 
+  ALLOWED_ATTRIBUTE_TYPES = %i[string text json jsonb].freeze
+  DEFAULT_EXCLUDED_COLUMN_KEYS = %w[
+    ancestry
+    ancestry_slug
+    slug
+    state
+    type
+  ].freeze
+  SENSITIVE_KEY_PATTERNS = [
+    /\Akey\z/i,
+    /access_key/i,
+    /api_key/i,
+    /credential/i,
+    /encrypted/i,
+    /password/i,
+    /private_key/i,
+    /secret/i,
+    /token/i,
+  ].freeze
   TEXT_METADATA_KEYS = %w[alt caption description label title].freeze
   URL_METADATA_KEYS = %w[href src url].freeze
   URL_JSON_KEYS = %w[href label title].freeze
@@ -42,6 +61,7 @@ class Folio::Ai::FormSnapshotSanitizer
     expanded_snapshot.each_with_object({}) do |(key, value), hash|
       attribute = attribute_name(key)
       next if ignored_key?(attribute)
+      next unless allowed_context_root?(attribute)
 
       sanitized = sanitize_attribute(attribute, value)
       hash[attribute] = sanitized if context_present?(sanitized)
@@ -96,6 +116,92 @@ class Folio::Ai::FormSnapshotSanitizer
       key.to_s.scan(/[^\[\]]+/).last.to_s
     end
 
+    def allowed_context_root?(key)
+      context_roots.include?(key.to_s)
+    end
+
+    def context_roots
+      @context_roots ||= begin
+        defaults = default_context_roots
+
+        if record.respond_to?(:folio_ai_form_snapshot_context_keys)
+          normalize_context_keys(record.folio_ai_form_snapshot_context_keys(default_keys: defaults))
+        else
+          defaults
+        end
+      end
+    end
+
+    def default_context_roots
+      normalize_context_keys(
+        registered_field_roots +
+          allowed_attribute_roots +
+          tiptap_roots +
+          atom_attribute_roots +
+          file_placement_attribute_roots
+      )
+    end
+
+    def registered_field_roots
+      return [] unless record_class&.respond_to?(:table_name)
+
+      Folio::Ai.registry.record(record_class.table_name)&.dig(:fields)&.keys || []
+    end
+
+    def allowed_attribute_roots
+      return [] unless record_class
+
+      attribute_types = if record_class.respond_to?(:columns_hash)
+        record_class.columns_hash
+      elsif record_class.respond_to?(:attribute_types)
+        record_class.attribute_types
+      end
+
+      return [] unless attribute_types
+
+      attribute_types.filter_map do |key, type|
+        next unless allowed_attribute_type?(type)
+        next if excluded_default_column_key?(key)
+
+        key
+      end
+    end
+
+    def allowed_attribute_type?(type)
+      type.respond_to?(:type) &&
+        ALLOWED_ATTRIBUTE_TYPES.include?(type.type.to_sym)
+    end
+
+    def tiptap_roots
+      return [] unless record_class&.respond_to?(:folio_tiptap_fields)
+
+      record_class.folio_tiptap_fields
+    end
+
+    def atom_attribute_roots
+      return [] unless record_class&.respond_to?(:atom_keys)
+
+      record_class.atom_keys.map { |key| "#{key}_attributes" }
+    end
+
+    def file_placement_attribute_roots
+      return [] unless record_class&.respond_to?(:folio_attachment_keys)
+
+      record_class.folio_attachment_keys.values.flatten.map { |key| "#{key}_attributes" }
+    end
+
+    def normalize_context_keys(keys)
+      Array(keys).filter_map { |key| key.to_s.strip.presence }.uniq
+    end
+
+    def excluded_default_column_key?(key)
+      key = key.to_s
+
+      DEFAULT_EXCLUDED_COLUMN_KEYS.include?(key) ||
+        key.end_with?("_slug") ||
+        ignored_key?(key)
+    end
+
     def sanitize_attribute(attribute, value)
       if tiptap_field?(attribute)
         sanitize_tiptap_value(value)
@@ -105,8 +211,7 @@ class Folio::Ai::FormSnapshotSanitizer
     end
 
     def tiptap_field?(attribute)
-      record&.class&.respond_to?(:folio_tiptap_fields) &&
-        record.class.folio_tiptap_fields.include?(attribute.to_s)
+      tiptap_roots.include?(attribute.to_s)
     end
 
     def sanitize_tiptap_value(value)
@@ -240,6 +345,7 @@ class Folio::Ai::FormSnapshotSanitizer
       else
         value.each_with_object({}) do |(key, item), hash|
           next if ignored_key?(key)
+          next if item.is_a?(Hash) && destroyed_hash?(item)
 
           sanitized = sanitize_context_value(item)
           hash[key.to_s] = sanitized if context_present?(sanitized)
@@ -389,6 +495,28 @@ class Folio::Ai::FormSnapshotSanitizer
     end
 
     def ignored_key?(key)
-      IGNORED_KEYS.include?(attribute_name(key))
+      key = attribute_name(key)
+
+      IGNORED_KEYS.include?(key) ||
+        key.end_with?("_id") ||
+        key.end_with?("_ids") ||
+        sensitive_key?(key)
+    end
+
+    def sensitive_key?(key)
+      SENSITIVE_KEY_PATTERNS.any? { |pattern| key.match?(pattern) }
+    end
+
+    def destroyed_hash?(value)
+      value = value.stringify_keys
+      destroy_value?(value["_destroy"])
+    end
+
+    def destroy_value?(value)
+      value == true || value.to_s == "1" || value.to_s.casecmp?("true")
+    end
+
+    def record_class
+      record&.class
     end
 end

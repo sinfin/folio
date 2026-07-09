@@ -173,9 +173,11 @@ Folio::Engine.routes.draw do
           get :list
         end
 
-        post "ai/text_suggestions",
-             to: "/folio/ai/console/api/text_suggestions#create",
-             as: :ai_text_suggestions
+        if Folio.pack_enabled?(:ai)
+          post "ai/text_suggestions",
+               to: "/folio/ai/console/api/text_suggestions#create",
+               as: :ai_text_suggestions
+        end
 
         resources :site_user_links, only: %i[] do
           member do

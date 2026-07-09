@@ -25,13 +25,42 @@ class Folio::Test < ActiveSupport::TestCase
     assert_includes head, "Folio.enabled_pack_assets(:javascripts)"
   end
 
+  test "disabled ai pack does not mount console api route" do
+    with_enabled_packs do
+      assert_raises(ActionController::RoutingError) do
+        Folio::Engine.routes.recognize_path("/console/api/ai/text_suggestions.json",
+                                            method: :post)
+      end
+    end
+  end
+
+  test "enabled ai pack mounts console api route" do
+    with_enabled_packs(:ai) do
+      assert_equal({
+                     controller: "folio/ai/console/api/text_suggestions",
+                     action: "create",
+                     format: "json",
+                   }.with_indifferent_access,
+                   Folio::Engine.routes.recognize_path("/console/api/ai/text_suggestions.json",
+                                                       method: :post).with_indifferent_access)
+    end
+  end
+
   private
     def with_enabled_packs(*packs)
       original_packs = Folio.enabled_packs
       Folio.enabled_packs = packs
+      reload_routes
 
       yield
     ensure
       Folio.enabled_packs = original_packs
+      reload_routes
+    end
+
+    def reload_routes
+      Folio::Engine.reload_routes! if Folio::Engine.respond_to?(:reload_routes!)
+      Folio::Engine.routes_reloader.reload! if Folio::Engine.respond_to?(:routes_reloader)
+      Rails.application.reload_routes!
     end
 end
