@@ -10,6 +10,7 @@ class Folio::Ai::Console::Api::TextSuggestionsController < Folio::Console::Api::
       enqueue_text_suggestions_job(suggestion_request)
     else
       render_component_json(text_suggestions_component(suggestion_request, error_code: suggestion_request.error_code),
+                            meta: error_meta(suggestion_request),
                             status: :unprocessable_entity)
     end
   end
@@ -60,15 +61,30 @@ class Folio::Ai::Console::Api::TextSuggestionsController < Folio::Console::Api::
     def loading_fragments(suggestion_request)
       return {} unless suggestion_request.grouped?
 
+      grouped_fragments(suggestion_request, loading: true)
+    end
+
+    def error_meta(suggestion_request)
+      return {} unless suggestion_request.grouped?
+
+      {
+        component_id: suggestion_request.component_id,
+        grouped: true,
+        fragments: grouped_fragments(suggestion_request, error_code: suggestion_request.error_code),
+      }
+    end
+
+    def grouped_fragments(suggestion_request, loading: false, error_code: nil)
       suggestion_request.fields.to_h do |field|
         [
           field.fetch(:component_id),
           render_to_string(Folio::Ai::Console::TextSuggestionsComponent.new(component_id: field.fetch(:component_id),
                                                                             field:,
-                                                                            loading: true,
+                                                                            loading:,
+                                                                            error_code:,
                                                                             show_instructions: false,
                                                                             show_close: false,
-                                                                            grouped: true,
+                                                                            grouped: error_code.blank?,
                                                                             loading_suggestion_count: Folio::Ai::GROUPED_SUGGESTION_COUNT),
                            layout: false),
         ]

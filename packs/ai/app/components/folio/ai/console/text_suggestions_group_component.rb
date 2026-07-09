@@ -41,6 +41,7 @@ class Folio::Ai::Console::TextSuggestionsGroupComponent < Folio::Console::Applic
                           action: {
                             "f-ai-c-text-suggestions-group/message": "onMessage",
                             "f-ai-c-text-suggestions:accepted": "closeIfNoSuggestions",
+                            "f-ai-input:groupPanelClosed": "closeIfNoOpenChildPanels",
                             "f-ai-input:closeGroup": "close",
                           })
     end

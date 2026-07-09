@@ -134,6 +134,7 @@ class Folio::Ai::TextSuggestionRequest
     return :site_disabled unless site_ai_enabled?
     return :field_not_registered unless registered_key?
     return :prompt_not_configured unless site_prompt_enabled?
+    return :missing_context unless content_requirement_satisfied?
     :provider_unavailable unless provider_available?
   end
 
@@ -173,12 +174,17 @@ class Folio::Ai::TextSuggestionRequest
     end
 
     def parsed_form_snapshot
-      snapshot = params[:current_form_snapshot]
-      return normalize_snapshot(snapshot) if snapshot.present?
+      return @parsed_form_snapshot if defined?(@parsed_form_snapshot)
 
-      JSON.parse(params[:current_form_snapshot_json].to_s)
+      snapshot = params[:current_form_snapshot]
+      if snapshot.present?
+        @parsed_form_snapshot = normalize_snapshot(snapshot)
+        return @parsed_form_snapshot
+      end
+
+      @parsed_form_snapshot = JSON.parse(params[:current_form_snapshot_json].to_s)
     rescue JSON::ParserError
-      {}
+      @parsed_form_snapshot = {}
     end
 
     def normalize_snapshot(snapshot)
@@ -200,6 +206,12 @@ class Folio::Ai::TextSuggestionRequest
         site.ai_prompt_enabled_for?(record_key:,
                                     key:,
                                     grouped: grouped?)
+    end
+
+    def content_requirement_satisfied?
+      Folio::Ai::ContentRequirement.satisfied?(record:,
+                                               requirement: record_config&.dig(:content_requirement),
+                                               form_snapshot:)
     end
 
     def site_provider
@@ -276,6 +288,10 @@ class Folio::Ai::TextSuggestionRequest
 
     def registered_key?
       grouped? ? group.present? && fields.present? : field.present?
+    end
+
+    def record_config
+      @record_config ||= Folio::Ai.registry.record(record_key)
     end
 
     def generator

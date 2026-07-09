@@ -25,6 +25,7 @@ class Folio::Ai::FormSnapshotSanitizer
   DEFAULT_EXCLUDED_COLUMN_KEYS = %w[
     ancestry
     ancestry_slug
+    atoms_data_for_search
     slug
     state
     type

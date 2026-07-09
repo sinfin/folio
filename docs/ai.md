@@ -45,10 +45,11 @@ Register each AI-enabled record class from the host app:
 
 ```ruby
 Rails.application.config.after_initialize do
-  Folio::Ai.register_record(record_class_name: "Article",
-                            fields: [
-                              { key: :perex, character_limit: 400 },
-                              { key: :meta_title, character_limit: 120 },
+Folio::Ai.register_record(record_class_name: "Article",
+                          content_requirement: :tiptap_or_atoms,
+                          fields: [
+                            { key: :perex, character_limit: 400 },
+                            { key: :meta_title, character_limit: 120 },
                               { key: :meta_description, character_limit: 250 },
                             ],
                             groups: [
@@ -65,6 +66,18 @@ The record key is the model table name. Fields and groups store simple hashes:
 `key`, optional `label`, optional `character_limit`, and group `fields`.
 Registration exposes the field or group in site settings; it does not show
 editor controls until the current site has it enabled with a nonblank prompt.
+
+`content_requirement` is optional and record-wide. Use
+`:tiptap_or_atoms` when every AI suggestion for the record needs body content
+from Tiptap or atoms. The AI controls still render when prompts are configured,
+but the request returns a missing-context error and skips the provider until
+the current form snapshot has usable Tiptap or atom nested-attribute content.
+Persisted record data and cache fields such as `atoms_data_for_search` are not
+used for this readiness check.
+
+Host apps can override
+`folio.ai.console.text_suggestions_component.errors.missing_context` for
+domain-specific wording.
 
 ## Use In Forms
 
@@ -127,8 +140,8 @@ the provider, Folio keeps only useful context roots:
 - Tiptap fields, atom attributes, and attachment placement attributes
 
 Framework fields, IDs, slugs, timestamps, destroyed nested records, and
-password/token/secret-style keys are dropped. JSON values are sanitized
-recursively.
+password/token/secret-style keys are dropped. Cache fields such as
+`atoms_data_for_search` are also dropped. JSON values are sanitized recursively.
 
 A record can replace the root allowlist by defining:
 

@@ -11,6 +11,7 @@ class Folio::Ai::FormSnapshotSanitizerTest < ActiveSupport::TestCase
       "title" => SnapshotColumn.new(:string),
       "body" => SnapshotColumn.new(:text),
       "settings" => SnapshotColumn.new(:jsonb),
+      "atoms_data_for_search" => SnapshotColumn.new(:text),
       "published" => SnapshotColumn.new(:boolean),
       "site_id" => SnapshotColumn.new(:integer),
       "slug" => SnapshotColumn.new(:string),
@@ -63,6 +64,7 @@ class Folio::Ai::FormSnapshotSanitizerTest < ActiveSupport::TestCase
         owner_id: 123,
         api_key: "nested-secret",
       }.to_json,
+      "snapshot_record[atoms_data_for_search]" => "Cached body text",
       "snapshot_record[published]" => "1",
       "snapshot_record[site_id]" => "1",
       "snapshot_record[slug]" => "private-slug",
@@ -72,6 +74,7 @@ class Folio::Ai::FormSnapshotSanitizerTest < ActiveSupport::TestCase
     assert_equal "Column title", result["title"]
     assert_equal "Body", result["body"]
     assert_equal({ "summary" => "JSON" }, result["settings"])
+    assert_nil result["atoms_data_for_search"]
     assert_nil result["published"]
     assert_nil result["site_id"]
     assert_nil result["slug"]

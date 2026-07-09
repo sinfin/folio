@@ -17,6 +17,7 @@
 
       connect () {
         this.resetAcceptedGroupedSuggestions()
+        this.openGroupedComponentIds = new Set()
 
         this.request = window.Folio.Ai.asyncJobRequest({
           timeoutMs: () => 45000,
@@ -31,7 +32,7 @@
       toggle (event) {
         this.stop(event)
 
-        if (this.panelOpen) {
+        if (this.openValue || this.panelOpen) {
           this.close()
         } else {
           this.open()
@@ -60,6 +61,18 @@
         this.openValue = false
       }
 
+      closeIfNoOpenChildPanels (event) {
+        const componentId = event?.detail?.componentId
+        if (!componentId) return
+
+        this.openGroupedComponentIds.delete(componentId)
+        if (this.openGroupedComponentIds.size > 0) return
+
+        this.hidePanel()
+        this.openValue = false
+        this.resetAcceptedGroupedSuggestions()
+      }
+
       open () {
         this.openValue = true
         if (this.request.active) return
@@ -77,6 +90,7 @@
         this.hidePanel()
         this.openValue = false
         this.resetAcceptedGroupedSuggestions()
+        this.openGroupedComponentIds = new Set()
         this.setStatus('idle')
       }
 
@@ -119,11 +133,31 @@
       }
 
       handleResponse (response, { pending, applyBufferedMessage }) {
+        if (!response.meta?.request_id) {
+          this.handleImmediateResponse(response)
+          return
+        }
+
         this.dispatchFragments('loading', response.meta?.fragments || {}, response.meta?.request_id)
 
         if (applyBufferedMessage((message) => this.applyMessageBusResult(message))) return
 
         if (pending) this.setStatus('waiting')
+      }
+
+      handleImmediateResponse (response) {
+        const fragments = response.meta?.fragments || {}
+
+        if (Object.keys(fragments).length > 0) {
+          this.dispatchFragments('result', fragments, null)
+          this.closeButtonTarget.hidden = false
+        } else {
+          this.showPanel()
+          this.showStatus(this.genericErrorText)
+        }
+
+        this.request.finish()
+        this.setStatus('idle')
       }
 
       applyMessageBusResult (message) {
@@ -135,6 +169,8 @@
       }
 
       dispatchFragments (eventName, fragments, requestId) {
+        if (eventName === 'result') this.trackOpenGroupedComponentIds(fragments)
+
         this.fieldsValue.forEach((field) => {
           const input = this.inputForField(field)
           if (!input) return
@@ -148,6 +184,14 @@
             }
           })
         })
+      }
+
+      trackOpenGroupedComponentIds (fragments) {
+        this.openGroupedComponentIds = new Set(
+          this.fieldsValue
+            .filter((field) => fragments[field.component_id])
+            .map((field) => field.component_id)
+        )
       }
 
       closeChildInputs (requestId) {

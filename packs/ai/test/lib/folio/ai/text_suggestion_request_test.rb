@@ -6,18 +6,7 @@ require Folio::Engine.root.join("packs/ai/lib/folio/ai")
 class Folio::Ai::TextSuggestionRequestTest < ActiveSupport::TestCase
   setup do
     Folio::Ai.reset_registry!
-    Folio::Ai.register_record(record_class_name: "Folio::Page",
-                              fields: [
-                                { key: :title, character_limit: 80 },
-                                { key: :perex, character_limit: 400 },
-                              ],
-                              groups: [
-                                {
-                                  key: :meta,
-                                  label: "Meta fields",
-                                  fields: %i[title perex],
-                                },
-                              ])
+    register_page
 
     Folio::Site.include(Folio::Ai::SiteConcern) unless Folio::Site < Folio::Ai::SiteConcern
     Folio::User.include(Folio::Ai::UserConcern) unless Folio::User < Folio::Ai::UserConcern
@@ -268,7 +257,176 @@ class Folio::Ai::TextSuggestionRequestTest < ActiveSupport::TestCase
     assert_not_predicate request, :ready?
   end
 
+  test "reports missing context when record requires tiptap or atoms content" do
+    register_page(content_requirement: :tiptap_or_atoms)
+    site = create(Rails.application.config.folio_site_default_test_factory,
+                  ai_settings: ai_settings)
+    page = create(:folio_page, site:, atoms_data_for_search: nil, tiptap_content: nil)
+
+    request = build_request(site:,
+                            page:,
+                            params: {
+                              key: "title",
+                              message_bus_client_id: "client-1",
+                              current_form_snapshot_json: {
+                                "folio_page[title]" => "Draft title",
+                              }.to_json,
+                            })
+
+    assert_equal :missing_context, request.error_code
+    assert_not_predicate request, :ready?
+  end
+
+  test "accepts current tiptap context when record requires tiptap or atoms content" do
+    register_page(content_requirement: :tiptap_or_atoms)
+    site = create(Rails.application.config.folio_site_default_test_factory,
+                  ai_settings: ai_settings)
+    page = create(:folio_page, site:, atoms_data_for_search: nil, tiptap_content: nil)
+
+    request = build_request(site:,
+                            page:,
+                            params: {
+                              key: "title",
+                              message_bus_client_id: "client-1",
+                              current_form_snapshot_json: {
+                                "folio_page[tiptap_content]" => tiptap_content.to_json,
+                              }.to_json,
+                            })
+
+    Folio::Ai::Providers::Dummy.stub(:available?, true) do
+      assert_predicate request, :ready?
+    end
+  end
+
+  test "accepts current tiptap embed context without text" do
+    register_page(content_requirement: :tiptap_or_atoms)
+    site = create(Rails.application.config.folio_site_default_test_factory,
+                  ai_settings: ai_settings)
+    page = create(:folio_page, site:, atoms_data_for_search: nil, tiptap_content: nil)
+
+    request = build_request(site:,
+                            page:,
+                            params: {
+                              key: "title",
+                              message_bus_client_id: "client-1",
+                              current_form_snapshot_json: {
+                                "folio_page[tiptap_content]" => tiptap_embed_content.to_json,
+                              }.to_json,
+                            })
+
+    Folio::Ai::Providers::Dummy.stub(:available?, true) do
+      assert_predicate request, :ready?
+    end
+  end
+
+  test "accepts current atom context when record requires tiptap or atoms content" do
+    register_page(content_requirement: :tiptap_or_atoms)
+    site = create(Rails.application.config.folio_site_default_test_factory,
+                  ai_settings: ai_settings)
+    page = create(:folio_page, site:, atoms_data_for_search: nil, tiptap_content: nil)
+
+    request = build_request(site:,
+                            page:,
+                            params: {
+                              key: "title",
+                              message_bus_client_id: "client-1",
+                              current_form_snapshot_json: {
+                                "folio_page[atoms_attributes][0][data][content]" => "Atom body",
+                              }.to_json,
+                            })
+
+    Folio::Ai::Providers::Dummy.stub(:available?, true) do
+      assert_predicate request, :ready?
+    end
+  end
+
+  test "ignores persisted body content when record requires current tiptap or atoms content" do
+    register_page(content_requirement: :tiptap_or_atoms)
+    site = create(Rails.application.config.folio_site_default_test_factory,
+                  ai_settings: ai_settings)
+    page = create(:folio_page, site:)
+    page.update_column(:atoms_data_for_search, "Persisted atom text")
+    page.update_column(:tiptap_content, tiptap_content.fetch("tiptap_content"))
+
+    request = build_request(site:,
+                            page:,
+                            params: {
+                              key: "title",
+                              message_bus_client_id: "client-1",
+                              current_form_snapshot_json: {
+                                "folio_page[title]" => "Draft title",
+                              }.to_json,
+                            })
+
+    assert_equal :missing_context, request.error_code
+
+    request = build_request(site:,
+                            page:,
+                            params: {
+                              key: "title",
+                              message_bus_client_id: "client-1",
+                              current_form_snapshot_json: {
+                                "folio_page[tiptap_content]" => empty_tiptap_content.to_json,
+                              }.to_json,
+                            })
+
+    assert_equal :missing_context, request.error_code
+  end
+
+  test "ignores atoms data cache in submitted form snapshot" do
+    register_page(content_requirement: :tiptap_or_atoms)
+    site = create(Rails.application.config.folio_site_default_test_factory,
+                  ai_settings: ai_settings)
+    page = create(:folio_page, site:, atoms_data_for_search: nil, tiptap_content: nil)
+
+    request = build_request(site:,
+                            page:,
+                            params: {
+                              key: "title",
+                              message_bus_client_id: "client-1",
+                              current_form_snapshot_json: {
+                                "folio_page[atoms_data_for_search]" => "Cached atom text",
+                              }.to_json,
+                            })
+
+    assert_equal :missing_context, request.error_code
+  end
+
+  test "applies content requirement to grouped requests" do
+    register_page(content_requirement: :tiptap_or_atoms)
+    site = create(Rails.application.config.folio_site_default_test_factory,
+                  ai_settings: ai_settings)
+    page = create(:folio_page, site:, atoms_data_for_search: nil, tiptap_content: nil)
+
+    request = build_request(site:,
+                            page:,
+                            params: {
+                              key: "meta",
+                              grouped: true,
+                              message_bus_client_id: "client-1",
+                            })
+
+    assert_equal :missing_context, request.error_code
+  end
+
   private
+    def register_page(content_requirement: nil)
+      Folio::Ai.reset_registry!
+      Folio::Ai.register_record(record_class_name: "Folio::Page",
+                                content_requirement:,
+                                fields: [
+                                  { key: :title, character_limit: 80 },
+                                  { key: :perex, character_limit: 400 },
+                                ],
+                                groups: [
+                                  {
+                                    key: :meta,
+                                    label: "Meta fields",
+                                    fields: %i[title perex],
+                                  },
+                                ])
+    end
+
     def ai_settings(field_prompt: "Write a short title.",
                     group_prompt: "Write title and perex as a set.",
                     field_enabled: nil,
@@ -304,5 +462,54 @@ class Folio::Ai::TextSuggestionRequestTest < ActiveSupport::TestCase
                                            current_user: user,
                                            current_site: site,
                                            current_ability: nil)
+    end
+
+    def tiptap_content
+      {
+        "tiptap_content" => {
+          "type" => "doc",
+          "content" => [
+            {
+              "type" => "paragraph",
+              "content" => [
+                { "type" => "text", "text" => "Article body" },
+              ],
+            },
+          ],
+        },
+      }
+    end
+
+    def empty_tiptap_content
+      {
+        "tiptap_content" => {
+          "type" => "doc",
+          "content" => [],
+        },
+      }
+    end
+
+    def tiptap_embed_content
+      {
+        "tiptap_content" => {
+          "type" => "doc",
+          "content" => [
+            {
+              "type" => "folioTiptapNode",
+              "attrs" => {
+                "type" => "Dummy::Tiptap::Node::Embed",
+                "version" => 1,
+                "data" => {
+                  "folio_embed_data" => {
+                    "active" => true,
+                    "type" => "instagram",
+                    "url" => "https://www.instagram.com/p/ABC123/",
+                  },
+                },
+              },
+            },
+          ],
+        },
+      }
     end
 end

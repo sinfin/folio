@@ -90,6 +90,7 @@
 
       close (event) {
         this.stopEvent(event)
+        const wasGroupPanelOpen = this.groupPanelOpen
         this.abortRequest()
         if (this.customHtmlElement) this.customHtmlElement.innerHTML = ''
         this.element.classList.remove(INPUT_OPEN_CLASS)
@@ -97,6 +98,10 @@
         this.clearSession()
 
         if (openController === this) openController = null
+
+        if (wasGroupPanelOpen) {
+          this.dispatch('groupPanelClosed', { bubbles: true, detail: this.trackingDetail() })
+        }
 
         this.syncControls()
       }
@@ -149,6 +154,7 @@
         if (!this.input) return
 
         this.startSession()
+        this.markGroupPanelOpen()
         this.storeGroupRequestId(event?.detail?.requestId)
         this.setLoadingStatus(STATUS_WAITING_FOR_SUGGESTIONS)
 
@@ -158,6 +164,8 @@
       showGroupResult (event) {
         const detail = event?.detail || {}
         if (!this.matchesGroupRequest(detail.requestId)) return
+
+        this.markGroupPanelOpen()
 
         if (detail.html) {
           this.handleHtml(detail.html)
@@ -298,8 +306,13 @@
         delete this.element.dataset.fAiInputSnapshot
         delete this.element.dataset.fAiInputUndoVisible
         delete this.element.dataset.fAiInputSelectedText
+        delete this.element.dataset.fAiInputGroupPanelOpen
         this.clearGroupRequestId()
         this.hideUndoButton()
+      }
+
+      markGroupPanelOpen () {
+        this.element.dataset.fAiInputGroupPanelOpen = 'true'
       }
 
       storeGroupRequestId (requestId) {
@@ -333,7 +346,10 @@
       }
 
       trackingDetail () {
-        return { key: this.keyValue }
+        return {
+          key: this.keyValue,
+          componentId: this.componentIdValue
+        }
       }
 
       stopEvent (event) {
@@ -379,6 +395,10 @@
 
       get groupedSuggestionsOpen () {
         return this.textSuggestionsElement?.classList.contains(`${PANEL_CLASS_NAME}--grouped`)
+      }
+
+      get groupPanelOpen () {
+        return this.element.dataset.fAiInputGroupPanelOpen === 'true'
       }
 
       get instructionsElement () {

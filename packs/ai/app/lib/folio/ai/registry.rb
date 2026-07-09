@@ -2,11 +2,15 @@
 
 # Stores record, field, and group metadata used by AI-enabled form inputs.
 class Folio::Ai::Registry
+  CONTENT_REQUIREMENTS = [
+    :tiptap_or_atoms,
+  ].freeze
+
   def initialize
     @records = {}
   end
 
-  def register_record(record_class_name:, fields:, groups: [])
+  def register_record(record_class_name:, fields:, groups: [], content_requirement: nil)
     record_class = resolve_record_class(record_class_name)
     key = record_class.table_name
     raise ArgumentError, "AI record already registered: #{key}" if @records.key?(key)
@@ -16,6 +20,7 @@ class Folio::Ai::Registry
     @records[key] = {
       key:,
       record_class_name: record_class.name,
+      content_requirement: normalize_content_requirement(content_requirement),
       fields: normalized_fields,
       groups: normalize_groups(groups, fields: normalized_fields),
     }
@@ -102,6 +107,15 @@ class Folio::Ai::Registry
         label: attributes[:label].presence,
         fields: field_keys,
       }
+    end
+
+    def normalize_content_requirement(value)
+      return if value.blank?
+
+      requirement = value.to_sym
+      return requirement if CONTENT_REQUIREMENTS.include?(requirement)
+
+      raise ArgumentError, "AI content requirement is not supported: #{value}"
     end
 
     def normalize_key(value)

@@ -139,6 +139,31 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
                     I18n.t("folio.ai.console.text_suggestions_component.errors.missing_message_bus_client_id")
   end
 
+  test "renders grouped validation errors as child fragments" do
+    assert_no_enqueued_jobs only: Folio::Ai::TextSuggestionsJob do
+      post console_api_ai_text_suggestions_path(format: :json),
+           params: request_params(grouped: true,
+                                  key: "meta",
+                                  component_id: "ai_group",
+                                  fields: [
+                                    { key: "title", component_id: "ai_title" },
+                                    { key: "perex", component_id: "ai_perex" },
+                                  ]).except(:message_bus_client_id),
+           as: :json
+    end
+
+    assert_response :unprocessable_entity
+    assert_equal true, response.parsed_body.dig("meta", "grouped")
+    assert_equal "ai_group", response.parsed_body.dig("meta", "component_id")
+
+    title_fragment = response.parsed_body.dig("meta", "fragments", "ai_title")
+    assert_includes title_fragment,
+                    I18n.t("folio.ai.console.text_suggestions_component.errors.missing_message_bus_client_id")
+    assert_not_includes title_fragment, "f-ai-c-text-suggestions--grouped"
+    assert_includes response.parsed_body.dig("meta", "fragments", "ai_perex"),
+                    "f-ai-c-text-suggestions__panel"
+  end
+
   private
     def request_params(**overrides)
       {

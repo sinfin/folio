@@ -59,6 +59,15 @@ class Folio::Ai::Console::TextSuggestionsComponentTest < Folio::Console::Compone
     assert_no_selector(".f-ai-c-text-suggestions__instructions")
   end
 
+  test "renders missing context error" do
+    I18n.with_locale(:en) do
+      render_inline(component(suggestions: [], error_code: :missing_context))
+    end
+
+    assert_text "Add content first so the AI assistant can generate relevant suggestions."
+    assert_no_selector(".f-ai-c-text-suggestions__instructions")
+  end
+
   test "renders czech labels" do
     I18n.with_locale(:cs) do
       render_inline(component)
