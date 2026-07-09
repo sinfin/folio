@@ -4,8 +4,16 @@
       type="button"
       data=stimulus_action(click: "toggle")
     ]
-      span.f-ai-c-text-suggestions-group__icon aria-hidden="true"
-        = folio_icon(:creation, height: 16)
+      span.f-ai-c-text-suggestions-group__icon-wrap
+        span.f-ai-c-text-suggestions-group__icon aria-hidden="true"
+          = folio_icon(:creation, height: 16)
+        span[
+          class="f-ai-c-text-suggestions-group__button-loader"
+          class="folio-loader"
+          class="folio-loader--tiny"
+          class="folio-loader--transparent"
+        ]
+
       span.f-ai-c-text-suggestions-group__button-label.small
         = button_label
 

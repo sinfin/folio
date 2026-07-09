@@ -46,10 +46,12 @@
       }
 
       open () {
-        this.panelTarget.hidden = false
-        this.closeButtonTarget.hidden = false
         this.openValue = true
-        if (!this.request.active) this.load()
+        if (this.request.active) return
+
+        this.closeChildInputs()
+        this.hidePanel()
+        this.load()
       }
 
       close (event) {
@@ -57,8 +59,7 @@
         const requestId = this.request.pendingRequestId
         this.request.abort()
         this.closeChildInputs(requestId)
-        this.panelTarget.hidden = true
-        this.closeButtonTarget.hidden = true
+        this.hidePanel()
         this.openValue = false
         this.setStatus('idle')
       }
@@ -72,6 +73,7 @@
           body: this.requestPayload({ instructions }),
           onResponse: (response, request) => this.handleResponse(response, request),
           onError: (error) => {
+            this.showPanel()
             this.showStatus(window.Folio.Ai.errorMessage(error, this.genericErrorText))
             this.setStatus('idle')
           },
@@ -100,8 +102,6 @@
       }
 
       handleResponse (response, { pending, applyBufferedMessage }) {
-        this.dispatchFragments('loading', response.meta?.fragments || {}, response.meta?.request_id)
-
         if (applyBufferedMessage((message) => this.applyMessageBusResult(message))) return
 
         if (pending) this.setStatus('waiting')
@@ -110,6 +110,7 @@
       applyMessageBusResult (message) {
         this.dispatchFragments('result', message.data?.fragments || {}, message.data?.request_id)
         this.request.finish()
+        this.showPanel()
         this.setStatus('idle')
       }
 
@@ -148,6 +149,7 @@
 
       handleTimeout () {
         this.dispatchFragments('result', {}, this.request.pendingRequestId)
+        this.showPanel()
         this.showStatus(window.Folio.i18n(window.Folio.Ai.i18n, 'requestTimeout'))
         this.request.finish()
         this.setStatus('idle')
@@ -162,6 +164,16 @@
 
       hideStatus () {
         this.statusTarget.hidden = true
+      }
+
+      showPanel () {
+        this.panelTarget.hidden = false
+        this.closeButtonTarget.hidden = false
+      }
+
+      hidePanel () {
+        this.panelTarget.hidden = true
+        this.closeButtonTarget.hidden = true
       }
 
       setStatus (status) {

@@ -25,6 +25,31 @@
     padding: px-to-rem(4px) px-to-rem(8px)
     white-space: nowrap
 
+  &__button
+    --folio-loader-foreground: #{$black}
+    --folio-loader-foreground-transparent: #{rgba($black, 0.2)}
+    cursor: pointer
+    position: relative
+
+  &__button-loader
+    display: none
+    right: auto
+
+  &__icon-wrap
+    position: relative
+
+  &[data-f-ai-c-text-suggestions-group-status-value="loading"] &__button-loader,
+  &[data-f-ai-c-text-suggestions-group-status-value="waiting"] &__button-loader
+    display: block
+
+  &[data-f-ai-c-text-suggestions-group-status-value="loading"] &__button &__icon,
+  &[data-f-ai-c-text-suggestions-group-status-value="waiting"] &__button &__icon
+    visibility: hidden
+
+  &[data-f-ai-c-text-suggestions-group-status-value="loading"] &__button,
+  &[data-f-ai-c-text-suggestions-group-status-value="waiting"] &__button
+    cursor: wait
+
   &__close
     padding-left: px-to-rem(6px)
     padding-right: px-to-rem(6px)

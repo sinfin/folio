@@ -38,7 +38,9 @@ class Folio::Ai::Console::TextSuggestionsGroupComponentTest < Folio::Console::Co
 
     assert_selector(".f-ai-c-text-suggestions-group", text: "Child inputs")
     assert_selector(".f-ai-c-text-suggestions-group__button", text: "AI suggestions for all variants")
-    assert_selector(".f-ai-c-text-suggestions-group__close[aria-label='Close']", visible: :all)
+    assert_selector(".f-ai-c-text-suggestions-group__button-loader.folio-loader", visible: :all)
+    assert_selector(".f-ai-c-text-suggestions-group__close[aria-label='Close'][hidden]", visible: :all)
+    assert_selector(".f-ai-c-text-suggestions-group__panel[hidden]", visible: :all)
     assert_selector("textarea[placeholder='Custom AI instructions (optional) ...']", visible: :all)
 
     fields = JSON.parse(page.find(".f-ai-c-text-suggestions-group")["data-f-ai-c-text-suggestions-group-fields-value"])
