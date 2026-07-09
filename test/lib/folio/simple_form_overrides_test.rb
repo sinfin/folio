@@ -42,7 +42,7 @@ class Folio::SimpleFormOverridesTest < ActionView::TestCase
     assert_includes input["data-action"].split, "change->f-input-character-counter#onInput"
   end
 
-  test "character counter text input marks wrapper and max value" do
+  test "character counter text input marks wrapper, max value and automatic current count limit" do
     html = simple_form_for "", method: :get, url: "/" do |f|
       concat(f.input :intro, as: :text, character_counter: 160)
     end
@@ -54,6 +54,23 @@ class Folio::SimpleFormOverridesTest < ActionView::TestCase
     assert_includes wrapper["class"].split, "form-group--with-character-counter"
     assert_includes input["data-controller"].split, "f-input-character-counter"
     assert_equal "160", input["data-f-input-character-counter-max-value"]
+    assert_equal "999", input["data-f-input-character-counter-current-count-limit-value"]
+  end
+
+  test "character counter automatic current count limit can be disabled" do
+    html = simple_form_for "", method: :get, url: "/" do |f|
+      concat(f.input :intro,
+                     as: :text,
+                     character_counter: 160,
+                     character_counter_auto_current_count_limit: false)
+    end
+
+    page = Capybara.string(html)
+    wrapper = page.find(".form-group._intro")
+    input = wrapper.find("textarea[name='intro']")
+
+    assert_equal "160", input["data-f-input-character-counter-max-value"]
+    assert_nil input["data-f-input-character-counter-current-count-limit-value"]
   end
 
   test "url json input renders custom html before hint" do

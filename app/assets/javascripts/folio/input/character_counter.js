@@ -17,6 +17,7 @@ window.Folio.Input.CharacterCounter.i18n = {
 
 window.Folio.Stimulus.register('f-input-character-counter', class extends window.Stimulus.Controller {
   static values = {
+    currentCountLimit: Number,
     max: Number
   }
 
@@ -38,7 +39,7 @@ window.Folio.Stimulus.register('f-input-character-counter', class extends window
       wrap.classList.toggle('text-danger', length > this.maxValue)
     }
 
-    current.innerText = length
+    current.innerText = this.currentCountText(length)
   }
 
   addElementToFormGroup () {
@@ -74,7 +75,7 @@ window.Folio.Stimulus.register('f-input-character-counter', class extends window
 
     const current = document.createElement('span')
     current.classList.add('f-input-character-counter-wrap__current')
-    current.innerText = currentLength
+    current.innerText = this.currentCountText(currentLength)
 
     wrap.appendChild(current)
 
@@ -94,6 +95,12 @@ window.Folio.Stimulus.register('f-input-character-counter', class extends window
     wrap.appendChild(document.createTextNode(` ${window.Folio.i18n(window.Folio.Input.CharacterCounter.i18n, 'shortForCharacter')}`))
 
     this.element.insertAdjacentElement('afterend', wrap)
+  }
+
+  currentCountText (length) {
+    if (this.hasCurrentCountLimitValue && length > this.currentCountLimitValue) return '*'
+
+    return length
   }
 
   removeElementFromFormGroup () {

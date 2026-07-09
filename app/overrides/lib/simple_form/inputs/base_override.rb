@@ -76,8 +76,18 @@ SimpleForm::Inputs::Base.class_eval do
   end
 
   def register_character_counter
+    values = {}
+
+    if options[:character_counter].is_a?(Numeric)
+      values[:max] = options[:character_counter]
+
+      if options[:character_counter_auto_current_count_limit] != false
+        values[:current_count_limit] = automatic_character_counter_current_count_limit(options[:character_counter])
+      end
+    end
+
     register_stimulus("f-input-character-counter",
-                      values: options[:character_counter].is_a?(Numeric) ? { max: options[:character_counter] } : {},
+                      values:,
                       action: { input: "onInput",
                                 change: "onInput" })
 
@@ -85,6 +95,10 @@ SimpleForm::Inputs::Base.class_eval do
     options[:wrapper_html][:class] = Array(options[:wrapper_html][:class])
     options[:wrapper_html][:class] << "form-group--with-character-counter"
     options[:wrapper_html][:class].uniq!
+  end
+
+  def automatic_character_counter_current_count_limit(character_counter)
+    (10**character_counter.to_i.abs.to_s.length) - 1
   end
 
   def required_class
