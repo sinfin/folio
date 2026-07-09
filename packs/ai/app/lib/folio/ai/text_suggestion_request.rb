@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-# Resolves one console AI suggestion request into record, site, field, provider,
-# form snapshot, instructions, and job parameters.
+# Resolves one console AI suggestion request into record, site, prompt,
+# instructions, provider, form snapshot, and job parameters.
 
 class Folio::Ai::TextSuggestionRequest
   attr_reader :params
@@ -72,7 +72,15 @@ class Folio::Ai::TextSuggestionRequest
   def instructions
     return params[:instructions].to_s if params.key?(:instructions)
 
-    stored_instruction
+    stored_instruction.to_s
+  end
+
+  def site_prompt
+    return unless site.respond_to?(:ai_prompt_for)
+
+    site.ai_prompt_for(record_key:,
+                       key:,
+                       grouped: grouped?)
   end
 
   def persist_instructions!
@@ -102,6 +110,7 @@ class Folio::Ai::TextSuggestionRequest
       message_bus_client_id:,
       component_id:,
       form_snapshot:,
+      site_prompt:,
       instructions:,
       suggestion_count: suggestion_count,
       record_key:,
@@ -123,6 +132,7 @@ class Folio::Ai::TextSuggestionRequest
     return :record_not_found unless record
     return :site_disabled unless site_ai_enabled?
     return :field_not_registered unless registered_key?
+    return :prompt_not_configured unless site_prompt_enabled?
     :provider_unavailable unless provider_available?
   end
 
@@ -176,20 +186,19 @@ class Folio::Ai::TextSuggestionRequest
     end
 
     def stored_instruction
-      return site_prompt.to_s if current_user.blank? || site.blank? || record_key.blank? || key.blank?
+      return if current_user.blank? || site.blank? || record_key.blank? || key.blank?
 
       Folio::Ai::UserInstruction.find_or_initialize_for(user: current_user,
                                                         site:,
                                                         record_key:,
-                                                        key:).instruction.to_s.presence || site_prompt.to_s
+                                                        key:).instruction
     end
 
-    def site_prompt
-      return unless site.respond_to?(:ai_prompt_for)
-
-      site.ai_prompt_for(record_key:,
-                         key:,
-                         grouped: grouped?)
+    def site_prompt_enabled?
+      site.respond_to?(:ai_prompt_enabled_for?) &&
+        site.ai_prompt_enabled_for?(record_key:,
+                                    key:,
+                                    grouped: grouped?)
     end
 
     def site_provider
@@ -268,6 +277,7 @@ class Folio::Ai::TextSuggestionRequest
                                              field:,
                                              form_snapshot:,
                                              provider:,
+                                             site_prompt:,
                                              instructions:,
                                              suggestion_count:)
     end

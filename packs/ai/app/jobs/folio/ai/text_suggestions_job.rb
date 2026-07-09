@@ -105,6 +105,7 @@ class Folio::Ai::TextSuggestionsJob < Folio::ApplicationJob
                                              field:,
                                              form_snapshot: params[:form_snapshot],
                                              provider:,
+                                             site_prompt: params[:site_prompt],
                                              instructions: params[:instructions],
                                              suggestion_count:)
     end

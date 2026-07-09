@@ -137,6 +137,17 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
                           grouped: true)
     end
 
+    def field_enabled?(record, field)
+      @site.ai_enabled_for?(record_key: record.fetch(:key),
+                            key: field.fetch(:key))
+    end
+
+    def group_enabled?(record, group)
+      @site.ai_enabled_for?(record_key: record.fetch(:key),
+                            key: group.fetch(:key),
+                            grouped: true)
+    end
+
     def site_setting(key)
       @site.ai_settings_data[key.to_s]
     end

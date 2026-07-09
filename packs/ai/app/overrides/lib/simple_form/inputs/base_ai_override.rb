@@ -9,9 +9,12 @@ module Folio::Ai::SimpleFormInputExtension
 
     config = ai_text_suggestions_config
     return unless config
-    return unless ai_text_suggestions_available?(config)
 
-    register_ai_text_suggestions(config)
+    availability = ai_text_suggestions_availability(config)
+    return unless availability
+
+    register_ai_text_suggestions(config,
+                                 show_button: availability.fetch(:show_button))
   end
 
   private
@@ -43,23 +46,36 @@ module Folio::Ai::SimpleFormInputExtension
       record.class.table_name if record&.class&.respond_to?(:table_name)
     end
 
-    def ai_text_suggestions_available?(config)
+    def ai_text_suggestions_availability(config)
+      return unless ai_text_suggestions_base_available?(config)
+
+      show_button = ai_prompt_enabled?(config)
+      return unless show_button || grouped_prompt_enabled_for_field?(config)
+
+      { show_button: }
+    end
+
+    def ai_text_suggestions_base_available?(config)
       Folio::Ai.config.enabled? &&
         persisted_ai_record?(config[:record]) &&
         ai_site_enabled?(config[:record]) &&
-        Folio::Ai.registry.field(config[:record_key], config[:field_key]).present? &&
+        registered_ai_field?(config) &&
         !ai_input_disabled? &&
         ai_provider_available?(config[:record])
     end
 
+    def registered_ai_field?(config)
+      Folio::Ai.registry.field(config[:record_key], config[:field_key]).present?
+    end
+
     def ai_site_enabled?(record)
-      site = record.respond_to?(:site) ? record.site : Folio::Current.site
+      site = ai_site(record)
 
       !site.respond_to?(:ai_enabled?) || site.ai_enabled?
     end
 
     def ai_provider_available?(record)
-      site = record.respond_to?(:site) ? record.site : Folio::Current.site
+      site = ai_site(record)
       provider_key = site&.respond_to?(:ai_provider) ? site.ai_provider : Folio::Ai.config.default_provider
       provider_model = site&.respond_to?(:ai_model) ? site.ai_model : Folio::Ai.config.default_model(provider_key)
 
@@ -81,10 +97,37 @@ module Folio::Ai::SimpleFormInputExtension
         input_html_options[:readonly]
     end
 
-    def register_ai_text_suggestions(config)
+    def ai_prompt_enabled?(config)
+      site = ai_site(config[:record])
+      return false unless site.respond_to?(:ai_prompt_enabled_for?)
+
+      site.ai_prompt_enabled_for?(record_key: config[:record_key],
+                                  key: config[:field_key],
+                                  grouped: false)
+    end
+
+    def grouped_prompt_enabled_for_field?(config)
+      site = ai_site(config[:record])
+      record = Folio::Ai.registry.record(config[:record_key])
+      return false unless site.respond_to?(:ai_prompt_enabled_for?) && record
+
+      record.fetch(:groups).values.any? do |group|
+        group.fetch(:fields).include?(config[:field_key]) &&
+          site.ai_prompt_enabled_for?(record_key: config[:record_key],
+                                      key: group.fetch(:key),
+                                      grouped: true)
+      end
+    end
+
+    def ai_site(record)
+      record.respond_to?(:site) ? record.site : Folio::Current.site
+    end
+
+    def register_ai_text_suggestions(config, show_button:)
       ensure_ai_input_id
       mark_ai_wrapper
-      append_ai_custom_html(config)
+      append_ai_custom_html(config,
+                            show_button:)
 
       register_stimulus(CONTROLLER_NAME,
                         wrapper: true,
@@ -137,16 +180,18 @@ module Folio::Ai::SimpleFormInputExtension
       input_html_options["data-action"] = [input_html_options["data-action"], action].compact.join(" ")
     end
 
-    def append_ai_custom_html(config)
+    def append_ai_custom_html(config, show_button:)
       options[:custom_html] = @builder.template.safe_join([
         options[:custom_html],
-        ai_text_suggestions_component(config),
+        ai_text_suggestions_component(config,
+                                      show_button:),
       ].compact)
     end
 
-    def ai_text_suggestions_component(config)
+    def ai_text_suggestions_component(config, show_button:)
       @builder.template.render(Folio::Ai::Console::InputControlsComponent.new(component_id: ai_text_suggestions_component_id,
-                                                                              label: ai_text_suggestions_label(config)))
+                                                                              label: ai_text_suggestions_label(config),
+                                                                              show_button:))
     end
 
     def ai_text_suggestions_label(config)

@@ -21,6 +21,20 @@ class Folio::Ai::Console::SitesControllerConcernTest < Folio::Console::BaseContr
                 enabled: "1",
                 provider: "dummy",
                 model: "dummy",
+                integrations: {
+                  folio_pages: {
+                    fields: {
+                      title: {
+                        enabled: "0",
+                      },
+                    },
+                    groups: {
+                      meta: {
+                        enabled: "1",
+                      },
+                    },
+                  },
+                },
               },
             },
           }
@@ -31,5 +45,7 @@ class Folio::Ai::Console::SitesControllerConcernTest < Folio::Console::BaseContr
     assert_equal "1", settings["enabled"]
     assert_equal "dummy", settings["provider"]
     assert_equal "dummy", settings["model"]
+    assert_equal "0", settings.dig("integrations", "folio_pages", "fields", "title", "enabled")
+    assert_equal "1", settings.dig("integrations", "folio_pages", "groups", "meta", "enabled")
   end
 end

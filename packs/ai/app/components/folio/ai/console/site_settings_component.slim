@@ -25,7 +25,13 @@
           - fields(record).each do |field|
             .f-ai-c-site-settings__field
               .f-ai-c-site-settings__field-header
-                .f-ai-c-site-settings__field-title = field[:label]
+                = boolean_input(:integrations,
+                                record[:key],
+                                :fields,
+                                field[:key],
+                                :enabled,
+                                label: field[:label],
+                                checked: field_enabled?(record, field))
 
                 - if field_hint(field)
                   small.f-ai-c-site-settings__field-hint = field_hint(field)
@@ -41,7 +47,13 @@
           - groups(record).each do |group|
             .f-ai-c-site-settings__field
               .f-ai-c-site-settings__field-header
-                .f-ai-c-site-settings__field-title = group[:label]
+                = boolean_input(:integrations,
+                                record[:key],
+                                :groups,
+                                group[:key],
+                                :enabled,
+                                label: group[:label],
+                                checked: group_enabled?(record, group))
 
               = text_area_input(:integrations,
                                 record[:key],

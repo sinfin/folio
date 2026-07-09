@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Adds AI settings, provider/model lookup, prompt lookup, and instruction
+# Adds AI settings, provider/model lookup, prompt availability, and instruction
 # associations to Folio sites.
 module Folio::Ai::SiteConcern
   extend ActiveSupport::Concern
@@ -33,14 +33,38 @@ module Folio::Ai::SiteConcern
     ai_settings_data["model"].presence || Folio::Ai.provider_class(ai_provider).default_model
   end
 
-  def ai_prompt_for(record_key:, key:, grouped: false)
+  def ai_settings_for(record_key:, key:, grouped: false)
     collection_key = grouped ? "groups" : "fields"
 
     ai_settings_data.dig("integrations",
                          record_key.to_s,
                          collection_key,
-                         key.to_s,
-                         "prompt").to_s.strip.presence
+                         key.to_s) || {}
+  end
+
+  def ai_prompt_for(record_key:, key:, grouped: false)
+    ai_settings_for(record_key:,
+                    key:,
+                    grouped:).dig("prompt").to_s.strip.presence
+  end
+
+  def ai_enabled_for?(record_key:, key:, grouped: false)
+    settings = ai_settings_for(record_key:,
+                               key:,
+                               grouped:)
+    return true unless settings.key?("enabled")
+
+    ActiveModel::Type::Boolean.new.cast(settings["enabled"])
+  end
+
+  def ai_prompt_enabled_for?(record_key:, key:, grouped: false)
+    ai_enabled? &&
+      ai_enabled_for?(record_key:,
+                      key:,
+                      grouped:) &&
+      ai_prompt_for(record_key:,
+                    key:,
+                    grouped:).present?
   end
 
   private

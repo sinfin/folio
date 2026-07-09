@@ -26,7 +26,24 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
                                 },
                               ])
 
-    @site.update!(ai_settings: { "enabled" => true, "provider" => "dummy" })
+    @site.update!(ai_settings: {
+                    "enabled" => true,
+                    "provider" => "dummy",
+                    "integrations" => {
+                      "folio_pages" => {
+                        "fields" => {
+                          "title" => {
+                            "prompt" => "Write a short title.",
+                          },
+                        },
+                        "groups" => {
+                          "meta" => {
+                            "prompt" => "Write title and perex as a set.",
+                          },
+                        },
+                      },
+                    },
+                  })
     @page = create(:folio_page, site: @site)
   end
 

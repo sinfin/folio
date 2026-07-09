@@ -11,18 +11,21 @@ class Folio::Ai::Console::TextSuggestionsGroupComponent < Folio::Console::Applic
     @instructions = instructions
   end
 
-  def render?
-    Folio::Ai.config.enabled? &&
-      record_key.present? &&
-      @record.respond_to?(:persisted?) &&
-      @record.persisted? &&
-      site_enabled? &&
-      provider_available? &&
-      group.present? &&
-      field_items.present?
-  end
-
   private
+    def controls_enabled?
+      Folio::Ai.config.enabled? &&
+        record_ready? &&
+        group_prompt_enabled? &&
+        provider_available? &&
+        field_items.present?
+    end
+
+    def record_ready?
+      record_key.present? &&
+        @record.respond_to?(:persisted?) &&
+        @record.persisted?
+    end
+
     def component_data
       stimulus_controller("f-ai-c-text-suggestions-group",
                           values: {
@@ -114,8 +117,12 @@ class Folio::Ai::Console::TextSuggestionsGroupComponent < Folio::Console::Applic
       @record.respond_to?(:site) ? @record.site : Folio::Current.site
     end
 
-    def site_enabled?
-      !site.respond_to?(:ai_enabled?) || site.ai_enabled?
+    def group_prompt_enabled?
+      return false unless group && site.respond_to?(:ai_prompt_enabled_for?)
+
+      site.ai_prompt_enabled_for?(record_key:,
+                                  key: group.fetch(:key),
+                                  grouped: true)
     end
 
     def provider_available?
@@ -136,7 +143,7 @@ class Folio::Ai::Console::TextSuggestionsGroupComponent < Folio::Console::Applic
     def instructions
       return @instructions.to_s unless @instructions.nil?
 
-      user_instruction.presence || site_prompt.to_s
+      user_instruction.to_s
     end
 
     def user_instruction
@@ -150,14 +157,6 @@ class Folio::Ai::Console::TextSuggestionsGroupComponent < Folio::Console::Applic
 
     def current_user
       Folio::Current.user
-    end
-
-    def site_prompt
-      return unless site.respond_to?(:ai_prompt_for)
-
-      site.ai_prompt_for(record_key:,
-                         key: group.fetch(:key),
-                         grouped: true)
     end
 
     def button_label

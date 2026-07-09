@@ -4,7 +4,7 @@ require "test_helper"
 require Folio::Engine.root.join("packs/ai/lib/folio/ai")
 
 class Folio::Ai::TextSuggestionGeneratorTest < ActiveSupport::TestCase
-  test "builds prompt from form snapshot, instructions, and model additional data" do
+  test "builds prompt from site prompt, instructions, form snapshot, and model additional data" do
     record = build_record_with_additional_data
     provider = CapturingProvider.new(response: {
       suggestions: [
@@ -17,9 +17,11 @@ class Folio::Ai::TextSuggestionGeneratorTest < ActiveSupport::TestCase
                             provider:,
                             field: { key: "title", label: "Title", character_limit: 10 },
                             form_snapshot: { title: "Draft title" },
+                            site_prompt: "Write a concise title.",
                             instructions: "Use Czech. Be direct.").call
 
     assert_includes provider.prompt, "Draft title"
+    assert_includes provider.prompt, "Write a concise title."
     assert_includes provider.prompt, "Use Czech."
     assert_includes provider.prompt, "Be direct."
     assert_includes provider.prompt, "category"
@@ -43,6 +45,7 @@ class Folio::Ai::TextSuggestionGeneratorTest < ActiveSupport::TestCase
                   provider: CapturingProvider.new(response: { suggestions: [{ text: "Suggestion" }] }.to_json),
                   field: { key: "title", label: "Title" },
                   form_snapshot: {},
+                  site_prompt: "Write a useful suggestion.",
                   instructions: nil)
       Folio::Ai::TextSuggestionGenerator.new(record:,
                                              site:,
@@ -50,6 +53,7 @@ class Folio::Ai::TextSuggestionGeneratorTest < ActiveSupport::TestCase
                                              field:,
                                              form_snapshot:,
                                              provider:,
+                                             site_prompt:,
                                              instructions:)
     end
 

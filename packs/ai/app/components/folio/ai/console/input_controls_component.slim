@@ -1,21 +1,22 @@
 .f-ai-c-input-controls data=stimulus_controller("f-ai-c-input-controls")
   .f-ai-input__controls
-    button.f-ai-input__button[
-      type="button"
-      id=button_id
-      aria-controls=@component_id
-      aria-expanded="false"
-      data=stimulus_data(action: { click: "toggle" }, target: "button")
-    ]
-      span.f-ai-input__icon aria-hidden="true"
-        = folio_icon(:creation, height: 16)
-      span[
-        class="f-ai-input__button-loader"
-        class="folio-loader"
-        class="folio-loader--tiny"
-        class="folio-loader--transparent"
+    - if show_button?
+      button.f-ai-input__button[
+        type="button"
+        id=button_id
+        aria-controls=@component_id
+        aria-expanded="false"
+        data=stimulus_data(action: { click: "toggle" }, target: "button")
       ]
-      span.f-ai-input__button-label = @label
+        span.f-ai-input__icon aria-hidden="true"
+          = folio_icon(:creation, height: 16)
+        span[
+          class="f-ai-input__button-loader"
+          class="folio-loader"
+          class="folio-loader--tiny"
+          class="folio-loader--transparent"
+        ]
+        span.f-ai-input__button-label = @label
 
     button.f-ai-input__undo[
       type="button"

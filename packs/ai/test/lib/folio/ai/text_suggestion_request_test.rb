@@ -29,7 +29,7 @@ class Folio::Ai::TextSuggestionRequestTest < ActiveSupport::TestCase
 
   test "resolves one registered field request" do
     site = create(Rails.application.config.folio_site_default_test_factory,
-                  ai_settings: { "enabled" => true, "provider" => "dummy" })
+                  ai_settings: ai_settings)
     user = create(:folio_user)
     page = create(:folio_page, site:)
 
@@ -61,13 +61,16 @@ class Folio::Ai::TextSuggestionRequestTest < ActiveSupport::TestCase
     assert_equal site, request.site
     assert_equal 80, request.field[:character_limit]
     assert_equal({ "title" => "Draft title" }, request.form_snapshot)
+    assert_equal "Write a short title.", request.site_prompt
     assert_equal "Use short words.", request.instructions
     assert_equal "client-1", request.message_bus_client_id
+    assert_equal "Write a short title.", request.job_params[:site_prompt]
+    assert_equal "Use short words.", request.job_params[:instructions]
   end
 
   test "normalizes grouped fields for child fragments" do
     site = create(Rails.application.config.folio_site_default_test_factory,
-                  ai_settings: { "enabled" => true, "provider" => "dummy" })
+                  ai_settings: ai_settings)
     page = create(:folio_page, site:)
 
     request = build_request(site:,
@@ -91,23 +94,12 @@ class Folio::Ai::TextSuggestionRequestTest < ActiveSupport::TestCase
     assert_equal true, request.job_params[:grouped]
     assert_equal "meta", request.job_params[:key]
     assert_equal request.fields.first, request.job_params[:field]
+    assert_equal "Write title and perex as a set.", request.job_params[:site_prompt]
   end
 
-  test "uses group site prompt until a user instruction overrides it" do
+  test "keeps group site prompt separate from user instructions" do
     site = create(Rails.application.config.folio_site_default_test_factory,
-                  ai_settings: {
-                    "enabled" => true,
-                    "provider" => "dummy",
-                    "integrations" => {
-                      "folio_pages" => {
-                        "groups" => {
-                          "meta" => {
-                            "prompt" => "Write title and perex together.",
-                          },
-                        },
-                      },
-                    },
-                  })
+                  ai_settings: ai_settings(group_prompt: "Write title and perex together."))
     user = create(:folio_user)
     page = create(:folio_page, site:)
 
@@ -120,7 +112,8 @@ class Folio::Ai::TextSuggestionRequestTest < ActiveSupport::TestCase
                               message_bus_client_id: "client-1",
                             })
 
-    assert_equal "Write title and perex together.", request.instructions
+    assert_equal "Write title and perex together.", request.site_prompt
+    assert_equal "", request.instructions
 
     Folio::Ai::UserInstruction.upsert_instruction!(user:,
                                                    site:,
@@ -137,7 +130,10 @@ class Folio::Ai::TextSuggestionRequestTest < ActiveSupport::TestCase
                               message_bus_client_id: "client-1",
                             })
 
+    assert_equal "Write title and perex together.", request.site_prompt
     assert_equal "Use a more direct meta pattern.", request.instructions
+    assert_equal "Write title and perex together.", request.job_params[:site_prompt]
+    assert_equal "Use a more direct meta pattern.", request.job_params[:instructions]
   end
 
   test "persists submitted instructions" do
@@ -224,7 +220,61 @@ class Folio::Ai::TextSuggestionRequestTest < ActiveSupport::TestCase
     assert_equal :site_disabled, request.error_code
   end
 
+  test "reports missing site prompt" do
+    site = create(Rails.application.config.folio_site_default_test_factory,
+                  ai_settings: ai_settings(field_prompt: nil, group_prompt: nil))
+    page = create(:folio_page, site:)
+    request = build_request(site:,
+                            page:,
+                            params: {
+                              key: "title",
+                              message_bus_client_id: "client-1",
+                            })
+
+    assert_equal :prompt_not_configured, request.error_code
+    assert_not_predicate request, :ready?
+  end
+
+  test "reports disabled site prompt" do
+    site = create(Rails.application.config.folio_site_default_test_factory,
+                  ai_settings: ai_settings(field_enabled: false))
+    page = create(:folio_page, site:)
+    request = build_request(site:,
+                            page:,
+                            params: {
+                              key: "title",
+                              message_bus_client_id: "client-1",
+                            })
+
+    assert_equal :prompt_not_configured, request.error_code
+    assert_not_predicate request, :ready?
+  end
+
   private
+    def ai_settings(field_prompt: "Write a short title.",
+                    group_prompt: "Write title and perex as a set.",
+                    field_enabled: nil,
+                    group_enabled: nil)
+      field = {}
+      field["prompt"] = field_prompt if field_prompt
+      field["enabled"] = field_enabled unless field_enabled.nil?
+
+      group = {}
+      group["prompt"] = group_prompt if group_prompt
+      group["enabled"] = group_enabled unless group_enabled.nil?
+
+      {
+        "enabled" => true,
+        "provider" => "dummy",
+        "integrations" => {
+          "folio_pages" => {
+            "fields" => field.present? ? { "title" => field } : {},
+            "groups" => group.present? ? { "meta" => group } : {},
+          },
+        },
+      }
+    end
+
     def build_request(site: create(Rails.application.config.folio_site_default_test_factory),
                       user: create(:folio_user),
                       page: create(:folio_page, site:),

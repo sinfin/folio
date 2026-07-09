@@ -23,6 +23,7 @@ en:
             record_not_found: Save the record before using AI suggestions.
             site_disabled: AI suggestions are disabled for this site.
             field_not_registered: AI suggestions are not configured for this field.
+            prompt_not_configured: AI suggestions are not configured for this field.
             provider_unavailable: Configure an AI provider before using AI suggestions.
             provider_error: AI suggestions could not be generated.
         text_suggestions_group_component:

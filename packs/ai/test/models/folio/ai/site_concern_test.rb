@@ -25,12 +25,20 @@ class Folio::Ai::SiteConcernTest < ActiveSupport::TestCase
                      "folio_pages" => {
                        "fields" => {
                          "title" => {
+                           "enabled" => false,
                            "prompt" => "Write a short title.",
+                         },
+                         "perex" => {
+                           "prompt" => "Write a perex.",
                          },
                        },
                        "groups" => {
                          "meta" => {
+                           "enabled" => false,
                            "prompt" => "Write meta variants together.",
+                         },
+                         "fallback_meta" => {
+                           "prompt" => "Write fallback meta variants.",
                          },
                        },
                      },
@@ -44,6 +52,14 @@ class Folio::Ai::SiteConcernTest < ActiveSupport::TestCase
                  site.ai_prompt_for(record_key: "folio_pages", key: "title")
     assert_equal "Write meta variants together.",
                  site.ai_prompt_for(record_key: "folio_pages", key: "meta", grouped: true)
+    assert_not site.ai_enabled_for?(record_key: "folio_pages", key: "title")
+    assert_not site.ai_prompt_enabled_for?(record_key: "folio_pages", key: "title")
+    assert site.ai_enabled_for?(record_key: "folio_pages", key: "perex")
+    assert site.ai_prompt_enabled_for?(record_key: "folio_pages", key: "perex")
+    assert_not site.ai_enabled_for?(record_key: "folio_pages", key: "meta", grouped: true)
+    assert_not site.ai_prompt_enabled_for?(record_key: "folio_pages", key: "meta", grouped: true)
+    assert site.ai_enabled_for?(record_key: "folio_pages", key: "fallback_meta", grouped: true)
+    assert site.ai_prompt_enabled_for?(record_key: "folio_pages", key: "fallback_meta", grouped: true)
   end
 
   test "adds AI prompts tab when AI is enabled and records are registered" do

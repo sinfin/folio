@@ -18,7 +18,12 @@
     align-items: center
     justify-content: space-between
     gap: px-to-rem(8px)
-    margin-bottom: px-to-rem(8px)
+    margin-bottom: $spacer
+
+    .form-group,
+    .form-check,
+    .form-check-label
+      margin-bottom: 0
 
   &__field-title
     font-weight: $font-weight-bold

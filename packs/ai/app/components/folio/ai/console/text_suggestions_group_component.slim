@@ -1,57 +1,60 @@
-.f-ai-c-text-suggestions-group data=component_data
-  .f-ai-c-text-suggestions-group__controls
-    button.f-ai-c-text-suggestions-group__button[
-      type="button"
-      data=stimulus_action(click: "toggle")
-    ]
-      span.f-ai-c-text-suggestions-group__icon-wrap
-        span.f-ai-c-text-suggestions-group__icon aria-hidden="true"
-          = folio_icon(:creation, height: 16)
-        span[
-          class="f-ai-c-text-suggestions-group__button-loader"
-          class="folio-loader"
-          class="folio-loader--tiny"
-          class="folio-loader--transparent"
-        ]
+- if controls_enabled?
+  .f-ai-c-text-suggestions-group data=component_data
+    .f-ai-c-text-suggestions-group__controls
+      button.f-ai-c-text-suggestions-group__button[
+        type="button"
+        data=stimulus_action(click: "toggle")
+      ]
+        span.f-ai-c-text-suggestions-group__icon-wrap
+          span.f-ai-c-text-suggestions-group__icon aria-hidden="true"
+            = folio_icon(:creation, height: 16)
+          span[
+            class="f-ai-c-text-suggestions-group__button-loader"
+            class="folio-loader"
+            class="folio-loader--tiny"
+            class="folio-loader--transparent"
+          ]
 
-      span.f-ai-c-text-suggestions-group__button-label.small
-        = button_label
+        span.f-ai-c-text-suggestions-group__button-label.small
+          = button_label
 
-    button.f-ai-c-text-suggestions-group__close[
-      type="button"
-      aria-label=t(".close")
+      button.f-ai-c-text-suggestions-group__close[
+        type="button"
+        aria-label=t(".close")
+        hidden=true
+        data=close_data
+      ]
+        = folio_icon(:close, height: 16)
+
+    .f-ai-c-text-suggestions-group__body
+      = content
+
+    .f-ai-c-text-suggestions-group__panel[
       hidden=true
-      data=close_data
+      data=stimulus_target("panel")
     ]
-      = folio_icon(:close, height: 16)
+      .f-ai-c-text-suggestions-group__status[
+        hidden=true
+        data=stimulus_target("status")
+      ]
+        = folio_icon(:alert,
+                     height: 16,
+                     class: "text-danger flex-shrink-0 flex-grow-0")
+        span data=stimulus_target("statusMessage") = t(".loading")
 
-  .f-ai-c-text-suggestions-group__body
-    = content
+      textarea.f-ai-c-text-suggestions-group__instructions[
+        class="form-control"
+        rows="2"
+        placeholder=t(".instructions_placeholder")
+        data=instructions_data
+      ]
+        = instructions
 
-  .f-ai-c-text-suggestions-group__panel[
-    hidden=true
-    data=stimulus_target("panel")
-  ]
-    .f-ai-c-text-suggestions-group__status[
-      hidden=true
-      data=stimulus_target("status")
-    ]
-      = folio_icon(:alert,
-                   height: 16,
-                   class: "text-danger flex-shrink-0 flex-grow-0")
-      span data=stimulus_target("statusMessage") = t(".loading")
-
-    textarea.f-ai-c-text-suggestions-group__instructions[
-      class="form-control"
-      rows="2"
-      placeholder=t(".instructions_placeholder")
-      data=instructions_data
-    ]
-      = instructions
-
-    button.f-ai-c-text-suggestions-group__submit[
-      type="button"
-      class="btn btn-medium-dark"
-      data=stimulus_action(click: "submit")
-    ]
-      = t(".submit")
+      button.f-ai-c-text-suggestions-group__submit[
+        type="button"
+        class="btn btn-medium-dark"
+        data=stimulus_action(click: "submit")
+      ]
+        = t(".submit")
+- else
+  = content

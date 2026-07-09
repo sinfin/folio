@@ -36,11 +36,13 @@ class Folio::Ai::Console::SiteSettingsComponentTest < Folio::Console::ComponentT
                      "folio_pages" => {
                        "fields" => {
                          "title" => {
+                           "enabled" => false,
                            "prompt" => "Write a short title.",
                          },
                        },
                        "groups" => {
                          "meta" => {
+                           "enabled" => true,
                            "prompt" => "Write title and perex as a set.",
                          },
                        },
@@ -59,6 +61,13 @@ class Folio::Ai::Console::SiteSettingsComponentTest < Folio::Console::ComponentT
                     text: "Write a short title.")
     assert_selector("textarea[name$='[ai_settings][integrations][folio_pages][groups][meta][prompt]']",
                     text: "Write title and perex as a set.")
+    title_enabled = page.find("input[type='checkbox'][name$='[ai_settings][integrations][folio_pages][fields][title][enabled]'][value='1']",
+                              visible: :all)
+    meta_enabled = page.find("input[type='checkbox'][name$='[ai_settings][integrations][folio_pages][groups][meta][enabled]'][value='1']",
+                             visible: :all)
+
+    assert_not title_enabled.checked?
+    assert meta_enabled.checked?
     assert_text(Folio::Page.model_name.human(count: 2))
     assert_text(Folio::Page.human_attribute_name(:title))
     assert_text("Meta fields")

@@ -1,18 +1,19 @@
 # frozen_string_literal: true
 
-# Builds provider prompts from form state, instructions, and model data, then
-# normalizes provider JSON into suggestion hashes the console UI can render.
+# Builds provider prompts from site prompts, user instructions, form state, and
+# model data, then normalizes provider JSON into suggestion hashes.
 
 class Folio::Ai::TextSuggestionGenerator
   CONTEXT_MARKER = "Context JSON:"
 
-  def initialize(record:, site:, record_key:, field:, form_snapshot:, provider:, instructions: nil, suggestion_count: Folio::Ai::DEFAULT_SUGGESTION_COUNT)
+  def initialize(record:, site:, record_key:, field:, form_snapshot:, provider:, site_prompt: nil, instructions: nil, suggestion_count: Folio::Ai::DEFAULT_SUGGESTION_COUNT)
     @record = record
     @site = site
     @record_key = record_key.to_s
     @field = field.symbolize_keys
     @form_snapshot = normalize_form_snapshot(form_snapshot)
     @provider = provider
+    @site_prompt = site_prompt.to_s.strip.presence
     @instructions = instructions.to_s.strip.presence
     @suggestion_count = suggestion_count.to_i.positive? ? suggestion_count.to_i : Folio::Ai::DEFAULT_SUGGESTION_COUNT
   end
@@ -38,12 +39,14 @@ class Folio::Ai::TextSuggestionGenerator
                 :field,
                 :form_snapshot,
                 :provider,
+                :site_prompt,
                 :instructions,
                 :suggestion_count
 
     def prompt_data
       {
         field: field.slice(:key, :label, :character_limit),
+        prompt: site_prompt,
         instructions:,
         form_snapshot:,
         additional_data: additional_data.presence,

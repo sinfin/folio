@@ -13,10 +13,18 @@ class Folio::Ai::SimpleFormInputExtensionTest < ActionView::TestCase
     Folio::Ai.register_record(record_class_name: "Folio::Page",
                               fields: [
                                 { key: :title, character_limit: 80 },
+                                { key: :perex, character_limit: 400 },
+                              ],
+                              groups: [
+                                {
+                                  key: :meta,
+                                  label: "Meta fields",
+                                  fields: %i[title perex],
+                                },
                               ])
 
     @site = create(Rails.application.config.folio_site_default_test_factory,
-                   ai_settings: { "enabled" => true, "provider" => "dummy" })
+                   ai_settings: ai_settings)
     @page = create(:folio_page, site: @site)
   end
 
@@ -84,6 +92,55 @@ class Folio::Ai::SimpleFormInputExtensionTest < ActionView::TestCase
     assert page.has_no_css?(".f-ai-input__custom-html")
   end
 
+  test "does not render controls when field prompt is blank" do
+    @site.update!(ai_settings: ai_settings(field_prompt: nil))
+
+    html = with_dummy_provider do
+      simple_form_for @page, url: "/" do |f|
+        concat(f.input :title, ai: true)
+      end
+    end
+
+    page = Capybara.string(html)
+
+    assert page.has_no_css?(".f-ai-input")
+    assert page.has_no_css?(".f-ai-input__button")
+  end
+
+  test "does not render individual button when field is disabled" do
+    @site.update!(ai_settings: ai_settings(field_enabled: false))
+
+    html = with_dummy_provider do
+      simple_form_for @page, url: "/" do |f|
+        concat(f.input :title, ai: true)
+      end
+    end
+
+    page = Capybara.string(html)
+
+    assert page.has_no_css?(".f-ai-input")
+    assert page.has_no_css?(".f-ai-input__button")
+  end
+
+  test "keeps grouped child wrapper without individual button" do
+    @site.update!(ai_settings: ai_settings(field_prompt: nil,
+                                           field_enabled: false,
+                                           group_prompt: "Write meta fields together."))
+
+    html = with_dummy_provider do
+      simple_form_for @page, url: "/" do |f|
+        concat(f.input :title, ai: true)
+      end
+    end
+
+    page = Capybara.string(html)
+
+    assert page.has_css?(".form-group.f-ai-input")
+    assert page.has_no_css?(".f-ai-input__button")
+    assert page.has_css?(".f-ai-input__undo[hidden]", visible: :all)
+    assert page.has_css?(".f-ai-input__custom-html", count: 1)
+  end
+
   test "does not render controls when no provider is available" do
     html = Folio::Ai.stub(:provider_for, ->(**) { raise Folio::Ai::ProviderError }) do
       simple_form_for @page, url: "/" do |f|
@@ -111,6 +168,34 @@ class Folio::Ai::SimpleFormInputExtensionTest < ActionView::TestCase
   end
 
   private
+    def ai_settings(field_prompt: "Write a short title.",
+                    group_prompt: nil,
+                    field_enabled: nil,
+                    group_enabled: nil)
+      field = {}
+      field["prompt"] = field_prompt if field_prompt
+      field["enabled"] = field_enabled unless field_enabled.nil?
+
+      fields = field.present? ? { "title" => field } : {}
+
+      group = {}
+      group["prompt"] = group_prompt if group_prompt
+      group["enabled"] = group_enabled unless group_enabled.nil?
+
+      groups = group.present? ? { "meta" => group } : {}
+
+      {
+        "enabled" => true,
+        "provider" => "dummy",
+        "integrations" => {
+          "folio_pages" => {
+            "fields" => fields,
+            "groups" => groups,
+          },
+        },
+      }
+    end
+
     def with_dummy_provider(&block)
       Folio::Ai.config.stub(:enabled?, true) do
         Folio::Ai::Providers::Dummy.stub(:available?, true, &block)

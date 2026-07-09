@@ -63,6 +63,8 @@ end
 
 The record key is the model table name. Fields and groups store simple hashes:
 `key`, optional `label`, optional `character_limit`, and group `fields`.
+Registration exposes the field or group in site settings; it does not show
+editor controls until the current site has it enabled with a nonblank prompt.
 
 ## Use In Forms
 
@@ -75,7 +77,8 @@ Use `ai: true` on registered SimpleForm inputs:
 ```
 
 The record must be persisted, the site must have AI enabled, the field must be
-registered, and an available provider must be configured.
+registered, the field must be enabled with a nonblank site prompt, and an
+available provider must be configured.
 
 Grouped suggestions wrap normal AI inputs:
 
@@ -89,8 +92,8 @@ Grouped suggestions wrap normal AI inputs:
                                 ai: true
 ```
 
-The group uses its own prompt and saved user instruction under the group key.
-The child inputs still own accepting, copying, undo, and final field updates.
+The group must be enabled with a nonblank site prompt under the group key. The
+child inputs still own accepting, copying, undo, and final field updates.
 When grouped child inputs use custom `input_html[:id]` values, pass matching
 field metadata so grouped results target the rendered inputs:
 
@@ -109,9 +112,12 @@ suggestion component id directly.
 
 ## Prompts And Data
 
-Site admins edit provider, model, field prompts, and group prompts in the site
-console AI tab. User instructions are stored per user, site, record key, and
-field or group key.
+Site admins edit provider, model, field prompts, group prompts, and field/group
+enabled flags in the site console AI tab. User instructions are stored per
+user, site, record key, and field or group key.
+
+Provider prompts include the required site prompt plus the optional saved or
+submitted user instruction. A user instruction never replaces the site prompt.
 
 The form snapshot is the only automatic request data source. Before it reaches
 the provider, Folio keeps only useful context roots:

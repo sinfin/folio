@@ -20,7 +20,7 @@ class Folio::Ai::Console::TextSuggestionsGroupComponentTest < Folio::Console::Co
                               ])
 
     @site = create(Rails.application.config.folio_site_default_test_factory,
-                   ai_settings: { "enabled" => true, "provider" => "dummy" })
+                   ai_settings: ai_settings)
     @page = create(:folio_page, site: @site)
   end
 
@@ -79,10 +79,52 @@ class Folio::Ai::Console::TextSuggestionsGroupComponentTest < Folio::Console::Co
   test "does not render without registered fields" do
     render_component do |form|
       render_inline(Folio::Ai::Console::TextSuggestionsGroupComponent.new(form:,
-                                                                         key: :missing))
+                                                                         key: :missing)) do
+        "Child inputs"
+      end
     end
 
+    assert_text("Child inputs")
     assert_no_selector(".f-ai-c-text-suggestions-group")
+  end
+
+  test "does not render without group prompt" do
+    @site.update!(ai_settings: ai_settings(group_prompt: nil))
+
+    render_component do |form|
+      render_inline(Folio::Ai::Console::TextSuggestionsGroupComponent.new(form:,
+                                                                         key: :meta)) do
+        "Child inputs"
+      end
+    end
+
+    assert_text("Child inputs")
+    assert_no_selector(".f-ai-c-text-suggestions-group")
+  end
+
+  test "does not render when group is disabled" do
+    @site.update!(ai_settings: ai_settings(group_enabled: false))
+
+    render_component do |form|
+      render_inline(Folio::Ai::Console::TextSuggestionsGroupComponent.new(form:,
+                                                                         key: :meta)) do
+        "Child inputs"
+      end
+    end
+
+    assert_text("Child inputs")
+    assert_no_selector(".f-ai-c-text-suggestions-group")
+  end
+
+  test "does not prefill instructions with group prompt" do
+    render_component do |form|
+      render_inline(Folio::Ai::Console::TextSuggestionsGroupComponent.new(form:,
+                                                                         key: :meta))
+    end
+
+    assert_no_selector(".f-ai-c-text-suggestions-group__instructions",
+                       text: "Write title and perex as a set.",
+                       visible: :all)
   end
 
   test "prefills saved group instructions" do
@@ -104,6 +146,25 @@ class Folio::Ai::Console::TextSuggestionsGroupComponentTest < Folio::Console::Co
   end
 
   private
+    def ai_settings(group_prompt: "Write title and perex as a set.",
+                    group_enabled: nil)
+      group = {}
+      group["prompt"] = group_prompt if group_prompt
+      group["enabled"] = group_enabled unless group_enabled.nil?
+
+      groups = group.present? ? { "meta" => group } : {}
+
+      {
+        "enabled" => true,
+        "provider" => "dummy",
+        "integrations" => {
+          "folio_pages" => {
+            "groups" => groups,
+          },
+        },
+      }
+    end
+
     def render_component(user: nil, &block)
       I18n.with_locale(:en) do
         Folio::Current.stub(:user, user) do

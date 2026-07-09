@@ -85,6 +85,21 @@ class Folio::Ai::TextSuggestionsJobTest < ActiveJob::TestCase
     assert_includes message[:payload].dig("data", "html"), "AI suggestions could not be generated."
   end
 
+  test "passes site prompt and user instructions to provider" do
+    provider = CapturingProvider.new
+
+    capture_message do
+      I18n.with_locale(:en) do
+        Folio::Ai.stub(:provider_for, provider) do
+          perform_job
+        end
+      end
+    end
+
+    assert_includes provider.prompt, "Write a title from the site prompt."
+    assert_includes provider.prompt, "Be direct."
+  end
+
   private
     def perform_job(params = job_params)
       Folio::Ai::TextSuggestionsJob.perform_now(request_id: "request-1",
@@ -100,6 +115,7 @@ class Folio::Ai::TextSuggestionsJobTest < ActiveJob::TestCase
         message_bus_client_id: "client-1",
         component_id: "ai_title",
         form_snapshot: { "title" => "Draft title" },
+        site_prompt: "Write a title from the site prompt.",
         instructions: "Be direct.",
         suggestion_count: 3,
         record_key: "folio_pages",
@@ -124,5 +140,18 @@ class Folio::Ai::TextSuggestionsJobTest < ActiveJob::TestCase
       }, &block)
 
       messages.fetch(0)
+    end
+
+    class CapturingProvider
+      attr_reader :prompt
+
+      def complete(prompt:, suggestion_count:)
+        @prompt = prompt
+        {
+          suggestions: [
+            { text: "Provider title" },
+          ],
+        }.to_json
+      end
     end
 end
