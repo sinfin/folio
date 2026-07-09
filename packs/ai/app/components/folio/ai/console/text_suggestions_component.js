@@ -7,7 +7,9 @@
       static targets = ['instructions', 'status', 'statusMessage', 'suggestion', 'suggestions']
 
       static values = {
-        key: String
+        key: String,
+        componentId: String,
+        grouped: Boolean
       }
 
       connect () {
@@ -56,7 +58,7 @@
         this.dispatch('accept', { bubbles: true, detail: { text } })
         suggestion.classList.add(SELECTED_CLASS)
 
-        this.dispatch('accepted', { detail: this.trackingDetail() })
+        this.dispatch('accepted', { detail: this.acceptedDetail() })
       }
 
       clearSuggestionSelection () {
@@ -73,8 +75,17 @@
         })
       }
 
-      trackingDetail () {
-        return { key: this.keyValue }
+      acceptedDetail () {
+        return {
+          key: this.keyValue,
+          componentId: this.componentIdValue,
+          grouped: this.groupedValue,
+          hasUnacceptedSuggestions: this.hasUnacceptedSuggestions
+        }
+      }
+
+      get hasUnacceptedSuggestions () {
+        return this.suggestionTargets.some((suggestion) => !suggestion.classList.contains(SELECTED_CLASS))
       }
 
       stopActionEvent (event) {

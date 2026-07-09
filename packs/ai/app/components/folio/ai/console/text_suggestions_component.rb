@@ -34,6 +34,8 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
       stimulus_controller("f-ai-c-text-suggestions",
                           values: {
                             key: @field[:key],
+                            component_id: @component_id,
+                            grouped: grouped?,
                           }.compact,
                           action: {
                             "f-ai-input:suggestionStale" => "clearSuggestionSelection",

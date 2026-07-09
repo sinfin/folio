@@ -16,6 +16,8 @@
       }
 
       connect () {
+        this.resetAcceptedGroupedSuggestions()
+
         this.request = window.Folio.Ai.asyncJobRequest({
           timeoutMs: () => 45000,
           onTimeout: () => this.handleTimeout()
@@ -45,6 +47,19 @@
         this.request.receiveMessage(event?.detail?.message, (message) => this.applyMessageBusResult(message))
       }
 
+      closeIfNoSuggestions (event) {
+        const detail = event?.detail || {}
+        if (!detail.grouped || !detail.componentId) return
+        if (detail.hasUnacceptedSuggestions) return
+
+        this.acceptedGroupedComponentIds.add(detail.componentId)
+        if (!this.allGroupedSuggestionsAccepted) return
+
+        this.closeChildInputs()
+        this.hidePanel()
+        this.openValue = false
+      }
+
       open () {
         this.openValue = true
         if (this.request.active) return
@@ -61,10 +76,12 @@
         this.closeChildInputs(requestId)
         this.hidePanel()
         this.openValue = false
+        this.resetAcceptedGroupedSuggestions()
         this.setStatus('idle')
       }
 
       load ({ instructions = null } = {}) {
+        this.resetAcceptedGroupedSuggestions()
         this.hideStatus()
         this.setStatus('loading')
 
@@ -110,6 +127,7 @@
       }
 
       applyMessageBusResult (message) {
+        this.resetAcceptedGroupedSuggestions()
         this.dispatchFragments('result', message.data?.fragments || {}, message.data?.request_id)
         this.request.finish()
         this.showPanel()
@@ -191,6 +209,14 @@
 
       get panelOpen () {
         return !this.panelTarget.hidden
+      }
+
+      get allGroupedSuggestionsAccepted () {
+        return this.fieldsValue.every((field) => this.acceptedGroupedComponentIds.has(field.component_id))
+      }
+
+      resetAcceptedGroupedSuggestions () {
+        this.acceptedGroupedComponentIds = new Set()
       }
 
       get instructions () {
