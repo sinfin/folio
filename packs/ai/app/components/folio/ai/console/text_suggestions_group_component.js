@@ -54,9 +54,13 @@
 
       close (event) {
         this.stop(event)
+        const requestId = this.request.pendingRequestId
+        this.request.abort()
+        this.closeChildInputs(requestId)
         this.panelTarget.hidden = true
         this.closeButtonTarget.hidden = true
         this.openValue = false
+        this.setStatus('idle')
       }
 
       load ({ instructions = null } = {}) {
@@ -122,6 +126,18 @@
               requestId
             }
           })
+        })
+      }
+
+      closeChildInputs (requestId) {
+        this.fieldsValue.forEach((field) => {
+          const input = this.inputForField(field)
+          if (!input) return
+
+          input.dispatchEvent(new CustomEvent('f-ai-input/close', {
+            bubbles: true,
+            detail: { requestId }
+          }))
         })
       }
 

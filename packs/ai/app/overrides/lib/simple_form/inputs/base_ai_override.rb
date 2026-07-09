@@ -116,6 +116,7 @@ module Folio::Ai::SimpleFormInputExtension
         "f-ai-c-text-suggestions:accept": "acceptSuggestion",
         "f-ai-c-text-suggestions-group:loading": "showGroupLoading",
         "f-ai-c-text-suggestions-group:result": "showGroupResult",
+        "f-ai-input/close": "close",
         "f-ai-input/message": "onMessage",
       }
     end
