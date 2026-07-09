@@ -14,6 +14,7 @@ Welcome to the documentation for the **Folio Rails Engine**. This project provid
 - [Admin Console](admin.md) — Admin UI, scaffolding, user roles, multi-site
 - [Files & Media](files.md) — File handling, media, metadata, placements
 - [Forms](forms.md) — Form building, validation, custom inputs
+- [AI Suggestions](ai.md) — Optional console text suggestions pack
 - [Emails & Templates](emails.md) — Email templates, newsletters
 - [Configuration](configuration.md) — Engine setup, options, localization
 - [Testing](testing.md) — Testing strategies, helpers, best practices
@@ -48,6 +49,9 @@ Welcome to the documentation for the **Folio Rails Engine**. This project provid
 
 **Forms:**
 - Building and validating forms, using custom inputs, and integrating with the admin UI.
+
+**AI Suggestions:**
+- Optional pack for console text suggestions on registered SimpleForm inputs.
 
 **Emails & Templates:**
 - Creating and managing email templates and newsletters.
@@ -149,7 +153,7 @@ Ensure these binaries are present on CI / production servers.
 ## Navigation
 
 - [Next: Architecture →](architecture.md)
-- [Components](components.md) | [Atoms](atoms.md) | [Admin Console](admin.md) | [Files & Media](files.md) | [HTML Sanitization](sanitization.md) | [Concerns](concerns.md) | [Jobs](jobs.md) | [Sitemaps](sitemap.md)
+- [Components](components.md) | [Atoms](atoms.md) | [Admin Console](admin.md) | [Files & Media](files.md) | [AI Suggestions](ai.md) | [HTML Sanitization](sanitization.md) | [Concerns](concerns.md) | [Jobs](jobs.md) | [Sitemaps](sitemap.md)
 
 ---
 
