@@ -62,16 +62,20 @@
         this.stopEvent(event)
 
         if (this.groupedSuggestionsOpen) {
-          this.dispatch('closeGroup', { bubbles: true, detail: this.trackingDetail() })
-          this.open()
+          this.openFromToggle()
           return
         }
 
         if (this.isOpen) {
           this.close()
         } else {
-          this.open()
+          this.openFromToggle()
         }
+      }
+
+      openFromToggle () {
+        this.dispatch('closeGroup', { bubbles: true, detail: this.trackingDetail() })
+        this.open()
       }
 
       open () {
