@@ -69,5 +69,5 @@
               span.f-c-files-picker__alt-ico.text-warning title=t('errors.messages.missing_file_alt')
                 = folio_icon(:alert)
 
-    - unless @as_file_placement
+    - if invalid?
       = @f.full_error @placement_key, class: "invalid-feedback d-block"

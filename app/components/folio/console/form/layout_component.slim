@@ -1,0 +1,14 @@
+.f-c-form-layout
+  .f-c-form-layout__grid
+    - if header?
+      .f-c-form-layout__grid-item.f-c-form-layout__grid-item--header
+        = header
+
+    - if file_pickers?
+      .f-c-form-layout__grid-item.f-c-form-layout__grid-item--file-pickers
+        .f-c-form-layout__file-pickers-scroll
+          .f-c-form-layout__file-pickers
+            = file_pickers
+
+    .f-c-form-layout__grid-item.f-c-form-layout__grid-item--content
+      = content

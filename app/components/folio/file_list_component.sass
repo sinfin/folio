@@ -42,7 +42,7 @@
     margin-top: 2 * $grid-gutter-base
 
   @for $i from 13 through 3
-    @container (max-width: #{($i * 168px) + (($i - 1) * 8px) + 1})
+    @container (max-width: #{($i * $f-file-list-file-item-size) + (($i - 1) * 8px) + 1})
       &__flex-item
         width: calc((100% - (#{$i - 1} * var(--f-file-list__flex-gap))) / #{$i})
 

@@ -7,32 +7,33 @@
 
 .tab-content
   = tab :content
-    = publishable_inputs(f)
+    = render(Folio::Console::Form::LayoutComponent.new) do |c|
+      - c.with_header
+        = publishable_inputs(f)
 
-    .row
-      .col-md-auto
+      - c.with_file_pickers
         = file_picker_for_cover(f)
-      .col-md
-        = f.input :title, atom_setting: :title,
-                          ai: true
-        = f.input :slug
-        = f.input :perex, character_counter: true,
-                          autosize: true,
-                          atom_setting: :perex,
-                          ai: true
 
-        = f.input :locale, collection: Dummy::Blog.available_locales,
-                          include_blank: false,
-                          atom_setting: :locale
+      = f.input :title, atom_setting: :title,
+                        ai: true
+      = f.input :slug
+      = f.input :perex, character_counter: true,
+                        autosize: true,
+                        atom_setting: :perex,
+                        ai: true
 
-        = react_ordered_multiselect(f, :authors, atom_setting: :authors)
+      = f.input :locale, collection: Dummy::Blog.available_locales,
+                        include_blank: false,
+                        atom_setting: :locale
 
-        = react_ordered_multiselect(f, :topics, atom_setting: :topics)
+      = react_ordered_multiselect(f, :authors, atom_setting: :authors)
 
-        = render Folio::Ai::Console::TextSuggestionsGroupComponent.new(form: f,
-                                                                       key: :meta) do
-          = f.input :meta_title, character_counter: true,
-                                 ai: true
-          = f.input :meta_description, autosize: true,
-                                      character_counter: true,
-                                      ai: true
+      = react_ordered_multiselect(f, :topics, atom_setting: :topics)
+
+      = render Folio::Ai::Console::TextSuggestionsGroupComponent.new(form: f,
+                                                                     key: :meta) do
+        = f.input :meta_title, character_counter: true,
+                               ai: true
+        = f.input :meta_description, autosize: true,
+                                    character_counter: true,
+                                    ai: true

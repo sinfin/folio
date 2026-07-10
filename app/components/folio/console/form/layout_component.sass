@@ -1,0 +1,55 @@
+.f-c-form-layout
+  container-name: f-c-form-layout
+  container-type: inline-size
+
+  &__grid
+    display: grid
+    gap: $f-c-form-group-spacer $grid-gutter-width
+    grid-template-columns: minmax(0, 1fr)
+
+  &__grid-item
+    min-width: 0
+
+    > :last-child
+      margin-bottom: 0
+
+  &__file-pickers-scroll
+    max-width: 100%
+    overflow-x: auto
+    overflow-y: hidden
+    -webkit-overflow-scrolling: touch
+
+  &__file-pickers
+    align-items: flex-start
+    display: flex
+    flex-wrap: nowrap
+    gap: $grid-gutter-width
+    width: max-content
+
+    > *
+      flex: 0 0 auto
+      margin-bottom: 0
+
+  @container f-c-form-layout (min-width: 600px)
+    &__grid
+      grid-template-columns: $f-file-list-file-item-size 1fr
+
+    &__grid-item--header
+      grid-column: 1 / -1
+
+    &__grid-item--file-pickers
+      grid-column: 1
+
+    &__file-pickers-scroll
+      overflow: visible
+
+    &__file-pickers
+      flex-direction: column
+      gap: $f-c-form-group-spacer
+      width: auto
+
+    &__grid-item--content
+      grid-column: 1 / -1
+
+    &__grid:has(&__grid-item--file-pickers) &__grid-item--content
+      grid-column: 2
