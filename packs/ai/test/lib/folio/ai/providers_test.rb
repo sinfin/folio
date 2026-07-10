@@ -84,14 +84,28 @@ class Folio::Ai::ProvidersTest < ActiveSupport::TestCase
     end
   end
 
-  test "reads OpenAI API key from Folio-prefixed ENV" do
-    ENV.stub(:[], ->(key) { key == "FOLIO_AI_OPENAI_API_KEY" ? "secret" : nil }) do
-      assert_equal "secret", Folio::Ai.openai_api_key
+  test "reads OpenAI API key from Folio-prefixed ENV outside test" do
+    Rails.stub(:env, ActiveSupport::StringInquirer.new("production")) do
+      ENV.stub(:[], ->(key) { key == "FOLIO_AI_OPENAI_API_KEY" ? "secret" : nil }) do
+        assert_equal "secret", Folio::Ai.openai_api_key
+      end
+
+      ENV.stub(:[], ->(key) { key == "OPENAI_API_KEY" ? "ignored" : nil }) do
+        assert_nil Folio::Ai.openai_api_key
+      end
+    end
+  end
+
+  test "does not read OpenAI API key from ENV in test" do
+    read_keys = []
+
+    Rails.stub(:env, ActiveSupport::StringInquirer.new("test")) do
+      ENV.stub(:[], ->(key) { read_keys << key }) do
+        assert_nil Folio::Ai.openai_api_key
+      end
     end
 
-    ENV.stub(:[], ->(key) { key == "OPENAI_API_KEY" ? "ignored" : nil }) do
-      assert_nil Folio::Ai.openai_api_key
-    end
+    assert_empty read_keys
   end
 
   test "builds available provider instances" do

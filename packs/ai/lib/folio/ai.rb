@@ -54,6 +54,8 @@ module Folio::Ai
     end
 
     def openai_api_key
+      return if Rails.env.test?
+
       ENV["FOLIO_AI_OPENAI_API_KEY"].presence
     end
 
