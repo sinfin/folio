@@ -55,8 +55,8 @@ class Folio::Ai::Console::SiteSettingsComponentTest < Folio::Console::ComponentT
     assert_selector(".f-ai-c-site-settings")
     assert_selector("input[name$='[ai_settings][enabled]'][value='1']", visible: :all)
     assert_selector("select[name$='[ai_settings][provider]'] option[value='dummy'][selected]")
-    assert_selector("select[name$='[ai_settings][model]'] option[value='dummy'][selected]",
-                    text: "dummy")
+    assert_selector("select[name$='[ai_settings][model]'] option[value=''][selected]",
+                    text: /dummy/)
     assert_selector("textarea[name$='[ai_settings][integrations][folio_pages][fields][title][prompt]']",
                     text: "Write a short title.")
     assert_selector("textarea[name$='[ai_settings][integrations][folio_pages][groups][meta][prompt]']",
@@ -72,6 +72,31 @@ class Folio::Ai::Console::SiteSettingsComponentTest < Folio::Console::ComponentT
     assert_text(Folio::Page.human_attribute_name(:title))
     assert_text("Meta fields")
     assert_text("Limit: 80")
+  end
+
+  test "renders provider model data for switching providers" do
+    site = build(:folio_site,
+                 ai_settings: {
+                   "provider" => "dummy",
+                   "model" => "dummy",
+                 })
+
+    Folio::Ai::Providers::OpenAi.stub(:models_env_value, "gpt-5.5,gpt-5.5-pro") do
+      render_component(site,
+                       providers: {
+                         dummy: Folio::Ai::Providers::Dummy,
+                         openai: Folio::Ai::Providers::OpenAi,
+                       })
+    end
+
+    providers = JSON.parse(page.find(".f-ai-c-site-settings")["data-f-ai-c-site-settings-providers-value"])
+
+    assert_equal "dummy", providers.dig("dummy", "defaultModel")
+    assert_includes providers.dig("dummy", "defaultLabel"), "dummy"
+    assert_equal [], providers.dig("dummy", "models")
+    assert_equal "gpt-5.5", providers.dig("openai", "defaultModel")
+    assert_includes providers.dig("openai", "defaultLabel"), "gpt-5.5"
+    assert_equal %w[gpt-5.5-pro], providers.dig("openai", "models")
   end
 
   test "renders provider setup message when no providers are available" do
@@ -98,7 +123,7 @@ class Folio::Ai::Console::SiteSettingsComponentTest < Folio::Console::ComponentT
     assert_no_selector(".f-ai-c-site-settings")
   end
 
-  test "keeps saved model values in the model select" do
+  test "selects default option when saved model is not in provider list" do
     site = build(:folio_site,
                  ai_settings: {
                    "provider" => "dummy",
@@ -107,11 +132,12 @@ class Folio::Ai::Console::SiteSettingsComponentTest < Folio::Console::ComponentT
 
     render_component(site)
 
-    assert_selector("select[name$='[ai_settings][model]'] option[value='custom-dummy'][selected]",
-                    text: "custom-dummy")
+    assert_selector("select[name$='[ai_settings][model]'] option[value=''][selected]",
+                    text: /dummy/)
+    assert_no_selector("select[name$='[ai_settings][model]'] option[value='custom-dummy']")
   end
 
-  test "renders model options from the selected provider" do
+  test "renders non-default model options from the selected provider" do
     site = build(:folio_site,
                  ai_settings: {
                    "provider" => "openai",
@@ -121,8 +147,9 @@ class Folio::Ai::Console::SiteSettingsComponentTest < Folio::Console::ComponentT
       render_component(site, providers: { openai: Folio::Ai::Providers::OpenAi })
     end
 
-    assert_selector("select[name$='[ai_settings][model]'] option[value='gpt-5.5']",
-                    text: "gpt-5.5")
+    assert_selector("select[name$='[ai_settings][model]'] option[value=''][selected]",
+                    text: /gpt-5.5/)
+    assert_no_selector("select[name$='[ai_settings][model]'] option[value='gpt-5.5']")
     assert_selector("select[name$='[ai_settings][model]'] option[value='gpt-5.5-pro']",
                     text: "gpt-5.5-pro")
   end

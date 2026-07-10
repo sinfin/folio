@@ -16,6 +16,11 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
       providers.present?
     end
 
+    def component_data
+      stimulus_controller("f-ai-c-site-settings",
+                          values: { providers: providers_json })
+    end
+
     def records
       Folio::Ai.registry.records
     end
@@ -58,18 +63,23 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
                   selected: selected.to_s,
                   label:,
                   required: false,
-                  input_html: input_html(*path, class: "form-select"))
+                  input_html: input_html(*path,
+                                         class: "form-select",
+                                         data: stimulus_data(target: "provider",
+                                                             action: { change: "changeProvider" })))
     end
 
     def model_input(*path, label:, provider:, selected:)
       @form.input(input_attribute(*path),
                   as: :select,
-                  collection: model_options(provider:, selected:),
+                  collection: model_options(provider:),
                   include_blank: false,
                   selected: selected.to_s,
                   label:,
                   required: false,
-                  input_html: input_html(*path, class: "form-select"))
+                  input_html: input_html(*path,
+                                         class: "form-select",
+                                         data: stimulus_target("model")))
     end
 
     def text_area_input(*path, label:, value:)
@@ -124,17 +134,14 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
     end
 
     def model_value
-      site_setting("model")
+      model = site_setting("model").presence
+      return model if explicit_provider_model_values(selected_provider).include?(model.to_s)
+
+      ""
     end
 
-    def model_options(provider:, selected:)
-      options = [[model_placeholder(provider), ""]]
-
-      [*provider_models(provider), selected].compact_blank.uniq.each do |model|
-        options << [model, model]
-      end
-
-      options
+    def model_options(provider:)
+      [[model_placeholder(provider), ""]] + explicit_provider_models(provider).map { |model| [model, model] }
     end
 
     def model_placeholder(provider)
@@ -185,7 +192,27 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
       provider_class(provider)&.models || []
     end
 
+    def explicit_provider_models(provider)
+      default_model = provider_default_model(provider).to_s
+
+      provider_models(provider).reject { |model| model.to_s == default_model }
+    end
+
+    def explicit_provider_model_values(provider)
+      explicit_provider_models(provider).map(&:to_s)
+    end
+
     def provider_class(provider)
       providers[provider.to_sym]
+    end
+
+    def providers_json
+      providers.each_with_object({}) do |(provider, provider_class), hash|
+        hash[provider.to_s] = {
+          defaultModel: provider_class.default_model,
+          defaultLabel: model_placeholder(provider),
+          models: explicit_provider_models(provider),
+        }
+      end.to_json
     end
 end

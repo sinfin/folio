@@ -15,6 +15,7 @@ module Folio::Ai::SiteConcern
              dependent: :destroy
 
     before_validation :set_default_ai_settings
+    before_validation :normalize_ai_model
   end
 
   def ai_settings_data
@@ -30,7 +31,11 @@ module Folio::Ai::SiteConcern
   end
 
   def ai_model
-    ai_settings_data["model"].presence || Folio::Ai.provider_class(ai_provider).default_model
+    provider_class = ai_provider_class(ai_provider)
+    model = ai_settings_data["model"].presence
+    return model if provider_class.nil? || explicit_provider_model_available?(provider_class, model)
+
+    provider_class.default_model
   end
 
   def ai_settings_for(record_key:, key:, grouped: false)
@@ -70,5 +75,36 @@ module Folio::Ai::SiteConcern
   private
     def set_default_ai_settings
       self.ai_settings = {} if ai_settings.nil?
+    end
+
+    def normalize_ai_model
+      settings = ai_settings_data
+      provider = settings["provider"].presence
+      return if provider.blank?
+
+      provider_class = ai_provider_class(provider)
+      return if provider_class.nil?
+
+      model = settings["model"].presence
+      return if model.blank? || explicit_provider_model_available?(provider_class, model)
+
+      settings["model"] = ""
+      self.ai_settings = settings
+    end
+
+    def ai_provider_class(provider)
+      Folio::Ai.provider_class(provider)
+    rescue ArgumentError
+      nil
+    end
+
+    def explicit_provider_model_available?(provider_class, model)
+      model.present? && explicit_provider_models(provider_class).include?(model.to_s)
+    end
+
+    def explicit_provider_models(provider_class)
+      default_model = provider_class.default_model.to_s
+
+      provider_class.models.map(&:to_s).reject { |model| model == default_model }
     end
 end
