@@ -45,11 +45,11 @@ Register each AI-enabled record class from the host app:
 
 ```ruby
 Rails.application.config.after_initialize do
-Folio::Ai.register_record(record_class_name: "Article",
-                          content_requirement: :tiptap_or_atoms,
-                          fields: [
-                            { key: :perex, character_limit: 400 },
-                            { key: :meta_title, character_limit: 120 },
+  Folio::Ai.register_record(record_class_name: "Article",
+                            content_requirement: :tiptap_or_atoms,
+                            fields: [
+                              { key: :perex, character_limit: 400 },
+                              { key: :meta_title, character_limit: 120 },
                               { key: :meta_description, character_limit: 250 },
                             ],
                             groups: [
