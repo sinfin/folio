@@ -11,12 +11,14 @@ class Folio::Ai::TextSuggestionsJob < Folio::ApplicationJob
 
     return unless deliverable?
 
-    MessageBus.publish(Folio::MESSAGE_BUS_CHANNEL,
-                       message.to_json,
-                       client_ids: [message_bus_client_id])
+    with_console_locale do
+      MessageBus.publish(Folio::MESSAGE_BUS_CHANNEL,
+                         message.to_json,
+                         client_ids: [message_bus_client_id])
+    end
   rescue Folio::Ai::ProviderError, Folio::Ai::ResponseError => e
     log_failure(e)
-    broadcast_error(:provider_error) if deliverable?
+    with_console_locale { broadcast_error(:provider_error) } if deliverable?
   end
 
   private
@@ -181,6 +183,14 @@ class Folio::Ai::TextSuggestionsJob < Folio::ApplicationJob
       return Folio::Ai::GROUPED_SUGGESTION_COUNT if grouped?
 
       Folio::Ai.normalize_suggestion_count(params[:suggestion_count])
+    end
+
+    def with_console_locale(&block)
+      I18n.with_locale(console_locale, &block)
+    end
+
+    def console_locale
+      site&.respond_to?(:console_locale) ? site.console_locale : I18n.locale
     end
 
     def log_failure(error)

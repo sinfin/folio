@@ -14,6 +14,7 @@ class Folio::Ai::TextSuggestionsJobTest < ActiveJob::TestCase
     Folio::Site.include(Folio::Ai::SiteConcern) unless Folio::Site < Folio::Ai::SiteConcern
 
     @site = create(Rails.application.config.folio_site_default_test_factory,
+                   locale: "en",
                    ai_settings: { "enabled" => true, "provider" => "dummy" })
     @page = create(:folio_page, site: @site)
   end
@@ -85,6 +86,26 @@ class Folio::Ai::TextSuggestionsJobTest < ActiveJob::TestCase
     assert_includes message[:payload].dig("data", "html"), "AI suggestions could not be generated."
   end
 
+  test "renders provider errors in the site console locale" do
+    @site.update!(locale: "en")
+
+    provider = Object.new
+    provider.define_singleton_method(:complete) do |prompt:, suggestion_count:|
+      raise Folio::Ai::ProviderError, "failed"
+    end
+
+    message = capture_message do
+      I18n.with_locale(:cs) do
+        Folio::Ai.stub(:provider_for, provider) do
+          perform_job
+        end
+      end
+    end
+
+    assert_includes message[:payload].dig("data", "html"), "AI suggestions could not be generated."
+    assert_not_includes message[:payload].dig("data", "html"), "AI návrhy se nepodařilo vygenerovat."
+  end
+
   test "passes site prompt and user instructions to provider" do
     provider = CapturingProvider.new
 
@@ -100,8 +121,6 @@ class Folio::Ai::TextSuggestionsJobTest < ActiveJob::TestCase
     assert_includes provider.prompt, "Be direct."
   end
 
-  private
-
   test "passes capped suggestion count to provider" do
     provider = CapturingProvider.new
 
@@ -115,6 +134,8 @@ class Folio::Ai::TextSuggestionsJobTest < ActiveJob::TestCase
 
     assert_equal Folio::Ai::MAX_SUGGESTION_COUNT, provider.suggestion_count
   end
+
+  private
     def perform_job(params = job_params)
       Folio::Ai::TextSuggestionsJob.perform_now(request_id: "request-1",
                                                 params:)
