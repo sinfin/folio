@@ -24,6 +24,9 @@ class Folio::Ai::TextSuggestionGeneratorTest < ActiveSupport::TestCase
     assert_includes provider.prompt, "Write a concise title."
     assert_includes provider.prompt, "Use Czech."
     assert_includes provider.prompt, "Be direct."
+    assert_includes provider.prompt, "Apply the site prompt"
+    assert_includes provider.prompt, "follow them for every suggestion"
+    assert_includes provider.prompt, "higher-priority editor direction"
     assert_includes provider.prompt, "category"
     assert_equal 3, provider.suggestion_count
     assert_equal ["A very long title", "Short"], suggestions.map { |suggestion| suggestion[:text] }

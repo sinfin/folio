@@ -43,7 +43,11 @@ class Folio::Ai::TextSuggestionGenerator
       Return only valid JSON in this shape: {"suggestions":[{"key":"title","text":"..."}]}.
       For each requested field key, return exactly #{suggestion_count} #{suggestion_word}.
       Use exactly the provided field keys.
-      Use the form snapshot as the source of truth.
+      Apply the site prompt from the context JSON.
+      If instructions are present in the context JSON, follow them for every suggestion.
+      Treat instructions as higher-priority editor direction for wording, tone, and requested output transformations.
+      If instructions conflict with the site prompt, satisfy the instructions first while preserving non-conflicting site prompt requirements.
+      Use the form snapshot as source material and context, but do not copy it unchanged when instructions request a different output.
       #{CONTEXT_MARKER}
       #{JSON.pretty_generate(prompt_data)}
     TEXT
