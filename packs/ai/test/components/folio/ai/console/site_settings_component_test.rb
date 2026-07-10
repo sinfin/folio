@@ -102,9 +102,26 @@ class Folio::Ai::Console::SiteSettingsComponentTest < Folio::Console::ComponentT
   test "renders provider setup message when no providers are available" do
     render_component(build(:folio_site), providers: {})
 
-    assert_selector(".f-ai-c-site-settings .alert-danger")
+    assert_selector(".f-ai-c-site-settings .f-c-ui-alert--danger")
     assert_no_selector(".f-ai-c-site-settings select")
     assert_no_selector(".f-ai-c-site-settings textarea")
+  end
+
+  test "keeps unavailable saved provider selected" do
+    site = build(:folio_site,
+                 ai_settings: {
+                   "provider" => "openai",
+                 })
+
+    render_component(site, providers: { dummy: Folio::Ai::Providers::Dummy })
+
+    assert_selector("select[name$='[ai_settings][provider]'] option[value='openai'][selected]",
+                    text: /OpenAI/)
+    assert_selector("select[name$='[ai_settings][provider]'] option[value='dummy']",
+                    text: "Dummy")
+    assert_selector("select[name$='[ai_settings][model]'] option[value=''][selected]",
+                    text: /#{Folio::Ai::Providers::OpenAi.default_model}/)
+    assert_selector(".f-ai-c-site-settings .f-c-ui-alert--warning", text: /OpenAI/)
   end
 
   test "resolves missing labels in the current locale" do

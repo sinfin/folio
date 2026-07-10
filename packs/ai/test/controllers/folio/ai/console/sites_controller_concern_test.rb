@@ -49,4 +49,30 @@ class Folio::Ai::Console::SitesControllerConcernTest < Folio::Console::BaseContr
     assert_equal "0", settings.dig("integrations", "folio_pages", "fields", "title", "enabled")
     assert_equal "1", settings.dig("integrations", "folio_pages", "groups", "meta", "enabled")
   end
+
+  test "preserves saved provider on site update" do
+    @site.update!(ai_settings: {
+                    "enabled" => true,
+                    "provider" => "openai",
+                    "model" => "",
+                  })
+
+    Folio::Ai.config.stub(:enabled?, true) do
+      put console_site_path,
+          params: {
+            site: {
+              ai_settings: {
+                enabled: "1",
+                provider: "openai",
+                model: "",
+              },
+            },
+          }
+    end
+
+    settings = @site.reload.ai_settings_data
+
+    assert_equal "openai", settings["provider"]
+    assert_equal "", settings["model"]
+  end
 end

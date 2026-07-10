@@ -40,6 +40,8 @@ en:
           model_placeholder: "Default: %{model}"
           model_placeholder_blank: Provider default
           no_providers: Configure an AI provider before editing AI suggestion settings for this site.
+          provider_unavailable_label: "%{provider} (unavailable)"
+          provider_unavailable_warning: "The saved %{provider} provider is not currently available. Restore its environment configuration or select another provider before saving."
           prompt_label: Prompt
           character_limit:
             one: "Limit: %{count} character"

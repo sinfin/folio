@@ -40,6 +40,8 @@ cs:
           model_placeholder: "Výchozí: %{model}"
           model_placeholder_blank: Výchozí model providera
           no_providers: Před úpravou AI nastavení pro tento web nastavte AI providera.
+          provider_unavailable_label: "%{provider} (nedostupný)"
+          provider_unavailable_warning: "Uložený provider %{provider} není aktuálně dostupný. Obnovte jeho konfiguraci v prostředí nebo před uložením vyberte jiného providera."
           prompt_label: Prompt
           character_limit:
             one: "Limit: %{count} znak"

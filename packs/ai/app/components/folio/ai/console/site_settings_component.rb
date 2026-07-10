@@ -13,7 +13,7 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
 
   private
     def provider_configuration_available?
-      providers.present?
+      provider_keys.present?
     end
 
     def component_data
@@ -115,10 +115,16 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
     end
 
     def provider_options
-      providers.keys.map { |provider| [t(".providers.#{provider}"), provider.to_s] }
+      provider_keys.map { |provider| [provider_option_label(provider), provider] }
     end
 
     def providers
+      provider_keys.each_with_object({}) do |provider, hash|
+        hash[provider.to_sym] = known_provider_class(provider)
+      end
+    end
+
+    def available_providers
       Folio::Ai.available_providers
     end
 
@@ -127,10 +133,19 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
     end
 
     def selected_provider
-      provider = site_setting("provider").presence || @site.ai_provider
-      return provider.to_s if providers.key?(provider.to_sym)
+      return saved_provider if saved_provider_known?
 
-      providers.keys.first.to_s
+      provider = @site.ai_provider
+      return provider.to_s if provider_keys.include?(provider.to_s)
+
+      provider_keys.first.to_s
+    end
+
+    def unavailable_provider_warning
+      return unless unavailable_saved_provider?
+
+      t(".provider_unavailable_warning",
+        provider: provider_label(saved_provider))
     end
 
     def model_value
@@ -214,5 +229,45 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
           models: explicit_provider_models(provider),
         }
       end.to_json
+    end
+
+    def provider_keys
+      keys = available_providers.keys.map(&:to_s)
+      return keys unless unavailable_saved_provider?
+
+      [saved_provider, *keys].uniq
+    end
+
+    def saved_provider
+      site_setting("provider").presence&.to_s
+    end
+
+    def saved_provider_known?
+      saved_provider.present? && known_provider_class(saved_provider).present?
+    end
+
+    def unavailable_saved_provider?
+      saved_provider_known? && !available_provider?(saved_provider)
+    end
+
+    def available_provider?(provider)
+      available_providers.key?(provider.to_sym)
+    end
+
+    def known_provider_class(provider)
+      Folio::Ai.provider_class(provider)
+    rescue ArgumentError
+      nil
+    end
+
+    def provider_label(provider)
+      t(".providers.#{provider}")
+    end
+
+    def provider_option_label(provider)
+      label = provider_label(provider)
+      return label unless provider.to_s == saved_provider && unavailable_saved_provider?
+
+      t(".provider_unavailable_label", provider: label)
     end
 end

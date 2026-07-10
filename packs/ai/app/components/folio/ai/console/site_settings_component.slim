@@ -4,6 +4,11 @@
                     label: t(".enabled_label"),
                     checked: site_enabled?)
 
+    - if unavailable_provider_warning
+      = render(Folio::Console::Ui::AlertComponent.new(variant: :warning,
+                                                      closable: false)) do
+        = unavailable_provider_warning
+
     .row
       .col-md-6
         = provider_input(:provider,
@@ -63,5 +68,6 @@
                                 label: t(".prompt_label"),
                                 value: group_prompt(record, group))
   - else
-    .alert.alert-danger
+    = render(Folio::Console::Ui::AlertComponent.new(variant: :danger,
+                                                    closable: false)) do
       = t(".no_providers")
