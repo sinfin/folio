@@ -101,6 +101,20 @@ class Folio::Ai::TextSuggestionsJobTest < ActiveJob::TestCase
   end
 
   private
+
+  test "passes capped suggestion count to provider" do
+    provider = CapturingProvider.new
+
+    capture_message do
+      I18n.with_locale(:en) do
+        Folio::Ai.stub(:provider_for, provider) do
+          perform_job(job_params.merge(suggestion_count: 99))
+        end
+      end
+    end
+
+    assert_equal Folio::Ai::MAX_SUGGESTION_COUNT, provider.suggestion_count
+  end
     def perform_job(params = job_params)
       Folio::Ai::TextSuggestionsJob.perform_now(request_id: "request-1",
                                                 params:)
@@ -143,10 +157,12 @@ class Folio::Ai::TextSuggestionsJobTest < ActiveJob::TestCase
     end
 
     class CapturingProvider
-      attr_reader :prompt
+      attr_reader :prompt,
+                  :suggestion_count
 
       def complete(prompt:, suggestion_count:)
         @prompt = prompt
+        @suggestion_count = suggestion_count
         {
           suggestions: [
             { text: "Provider title" },

@@ -231,8 +231,7 @@ class Folio::Ai::TextSuggestionRequest
     end
 
     def suggestion_count
-      count = params[:suggestion_count].to_i
-      count.positive? ? count : Folio::Ai::DEFAULT_SUGGESTION_COUNT
+      Folio::Ai.normalize_suggestion_count(params[:suggestion_count])
     end
 
     def submitted_instructions_too_long?

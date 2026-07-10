@@ -180,8 +180,7 @@ class Folio::Ai::TextSuggestionsJob < Folio::ApplicationJob
     def suggestion_count
       return Folio::Ai::GROUPED_SUGGESTION_COUNT if grouped?
 
-      count = params[:suggestion_count].to_i
-      count.positive? ? count : Folio::Ai::DEFAULT_SUGGESTION_COUNT
+      Folio::Ai.normalize_suggestion_count(params[:suggestion_count])
     end
 
     def log_failure(error)

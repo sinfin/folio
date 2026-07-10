@@ -15,7 +15,7 @@ class Folio::Ai::TextSuggestionGenerator
     @provider = provider
     @site_prompt = site_prompt.to_s.strip.presence
     @instructions = instructions.to_s.strip.presence
-    @suggestion_count = suggestion_count.to_i.positive? ? suggestion_count.to_i : Folio::Ai::DEFAULT_SUGGESTION_COUNT
+    @suggestion_count = Folio::Ai.normalize_suggestion_count(suggestion_count)
   end
 
   def call

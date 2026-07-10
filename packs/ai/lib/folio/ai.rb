@@ -10,6 +10,7 @@ module Folio::Ai
   end
 
   DEFAULT_SUGGESTION_COUNT = 3
+  MAX_SUGGESTION_COUNT = 3
   GROUPED_SUGGESTION_COUNT = 1
   ProviderError = Class.new(StandardError)
   ResponseError = Class.new(StandardError)
@@ -72,6 +73,12 @@ module Folio::Ai
       raise ProviderError, "AI provider is not available: #{key}" unless provider_class
 
       provider_class.new(model:)
+    end
+
+    def normalize_suggestion_count(count, default: DEFAULT_SUGGESTION_COUNT)
+      count = count.to_i
+      count = default unless count.positive?
+      [count, MAX_SUGGESTION_COUNT].min
     end
 
     private

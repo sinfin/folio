@@ -39,6 +39,23 @@ class Folio::Ai::TextSuggestionGeneratorTest < ActiveSupport::TestCase
     end
   end
 
+  test "caps provider suggestion count" do
+    provider = CapturingProvider.new(response: {
+      suggestions: [
+        { text: "First" },
+        { text: "Second" },
+        { text: "Third" },
+        { text: "Fourth" },
+      ],
+    }.to_json)
+
+    suggestions = generator(provider:,
+                            suggestion_count: 99).call
+
+    assert_equal Folio::Ai::MAX_SUGGESTION_COUNT, provider.suggestion_count
+    assert_equal %w[First Second Third], suggestions.map { |suggestion| suggestion[:text] }
+  end
+
   test "resolves missing field label in the current locale" do
     provider = CapturingProvider.new(response: { suggestions: [{ text: "Suggestion" }] }.to_json)
 
@@ -57,7 +74,8 @@ class Folio::Ai::TextSuggestionGeneratorTest < ActiveSupport::TestCase
                   field: { key: "title", label: "Title" },
                   form_snapshot: {},
                   site_prompt: "Write a useful suggestion.",
-                  instructions: nil)
+                  instructions: nil,
+                  suggestion_count: Folio::Ai::DEFAULT_SUGGESTION_COUNT)
       Folio::Ai::TextSuggestionGenerator.new(record:,
                                              site:,
                                              record_key: "folio_pages",
@@ -65,7 +83,8 @@ class Folio::Ai::TextSuggestionGeneratorTest < ActiveSupport::TestCase
                                              form_snapshot:,
                                              provider:,
                                              site_prompt:,
-                                             instructions:)
+                                             instructions:,
+                                             suggestion_count:)
     end
 
     def build_record_with_additional_data
