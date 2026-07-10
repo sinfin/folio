@@ -141,6 +141,34 @@ class Folio::Ai::SimpleFormInputExtensionTest < ActionView::TestCase
     assert page.has_css?(".f-ai-input__custom-html", count: 1)
   end
 
+  test "merges existing input data with character counter and ai actions" do
+    html = with_dummy_provider do
+      simple_form_for @page, url: "/" do |f|
+        concat(f.input :title,
+                       ai: true,
+                       character_counter: 80,
+                       input_html: {
+                         data: {
+                           action: "input->host-controller#onInput",
+                           key: "title_google",
+                         },
+                       })
+      end
+    end
+
+    page = Capybara.string(html)
+    wrapper = page.find(".form-group.f-ai-input")
+    input = wrapper.find("input")
+
+    assert_includes wrapper["data-controller"].split, "f-ai-input"
+    assert_includes input["data-controller"].split, "f-input-character-counter"
+    assert_equal "title_google", input["data-key"]
+    assert_includes input["data-action"].split, "input->host-controller#onInput"
+    assert_includes input["data-action"].split, "input->f-input-character-counter#onInput"
+    assert_includes input["data-action"].split, "change->f-input-character-counter#onInput"
+    assert_includes input["data-action"].split, "input->f-ai-input#onInput"
+  end
+
   test "does not render controls when no provider is available" do
     html = Folio::Ai.stub(:provider_for, ->(**) { raise Folio::Ai::ProviderError }) do
       simple_form_for @page, url: "/" do |f|

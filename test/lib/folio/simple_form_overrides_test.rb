@@ -42,6 +42,26 @@ class Folio::SimpleFormOverridesTest < ActionView::TestCase
     assert_includes input["data-action"].split, "change->f-input-character-counter#onInput"
   end
 
+  test "character counter preserves existing nested input data" do
+    html = simple_form_for "", method: :get, url: "/" do |f|
+      concat(f.input :title,
+                     character_counter: true,
+                     input_html: {
+                       data: {
+                         action: "input->host-controller#onInput",
+                         key: "title_google",
+                       },
+                     })
+    end
+
+    input = Capybara.string(html).find("input[name='title']")
+
+    assert_equal "title_google", input["data-key"]
+    assert_includes input["data-action"].split, "input->host-controller#onInput"
+    assert_includes input["data-action"].split, "input->f-input-character-counter#onInput"
+    assert_includes input["data-action"].split, "change->f-input-character-counter#onInput"
+  end
+
   test "character counter text input marks wrapper, max value and automatic current count limit" do
     html = simple_form_for "", method: :get, url: "/" do |f|
       concat(f.input :intro, as: :text, character_counter: 160)

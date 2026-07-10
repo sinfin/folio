@@ -176,8 +176,7 @@ module Folio::Ai::SimpleFormInputExtension
     end
 
     def append_ai_input_action
-      action = "input->#{CONTROLLER_NAME}#onInput"
-      input_html_options["data-action"] = [input_html_options["data-action"], action].compact.join(" ")
+      merge_stimulus_data!(input_html_options, { "action" => "input->#{CONTROLLER_NAME}#onInput" })
     end
 
     def append_ai_custom_html(config, show_button:)
