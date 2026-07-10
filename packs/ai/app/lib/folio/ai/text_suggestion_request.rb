@@ -133,6 +133,7 @@ class Folio::Ai::TextSuggestionRequest
     return :record_not_found unless record
     return :site_disabled unless site_ai_enabled?
     return :field_not_registered unless registered_key?
+    return :instructions_too_long if submitted_instructions_too_long?
     return :prompt_not_configured unless site_prompt_enabled?
     return :missing_context unless content_requirement_satisfied?
     :provider_unavailable unless provider_available?
@@ -232,6 +233,11 @@ class Folio::Ai::TextSuggestionRequest
     def suggestion_count
       count = params[:suggestion_count].to_i
       count.positive? ? count : Folio::Ai::DEFAULT_SUGGESTION_COUNT
+    end
+
+    def submitted_instructions_too_long?
+      params.key?(:instructions) &&
+        params[:instructions].to_s.length > Folio::Ai::UserInstruction::MAX_INSTRUCTION_LENGTH
     end
 
     def grouped_fields

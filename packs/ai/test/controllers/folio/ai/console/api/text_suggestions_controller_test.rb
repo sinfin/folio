@@ -139,6 +139,22 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
                     I18n.t("folio.ai.console.text_suggestions_component.errors.missing_message_bus_client_id")
   end
 
+  test "renders instruction validation error and does not enqueue job" do
+    assert_no_enqueued_jobs only: Folio::Ai::TextSuggestionsJob do
+      post console_api_ai_text_suggestions_path(format: :json),
+           params: request_params(instructions: "x" * (Folio::Ai::UserInstruction::MAX_INSTRUCTION_LENGTH + 1)),
+           as: :json
+    end
+
+    assert_response :unprocessable_entity
+    assert_includes response.parsed_body["data"],
+                    I18n.t("folio.ai.console.text_suggestions_component.errors.instructions_too_long")
+    assert_nil Folio::Ai::UserInstruction.find_by(user: @superadmin,
+                                                  site: @site,
+                                                  integration_key: "folio_pages",
+                                                  field_key: "title")
+  end
+
   test "renders grouped validation errors as child fragments" do
     assert_no_enqueued_jobs only: Folio::Ai::TextSuggestionsJob do
       post console_api_ai_text_suggestions_path(format: :json),

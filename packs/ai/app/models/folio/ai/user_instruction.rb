@@ -2,6 +2,8 @@
 
 # Persists per-user prompt instructions for one registered record field or group.
 class Folio::Ai::UserInstruction < Folio::ApplicationRecord
+  MAX_INSTRUCTION_LENGTH = 10_000
+
   self.table_name = "folio_ai_user_instructions"
 
   belongs_to :user,
@@ -15,7 +17,7 @@ class Folio::Ai::UserInstruction < Folio::ApplicationRecord
             :field_key,
             presence: true
   validates :instruction,
-            length: { maximum: 10_000 }
+            length: { maximum: MAX_INSTRUCTION_LENGTH }
 
   before_validation :normalize_values
 

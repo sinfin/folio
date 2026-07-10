@@ -24,6 +24,7 @@ cs:
             site_disabled: AI návrhy jsou pro tento web vypnuté.
             field_not_registered: AI návrhy nejsou pro toto pole nakonfigurované.
             prompt_not_configured: AI návrhy nejsou pro toto pole nakonfigurované.
+            instructions_too_long: Instrukce pro AI jsou příliš dlouhé.
             missing_context: Doplňte nejdříve obsah, aby mohl AI asistent generovat relevantní návrhy.
             provider_unavailable: Před použitím AI návrhů nastavte AI providera.
             provider_error: AI návrhy se nepodařilo vygenerovat.
