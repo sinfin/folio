@@ -65,14 +65,39 @@ Avoid hand-writing controller-specific attributes such as `data-action`,
 Call on the **root element's** `data` hash. This sets `@stimulus_controller_name` for child helpers.
 
 ```slim
-.my-block data=stimulus_controller("m-my-block",
-                                    values: { url: some_url },
-                                    action: { click: "onClick" },
-                                    classes: %w[active],
-                                    outlets: %w[f-c-other])
+.my-block data=data
 ```
 
+```ruby
+private
+  def data
+    stimulus_controller("m-my-block",
+                        values: { url: some_url },
+                        action: { click: "onClick" },
+                        classes: %w[active],
+                        outlets: %w[f-c-other])
+  end
+```
+
+Avoid multiline `stimulus_controller(...)` calls in Slim. When the root data
+hash is not short enough to stay inline, extract it to a component method.
+Prefer naming that root method `data` so the root reads
+`.my-block data=data`. Use a more specific name only when the component already
+has multiple data helpers or `data` would be ambiguous.
+
 **Do not** pass `inline: true` on the primary root — it skips setting `@stimulus_controller_name` and breaks child helpers.
+
+Use **one primary, non-inline feature controller per ViewComponent**, and make
+its identifier match that component's BEM block. Do not mount another
+component's full controller from a helper on the current component, and do not
+borrow another controller's targets for visible component markup. For example,
+do not use `stimulus_data(controller: "other-block", target: "...")` from the
+current component to wire another component's target. If a section needs
+separate full-feature behavior, extract or generate a child ViewComponent with
+its own root/controller; otherwise merge the behavior into the current
+component's controller. Utility helpers such as `stimulus_tooltip` remain the
+exception because they are inline utility controllers, not component-owned
+feature controllers.
 
 ### Children — `stimulus_target`, `stimulus_action`
 
