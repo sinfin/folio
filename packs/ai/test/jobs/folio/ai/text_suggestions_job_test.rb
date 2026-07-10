@@ -43,9 +43,11 @@ class Folio::Ai::TextSuggestionsJobTest < ActiveJob::TestCase
   end
 
   test "broadcasts grouped child fragments" do
+    provider = GroupedCapturingProvider.new
+
     message = capture_message do
       I18n.with_locale(:en) do
-        Folio::Ai::Providers::Dummy.stub(:available?, true) do
+        Folio::Ai.stub(:provider_for, provider) do
           perform_job(job_params.merge(grouped: true,
                                        key: "meta",
                                        component_id: "ai_group",
@@ -57,16 +59,18 @@ class Folio::Ai::TextSuggestionsJobTest < ActiveJob::TestCase
       end
     end
 
+    assert_equal 1, provider.calls
+    assert_equal Folio::Ai::GROUPED_SUGGESTION_COUNT, provider.suggestion_count
     assert_equal true, message[:payload].dig("data", "grouped")
     assert_equal "ai_group", message[:payload].dig("data", "component_id")
 
     title_fragment = message[:payload].dig("data", "fragments", "ai_title")
     assert_includes title_fragment, "f-ai-c-text-suggestions--grouped"
-    assert_includes title_fragment, "Dummy title for testing AI suggestions"
+    assert_includes title_fragment, "Grouped title"
     assert_not_includes title_fragment, "f-ai-c-text-suggestions__close"
     assert_not_includes title_fragment, "f-ai-c-text-suggestions__instructions"
     assert_includes message[:payload].dig("data", "fragments", "ai_perex"),
-                    "Dummy perex summarizing the article angle"
+                    "Grouped perex"
   end
 
   test "broadcasts rendered provider errors" do
@@ -186,7 +190,29 @@ class Folio::Ai::TextSuggestionsJobTest < ActiveJob::TestCase
         @suggestion_count = suggestion_count
         {
           suggestions: [
-            { text: "Provider title" },
+            { key: "title", text: "Provider title" },
+          ],
+        }.to_json
+      end
+    end
+
+    class GroupedCapturingProvider
+      attr_reader :prompt,
+                  :suggestion_count,
+                  :calls
+
+      def initialize
+        @calls = 0
+      end
+
+      def complete(prompt:, suggestion_count:)
+        @calls += 1
+        @prompt = prompt
+        @suggestion_count = suggestion_count
+        {
+          suggestions: [
+            { key: "title", text: "Grouped title" },
+            { key: "perex", text: "Grouped perex" },
           ],
         }.to_json
       end

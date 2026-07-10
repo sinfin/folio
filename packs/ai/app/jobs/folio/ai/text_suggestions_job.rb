@@ -96,20 +96,24 @@ class Folio::Ai::TextSuggestionsJob < Folio::ApplicationJob
     end
 
     def suggestions_for(field)
-      @suggestions ||= {}
-      @suggestions[field.fetch(:key)] ||= generator(field:).call
+      suggestions_by_field.fetch(field.fetch(:key).to_s)
     end
 
-    def generator(field:)
-      Folio::Ai::TextSuggestionGenerator.new(record:,
-                                             site:,
-                                             record_key: params[:record_key],
-                                             field:,
-                                             form_snapshot: params[:form_snapshot],
-                                             provider:,
-                                             site_prompt: params[:site_prompt],
-                                             instructions: params[:instructions],
-                                             suggestion_count:)
+    def suggestions_by_field
+      @suggestions_by_field ||= generator.call_by_field
+    end
+
+    def generator
+      @generator ||= Folio::Ai::TextSuggestionGenerator.new(record:,
+                                                            site:,
+                                                            record_key: params[:record_key],
+                                                            key: params[:key],
+                                                            fields:,
+                                                            form_snapshot: params[:form_snapshot],
+                                                            provider:,
+                                                            site_prompt: params[:site_prompt],
+                                                            instructions: params[:instructions],
+                                                            suggestion_count:)
     end
 
     def record

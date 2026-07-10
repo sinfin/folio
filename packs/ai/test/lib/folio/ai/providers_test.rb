@@ -55,6 +55,23 @@ class Folio::Ai::ProvidersTest < ActiveSupport::TestCase
     assert texts.none? { |text| text.include?("Generate suggestions") }
   end
 
+  test "returns grouped dummy suggestions for every requested field" do
+    prompt = <<~TEXT.squish
+      Generate grouped suggestions.
+      #{Folio::Ai::TextSuggestionGenerator::CONTEXT_MARKER}
+      {"fields":[{"key":"title"},{"key":"perex"}]}
+    TEXT
+
+    response = JSON.parse(Folio::Ai::Providers::Dummy.new.complete(prompt:, suggestion_count: 1))
+    suggestions = response.fetch("suggestions")
+
+    assert_equal ["title", "perex"], suggestions.map { |suggestion| suggestion.fetch("key") }
+    assert_equal "Dummy title for testing AI suggestions in local development.",
+                 suggestions.first.fetch("text")
+    assert_equal "Dummy perex summarizing the article angle so editors can test copy, accept and undo states without a real AI request.",
+                 suggestions.second.fetch("text")
+  end
+
   test "defines OpenAI model options from Folio-prefixed ENV with fallback" do
     Folio::Ai::Providers::OpenAi.stub(:models_env_value, " gpt-5.5, gpt-5.5-pro, gpt-5.5 ") do
       assert_equal %w[gpt-5.5 gpt-5.5-pro], Folio::Ai::Providers::OpenAi.models

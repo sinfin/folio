@@ -19,13 +19,9 @@ class Folio::Ai::Providers::Dummy < Folio::Ai::Providers::Base
 
   def complete(prompt:, suggestion_count:)
     delay_response
-    texts = dummy_texts(prompt)
+    data = prompt_data(prompt)
 
-    {
-      suggestions: suggestion_count.times.map do |index|
-        { text: texts[index % texts.size] }
-      end,
-    }.to_json
+    { suggestions: suggestions_for(data:, suggestion_count:) }.to_json
   end
 
   private
@@ -34,9 +30,28 @@ class Folio::Ai::Providers::Dummy < Folio::Ai::Providers::Base
       sleep(delay) if delay.positive?
     end
 
-    def dummy_texts(prompt)
-      field_key = prompt_data(prompt).dig("field", "key").to_s
+    def suggestions_for(data:, suggestion_count:)
+      if data["fields"].present?
+        return data.fetch("fields").flat_map do |field|
+          field_key = field["key"].to_s
+          next [] if field_key.blank?
 
+          texts = dummy_texts(field_key)
+
+          suggestion_count.times.map do |index|
+            { key: field_key, text: texts[index % texts.size] }
+          end
+        end
+      end
+
+      texts = dummy_texts(data.dig("field", "key").to_s)
+
+      suggestion_count.times.map do |index|
+        { text: texts[index % texts.size] }
+      end
+    end
+
+    def dummy_texts(field_key)
       case field_key
       when "perex"
         perex_texts

@@ -1,16 +1,27 @@
 # frozen_string_literal: true
 
 # Builds provider prompts from site prompts, user instructions, form state, and
-# model data, then normalizes provider JSON into suggestion hashes.
+# model data, then normalizes provider JSON into field-keyed suggestion hashes.
 
 class Folio::Ai::TextSuggestionGenerator
   CONTEXT_MARKER = "Context JSON:"
 
-  def initialize(record:, site:, record_key:, field:, form_snapshot:, provider:, site_prompt: nil, instructions: nil, suggestion_count: Folio::Ai::DEFAULT_SUGGESTION_COUNT)
+  def initialize(record:,
+                 site:,
+                 record_key:,
+                 form_snapshot:,
+                 provider:,
+                 field: nil,
+                 fields: nil,
+                 key: nil,
+                 site_prompt: nil,
+                 instructions: nil,
+                 suggestion_count: Folio::Ai::DEFAULT_SUGGESTION_COUNT)
     @record = record
     @site = site
     @record_key = record_key.to_s
-    @field = field.symbolize_keys
+    @fields = normalize_fields(fields.presence || [field])
+    @key = key.to_s.strip.presence || primary_field.fetch(:key)
     @form_snapshot = normalize_form_snapshot(form_snapshot)
     @provider = provider
     @site_prompt = site_prompt.to_s.strip.presence
@@ -19,13 +30,19 @@ class Folio::Ai::TextSuggestionGenerator
   end
 
   def call
-    parse_response(provider.complete(prompt:, suggestion_count:)).first(suggestion_count)
+    call_by_field.fetch(primary_field.fetch(:key))
+  end
+
+  def call_by_field
+    @call_by_field ||= parse_response(provider.complete(prompt:, suggestion_count:))
   end
 
   def prompt
     <<~TEXT.squish
-      Generate #{suggestion_count} text suggestions for the requested form field.
-      Return only valid JSON in this shape: {"suggestions":[{"text":"..."}]}.
+      Generate #{suggestion_count} text #{suggestion_word} for each requested form field.
+      Return only valid JSON in this shape: {"suggestions":[{"key":"title","text":"..."}]}.
+      For each requested field key, return exactly #{suggestion_count} #{suggestion_word}.
+      Use exactly the provided field keys.
       Use the form snapshot as the source of truth.
       #{CONTEXT_MARKER}
       #{JSON.pretty_generate(prompt_data)}
@@ -36,7 +53,8 @@ class Folio::Ai::TextSuggestionGenerator
     attr_reader :record,
                 :site,
                 :record_key,
-                :field,
+                :key,
+                :fields,
                 :form_snapshot,
                 :provider,
                 :site_prompt,
@@ -45,7 +63,8 @@ class Folio::Ai::TextSuggestionGenerator
 
     def prompt_data
       {
-        field: field_data,
+        key:,
+        fields: fields.map { |field| field_data(field) },
         prompt: site_prompt,
         instructions:,
         form_snapshot:,
@@ -53,11 +72,19 @@ class Folio::Ai::TextSuggestionGenerator
       }.compact
     end
 
-    def field_data
-      field.slice(:key, :character_limit).merge(label: field_label).compact
+    def primary_field
+      fields.first
     end
 
-    def field_label
+    def fields_by_key
+      @fields_by_key ||= fields.index_by { |field| field.fetch(:key) }
+    end
+
+    def field_data(field)
+      field.slice(:key, :character_limit).merge(label: field_label(field)).compact
+    end
+
+    def field_label(field)
       field[:label].presence ||
         record.class.human_attribute_name(field.fetch(:key)) ||
         field.fetch(:key).humanize
@@ -66,14 +93,24 @@ class Folio::Ai::TextSuggestionGenerator
     def additional_data
       return unless record.respond_to?(:folio_ai_additional_data)
 
-      record.folio_ai_additional_data(field_key: field.fetch(:key),
+      record.folio_ai_additional_data(field_key: key,
                                       form_snapshot:)
     end
 
+    def normalize_fields(fields)
+      Array(fields).filter_map do |field|
+        field_hash = raw_hash(field).symbolize_keys
+        field_key = field_hash[:key].to_s.strip
+        next if field_key.blank?
+
+        field_hash.merge(key: field_key)
+      end
+    end
+
     def normalize_form_snapshot(value)
-      raw_hash(value).each_with_object({}) do |(key, item), hash|
+      raw_hash(value).each_with_object({}) do |(snapshot_key, item), hash|
         normalized = normalize_form_snapshot_value(item)
-        hash[key.to_s] = normalized if normalized.present?
+        hash[snapshot_key.to_s] = normalized if normalized.present?
       end
     end
 
@@ -94,45 +131,62 @@ class Folio::Ai::TextSuggestionGenerator
     end
 
     def parse_response(raw_response)
-      suggestions = response_items(raw_response).filter_map.with_index do |item, index|
-        suggestion_from(item, index)
+      suggestions = response_items(raw_response).each_with_object({}) do |item, hash|
+        field_key, text = suggestion_attributes(item)
+
+        hash[field_key] ||= []
+        hash[field_key] << suggestion_from(field: fields_by_key.fetch(field_key),
+                                           key: hash[field_key].size + 1,
+                                           text:)
       end
 
-      raise Folio::Ai::ResponseError, "AI provider returned no suggestions" if suggestions.blank?
+      fields.to_h do |field|
+        field_key = field.fetch(:key)
+        field_suggestions = Array(suggestions[field_key]).first(suggestion_count)
+        raise Folio::Ai::ResponseError, "AI provider did not return suggestions for: #{field_key}" if field_suggestions.blank?
 
-      suggestions
+        [field_key, field_suggestions]
+      end
     end
 
     def response_items(raw_response)
       parsed = JSON.parse(raw_response.to_s)
 
-      case parsed
-      when Hash
-        Array(parsed["suggestions"])
-      when Array
-        parsed
-      else
-        raise Folio::Ai::ResponseError, "AI provider response has invalid format"
-      end
+      return parsed.fetch("suggestions") if parsed.is_a?(Hash) && parsed["suggestions"].is_a?(Array)
+
+      raise Folio::Ai::ResponseError, "AI provider response has invalid format"
     rescue JSON::ParserError
       raise Folio::Ai::ResponseError, "AI provider response is not valid JSON"
     end
 
-    def suggestion_from(item, index)
-      data = item.is_a?(Hash) ? item.symbolize_keys : { text: item }
-      text = data[:text].to_s.strip
-      return if text.blank?
+    def suggestion_attributes(item)
+      data = item.is_a?(Hash) ? item.with_indifferent_access : nil
+      raise Folio::Ai::ResponseError, "AI provider suggestion has invalid format" unless data
 
+      field_key = data[:key].to_s.strip
+      text = data[:text].to_s.strip
+      unless fields_by_key.key?(field_key) && text.present?
+        raise Folio::Ai::ResponseError, "AI provider suggestion has invalid format"
+      end
+
+      [field_key, text]
+    end
+
+    def suggestion_from(field:, key:, text:)
       {
-        key: data[:key].presence || index + 1,
+        key:,
         text:,
         character_count: text.length,
         character_limit: field[:character_limit],
-        over_character_limit: over_character_limit?(text),
+        over_character_limit: over_character_limit?(field:, text:),
       }.compact
     end
 
-    def over_character_limit?(text)
+    def over_character_limit?(field:, text:)
       field[:character_limit].present? && text.length > field[:character_limit].to_i
+    end
+
+    def suggestion_word
+      suggestion_count == 1 ? "suggestion" : "suggestions"
     end
 end

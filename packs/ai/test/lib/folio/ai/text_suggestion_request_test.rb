@@ -143,6 +143,25 @@ class Folio::Ai::TextSuggestionRequestTest < ActiveSupport::TestCase
     assert_equal "Use a more direct meta pattern.", request.job_params[:instructions]
   end
 
+  test "uses the group prompt without child field prompts for grouped requests" do
+    site = create(Rails.application.config.folio_site_default_test_factory,
+                  ai_settings: ai_settings(field_prompt: "Do not use the title prompt.",
+                                           group_prompt: "Use the group prompt only."))
+    page = create(:folio_page, site:)
+
+    request = build_request(site:,
+                            page:,
+                            params: {
+                              key: "meta",
+                              grouped: true,
+                              message_bus_client_id: "client-1",
+                            })
+
+    assert_equal "Use the group prompt only.", request.site_prompt
+    assert_equal "Use the group prompt only.", request.job_params[:site_prompt]
+    assert_not_includes request.job_params[:site_prompt], "Do not use the title prompt."
+  end
+
   test "persists submitted instructions" do
     site = create(Rails.application.config.folio_site_default_test_factory)
     user = create(:folio_user)
@@ -203,6 +222,7 @@ class Folio::Ai::TextSuggestionRequestTest < ActiveSupport::TestCase
 
     assert_equal :instructions_too_long, request.error_code
     assert_not_predicate request, :ready?
+  end
 
   test "caps submitted suggestion count in job params" do
     site = create(Rails.application.config.folio_site_default_test_factory,
@@ -218,7 +238,6 @@ class Folio::Ai::TextSuggestionRequestTest < ActiveSupport::TestCase
                             })
 
     assert_equal Folio::Ai::MAX_SUGGESTION_COUNT, request.job_params[:suggestion_count]
-  end
   end
 
   test "uses site provider and model with dummy fallback model" do

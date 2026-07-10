@@ -105,8 +105,10 @@ Grouped suggestions wrap normal AI inputs:
                                 ai: true
 ```
 
-The group must be enabled with a nonblank site prompt under the group key. The
-child inputs still own accepting, copying, undo, and final field updates.
+The group must be enabled with a nonblank site prompt under the group key.
+Grouped requests use that group prompt only; they do not merge in the child
+fields' individual prompts. The child inputs still own accepting, copying,
+undo, and final field updates.
 When grouped child inputs use custom `input_html[:id]` values, pass matching
 field metadata so grouped results target the rendered inputs:
 
@@ -176,9 +178,9 @@ adding alternate data-source APIs for one-off use cases.
 4. The job publishes MessageBus payloads with rendered HTML fragments.
 5. The frontend replaces suggestion HTML for the matching input components.
 
-Single-field requests return three suggestions. Grouped requests return one
-suggestion fragment for each field in the group plus the shared group controls
-and instructions.
+Single-field requests return at most three suggestions. Grouped requests use
+one provider/API call for the whole group and return one suggestion fragment
+for each field plus the shared group controls and instructions.
 
 ## Verify
 
