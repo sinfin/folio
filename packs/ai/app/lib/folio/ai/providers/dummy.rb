@@ -3,6 +3,7 @@
 # Development-only provider returning deterministic fake suggestions.
 class Folio::Ai::Providers::Dummy < Folio::Ai::Providers::Base
   DEFAULT_MODEL = "dummy"
+  RESPONSE_DELAY = 1.second
 
   def self.key
     :dummy
@@ -12,7 +13,12 @@ class Folio::Ai::Providers::Dummy < Folio::Ai::Providers::Base
     Rails.env.development?
   end
 
+  def self.response_delay
+    Rails.env.development? ? RESPONSE_DELAY : 0
+  end
+
   def complete(prompt:, suggestion_count:)
+    delay_response
     texts = dummy_texts(prompt)
 
     {
@@ -23,6 +29,11 @@ class Folio::Ai::Providers::Dummy < Folio::Ai::Providers::Base
   end
 
   private
+    def delay_response
+      delay = self.class.response_delay
+      sleep(delay) if delay.positive?
+    end
+
     def dummy_texts(prompt)
       field_key = prompt_data(prompt).dig("field", "key").to_s
 

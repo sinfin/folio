@@ -29,6 +29,16 @@ class Folio::Ai::ProvidersTest < ActiveSupport::TestCase
     assert_equal Folio::Ai::Providers::Dummy::DEFAULT_MODEL, Folio::Ai::Providers::Dummy.default_model
   end
 
+  test "delays dummy responses only in development" do
+    Rails.stub(:env, ActiveSupport::StringInquirer.new("development")) do
+      assert_equal 1.second, Folio::Ai::Providers::Dummy.response_delay
+    end
+
+    Rails.stub(:env, ActiveSupport::StringInquirer.new("test")) do
+      assert_equal 0, Folio::Ai::Providers::Dummy.response_delay
+    end
+  end
+
   test "returns field-aware dummy suggestions without prompt text" do
     prompt = <<~TEXT.squish
       Generate suggestions.
