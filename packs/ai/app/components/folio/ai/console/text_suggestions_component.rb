@@ -79,15 +79,12 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
     end
 
     def status_message
-      return t(".loading") if loading?
       return unless error?
 
       t(".errors.#{@error_code}")
     end
 
     def status_hidden?
-      return true if grouped? && loading?
-
       status_message.blank?
     end
 

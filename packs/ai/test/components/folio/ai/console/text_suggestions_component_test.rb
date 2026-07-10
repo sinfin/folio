@@ -29,6 +29,8 @@ class Folio::Ai::Console::TextSuggestionsComponentTest < Folio::Console::Compone
     end
 
     assert_selector(".f-ai-c-text-suggestions__suggestion--loading", count: 3)
+    assert_selector(".f-ai-c-text-suggestions__status[hidden]", visible: :hidden)
+    assert_no_selector(".f-ai-c-text-suggestions__status", visible: true)
     assert_text "Preparing ..."
   end
 
@@ -44,7 +46,8 @@ class Folio::Ai::Console::TextSuggestionsComponentTest < Folio::Console::Compone
 
     assert_selector(".f-ai-c-text-suggestions--grouped")
     assert_no_selector(".f-ai-c-text-suggestions__close")
-    assert_no_selector(".f-ai-c-text-suggestions__status")
+    assert_selector(".f-ai-c-text-suggestions__status[hidden]", visible: :hidden)
+    assert_no_selector(".f-ai-c-text-suggestions__status", visible: true)
     assert_no_selector(".f-ai-c-text-suggestions__instructions")
     assert_selector(".f-ai-c-text-suggestions__suggestion--loading", count: 1)
     assert_text "Preparing ..."
