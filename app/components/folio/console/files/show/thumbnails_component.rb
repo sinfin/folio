@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 class Folio::Console::Files::Show::ThumbnailsComponent < Folio::Console::ApplicationComponent
-  # Relative tolerance for proximity clustering of crop aspect ratios (provisional; confirm with design).
-  RATIO_TOLERANCE = 0.04
+  # Relative tolerance for proximity clustering of crop aspect ratios.
+  # A key joins a bucket when its ratio is within +-2 % of the bucket's
+  # cleanest ratio (the member with the smallest reduced numerator+denominator).
+  RATIO_TOLERANCE = 0.02
 
   def initialize(file:)
     @file = file
@@ -20,15 +22,6 @@ class Folio::Console::Files::Show::ThumbnailsComponent < Folio::Console::Applica
     crop_keys = crop_ratios.values.flatten
     regular_keys = grouped.dig("regular", "regular") || []
     crop_keys + regular_keys
-  end
-
-  # Returns the "cleanest" reduced-fraction label for a bucket of [key, w, h] entries:
-  # the one with the smallest numerator+denominator after gcd reduction.
-  def self.cleanest_ratio_label(entries)
-    entries.map { |(_k, w, h)|
-      g = w.gcd(h)
-      [(w / g) + (h / g), "#{w / g}:#{h / g}"]
-    }.min_by(&:first).last
   end
 
   def self.group_thumbnail_size_keys(keys)
@@ -51,23 +44,37 @@ class Folio::Console::Files::Show::ThumbnailsComponent < Folio::Console::Applica
       end
     end
 
-    # Proximity cluster crop entries (ascending ratio, anchor = bucket's smallest ratio)
+    # Proximity cluster crop entries: ascending ratio; a bucket is anchored to
+    # its cleanest member's exact ratio and re-anchors when a cleaner member joins.
     unless crop_entries.empty?
       buckets = []
+
       crop_entries.sort_by { |(_k, r, _w, _h)| r }.each do |key, r, w, h|
+        g = w.gcd(h)
+        clean_sum = (w / g) + (h / g)
+        clean_ratio = (w / g).to_f / (h / g)
+        label = "#{w / g}:#{h / g}"
+
         b = buckets.last
-        if b && ((r - b[:anchor]) / b[:anchor]) <= RATIO_TOLERANCE
-          b[:entries] << [key, w, h]
+
+        if b && ((r - b[:clean_ratio]).abs / b[:clean_ratio]) <= RATIO_TOLERANCE
+          b[:entries] << key
+
+          if clean_sum < b[:clean_sum]
+            b[:clean_sum] = clean_sum
+            b[:clean_ratio] = clean_ratio
+            b[:label] = label
+          end
         else
-          buckets << { anchor: r, entries: [[key, w, h]] }
+          buckets << { clean_sum:, clean_ratio:, label:, entries: [key] }
         end
       end
 
       grouped["crop"] = {}
+
       buckets.each do |bucket|
-        label = cleanest_ratio_label(bucket[:entries])
-        grouped["crop"][label] ||= []
-        grouped["crop"][label].concat(bucket[:entries].map(&:first))
+        grouped["crop"][bucket[:label]] ||= []
+        grouped["crop"][bucket[:label]].concat(bucket[:entries])
       end
     end
 
