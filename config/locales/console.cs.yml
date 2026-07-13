@@ -80,9 +80,9 @@ cs:
       blank: Neuvedeno
       media_sources:
         form:
-          add_site_rule: Přidat pravidlo pro titul
-          site_rules: Pravidla podle titulu
-          site_rules_hint: Nevyplněné pole dědí hodnotu z hlavního zdroje. Pokud nejsou přidány žádné tituly, zdroj je použitelný všude.
+          add_site_rule: Přidat pravidlo pro web
+          site_rules: Pravidla podle webu
+          site_rules_hint: Nevyplněné pole dědí hodnotu z hlavního zdroje. Pokud nejsou přidány žádné weby, zdroj je použitelný všude.
       boolean:
         "yes": "Ano"
         "no": "Ne"
@@ -511,6 +511,7 @@ cs:
         usage_constraints_component:
           max_usage_count: "Maximální počet použití:"
           allowed_sites_blank: Nevyplněno
+          media_source: "Zdroj médií:"
 
       eleven_labs:
         transcribe_subtitles_job:

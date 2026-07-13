@@ -152,7 +152,7 @@ class Folio::File::HasUsageConstraintsTest < ActiveSupport::TestCase
     assert_equal 5, image.attribution_max_usage_count
   end
 
-  test "prefills current site max usage count and global metadata when media source is assigned" do
+  test "stores global max usage count and applies current site override when media source is assigned" do
     with_sharing(true) do
       ms = media_source(title: "Getty Images")
       ms.update!(
@@ -175,7 +175,24 @@ class Folio::File::HasUsageConstraintsTest < ActiveSupport::TestCase
       assert_equal ms, image.media_source
       assert_equal "Commercial License", image.attribution_licence
       assert_equal "© 2024 Getty Images", image.attribution_copyright
-      assert_equal 3, image.attribution_max_usage_count
+      assert_equal 5, image.attribution_max_usage_count
+      assert_equal 3, image.effective_attribution_max_usage_count(site: @site)
+    end
+  end
+
+  test "site override does not replace a file fallback when media source has no global max" do
+    with_sharing(true) do
+      ms = media_source(title: "Getty Images")
+      ms.update!(max_usage_count: nil)
+      ms.media_source_site_links.create!(site: @site, max_usage_count: 3)
+
+      image = img(
+        attribution_source: ms.title,
+        attribution_max_usage_count: 9
+      )
+
+      assert_equal 9, image.attribution_max_usage_count
+      assert_equal 3, image.effective_attribution_max_usage_count(site: @site)
     end
   end
 
@@ -287,6 +304,45 @@ class Folio::File::HasUsageConstraintsTest < ActiveSupport::TestCase
       assert create_atom(Dummy::Atom::Contents::ImageAndText, placement: article, cover: image, content: "content")
       assert_equal 1, image.reload.published_usage_count
       assert_equal 1, image.reload.published_usage_count_for_site(@site)
+    end
+  end
+
+  test "publishing and unpublishing parent refreshes atom-only cached usage count" do
+    with_sharing(true) do
+      image = img
+      article = create(:dummy_blog_article, site: @site, published: false)
+      create_atom(Dummy::Atom::Contents::ImageAndText,
+                  placement: article,
+                  cover: image,
+                  content: "content")
+
+      assert_equal 0, image.reload.published_usage_count
+
+      article.update!(published: true)
+      assert_equal 1, image.reload.published_usage_count
+
+      article.update!(published: false)
+      assert_equal 0, image.reload.published_usage_count
+    end
+  end
+
+  test "publishing parent counts repeated direct and atom file usage once" do
+    with_sharing(true) do
+      image = img
+      article = create(:dummy_blog_article, site: @site, published: false)
+      article.image_placements.create!(file: image)
+      2.times do
+        create_atom(Dummy::Atom::Contents::ImageAndText,
+                    placement: article,
+                    cover: image,
+                    content: "content")
+      end
+
+      assert_equal 0, image.reload.published_usage_count
+
+      article.update!(published: true)
+
+      assert_equal 1, image.reload.published_usage_count
     end
   end
 

@@ -414,14 +414,17 @@ module Folio::HasAttachments
     end
 
     def update_file_usage_counts_on_publish_change
-      files = Folio::FilePlacement::Base
-               .where(placement_id: id, placement_type: self.class.base_class.name)
-               .includes(:file)
-               .map(&:file)
-               .uniq
-               .compact
+      placements = Folio::FilePlacement::Base.where(placement_id: id,
+                                                     placement_type: self.class.base_class.name)
 
-      files.each(&:update_file_placements_counts!)
+      if respond_to?(:all_atoms_in_array)
+        atom_ids = Folio::Atom::Base.where(placement: self).select(:id)
+        atom_placements = Folio::FilePlacement::Base.where(placement_id: atom_ids,
+                                                           placement_type: "Folio::Atom::Base")
+        placements = placements.or(atom_placements)
+      end
+
+      Folio::File.where(id: placements.select(:file_id)).find_each(&:update_file_placements_counts!)
     end
 
     def validate_files_usage_limits_if_publishing

@@ -165,7 +165,7 @@ module Folio::File::HasUsageConstraints
     max_usage_count = effective_attribution_max_usage_count(site:)
     return false unless max_usage_count&.positive?
 
-    usage_count = if site && site_specific_usage_constraints?
+    usage_count = if site && allowed_sites_managed_by_media_source?
       published_usage_count_for_site(site)
     else
       published_usage_count
@@ -178,7 +178,7 @@ module Folio::File::HasUsageConstraints
     return true unless site
 
     if Rails.application.config.folio_shared_files_between_sites
-      if media_source&.media_source_site_links&.any?
+      if allowed_sites_managed_by_media_source?
         media_source.rule_for_site(site).present?
       else
         allowed_sites.empty? || allowed_sites.include?(site)
@@ -192,6 +192,15 @@ module Folio::File::HasUsageConstraints
     media_source&.effective_max_usage_count(site:) || attribution_max_usage_count
   end
 
+  def max_usage_count_managed_by_media_source?(site: Folio::Current.site)
+    media_source&.effective_max_usage_count(site:).present?
+  end
+
+  def allowed_sites_managed_by_media_source?
+    Rails.application.config.folio_shared_files_between_sites &&
+      media_source&.media_source_site_links&.any?
+  end
+
   def published_usage_count_for_site(site)
     return published_usage_count unless site
 
@@ -199,7 +208,7 @@ module Folio::File::HasUsageConstraints
   end
 
   def allowed_sites_for_usage_constraints
-    if site_specific_usage_constraints?
+    if allowed_sites_managed_by_media_source?
       media_source.allowed_sites
     else
       allowed_sites
@@ -211,11 +220,6 @@ module Folio::File::HasUsageConstraints
   end
 
   private
-    def site_specific_usage_constraints?
-      Rails.application.config.folio_shared_files_between_sites &&
-        media_source&.media_source_site_links&.any?
-    end
-
     def find_media_source_for(attribution_source)
       scope = if Rails.application.config.folio_shared_files_between_sites
         Folio::MediaSource.all
@@ -254,7 +258,7 @@ module Folio::File::HasUsageConstraints
       {
         attribution_licence: media_source.licence,
         attribution_copyright: media_source.copyright_text,
-        attribution_max_usage_count: media_source.effective_max_usage_count(site: Folio::Current.site)
+        attribution_max_usage_count: media_source.max_usage_count
       }.each do |file_attr, value|
         if value.present?
           self.send("#{file_attr}=", value)

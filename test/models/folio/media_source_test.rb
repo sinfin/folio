@@ -157,4 +157,45 @@ class Folio::MediaSourceTest < ActiveSupport::TestCase
     image.reload
     assert_nil image.media_source_id
   end
+
+  test "destroy clears copied global max instead of leaving site override" do
+    with_config(folio_shared_files_between_sites: true) do
+      site = create_and_host_site
+      media_source = create(:folio_media_source, site:, max_usage_count: 5)
+      media_source.media_source_site_links.create!(site:, max_usage_count: 3)
+      image = create(:folio_file_image,
+                     site:,
+                     attribution_source: media_source.title)
+
+      assert_equal 5, image.attribution_max_usage_count
+      assert_equal 3, image.effective_attribution_max_usage_count(site:)
+
+      media_source.destroy!
+
+      image.reload
+      assert_nil image.media_source_id
+      assert_nil image.attribution_max_usage_count
+    end
+  end
+
+  test "destroy preserves file fallback when media source has only a site override" do
+    with_config(folio_shared_files_between_sites: true) do
+      site = create_and_host_site
+      media_source = create(:folio_media_source, site:, max_usage_count: nil)
+      media_source.media_source_site_links.create!(site:, max_usage_count: 3)
+      image = create(:folio_file_image,
+                     site:,
+                     attribution_source: media_source.title,
+                     attribution_max_usage_count: 9)
+
+      assert_equal 9, image.attribution_max_usage_count
+      assert_equal 3, image.effective_attribution_max_usage_count(site:)
+
+      media_source.destroy!
+
+      image.reload
+      assert_nil image.media_source_id
+      assert_equal 9, image.attribution_max_usage_count
+    end
+  end
 end
