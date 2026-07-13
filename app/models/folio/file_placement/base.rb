@@ -365,20 +365,16 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
 
     def file_usage_already_represented?
       validation_record = usage_validation_record
+      placement_type = validation_record.class.base_class.name
+      scope = Folio::FilePlacement::Base.where(file_id: file.id).where.not(id:)
+      direct_placements = scope.where(placement_type:,
+                                      placement_id: validation_record.id)
+      atom_ids = Folio::Atom::Base.where(placement_type:,
+                                         placement_id: validation_record.id)
+      atom_placements = scope.where(placement_type: "Folio::Atom::Base",
+                                    placement_id: atom_ids.select(:id))
 
-      file.file_placements.includes(:placement).any? do |file_placement|
-        next if file_placement.id == id
-
-        file_placement_usage_record = if file_placement.placement.is_a?(Folio::Atom::Base) &&
-                                         file_placement.placement.placement.present?
-          file_placement.placement.placement
-        else
-          file_placement.placement
-        end
-
-        file_placement_usage_record&.class&.base_class == validation_record.class.base_class &&
-          file_placement_usage_record.id == validation_record.id
-      end
+      direct_placements.or(atom_placements).exists?
     end
 
     def update_placement_counts_unless_inside_nested_attributes

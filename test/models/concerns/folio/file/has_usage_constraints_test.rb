@@ -313,6 +313,33 @@ class Folio::File::HasUsageConstraintsTest < ActiveSupport::TestCase
     end
   end
 
+  test "atom usage validation does not load every previous atom parent" do
+    with_sharing(true) do
+      ms = media_source(title: "Wire")
+      ms.media_source_site_links.create!(site: @site, max_usage_count: 100)
+      image = img(attribution_source: ms.title)
+
+      5.times do
+        article = create(:dummy_blog_article, site: @site, published: true)
+        create_atom(Dummy::Atom::Contents::ImageAndText,
+                    placement: article,
+                    cover: image,
+                    content: "content")
+      end
+
+      image.reload
+      article = create(:dummy_blog_article, site: @site, published: true)
+      atom = Dummy::Atom::Contents::ImageAndText.new(placement: article,
+                                                     cover: image,
+                                                     content: "content")
+
+      queries = capture_sql_queries { assert atom.valid? }
+      parent_queries = queries.grep(/SELECT "dummy_blog_articles"\.\*/)
+
+      assert_empty parent_queries
+    end
+  end
+
   test "preloads current site usage counts for a file collection" do
     with_sharing(true) do
       other_site = create_site(force: true)
@@ -449,5 +476,19 @@ class Folio::File::HasUsageConstraintsTest < ActiveSupport::TestCase
 
     def media_source(title: "MS")
       create(:folio_media_source, title:, site: @site)
+    end
+
+    def capture_sql_queries
+      queries = []
+      subscriber = ActiveSupport::Notifications.subscribe("sql.active_record") do |_name, _start, _finish, _id, payload|
+        next if payload[:name].in?(%w[SCHEMA TRANSACTION]) || payload[:cached]
+
+        queries << payload[:sql]
+      end
+
+      yield
+      queries
+    ensure
+      ActiveSupport::Notifications.unsubscribe(subscriber) if subscriber
     end
 end
