@@ -18,7 +18,18 @@
     cursor: pointer
     display: inline-flex
     align-items: center
+    gap: $grid-gutter-half
     min-height: 28px
+
+    &::-webkit-details-marker
+      display: none
+
+  &__all-summary-chevron
+    display: inline-flex
+    transition: transform 0.2s ease
+
+  &__all[open] &__all-summary-chevron
+    transform: rotate(180deg)
 
   &__all-list
     display: flex

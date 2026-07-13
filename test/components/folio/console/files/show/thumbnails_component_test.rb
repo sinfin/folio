@@ -76,4 +76,17 @@ class Folio::Console::Files::Show::ThumbnailsComponentTest < Folio::Console::Com
       end
     end
   end
+
+  test "render shows a chevron on the all-thumbnails disclosure" do
+    with_controller_class(Folio::Console::File::ImagesController) do
+      with_request_url "/console/file/images" do
+        file = create(:folio_file_image)
+        file.update!(thumbnail_sizes: { "80x80#" => { url: "https://example.com/80x80.jpg" } })
+
+        render_inline(Folio::Console::Files::Show::ThumbnailsComponent.new(file:))
+
+        assert_selector("details.f-c-files-show-thumbnails__all summary .f-c-files-show-thumbnails__all-summary-chevron svg")
+      end
+    end
+  end
 end

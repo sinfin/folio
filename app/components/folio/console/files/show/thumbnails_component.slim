@@ -10,7 +10,9 @@
                                                                                thumbnail_size_keys:))
 
     details.f-c-files-show-thumbnails__all
-      summary.f-c-files-show-thumbnails__all-summary = t('.show_all_thumbnails')
+      summary.f-c-files-show-thumbnails__all-summary
+        span.f-c-files-show-thumbnails__all-summary-label = t('.show_all_thumbnails')
+        span.f-c-files-show-thumbnails__all-summary-chevron = folio_icon(:chevron_down, height: 16)
 
       .f-c-files-show-thumbnails__all-list
         - all_size_keys.each do |thumbnail_size_key|
