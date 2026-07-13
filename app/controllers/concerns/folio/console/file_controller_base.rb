@@ -106,10 +106,11 @@ module Folio::Console::FileControllerBase
     end
 
     def folio_console_collection_includes
-      includes = [:tags]
+      includes = %i[site tags]
 
       if @klass.try(:has_usage_constraints?)
         includes << :allowed_sites
+        includes << { media_source: { media_source_site_links: :site } }
       end
 
       includes

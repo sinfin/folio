@@ -94,4 +94,15 @@ class Folio::FileListComponent < Folio::ApplicationComponent
       "f-file-list--primary-action-#{@primary_action}"
     end
   end
+
+  private
+    def before_render
+      return unless @files
+      return unless @file_klass.try(:has_usage_constraints?)
+      return unless Rails.application.config.folio_shared_files_between_sites
+      return unless Folio::Current.site
+
+      @files = @files.to_a
+      Folio::File::PublishedUsageCounter.preload(@files, site: Folio::Current.site)
+    end
 end
