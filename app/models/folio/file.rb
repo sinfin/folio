@@ -421,28 +421,7 @@ class Folio::File < Folio::ApplicationRecord
   end
 
   def calculate_published_usage_count
-    placement_types = file_placements.distinct.pluck(:placement_type)
-    return 0 if placement_types.empty?
-
-    published_conditions = placement_types.map do |type|
-      klass = type.constantize
-      table_name = klass.table_name
-
-      if klass.column_names.include?("published")
-        "(folio_file_placements.placement_type = '#{type}' AND EXISTS (SELECT 1 FROM #{table_name} WHERE #{table_name}.id = folio_file_placements.placement_id AND #{table_name}.published = true))"
-      else
-        # For classes without published, assume published
-        "folio_file_placements.placement_type = '#{type}'"
-      end
-    rescue NameError
-      # If class doesn't exist, assume published
-      "folio_file_placements.placement_type = '#{type}'"
-    end
-
-    file_placements
-      .where(published_conditions.join(" OR "))
-      .distinct
-      .count("CONCAT(placement_type, ':', placement_id)")
+    Folio::File::PublishedUsageCounter.count(self)
   end
 
   def update_file_placements_counts!
