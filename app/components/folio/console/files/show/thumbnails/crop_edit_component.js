@@ -79,6 +79,14 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
 
     window.Folio.Api.apiPatch(this.apiUrlValue, data).then((res) => {
       if (res && res.data) {
+        const ratio = this.apiDataValue.ratio
+        const listGroupHtml = res.meta && res.meta.list_group_html
+
+        if (listGroupHtml) {
+          const listGroupEl = document.querySelector(`.f-c-files-show-thumbnails-list-group[data-ratio="${ratio}"]`)
+          if (listGroupEl) listGroupEl.outerHTML = listGroupHtml
+        }
+
         ratioEl.outerHTML = res.data
       } else {
         throw new Error('Invalid response from server')

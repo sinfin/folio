@@ -477,6 +477,33 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
                 as: :json
         end
       end
+
+      test "#{klass} - update_thumbnails_crop returns the disclosure list group html in meta" do
+        file = create(klass.model_name.singular)
+        file.update!(thumbnail_sizes: { "160x90#" => { "uid" => "u1", "url" => "https://example.com/160x90.jpg" } })
+
+        patch url_for([:update_thumbnails_crop, :console, :api, file, format: :json]), params: {
+          crop: { x: 0.0, y: 0.1 },
+          ratio: "16:9",
+          thumbnail_size_keys: ["160x90#"]
+        }
+
+        assert_response(:success)
+        list_group_html = response.parsed_body["meta"]["list_group_html"]
+        assert list_group_html.include?("f-c-files-show-thumbnails-list-group")
+        assert list_group_html.include?('data-ratio="16:9"')
+      end
+
+      test "#{klass} - update_thumbnails_crop destroys uids stored under symbol keys" do
+        file = create(klass.model_name.singular)
+        file.update!(thumbnail_sizes: { "200x100#" => { uid: "sym-uid-1", webp_uid: "sym-webp-uid-1" } })
+
+        assert_enqueued_with(job: Folio::DestroyThumbnailUidsJob, args: [["sym-uid-1", "sym-webp-uid-1"]]) do
+          patch url_for([:update_thumbnails_crop, :console, :api, file, format: :json]),
+                params: { ratio: "2:1", thumbnail_size_keys: %w[200x100#], crop: { x: 0.5, y: 0.5 } },
+                as: :json
+        end
+      end
     end
   end
 end

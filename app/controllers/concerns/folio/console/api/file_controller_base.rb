@@ -286,12 +286,11 @@ module Folio::Console::Api::FileControllerBase
 
     thumbnail_size_keys.each do |size_key|
       if thumbnail_sizes[size_key].is_a?(Hash)
-        if thumbnail_sizes[size_key]["uid"].is_a?(String)
-          thumb_uids_to_destroy << thumbnail_sizes[size_key]["uid"]
-        end
-        if thumbnail_sizes[size_key]["webp_uid"].is_a?(String)
-          thumb_uids_to_destroy << thumbnail_sizes[size_key]["webp_uid"]
-        end
+        uid = thumbnail_sizes[size_key][:uid] || thumbnail_sizes[size_key]["uid"]
+        webp_uid = thumbnail_sizes[size_key][:webp_uid] || thumbnail_sizes[size_key]["webp_uid"]
+
+        thumb_uids_to_destroy << uid if uid.is_a?(String)
+        thumb_uids_to_destroy << webp_uid if webp_uid.is_a?(String)
       end
 
       # hackily extracted from app/models/concerns/folio/thumbnails.rb
@@ -335,10 +334,17 @@ module Folio::Console::Api::FileControllerBase
     uids = thumb_uids_to_destroy.compact.uniq
     Folio::DestroyThumbnailUidsJob.perform_later(uids) if uids.any?
 
+    list_group_html = render_to_string(Folio::Console::Files::Show::Thumbnails::ListGroupComponent.new(file: @file,
+                                                                                                       ratio:,
+                                                                                                       thumbnail_size_keys:,
+                                                                                                       updated_thumbnails_crop: true),
+                                       layout: false)
+
     render_component_json(Folio::Console::Files::Show::Thumbnails::RatioComponent.new(file: @file,
                                                                                       ratio:,
                                                                                       thumbnail_size_keys:,
-                                                                                      updated_thumbnails_crop: true))
+                                                                                      updated_thumbnails_crop: true),
+                          meta: { list_group_html: })
   end
 
   private
