@@ -15,9 +15,14 @@
         span.f-c-files-show-thumbnails__all-summary-chevron = folio_icon(:chevron_down, height: 16)
 
       .f-c-files-show-thumbnails__all-list
-        - all_size_keys.each do |thumbnail_size_key|
-          = render(Folio::Console::Files::Show::Thumbnails::Ratio::ThumbnailComponent.new(thumbnail_size_key:,
-                                                                                          thumbnail: @file.thumbnail_sizes[thumbnail_size_key],
-                                                                                          file: @file))
+        - crop_ratios.each do |ratio, thumbnail_size_keys|
+          = render(Folio::Console::Files::Show::Thumbnails::ListGroupComponent.new(file: @file,
+                                                                                   ratio:,
+                                                                                   thumbnail_size_keys:))
+
+        - if regular_size_keys.present?
+          = render(Folio::Console::Files::Show::Thumbnails::ListGroupComponent.new(file: @file,
+                                                                                   ratio: "regular",
+                                                                                   thumbnail_size_keys: regular_size_keys))
   - else
     p = t('.no_thumbnails_yet')

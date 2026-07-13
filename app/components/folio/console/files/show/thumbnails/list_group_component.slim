@@ -1,0 +1,26 @@
+.f-c-files-show-thumbnails-list-group data-ratio=@ratio
+  .f-c-files-show-thumbnails-list-group__header
+    - unless regular?
+      - if representative_url
+        img.f-c-files-show-thumbnails-list-group__representative-img[
+          loading="lazy"
+          src=representative_url
+          data=representative_data
+        ]
+
+    .f-c-files-show-thumbnails-list-group__meta
+      span.f-c-files-show-thumbnails-list-group__label = ratio_label
+
+      - if usage_label
+        span.f-c-files-show-thumbnails-list-group__usage = "· #{usage_label}"
+
+      - unless regular?
+        span.f-c-files-show-thumbnails-list-group__count[
+          title=t('.variants_count', count: variants_count)
+        ] = "(#{variants_count})"
+
+  .f-c-files-show-thumbnails-list-group__thumbs
+    - @thumbnail_size_keys.each do |thumbnail_size_key|
+      = render(Folio::Console::Files::Show::Thumbnails::Ratio::ThumbnailComponent.new(thumbnail_size_key:,
+                                                                                      thumbnail: @file.thumbnail_sizes[thumbnail_size_key],
+                                                                                      file: @file))

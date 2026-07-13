@@ -17,4 +17,28 @@ module Folio::Console::Files::Show::Thumbnails::RepresentativeImage
       end
     end
   end
+
+  # Resolved preview URL for the largest generated size among keys, using the
+  # same CDN / temporary-url rewriting as the detail thumbnails. Doader
+  # placeholder URLs are skipped unless include_doader (waiting state after a
+  # crop reset, where the temporary url is the only thing available).
+  def representative_url(file:, keys:, include_doader: false)
+    candidates = keys.select do |key|
+      thumb = file.thumbnail_sizes[key]
+      next false unless thumb.is_a?(Hash) && thumb[:url].present?
+
+      include_doader || !thumb[:url].include?("doader.com")
+    end
+
+    return nil if candidates.empty?
+
+    key = representative_thumbnail_size_key(candidates)
+    url = file.thumbnail_sizes[key][:url]
+
+    if url.include?("doader.com")
+      file.temporary_url(key)
+    else
+      Folio::S3.cdn_url_rewrite(url)
+    end
+  end
 end

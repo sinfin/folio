@@ -61,6 +61,12 @@ en:
             crop_edit_component:
               edit: Edit crop
 
+            list_group_component:
+              regular: Versions without crop
+              variants_count:
+                one: "%{count} size"
+                other: "%{count} sizes"
+
         batch:
           bar_component:
             delete: Delete

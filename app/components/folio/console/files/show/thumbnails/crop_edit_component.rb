@@ -25,29 +25,10 @@ class Folio::Console::Files::Show::Thumbnails::CropEditComponent < Folio::Consol
     def image_url
       return @image_url if defined?(@image_url)
 
-      candidates = @thumbnail_size_keys.select do |key|
-        thumb = @file.thumbnail_sizes[key]
-        next false unless thumb.is_a?(Hash) && thumb[:url].present?
-
-        @updated_thumbnails_crop || !thumb[:url].include?("doader.com")
-      end
-
-      @image_url = if candidates.empty?
-        nil
-      else
-        key = Folio::Console::Files::Show::Thumbnails::RepresentativeImage.representative_thumbnail_size_key(candidates)
-        resolve_thumbnail_url(@file.thumbnail_sizes[key], key)
-      end
-    end
-
-    def resolve_thumbnail_url(thumb, key)
-      url = thumb[:url]
-
-      if url.include?("doader.com")
-        @file.temporary_url(key)
-      else
-        Folio::S3.cdn_url_rewrite(url)
-      end
+      @image_url = Folio::Console::Files::Show::Thumbnails::RepresentativeImage
+                     .representative_url(file: @file,
+                                         keys: @thumbnail_size_keys,
+                                         include_doader: @updated_thumbnails_crop)
     end
 
     def image_data

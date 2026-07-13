@@ -62,6 +62,13 @@ cs:
             crop_edit_component:
               edit: Upravit ořez
 
+            list_group_component:
+              regular: Verze bez ořezu
+              variants_count:
+                one: "%{count} velikost"
+                few: "%{count} velikosti"
+                other: "%{count} velikostí"
+
         batch:
           bar_component:
             delete: Smazat

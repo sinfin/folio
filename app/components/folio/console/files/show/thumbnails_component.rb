@@ -15,13 +15,9 @@ class Folio::Console::Files::Show::ThumbnailsComponent < Folio::Console::Applica
     grouped["crop"] || {}
   end
 
-  # All generated thumbnail size keys in a stable order: crop ratios first
-  # (ascending), then the non-cropped "regular" sizes. Used for the
-  # "All generated thumbnails" disclosure.
-  def all_size_keys
-    crop_keys = crop_ratios.values.flatten
-    regular_keys = grouped.dig("regular", "regular") || []
-    crop_keys + regular_keys
+  # Non-crop sizes for the trailing "regular" group of the disclosure.
+  def regular_size_keys
+    grouped.dig("regular", "regular") || []
   end
 
   def self.group_thumbnail_size_keys(keys)
