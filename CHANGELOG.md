@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - **Console private attachments**: Replace the Dropzone/S3Upload add flow with `Folio::UppyComponent`, preserving nested attachment ordering/destroy behavior and hiding move arrows in single-attachment mode.
-- **Console image thumbnails**: Group generated crop thumbnails by aspect ratio, shown as a row of per-ratio preview tiles labelled with the ratio (e.g. `16×9`), with a single collapsible "all generated thumbnails" list below. Near-duplicate aspect ratios are clustered by proximity (configurable `RATIO_TOLERANCE`) instead of one tile per exact ratio. Add an overridable `Folio::File#thumbnail_ratio_label(ratio, thumbnail_size_keys)` hook (default `nil`) so host apps can relabel groups (e.g. by on-site usage).
+- **Console image thumbnails**: Group generated crop thumbnails by aspect ratio, shown as a row of per-ratio preview tiles labelled with the ratio (e.g. `16×9`), with a single collapsible "all generated thumbnails" list below. The collapsible list is grouped by the same ratio buckets - each group shows a representative preview, the variant count, and an optional usage label via the overridable `Folio::File#thumbnail_ratio_label(ratio, thumbnail_size_keys)` hook (default `nil`); the disclosure toggle has a chevron indicator. Near-duplicate aspect ratios are clustered within a +-2 % tolerance around the cleanest ratio of the bucket (`RATIO_TOLERANCE`) instead of one tile per exact ratio.
 - **Console crop editor**: Open the per-ratio crop editor in a modal overlay (close via ESC, backdrop, or Cancel) from a crop button on each ratio tile.
 
 ### Fixed
@@ -14,6 +14,8 @@ All notable changes to this project will be documented in this file.
 - **Uppy drag-and-drop**: Only the first active uploader handles window-level file drops, preventing duplicate uploads when a page renders multiple `Folio::UppyComponent` instances.
 - **Crop persistence**: Persist a group's crop under every exact aspect ratio it contains so later thumbnail regeneration keeps the crop instead of falling back to the default gravity.
 - **Crop save performance**: Move stale thumbnail uid cleanup off the request into `Folio::DestroyThumbnailUidsJob`.
+- **Crop save**: Refresh the affected group in the "all generated thumbnails" list immediately after saving a crop, so its thumbnails show the regeneration state without reopening the file detail.
+- **Crop save**: Destroy stale thumbnail uids also when `thumbnail_sizes` entries use symbol keys (the production YAML serialization), fixing orphaned thumbnail blobs.
 
 ## [7.7.1] - 2026-06-16
 
