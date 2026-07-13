@@ -83,16 +83,34 @@ module Folio::File::HasUsageConstraints
 
     def usage_constraints_under_limit_sql(site = nil)
       effective_max = usage_constraints_effective_max_usage_count_sql
-      usage_count = usage_constraints_effective_published_usage_count_sql(site)
+      return "(#{effective_max} IS NULL OR folio_files.published_usage_count < #{effective_max})" unless site
 
-      "(#{effective_max} IS NULL OR #{usage_count} < #{effective_max})"
+      <<~SQL.squish
+        (
+          #{effective_max} IS NULL
+          OR CASE
+            WHEN #{usage_constraints_media_source_rules_exist_sql}
+            THEN folio_files.id NOT IN (#{usage_constraints_site_over_limit_file_ids_sql(site)})
+            ELSE folio_files.published_usage_count < #{effective_max}
+          END
+        )
+      SQL
     end
 
     def usage_constraints_over_limit_sql(site = nil)
       effective_max = usage_constraints_effective_max_usage_count_sql
-      usage_count = usage_constraints_effective_published_usage_count_sql(site)
+      return "(#{effective_max} > 0 AND folio_files.published_usage_count >= #{effective_max})" unless site
 
-      "(#{effective_max} > 0 AND #{usage_count} >= #{effective_max})"
+      <<~SQL.squish
+        (
+          #{effective_max} > 0
+          AND CASE
+            WHEN #{usage_constraints_media_source_rules_exist_sql}
+            THEN folio_files.id IN (#{usage_constraints_site_over_limit_file_ids_sql(site)})
+            ELSE folio_files.published_usage_count >= #{effective_max}
+          END
+        )
+      SQL
     end
 
     def usage_constraints_allowed_site_sql(site)
@@ -144,20 +162,55 @@ module Folio::File::HasUsageConstraints
       SQL
     end
 
-    def usage_constraints_effective_published_usage_count_sql(site)
-      return "folio_files.published_usage_count" unless site
-
+    def usage_constraints_media_source_rules_exist_sql
       <<~SQL.squish
-        CASE
-          WHEN EXISTS (
-            SELECT 1
-              FROM folio_media_source_site_links usage_constraint_media_source_rules
-             WHERE usage_constraint_media_source_rules.media_source_id = folio_files.media_source_id
-          )
-          THEN #{Folio::File::PublishedUsageCounter.sql_for_outer_file(site:)}
-          ELSE folio_files.published_usage_count
-        END
+        EXISTS (
+          SELECT 1
+            FROM folio_media_source_site_links usage_constraint_media_source_rules
+           WHERE usage_constraint_media_source_rules.media_source_id = folio_files.media_source_id
+        )
       SQL
+    end
+
+    def usage_constraints_site_over_limit_file_ids_sql(site)
+      source_managed_file_ids_sql = <<~SQL.squish
+        SELECT usage_constraint_source_managed_files.id
+          FROM folio_files usage_constraint_source_managed_files
+         WHERE usage_constraint_source_managed_files.media_source_id IN (
+           SELECT usage_constraint_source_managed_rules.media_source_id
+             FROM folio_media_source_site_links usage_constraint_source_managed_rules
+         )
+      SQL
+      usage_records_sql = Folio::File::PublishedUsageCounter.records_sql(
+        site:,
+        file_ids_sql: source_managed_file_ids_sql
+      )
+      effective_max = <<~SQL.squish
+        COALESCE(
+          usage_constraint_counted_file_site_links.max_usage_count,
+          usage_constraint_counted_file_sources.max_usage_count,
+          usage_constraint_counted_files.attribution_max_usage_count
+        )
+      SQL
+
+      sanitize_sql_array([
+        <<~SQL.squish,
+          SELECT folio_file_published_usage_records.file_id
+            FROM (#{usage_records_sql}) folio_file_published_usage_records
+            JOIN folio_files usage_constraint_counted_files
+              ON usage_constraint_counted_files.id = folio_file_published_usage_records.file_id
+            JOIN folio_media_sources usage_constraint_counted_file_sources
+              ON usage_constraint_counted_file_sources.id = usage_constraint_counted_files.media_source_id
+            LEFT JOIN folio_media_source_site_links usage_constraint_counted_file_site_links
+              ON usage_constraint_counted_file_site_links.media_source_id = usage_constraint_counted_file_sources.id
+             AND usage_constraint_counted_file_site_links.site_id = :site_id
+           WHERE #{effective_max} > 0
+           GROUP BY folio_file_published_usage_records.file_id,
+                    #{effective_max}
+          HAVING COUNT(*) >= #{effective_max}
+        SQL
+        { site_id: site.id }
+      ])
     end
   end
 
@@ -203,8 +256,16 @@ module Folio::File::HasUsageConstraints
 
   def published_usage_count_for_site(site)
     return published_usage_count unless site
+    if @preloaded_published_usage_counts&.key?(site.id)
+      return @preloaded_published_usage_counts.fetch(site.id)
+    end
 
     Folio::File::PublishedUsageCounter.count(self, site:)
+  end
+
+  def preload_published_usage_count_for_site(site, count)
+    @preloaded_published_usage_counts ||= {}
+    @preloaded_published_usage_counts[site.id] = count
   end
 
   def allowed_sites_for_usage_constraints

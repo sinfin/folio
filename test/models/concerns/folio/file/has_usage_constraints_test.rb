@@ -52,10 +52,16 @@ class Folio::File::HasUsageConstraintsTest < ActiveSupport::TestCase
 
   test "by_usage_constraints with sharing stays SQL-backed" do
     with_sharing(true) do
+      article = create(:dummy_blog_article, site: @site, published: true)
+      article.image_placements.create!(file: img)
+
       sql = Folio::File::Image.by_usage_constraints("usable").to_sql
 
       assert_includes sql, "folio_file_site_links"
       assert_includes sql, "folio_media_source_site_links"
+      assert_includes sql, "GROUP BY folio_file_published_usage_records.file_id"
+      assert_includes sql, "usage_constraint_source_managed_files"
+      assert_not_includes sql, "folio_file_placements.file_id = folio_files.id"
     end
   end
 
@@ -304,6 +310,30 @@ class Folio::File::HasUsageConstraintsTest < ActiveSupport::TestCase
       assert create_atom(Dummy::Atom::Contents::ImageAndText, placement: article, cover: image, content: "content")
       assert_equal 1, image.reload.published_usage_count
       assert_equal 1, image.reload.published_usage_count_for_site(@site)
+    end
+  end
+
+  test "preloads current site usage counts for a file collection" do
+    with_sharing(true) do
+      other_site = create_site(force: true)
+      first_image = img
+      second_image = img
+      article = create(:dummy_blog_article, site: @site, published: true)
+      article.image_placements.create!(file: first_image)
+      create_atom(Dummy::Atom::Contents::ImageAndText,
+                  placement: article,
+                  cover: first_image,
+                  content: "content")
+      other_article = create(:dummy_blog_article, site: other_site, published: true)
+      other_article.image_placements.create!(file: second_image)
+      files = [first_image.reload, second_image.reload]
+
+      Folio::File::PublishedUsageCounter.preload(files, site: @site)
+
+      Folio::File::PublishedUsageCounter.stub(:count, -> (*, **) { flunk "unexpected per-file count" }) do
+        assert_equal 1, files.first.published_usage_count_for_site(@site)
+        assert_equal 0, files.second.published_usage_count_for_site(@site)
+      end
     end
   end
 
