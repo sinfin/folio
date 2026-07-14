@@ -16,6 +16,7 @@ class Dummy::UiController < ApplicationController
       clipboard
       embed
       forms
+      folio_icons
       hero
       icons
       images
@@ -87,6 +88,9 @@ class Dummy::UiController < ApplicationController
       { variant: :info, loader: true, label: "Add loader flash",
         onclick: "window.Dummy.Ui.Flash.flash({ content: 'New loader message!', variant: 'loader' })" },
     ]
+  end
+
+  def folio_icons
   end
 
   def pagination

@@ -79,6 +79,7 @@ Rails.application.routes.draw do
       get :boolean_toggles
       get :buttons
       get :forms
+      get :folio_icons
       get :icons
       get :images
       get :modals

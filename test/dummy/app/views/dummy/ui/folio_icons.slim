@@ -1,0 +1,14 @@
+.container-fluid
+  h1
+    a.d-unlink href=dummy_ui_path UI kit
+
+  h2 Folio Icons
+
+  .d-flex.flex-wrap.gap-3[
+    onmouseenter="this.style.color = 'red'"
+    onmouseleave="this.style.color = 'inherit'"
+  ]
+    - Folio::Ui::IconCell::ICONS.each do |name, _h|
+      .d-flex.flex-column.align-items-center.gap-1.p-2.border.rounded
+        = folio_icon(name)
+        small = name
