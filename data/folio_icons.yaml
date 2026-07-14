@@ -264,6 +264,9 @@ minus_circle:
 more_vert:
   width: 24
   height: 24
+newspaper_variant_outline:
+  width: 24
+  height: 24
 open_in_new:
   width: 24
   height: 24
