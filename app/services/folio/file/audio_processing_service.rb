@@ -12,6 +12,8 @@ class Folio::File::AudioProcessingService
   TARGET_SAMPLE_RATE_HZ = 44_100
   MONO_BITRATE = "128k"
   STEREO_BITRATE = "192k"
+  WAVEFORM_POINT_COUNT = 200
+  WAVEFORM_ANALYSIS_SAMPLE_RATE_HZ = 11_025
   DERIVATIVE_ROOT = "audio"
   PLAYABLE_SUBPATH = "encoded"
 
@@ -44,11 +46,12 @@ class Folio::File::AudioProcessingService
     metadata = inspect_media
     mapped_metadata = build_mapped_metadata(metadata)
     playable_data = create_playable_derivative(metadata)
+    waveform_payload = safely_generate_waveform_payload(playable_data:, mapped_metadata:)
     artwork_image = create_or_update_artwork_image(metadata)
 
     persist!(
       file_metadata: mapped_metadata,
-      remote_services_data: processed_remote_services_data(playable_data:, artwork_image:, mapped_metadata:),
+      remote_services_data: processed_remote_services_data(playable_data:, artwork_image:, mapped_metadata:, waveform_payload:),
     )
 
     audio_file.processing_done! if audio_file.processing?
@@ -84,9 +87,14 @@ class Folio::File::AudioProcessingService
       JSON.parse(output)
     end
 
-    def processed_remote_services_data(playable_data:, artwork_image:, mapped_metadata:)
+    def processed_remote_services_data(playable_data:, artwork_image:, mapped_metadata:, waveform_payload:)
       remote_data = audio_file.remote_services_data.to_h.dup
       remote_data["playable"] = playable_data
+      if waveform_payload.present?
+        remote_data["waveform"] = waveform_payload
+      else
+        remote_data.delete("waveform")
+      end
       remote_data["artwork_image_id"] = artwork_image&.id
       remote_data["quality_warning"] = quality_warning(mapped_metadata)
       remote_data["processed_at"] = Time.current.iso8601
@@ -144,6 +152,76 @@ class Folio::File::AudioProcessingService
               tempfile.path)
 
         store_derivative(tempfile:, extension:, content_type:)
+      end
+    end
+
+    def safely_generate_waveform_payload(playable_data:, mapped_metadata:)
+      generate_waveform_payload(playable_data:, mapped_metadata:)
+    rescue StandardError => e
+      Rails.logger.warn("[AudioProcessingService] waveform generation failed for file ##{audio_file.id}: #{e.message}")
+      nil
+    end
+
+    def generate_waveform_payload(playable_data:, mapped_metadata:)
+      peaks = nil
+
+      with_waveform_source(playable_data) do |source_path|
+        with_tempfile("raw") do |tempfile|
+          shell("ffmpeg",
+                "-y",
+                "-i", source_path,
+                "-vn",
+                "-ac", "1",
+                "-ar", WAVEFORM_ANALYSIS_SAMPLE_RATE_HZ.to_s,
+                "-f", "s16le",
+                "-acodec", "pcm_s16le",
+                tempfile.path)
+
+          peaks = waveform_peaks_from_file(tempfile.path)
+        end
+      end
+
+      {
+        "peaks" => peaks,
+      }
+    end
+
+    def with_waveform_source(playable_data)
+      if playable_data["storage"] == "s3" && playable_data["path"].present?
+        with_tempfile(playable_data["extension"].presence || "audio") do |tempfile|
+          test_aware_download_from_s3(s3_path: playable_data["path"], local_path: tempfile.path)
+          yield tempfile.path
+        end
+      else
+        yield audio_file.file_url_or_path
+      end
+    end
+
+    def waveform_peaks_from_file(path)
+      samples = File.binread(path).unpack("s<*")
+      return [] if samples.empty?
+
+      bucket_peaks = Array.new(WAVEFORM_POINT_COUNT, 0)
+      total_samples = samples.size
+
+      samples.each_with_index do |sample, index|
+        bucket_index = index * WAVEFORM_POINT_COUNT / total_samples
+        peak = sample.abs
+
+        bucket_peaks[bucket_index] = peak if peak > bucket_peaks[bucket_index]
+      end
+
+      normalize_waveform_peaks(bucket_peaks)
+    end
+
+    def normalize_waveform_peaks(bucket_peaks)
+      max_peak = bucket_peaks.max
+      return Array.new(WAVEFORM_POINT_COUNT, 0.0) unless max_peak&.positive?
+
+      bucket_peaks.map do |peak|
+        normalized = (peak / max_peak.to_f).clamp(0.0, 1.0)
+
+        Math.sqrt(normalized).round(3)
       end
     end
 

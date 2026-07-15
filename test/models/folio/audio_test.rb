@@ -220,4 +220,16 @@ class Folio::File::AudioTest < ActiveSupport::TestCase
 
     assert_equal 1, find_calls
   end
+
+  test "waveform payload exposes persisted peak envelope" do
+    audio = create(:folio_file_audio,
+                   remote_services_data: {
+                     "waveform" => {
+                       "peaks" => [0.0, 0.42, 1.0],
+                     }
+                   })
+
+    assert_equal [0.0, 0.42, 1.0], audio.waveform_peaks
+    assert_equal [0.0, 0.42, 1.0], audio.waveform_payload["peaks"]
+  end
 end

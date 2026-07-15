@@ -52,6 +52,14 @@ class Folio::File::Audio < Folio::File
     playable_storage_data["path"]
   end
 
+  def waveform_payload
+    remote_services_data.to_h["waveform"].presence
+  end
+
+  def waveform_peaks
+    Array(waveform_payload&.fetch("peaks", nil))
+  end
+
   def playable_content_type
     playable_storage_data["content_type"].presence || file_mime_type
   end
