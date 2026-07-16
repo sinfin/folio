@@ -81,6 +81,9 @@ module Folio
 
     config.folio_direct_s3_upload_allow_for_users = false
     config.folio_direct_s3_upload_allow_public = false
+    config.folio_direct_s3_upload_max_file_size = 5.gigabytes
+    config.folio_direct_s3_multipart_upload_enabled = false
+    config.folio_direct_s3_multipart_upload_min_file_size = 100.megabytes
     config.folio_direct_s3_upload_attributes_for_job_proc = -> (controller) {
       { site_id: controller.send(:site_for_new_files).id }
     }

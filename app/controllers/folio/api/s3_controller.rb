@@ -4,7 +4,18 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
   include Folio::S3::Client
 
   before_action :authenticate_s3!, except: %i[file_list_file]
-  before_action :get_file_name_and_s3_path, only: %i[before]
+  before_action :ensure_multipart_upload_enabled!, only: %i[
+    create_multipart_upload
+    sign_part
+    complete_multipart_upload
+    abort_multipart_upload
+  ]
+  before_action :get_file_name_and_s3_path, only: %i[before create_multipart_upload]
+  before_action :get_existing_s3_path, only: %i[
+    sign_part
+    complete_multipart_upload
+    abort_multipart_upload
+  ]
 
   def before # return settings for S3 file upload
     presigned_url = test_aware_presign_url(s3_path: @s3_path, method_name: :put_object)
@@ -15,6 +26,63 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
       file_name: @file_name,
       s3_path: @s3_path,
     }
+  end
+
+  def create_multipart_upload
+    options = {
+      bucket: s3_bucket,
+      key: test_aware_s3_path(@s3_path),
+    }
+
+    options[:content_type] = params[:content_type] if params[:content_type].present?
+
+    response = s3_client.create_multipart_upload(**options)
+
+    render json: {
+      uploadId: response.upload_id,
+      upload_id: response.upload_id,
+      key: @s3_path,
+      s3_path: @s3_path,
+      file_name: @file_name,
+      jwt: "TODO",
+    }
+  end
+
+  def sign_part
+    presigned_url = s3_presigner.presigned_url(
+      :upload_part,
+      bucket: s3_bucket,
+      key: test_aware_s3_path(@s3_path),
+      upload_id: upload_id_param,
+      part_number: part_number_param,
+    )
+
+    render json: { url: presigned_url }
+  end
+
+  def complete_multipart_upload
+    response = s3_client.complete_multipart_upload(
+      bucket: s3_bucket,
+      key: test_aware_s3_path(@s3_path),
+      upload_id: upload_id_param,
+      multipart_upload: { parts: multipart_upload_parts },
+    )
+
+    render json: {
+      location: response.try(:location),
+      key: @s3_path,
+      s3_path: @s3_path,
+    }
+  end
+
+  def abort_multipart_upload
+    s3_client.abort_multipart_upload(
+      bucket: s3_bucket,
+      key: test_aware_s3_path(@s3_path),
+      upload_id: upload_id_param,
+    )
+
+    render json: {}
   end
 
   # somewhere between, JS on FE directly loads file as temporary to S3 and returns it's s3_path
@@ -96,6 +164,55 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
         SecureRandom.urlsafe_base64(16),
         @file_name,
       ].join("/")
+    end
+
+    def get_existing_s3_path
+      @s3_path = params[:key].presence || params[:s3_path].presence
+
+      unless @s3_path&.start_with?(s3_upload_path_prefix)
+        render json: {}, status: :unprocessable_content
+      end
+    end
+
+    def s3_upload_path_prefix
+      "tmp_folio_file_uploads/session/"
+    end
+
+    def s3_upload_session_prefix
+      session[:init] = true unless session.id
+
+      [
+        s3_upload_path_prefix.delete_suffix("/"),
+        session.id.public_id,
+        "",
+      ].join("/")
+    end
+
+    def ensure_multipart_upload_enabled!
+      render json: {}, status: :not_found unless Rails.application.config.folio_direct_s3_multipart_upload_enabled
+    end
+
+    def upload_id_param
+      params[:uploadId].presence || params[:upload_id].presence || params.require(:upload_id)
+    end
+
+    def part_number_param
+      part_number = (params[:partNumber].presence || params[:part_number].presence || params.require(:part_number)).to_i
+
+      if part_number < 1 || part_number > 10_000
+        raise ActionController::BadRequest, "Invalid S3 multipart part number"
+      end
+
+      part_number
+    end
+
+    def multipart_upload_parts
+      params.require(:parts).map do |part|
+        {
+          part_number: (part[:PartNumber].presence || part[:part_number].presence || part[:partNumber]).to_i,
+          etag: part[:ETag].presence || part[:etag],
+        }
+      end
     end
 
     def handle_after(job_klass)

@@ -9,7 +9,9 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
     maxNumberOfFiles: Number,
     existingId: String,
     allowedFormats: String,
-    maxFileSize: Number
+    maxFileSize: Number,
+    multipartUploadEnabled: Boolean,
+    multipartUploadMinFileSize: Number
   }
 
   static targets = ['trigger', 'loader']
@@ -126,8 +128,11 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
       const args = { type: this.fileTypeValue }
       if (this.existingIdValue) args.existing_id = this.existingIdValue
 
-      this.uppy.use(window.Uppy.AwsS3, {
-        shouldUseMultipart: false,
+      const awsS3Options = {
+        shouldUseMultipart: (file) => {
+          return this.multipartUploadEnabledValue &&
+            file.size >= this.multipartUploadMinFileSizeValue
+        },
         getUploadParameters: (file) => {
           return window.Folio.Api.apiPost('/folio/api/s3/before', { ...args, file_name: file.name })
             .then((response) => {
@@ -147,7 +152,72 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
               throw new Error(window.Folio.i18n(this.constructor.ERROR_MESSAGES, 'failedToPrepareUpload'))
             })
         }
-      })
+      }
+
+      if (this.multipartUploadEnabledValue) {
+        Object.assign(awsS3Options, {
+          createMultipartUpload: (file) => {
+            return window.Folio.Api.apiPost('/folio/api/s3/create_multipart_upload', {
+              ...args,
+              file_name: file.name,
+              content_type: file.type
+            }).then((response) => {
+              this.uppy.setFileMeta(file.id, {
+                s3_path: response.s3_path,
+                jwt: response.jwt,
+                sanitized_name: response.file_name
+              })
+
+              return {
+                uploadId: response.uploadId || response.upload_id,
+                key: response.key || response.s3_path
+              }
+            }).catch((error) => {
+              console.error('[Uppy] Failed to create S3 multipart upload:', error)
+              throw new Error(window.Folio.i18n(this.constructor.ERROR_MESSAGES, 'failedToPrepareUpload'))
+            })
+          },
+          signPart: (_file, partData) => {
+            return window.Folio.Api.apiPost('/folio/api/s3/sign_part', {
+              key: partData.key,
+              uploadId: partData.uploadId,
+              partNumber: partData.partNumber
+            }).then((response) => {
+              return {
+                url: response.url,
+                headers: response.headers || {}
+              }
+            }).catch((error) => {
+              console.error('[Uppy] Failed to sign S3 multipart upload part:', error)
+              throw new Error(window.Folio.i18n(this.constructor.ERROR_MESSAGES, 'failedToPrepareUpload'))
+            })
+          },
+          completeMultipartUpload: (file, uploadData) => {
+            return window.Folio.Api.apiPost('/folio/api/s3/complete_multipart_upload', {
+              key: uploadData.key,
+              uploadId: uploadData.uploadId,
+              parts: uploadData.parts
+            }).then((response) => {
+              if (response.s3_path) {
+                this.uppy.setFileMeta(file.id, { s3_path: response.s3_path })
+              }
+
+              return { location: response.location }
+            }).catch((error) => {
+              console.error('[Uppy] Failed to complete S3 multipart upload:', error)
+              throw new Error(window.Folio.i18n(this.constructor.ERROR_MESSAGES, 'failedToPrepareUpload'))
+            })
+          },
+          abortMultipartUpload: (_file, uploadData) => {
+            return window.Folio.Api.apiPost('/folio/api/s3/abort_multipart_upload', {
+              key: uploadData.key,
+              uploadId: uploadData.uploadId
+            })
+          }
+        })
+      }
+
+      this.uppy.use(window.Uppy.AwsS3, awsS3Options)
 
       this.uppy.on('upload', (data) => {
         this.dispatch('upload', data)

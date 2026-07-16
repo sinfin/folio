@@ -321,6 +321,10 @@ Folio::Engine.routes.draw do
 
       resource :s3, only: [], controller: "s3" do
         post :before
+        post :create_multipart_upload
+        post :sign_part
+        post :complete_multipart_upload
+        post :abort_multipart_upload
         post :after
         get :file_list_file
       end
