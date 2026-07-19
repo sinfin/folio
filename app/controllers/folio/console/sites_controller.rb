@@ -46,7 +46,7 @@ class Folio::Console::SitesController < Folio::Console::BaseController
 
       permitted = [
         *ary,
-        *@site.class.additional_params,
+        *@site.class.additional_strong_params,
         *file_placements_strong_params,
         :subtitle_languages_string,
         { social_links: Folio::Site.social_link_sites },

@@ -421,28 +421,7 @@ class Folio::File < Folio::ApplicationRecord
   end
 
   def calculate_published_usage_count
-    placement_types = file_placements.distinct.pluck(:placement_type)
-    return 0 if placement_types.empty?
-
-    published_conditions = placement_types.map do |type|
-      klass = type.constantize
-      table_name = klass.table_name
-
-      if klass.column_names.include?("published")
-        "(folio_file_placements.placement_type = '#{type}' AND EXISTS (SELECT 1 FROM #{table_name} WHERE #{table_name}.id = folio_file_placements.placement_id AND #{table_name}.published = true))"
-      else
-        # For classes without published, assume published
-        "folio_file_placements.placement_type = '#{type}'"
-      end
-    rescue NameError
-      # If class doesn't exist, assume published
-      "folio_file_placements.placement_type = '#{type}'"
-    end
-
-    file_placements
-      .where(published_conditions.join(" OR "))
-      .distinct
-      .count("CONCAT(placement_type, ':', placement_id)")
+    Folio::File::PublishedUsageCounter.count(self)
   end
 
   def update_file_placements_counts!
@@ -454,6 +433,16 @@ class Folio::File < Folio::ApplicationRecord
     updates[:file_placements_count] = placements_count if file_placements_count != placements_count
 
     update_columns(updates) if updates.any?
+  end
+
+  # A purely numeric slug (e.g. derived from a file named "349444.jpg") would be
+  # resolved by FriendlyId ahead of the file whose primary key equals that number
+  # — friendly.find("349444") would return the slug owner instead of id 349444.
+  # Force a neutral, non-numeric slug so the slug and id namespaces never overlap.
+  # NOTE: must stay public — FriendlyId::Candidates calls it on the record.
+  def normalize_friendly_id(value)
+    normalized = super
+    normalized.to_s.match?(/\A\d+\z/) ? neutral_slug : normalized
   end
 
   private
