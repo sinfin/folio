@@ -16,6 +16,10 @@ All notable changes to this project will be documented in this file.
 - default `devise_modules` moved to folio config, so each app can set their own set. Default are `%i[database_authenticatable recoverable rememberable trackable invitable timeoutable lockable]
 - added option `Rails.application.config.folio_cookie_consent_configuration[:keep_attached_after_accept]` (default false). Set it `true` if app allways display link to open cookies settings.
 
+### Fixed
+
+- set `Folio::Current.cache_key_base` only after request locale resolution and use a locale-independent cache key for current site lookup
+
 ## [6.5.1] - 2025-06-18
 
 ### Added

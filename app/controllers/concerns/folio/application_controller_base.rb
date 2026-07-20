@@ -16,6 +16,7 @@ module Folio::ApplicationControllerBase
     layout :current_site_based_layout
 
     before_action :set_i18n_locale
+    before_action :set_folio_current_cache_key_base
 
     before_action :set_cookies_for_log
 
@@ -34,6 +35,10 @@ module Folio::ApplicationControllerBase
     else
       I18n.locale = Folio::Current.site.locale
     end
+  end
+
+  def set_folio_current_cache_key_base
+    Folio::Current.cache_key_base = Rails.application.config.action_controller.perform_caching ? try(:cache_key_base) : nil
   end
 
   def default_url_options
