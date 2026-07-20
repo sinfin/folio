@@ -1,7 +1,7 @@
 $medium-gray: #E8E8E8 !default
 
 .f-c-tiptap-overlay-form-nested-nodes
-  --f-c-tiptap-overlay-form-nested-nodes-spacer: #{2 * $spacer}
+  --f-c-tiptap-overlay-form-nested-nodes-spacer: #{$spacer}
 
   background: $medium-gray
   border-radius: $border-radius
@@ -51,8 +51,12 @@ $medium-gray: #E8E8E8 !default
     font-size: $font-size-base
     font-weight: $font-weight-bold
 
-  &__add-button
+  // styling &__add-button directly leaves a trailing gap
+  .f-nested-fields__add
     bottom: 100%
     position: absolute
     right: 0
     z-index: 2
+
+  @container f-c-tiptap-overlay-form (min-width: #{$f-c-tiptap-overlay-form__container-breakpoint})
+    --f-c-tiptap-overlay-form-nested-nodes-spacer: #{2 * $spacer}

@@ -1,4 +1,9 @@
 .f-c-tiptap-overlay-form
+  --f-c-tiptap-overlay-form__padding-x: #{$grid-gutter-width * 0.5}
+  --f-c-tiptap-overlay-form__padding-y: #{$grid-gutter-width}
+
+  container-name: f-c-tiptap-overlay-form
+  container-type: inline-size
   height: 100%
 
   &__form
@@ -10,7 +15,7 @@
     display: flex
     align-items: center
     flex: 0 0 auto
-    padding: $grid-gutter-width
+    padding: var(--f-c-tiptap-overlay-form__padding-y) var(--f-c-tiptap-overlay-form__padding-x)
     gap: $grid-gutter-width
 
   &__form-title
@@ -24,4 +29,9 @@
   &__form-body
     flex: 1 1 auto
     overflow-y: auto
-    padding: 0 $grid-gutter-width $grid-gutter-width
+    padding: 0 var(--f-c-tiptap-overlay-form__padding-x) var(--f-c-tiptap-overlay-form__padding-y)
+
+  @container f-c-tiptap-overlay-form (min-width: #{$f-c-tiptap-overlay-form__container-breakpoint})
+    &__form
+      --f-c-tiptap-overlay-form__padding-x: #{$grid-gutter-width}
+      --f-c-tiptap-overlay-form__padding-y: #{$grid-gutter-width}
