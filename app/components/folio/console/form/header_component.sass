@@ -14,11 +14,11 @@
   &__inner
     display: flex
     align-items: center
+    gap: $grid-gutter-width / 2
 
   &__right
     flex: 0 0 auto
     margin-left: auto
-    padding-left: $grid-gutter-width
 
   &__h2
     margin: $spacer / 2 0 0
@@ -26,3 +26,11 @@
   &__validation-boxes
     &:empty
       display: none
+
+  +media-breakpoint-down(sm)
+    &__inner
+      flex-direction: column
+      align-items: stretch
+
+    &__right
+      margin-left: 0
