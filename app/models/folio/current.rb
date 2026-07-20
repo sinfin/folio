@@ -14,6 +14,7 @@ class Folio::Current < ActiveSupport::CurrentAttributes
             :session,
             :ability,
             :cache_key_base,
+            :site_cache_key_base,
             :skip_caching
 
   SITE_KEYS = %i[
@@ -27,11 +28,11 @@ class Folio::Current < ActiveSupport::CurrentAttributes
     attributes
   end
 
-  def setup!(request:, user: nil, session: nil, cache_key_base: nil)
-    setup_folio_data(request:, user:, session:, cache_key_base:)
+  def setup!(request:, user: nil, session: nil, cache_key_base: nil, site_cache_key_base: cache_key_base)
+    setup_folio_data(request:, user:, session:, cache_key_base:, site_cache_key_base:)
   end
 
-  def setup_folio_data(request:, user:, session:, cache_key_base:)
+  def setup_folio_data(request:, user:, session:, cache_key_base:, site_cache_key_base:)
     self.host = request.host
     self.request_id = request.uuid
     self.user_agent = request.user_agent
@@ -41,8 +42,9 @@ class Folio::Current < ActiveSupport::CurrentAttributes
     self.session = session
 
     self.cache_key_base = cache_key_base
+    self.site_cache_key_base = site_cache_key_base
 
-    # keep the code that uses site under cache_key_base
+    # keep the code that uses site under site_cache_key_base
     nillify_site_records unless self.class.site_matches_host?(site:, host:)
     self.ability = Folio::Ability.new(user, site)
   end
@@ -68,9 +70,9 @@ class Folio::Current < ActiveSupport::CurrentAttributes
   end
 
   def self.cache_aware_get_site(host: nil)
-    if !skip_caching && cache_key_base
-      # cache_key_base should contain request.host
-      Rails.cache.fetch(["Folio::Current.cache_aware_get_site"] + cache_key_base, expires_in: Folio.expires_in) do
+    if !skip_caching && site_cache_key_base
+      # site_cache_key_base should contain request.host
+      Rails.cache.fetch(["Folio::Current.cache_aware_get_site"] + site_cache_key_base, expires_in: Folio.expires_in) do
         get_site(host:)
       end
     else
@@ -101,8 +103,8 @@ class Folio::Current < ActiveSupport::CurrentAttributes
   end
 
   def self.cache_aware_get_main_site
-    if !skip_caching && cache_key_base
-      Rails.cache.fetch(["Folio::Current.cache_aware_get_main_site"] + cache_key_base, expires_in: Folio.expires_in) do
+    if !skip_caching && site_cache_key_base
+      Rails.cache.fetch(["Folio::Current.cache_aware_get_main_site"] + site_cache_key_base, expires_in: Folio.expires_in) do
         get_main_site
       end
     else
