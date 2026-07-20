@@ -1,15 +1,18 @@
-$f-ai-c-text-suggestions-accent: #9637D3 !default
-$f-ai-c-text-suggestions-accent-light: #D3B3E8 !default
-$f-ai-c-text-suggestions-background: #F3EBFC !default
-$f-ai-c-text-suggestions-text: $gray-600 !default
-$f-ai-c-text-suggestions-border-ui: $gray-300 !default
-$f-ai-c-text-suggestions-button-bg: $gray-500 !default
-$f-ai-c-text-suggestions-inner-gap: px-to-rem(12px)
+$f-ai-c-text-suggestions__accent: #9637D3 !default
+$f-ai-c-text-suggestions__accent-light: #D3B3E8 !default
+$f-ai-c-text-suggestions__background: #F3EBFC !default
+$f-ai-c-text-suggestions__text: $gray-600 !default
+$f-ai-c-text-suggestions__border-ui: $gray-300 !default
+$f-ai-c-text-suggestions__button-bg: $gray-500 !default
+$f-ai-c-text-suggestions__inner-gap: px-to-rem(12px)
+$f-ai-c-text-suggestions__close-min-height: px-to-rem(24px)
+$f-ai-c-text-suggestions__close-padding-y: px-to-rem(4px)
+$f-ai-c-text-suggestions__body-padding: px-to-rem(20px)
 
 .f-ai-c-text-suggestions
-  --folio-loader-background: #{rgba($f-ai-c-text-suggestions-background, 0.9)}
-  --folio-loader-foreground-transparent: #{$f-ai-c-text-suggestions-accent-light}
-  --folio-loader-foreground: #{$f-ai-c-text-suggestions-accent}
+  --folio-loader-background: #{rgba($f-ai-c-text-suggestions__background, 0.9)}
+  --folio-loader-foreground-transparent: #{$f-ai-c-text-suggestions__accent-light}
+  --folio-loader-foreground: #{$f-ai-c-text-suggestions__accent}
 
   margin-top: px-to-rem(8px)
 
@@ -17,8 +20,8 @@ $f-ai-c-text-suggestions-inner-gap: px-to-rem(12px)
     margin-top: px-to-rem(8px + 20px)
 
   &__panel
-    background: $f-ai-c-text-suggestions-background
-    border: 1px solid $f-ai-c-text-suggestions-accent-light
+    background: $f-ai-c-text-suggestions__background
+    border: 1px solid $f-ai-c-text-suggestions__accent-light
     border-radius: px-to-rem(4px)
     display: flex
     flex-direction: column
@@ -29,7 +32,7 @@ $f-ai-c-text-suggestions-inner-gap: px-to-rem(12px)
     pointer-events: none
 
   &__title
-    color: $f-ai-c-text-suggestions-text
+    color: $f-ai-c-text-suggestions__text
     flex: 1 1 auto
     font-size: $font-size-base
     font-weight: $font-weight-normal
@@ -44,12 +47,12 @@ $f-ai-c-text-suggestions-inner-gap: px-to-rem(12px)
     cursor: pointer
     display: flex
     justify-content: flex-end
-    min-height: px-to-rem(24px)
-    padding: px-to-rem(4px) px-to-rem(8px)
+    min-height: $f-ai-c-text-suggestions__close-min-height
+    padding: $f-ai-c-text-suggestions__close-padding-y px-to-rem(8px)
 
   &__status
     align-items: center
-    color: $f-ai-c-text-suggestions-text
+    color: $f-ai-c-text-suggestions__text
     display: flex
     font-size: $font-size-sm
     gap: px-to-rem(4px)
@@ -57,28 +60,31 @@ $f-ai-c-text-suggestions-inner-gap: px-to-rem(12px)
     margin: 0
 
     &:only-child
-      padding-top: px-to-rem(20px)
+      padding-top: $f-ai-c-text-suggestions__body-padding
 
     &[hidden]
       display: none !important
 
+  &__close + &__body &__status:only-child
+    margin-top: -1 * ($f-ai-c-text-suggestions__close-padding-y + $f-ai-c-text-suggestions__close-min-height)
+
   &__body
     display: flex
     flex-direction: column
-    gap: $f-ai-c-text-suggestions-inner-gap
-    padding: 0 px-to-rem(20px) px-to-rem(20px)
+    gap: $f-ai-c-text-suggestions__inner-gap
+    padding: 0 $f-ai-c-text-suggestions__body-padding $f-ai-c-text-suggestions__body-padding
     position: relative
 
   &__suggestions
     display: flex
     flex-direction: column
-    gap: $f-ai-c-text-suggestions-inner-gap
+    gap: $f-ai-c-text-suggestions__inner-gap
     margin: 0
 
   &__suggestion
     align-items: center
-    background: $f-ai-c-text-suggestions-background
-    border: 1px solid $f-ai-c-text-suggestions-accent-light
+    background: $f-ai-c-text-suggestions__background
+    border: 1px solid $f-ai-c-text-suggestions__accent-light
     border-radius: px-to-rem(4px)
     cursor: pointer
     display: flex
@@ -88,7 +94,7 @@ $f-ai-c-text-suggestions-inner-gap: px-to-rem(12px)
     width: 100%
 
     &:hover
-      border-color: $f-ai-c-text-suggestions-accent
+      border-color: $f-ai-c-text-suggestions__accent
 
     &--selected
       &, &:hover
@@ -99,7 +105,7 @@ $f-ai-c-text-suggestions-inner-gap: px-to-rem(12px)
       cursor: wait
 
       &:hover
-        border-color: $f-ai-c-text-suggestions-accent-light
+        border-color: $f-ai-c-text-suggestions__accent-light
 
   &__suggestion-body
     display: flex
@@ -117,7 +123,7 @@ $f-ai-c-text-suggestions-inner-gap: px-to-rem(12px)
     line-height: $line-height-base
 
   &__suggestion-text
-    color: $f-ai-c-text-suggestions-text
+    color: $f-ai-c-text-suggestions__text
     font-size: $font-size-base
     line-height: $line-height-base
     margin: 0
@@ -147,7 +153,7 @@ $f-ai-c-text-suggestions-inner-gap: px-to-rem(12px)
     background: transparent
     border: 0
     border-radius: px-to-rem(4px)
-    color: $f-ai-c-text-suggestions-text
+    color: $f-ai-c-text-suggestions__text
     cursor: pointer
     display: inline-flex
     flex-shrink: 0
