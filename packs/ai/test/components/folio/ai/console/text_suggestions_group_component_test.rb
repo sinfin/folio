@@ -143,6 +143,8 @@ class Folio::Ai::Console::TextSuggestionsGroupComponentTest < Folio::Console::Co
     assert_selector(".f-ai-c-text-suggestions-group__instructions",
                     text: "Keep title and perex aligned.",
                     visible: :all)
+    assert_selector(".f-ai-c-text-suggestions-group__instructions[data-f-c-form-footer-autosave-disabled='true']",
+                    visible: :all)
   end
 
   private

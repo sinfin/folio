@@ -55,7 +55,8 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
 
     def instructions_data
       stimulus_merge(stimulus_controller("f-input-autosize", inline: true),
-                     stimulus_target("instructions"))
+                     stimulus_target("instructions"),
+                     Folio::Console::Form::FooterComponent::AUTOSAVE_DISABLED_DATA)
     end
 
     def field_label

@@ -20,6 +20,7 @@ class Folio::Ai::Console::TextSuggestionsComponentTest < Folio::Console::Compone
     assert_no_text "12 characters"
     assert_no_text "> 10"
     assert_selector("textarea", text: "Use short words.")
+    assert_selector("textarea[data-f-c-form-footer-autosave-disabled='true']")
     assert_selector(".f-ai-c-text-suggestions__regenerate")
   end
 
