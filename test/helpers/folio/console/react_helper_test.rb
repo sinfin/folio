@@ -13,6 +13,7 @@ class Folio::Console::ReactHelperTest < ActionView::TestCase
 
     assert_includes wrap["data-url"], "/console/api/autocomplete/react_select"
     assert_nil wrap["data-options"]
+    assert_nil wrap["data-max-items"]
     assert_nil wrap["data-serialization"]
     assert_nil wrap["data-input-name"]
   end
@@ -51,6 +52,61 @@ class Folio::Console::ReactHelperTest < ActionView::TestCase
     assert_equal [], data_json(wrap, "removed-items")
     assert_equal author.id, items[0]["value"]
     assert_equal "Ada Lovelace", items[0]["label"]
+  end
+
+  test "react_ordered_multiselect limits virtual scalar values to one item" do
+    author = create(:dummy_blog_author,
+                    first_name: "Ada",
+                    last_name: "Lovelace")
+
+    wrap = ordered_multiselect_wrap(build(:dummy_blog_article),
+                                    relation_name: :archive_category_id,
+                                    virtual: {
+                                      class_name: "Dummy::Blog::Author",
+                                      selected: [author],
+                                      input_name: "dummy_blog_article[archive_category_id]",
+                                      serialization: :scalar,
+                                    },
+                                    label_method: :full_name,
+                                    sortable: false)
+    items = data_json(wrap, "items")
+
+    assert_equal "scalar", wrap["data-serialization"]
+    assert_equal "dummy_blog_article[archive_category_id]", wrap["data-input-name"]
+    assert_equal "1", wrap["data-max-items"]
+    assert_equal "0", wrap["data-sortable"]
+    assert_equal author.id, items[0]["value"]
+    assert_equal "Ada Lovelace", items[0]["label"]
+  end
+
+  test "react_ordered_multiselect supports a positive item limit for multiple values" do
+    wrap = ordered_multiselect_wrap(build(:dummy_blog_article),
+                                    max_items: 3)
+
+    assert_equal "3", wrap["data-max-items"]
+    assert_nil wrap["data-serialization"]
+  end
+
+  test "react_ordered_multiselect rejects a scalar limit other than one" do
+    assert_raises(ArgumentError) do
+      ordered_multiselect_wrap(build(:dummy_blog_article),
+                               relation_name: :archive_category_id,
+                               max_items: 3,
+                               virtual: {
+                                 class_name: "Dummy::Blog::Author",
+                                 selected: [],
+                                 input_name: "dummy_blog_article[archive_category_id]",
+                                 serialization: :scalar,
+                               })
+    end
+  end
+
+  test "react_ordered_multiselect rejects invalid item limits" do
+    [0, -1, 1.5, "3"].each do |max_items|
+      assert_raises(ArgumentError) do
+        ordered_multiselect_wrap(build(:dummy_blog_article), max_items:)
+      end
+    end
   end
 
   test "react_ordered_multiselect keeps explicit label in virtual mode" do

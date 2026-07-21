@@ -63,6 +63,7 @@ const initialState = {
   url: null,
   options: null,
   sortable: true,
+  maxItems: null,
   atomSetting: false,
   serialization: null,
   inputName: null
@@ -90,6 +91,8 @@ function orderedMultiselectReducer (state = initialState, action) {
       }
 
     case ADD_ITEM: {
+      if (state.maxItems && state.items.length >= state.maxItems) return state
+
       const existingItem = state.items.find((item) => item.value === action.item.id)
       if (existingItem) return state
 

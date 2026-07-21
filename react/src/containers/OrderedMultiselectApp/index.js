@@ -84,6 +84,7 @@ class OrderedMultiselectApp extends React.Component {
     const { orderedMultiselect } = this.props
     const without = orderedMultiselect.items.map((item) => item.value).join(',')
     const rawOptions = orderedMultiselect.options ? filterOptions(orderedMultiselect.options, orderedMultiselect.items) : null
+    const canAddItem = !orderedMultiselect.maxItems || orderedMultiselect.items.length < orderedMultiselect.maxItems
     const selectProps = {
       onChange: this.onSelect,
       createable: false,
@@ -138,7 +139,7 @@ class OrderedMultiselectApp extends React.Component {
           />
         ) : null}
 
-        <Select {...selectProps} />
+        {canAddItem ? <Select {...selectProps} /> : null}
 
         <Serialized orderedMultiselect={orderedMultiselect} />
       </div>

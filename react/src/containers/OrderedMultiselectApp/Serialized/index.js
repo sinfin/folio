@@ -33,6 +33,15 @@ function SerializedArrayItem ({ item, inputName }) {
   )
 }
 
+function SerializedScalar ({ items, inputName }) {
+  const item = items[0]
+  const value = item && item.value !== undefined && item.value !== null ? item.value : ''
+
+  return (
+    <input type='hidden' name={inputName} value={value} />
+  )
+}
+
 function Serialized ({ orderedMultiselect }) {
   const { paramBase, foreignKey, items, removedItems, sortable, serialization, inputName } = orderedMultiselect
 
@@ -48,6 +57,14 @@ function Serialized ({ orderedMultiselect }) {
             inputName={inputName}
           />
         ))}
+      </div>
+    )
+  }
+
+  if (serialization === 'scalar') {
+    return (
+      <div hidden>
+        <SerializedScalar items={items} inputName={inputName} />
       </div>
     )
   }

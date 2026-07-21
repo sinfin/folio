@@ -53,4 +53,38 @@ describe('OrderedMultiselectApp Serialized', () => {
       ['economia_article[issue_ids][]', 456]
     ])
   })
+
+  it('renders a scalar value', () => {
+    const orderedMultiselect = {
+      serialization: 'scalar',
+      inputName: 'economia_article[archive_category_id]',
+      items: [
+        { uniqueId: 'first', value: 123 }
+      ],
+      removedItems: []
+    }
+
+    const component = renderer.create(<Serialized orderedMultiselect={orderedMultiselect} />)
+    const inputs = component.root.findAllByType('input').map((input) => input.props)
+
+    expect(inputs.map((input) => [input.name, input.value])).toEqual([
+      ['economia_article[archive_category_id]', 123]
+    ])
+  })
+
+  it('renders a blank scalar value after removal', () => {
+    const orderedMultiselect = {
+      serialization: 'scalar',
+      inputName: 'economia_article[archive_category_id]',
+      items: [],
+      removedItems: []
+    }
+
+    const component = renderer.create(<Serialized orderedMultiselect={orderedMultiselect} />)
+    const inputs = component.root.findAllByType('input').map((input) => input.props)
+
+    expect(inputs.map((input) => [input.name, input.value])).toEqual([
+      ['economia_article[archive_category_id]', '']
+    ])
+  })
 })

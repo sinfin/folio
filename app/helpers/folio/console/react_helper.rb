@@ -142,6 +142,7 @@ module Folio::Console::ReactHelper
                                 default_scope: nil,
                                 order_scope: :ordered,
                                 sortable: true,
+                                max_items: nil,
                                 required: nil,
                                 label: nil,
                                 menu_placement: :bottom,
@@ -152,6 +153,10 @@ module Folio::Console::ReactHelper
                                 value_method: :id,
                                 selected_through_records: nil,
                                 virtual: nil)
+    unless max_items.nil? || (max_items.is_a?(Integer) && max_items.positive?)
+      raise ArgumentError, "max_items must be a positive integer or nil"
+    end
+
     class_name = "folio-react-wrap folio-react-wrap--ordered-multiselect"
 
     unless sortable
@@ -168,8 +173,16 @@ module Folio::Console::ReactHelper
 
     if virtual
       class_names = virtual.fetch(:class_name)
-      data_serialization = "array"
+      data_serialization = virtual.fetch(:serialization, :array).to_s
       data_input_name = virtual.fetch(:input_name)
+
+      if data_serialization == "scalar"
+        if max_items && max_items != 1
+          raise ArgumentError, "scalar serialization only supports max_items: 1"
+        end
+
+        max_items = 1
+      end
 
       items = Array(virtual.fetch(:selected)).map do |record|
         item_label = react_ordered_multiselect_value(record, label_method)
@@ -254,6 +267,7 @@ module Folio::Console::ReactHelper
       "data-url" => url,
       "data-options" => options&.to_json,
       "data-sortable" => sortable ? "1" : "0",
+      "data-max-items" => max_items,
       "data-menu-placement" => menu_placement,
       "data-atom-setting" => atom_setting,
       "data-serialization" => data_serialization,
