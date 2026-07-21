@@ -9,6 +9,8 @@ class Folio::Console::Tiptap::Overlay::Form::InputComponent < Folio::Console::Ap
 
   private
     def input
+      return @f.hidden_field(@key) if @attr_config[:hidden]
+
       case @attr_config[:type]
       when :string, :text, :integer, :url_json, :rich_text, :color
         send("render_input_#{@attr_config[:type]}")

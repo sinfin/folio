@@ -6,9 +6,26 @@ class Folio::Console::Tiptap::Overlay::Form::InputComponentTest < Folio::Console
   class Node < Folio::Tiptap::Node
     tiptap_node structure: {
       title: :string,
+      internal_uid: { type: :string, hidden: true },
       url: { type: :url_json, disable_label: true },
       accent_color: :color,
     }
+  end
+
+  test "renders hidden configured attribute as a real hidden input" do
+    node = Node.new(internal_uid: "stable-uid")
+    view = vc_test_controller.view_context
+
+    view.simple_form_for(node, url: "/", as: "tiptap_node_attrs[data]") do |f|
+      render_inline(Folio::Console::Tiptap::Overlay::Form::InputComponent.new(
+        f:,
+        key: :internal_uid,
+        attr_config: Node.structure[:internal_uid],
+      ))
+    end
+
+    assert_selector('input[type="hidden"][name="tiptap_node_attrs[data][internal_uid]"][value="stable-uid"]',
+                    visible: :all)
   end
 
   test "renders input for configured attribute" do

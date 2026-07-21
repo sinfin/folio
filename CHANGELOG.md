@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - **React ordered multi-select**: Support virtual ID-array fields with remote autocomplete and array hidden-input serialization.
 - **React ordered multi-select**: Support local `collection:` options, including grouped options, for ordered relation pickers that should filter without remote autocomplete.
 - **React ordered multi-select**: Support configurable item limits and scalar hidden-input serialization for single-value virtual fields.
+- **Tiptap custom nodes**: Allow attributes configured with `hidden: true` to persist internal values through the console overlay without rendering visible controls.
 
 ### Changed
 
