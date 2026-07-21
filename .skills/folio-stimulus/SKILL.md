@@ -151,6 +151,13 @@ All utility helpers use `inline: true` internally — they are designed to be me
 - **Controller-to-controller communication** — use `this.dispatch('eventName', { detail })` which bubbles by default. Parent controllers listen via `stimulus_action("child-controller:event-name": "handler")`.
 - Use `connect()` / `disconnect()` for setup/teardown — no global `$(document).on`.
 
+## Initial state
+
+When a component's initial hidden, disabled, or selected state derives entirely
+from server-rendered record data, render that state in the server markup. Do
+not rely on `connect()` solely to establish it; reserve Stimulus for subsequent
+interaction or genuinely client-derived state.
+
 ## Pitfalls
 
 - **`inline: true` on the primary controller** — `@stimulus_controller_name` is not set; `stimulus_target` / `stimulus_action` on children will fail or bind to the wrong controller.

@@ -39,6 +39,14 @@ Instead, exercise the behavior through one of:
 - Do not test static presentation details that are always present and not part
   of conditional behavior, such as a fixed CSS utility class (`cell--compact`) or
   non-interactive styling option. Let the template/component code carry that.
+- For rendered form validation, assert the relevant error indicator or count
+  rather than localized error wording, unless that wording is itself the
+  user-facing contract.
+- Use `visible: :all` when asserting `[hidden]` content.
+- Test conditional rendering and state changes, not static presentation that is
+  present in every variant.
+- Controller tests for `as: :embed` must submit `folio_embed_data.to_json`,
+  matching the hidden input's browser contract.
 
 ## ViewComponents
 

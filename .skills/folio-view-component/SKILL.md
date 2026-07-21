@@ -80,6 +80,9 @@ Full conventions in **[`.skills/folio-stimulus/SKILL.md`](../folio-stimulus/SKIL
 
 - From views/controllers: **`render MyComponent.new(foo: bar)`** (or helper wrappers your app uses).
 - From inside a ViewComponent: **`render OtherComponent.new(...)`** or **`helpers.render(...)`** as in nearby Folio examples.
+- Components must own render-time predicates and options, or receive them
+  explicitly. Do not depend on controller-only helpers that disappear in
+  isolated component tests.
 
 ## Testing
 
