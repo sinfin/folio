@@ -183,6 +183,10 @@ window.Folio.Player.innerBind = (el, opts, file) => {
       videoSize.width = fileAttributes.file_width
       videoSize.height = fileAttributes.file_height
     }
+
+    // Portrait video: cap the width via .f-player--vertical so the preview does
+    // not fill the column vertically (see player_component.sass).
+    el.classList.toggle('f-player--vertical', videoSize.height > videoSize.width)
   }
 
   child.width = videoSize.width

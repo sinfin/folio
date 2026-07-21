@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- **Console video preview for portrait videos**: The file-picker video preview (`Folio::PlayerComponent`) no longer fills the form column vertically for portrait (vertical) videos. A new `.f-player--vertical` modifier — added both on server render and when a portrait file is bound in the browser — caps the preview width (`$f-player-video-vertical-max-width`, default `224px`) so its aspect-ratio-driven height stays in line with landscape previews. Landscape and square videos are unchanged.
 - **Media-source usage constraints**: Usage counts include files placed through atoms, media-source rules are authoritative in the file console, and site-specific limits remain attached to the media source instead of being copied to files.
 - **Media source site rules**: Persisted rules can now be removed and re-added for the same site in one edit without tripping uniqueness validation.
 - **Console record lookup vs numeric slugs**: The console now resolves a numeric `:id` param by primary key first, falling back to FriendlyId only for genuine (non-numeric) slugs. Previously a record whose slug happened to equal another record's id (e.g. a file uploaded as `349444.jpg` gets slug `349444`, colliding with id `349444`) hijacked the lookup, so opening/selecting/editing that id returned the wrong record. `Folio::File` slugs are now also prevented from being purely numeric, so the slug and id namespaces never overlap.

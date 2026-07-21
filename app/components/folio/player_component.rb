@@ -22,4 +22,14 @@ class Folio::PlayerComponent < ApplicationComponent
       Folio::FileSerializer
     end
   end
+
+  # Portrait video: the preview would otherwise blow up vertically because its
+  # height follows the intrinsic aspect ratio at full width (see .f-player--video
+  # sizing). The modifier lets the stylesheet cap the width instead.
+  def vertical?
+    width = @file.try(:file_width).to_i
+    height = @file.try(:file_height).to_i
+
+    width.positive? && height > width
+  end
 end
