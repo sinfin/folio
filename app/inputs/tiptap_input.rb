@@ -22,6 +22,7 @@ class TiptapInput < SimpleForm::Inputs::StringInput
                         latest_revision_at: latest_revision_at&.iso8601,
                         has_unsaved_changes: has_unsaved_changes?,
                         readonly: readonly?,
+                        editor_context_json: editor_context_json,
                         tiptap_config_json:,
                         tiptap_content_json_structure_json: Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE.to_json,
                       }.compact,
@@ -66,6 +67,10 @@ class TiptapInput < SimpleForm::Inputs::StringInput
   end
 
   private
+    def editor_context_json
+      options[:editor_context].to_json if options[:editor_context].present?
+    end
+
     def tiptap_config_json
       (@builder.object.try(:tiptap_config, attribute_name: attribute_name) || Folio::Tiptap.config).to_input_json
     end

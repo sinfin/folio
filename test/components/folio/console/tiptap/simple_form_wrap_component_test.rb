@@ -15,6 +15,27 @@ class Folio::Console::Tiptap::SimpleFormWrapComponentTest < Folio::Console::Comp
     end
   end
 
+  test "passes per-attribute options to the generated Tiptap input" do
+    with_controller_class(Folio::Console::PagesController) do
+      with_request_url "/console/pages/new" do
+        simple_form_model = [:console, Folio::Page.new]
+        simple_form_options = {
+          tiptap_input_options: {
+            tiptap_content: { editor_context: { scope_id: 123 } },
+          },
+        }
+
+        render_inline(Folio::Console::Tiptap::SimpleFormWrapComponent.new(
+          simple_form_model:,
+          simple_form_options:,
+        )) { "custom form fields" }
+
+        assert_selector("[data-f-input-tiptap-editor-context-json-value='{" \
+                        "\"scope_id\":123}']")
+      end
+    end
+  end
+
   test "renders a read-only Tiptap input without modification controls" do
     with_controller_class(Folio::Console::PagesController) do
       with_request_url "/console/pages/new" do
