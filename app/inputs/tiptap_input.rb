@@ -21,7 +21,7 @@ class TiptapInput < SimpleForm::Inputs::StringInput
                         attribute_name: attribute_name.to_s,
                         latest_revision_at: latest_revision_at&.iso8601,
                         has_unsaved_changes: has_unsaved_changes?,
-                        readonly: @builder.template.instance_variable_get(:@audited_audit).present?,
+                        readonly: readonly?,
                         tiptap_config_json:,
                         tiptap_content_json_structure_json: Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE.to_json,
                       }.compact,
@@ -71,9 +71,14 @@ class TiptapInput < SimpleForm::Inputs::StringInput
     end
 
     def tiptap_autosave_enabled?
+      return false if readonly?
       return false if @builder.object.respond_to?(:new_record?) && @builder.object.new_record?
 
       @builder.object.try(:tiptap_autosave_enabled?, attribute_name: attribute_name)
+    end
+
+    def readonly?
+      options[:readonly] || @builder.template.instance_variable_get(:@audited_audit).present?
     end
 
     def current_user_latest_revision

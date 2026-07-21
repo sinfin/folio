@@ -58,7 +58,7 @@
               hidden=(field != selected_attr)
               data=stimulus_target("attributeWrap")
             ]
-              = form.input field.to_sym, as: :tiptap, block: true, error: false
+              = form.input field.to_sym, tiptap_input_options_for(field)
 
     .f-c-tiptap-simple-form-wrap__form-footer
-      = helpers.form_footer form, static: true
+      = helpers.form_footer(form, { static: true }.merge(@form_footer_options))

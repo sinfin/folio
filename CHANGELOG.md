@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 - **React ordered multi-select**: Support local `collection:` options, including grouped options, for ordered relation pickers that should filter without remote autocomplete.
 - **React ordered multi-select**: Support configurable item limits and scalar hidden-input serialization for single-value virtual fields.
 - **Tiptap custom nodes**: Allow attributes configured with `hidden: true` to persist internal values through the console overlay without rendering visible controls.
+- **Tiptap block editor forms**: Accept per-field input and footer options, including an explicit read-only editor state. Read-only editors disable autosave, while footer options can hide save and other modification controls.
 
 ### Changed
 
