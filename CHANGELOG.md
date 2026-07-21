@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- **Nested fields**: `folio_nested_fields` now supports `hide_selected_value_for:` to hide values already selected in visible sibling rows. The media-source site rules form uses it for `site_id`, disables the add button when no site value remains, and newly added rules offer the next available site instead of duplicating an existing selection.
+- **Tiptap default responsive preview**: the block editor can start in the mobile (responsive) preview when the host app sets the current user's `mobile_first` console preference. The value flows from `TiptapInput` through the Stimulus controller to the editor's initial responsive-preview state; the toolbar toggle still switches back and the manual choice is not persisted. Applies only to the block editor (rich-text fields have no responsive toggle).
 - **Console collection selects**: Add `filterable: true` for local Select2 filtering over pre-rendered collection options and grouped selects, preserving existing `remote:` autocomplete behavior.
 - **React ordered multi-select**: Support virtual ID-array fields with remote autocomplete and array hidden-input serialization.
 - **React ordered multi-select**: Support local `collection:` options, including grouped options, for ordered relation pickers that should filter without remote autocomplete.
@@ -12,20 +14,30 @@ All notable changes to this project will be documented in this file.
 - **Tiptap custom nodes**: Allow attributes configured with `hidden: true` to persist internal values through the console overlay without rendering visible controls.
 - **Tiptap block editor forms**: Accept per-field input and footer options, including an explicit read-only editor state. Read-only editors disable autosave, while footer options can hide save and other modification controls.
 - **Tiptap node overlays**: Pass source editor metadata and optional caller-provided context with node edit and save requests, allowing overlay fields to be scoped to the editor that opened them.
+- **`Folio::Site.additional_strong_params`**: the full list of params permitted in the site console form (`site_params`), defaulting to `additional_params`. Override it (e.g. `super + %i[…]`) to permit fields you render yourself — e.g. in a custom `console_form_tabs` tab — without them being auto-rendered in the settings tab.
+- **Embed lazy loading**: `Folio::Embed::BoxComponent` accepts `lazy: false` to load immediately instead of waiting for intersection; the default remains `lazy: true`.
 
 ### Changed
 
+- **Media-source usage constraints**: Current-site usage filtering now aggregates direct and atom placements once and batch-loads displayed file counts instead of running a usage query per file.
+- **Possible future media-source counter refactor (not included)**: A synthetic benchmark measured the set-based query on PostgreSQL 16.14 with 300,000 files and 600,000 placements. With site-specific source rules on 10% of files, all request medians across five runs stayed below 2 seconds, including a deep usable page at 1.85 seconds with 0.97 seconds of SQL. With rules on 100% of files, the usable source/site-filtered request and deep usable page reached 2.35 and 2.38 seconds, although concurrent ordinary queries remained unaffected. If production resembles the 100% case, add a `folio_file_site_published_usage_counts` table with `file_id`, `site_id`, `published_usage_count`, timestamps, foreign keys, and a unique `(file_id, site_id)` index. Backfill it from deduplicated direct and atom usage grouped by parent record and site, then keep it synchronized for placement create/destroy/move, atom parent changes, parent publish/unpublish, parent site changes, and parent destruction. A design review must decide between synchronous updates and queued updates because stale queued counts could allow over-limit publication. Filtering and file-card rendering should join/preload the persisted counter while retaining `folio_files.published_usage_count` as the global fallback; add a reconciliation task and rerun the same 300,000-file HTTP benchmark before removing the dynamic SQL path.
 - **Console private attachments**: Replace the Dropzone/S3Upload add flow with `Folio::UppyComponent`, preserving nested attachment ordering/destroy behavior and hiding move arrows in single-attachment mode.
+- **Test parallelization**: Automatic Rails test runs now use at most 8 workers and begin above 100 loaded test methods. Set `TEST_MAX_WORKERS` or `TEST_PARALLELIZATION_THRESHOLD` to change those automatic defaults; setting either to `0` delegates that setting to Rails' default, while `PARALLEL_WORKERS` remains Rails' exact override.
 
 ### Fixed
 
 - **Console sidebar**: Only highlight the most specific active sidebar link when multiple prefix matches apply, so nested console pages no longer mark parent links active too.
 - **Console ancestry position buttons**: Refresh the same ancestry catalogue after moving rows when a page renders multiple ancestry catalogues, instead of replacing the moved catalogue with the first catalogue from the refreshed page.
+- **Embed inputs**: Server validation messages now appear directly beneath the HTML/URL field, before the preview, rather than above its label.
+- **Media-source usage constraints**: Usage counts include files placed through atoms, media-source rules are authoritative in the file console, and site-specific limits remain attached to the media source instead of being copied to files.
+- **Media source site rules**: Persisted rules can now be removed and re-added for the same site in one edit without tripping uniqueness validation.
+- **Console record lookup vs numeric slugs**: The console now resolves a numeric `:id` param by primary key first, falling back to FriendlyId only for genuine (non-numeric) slugs. Previously a record whose slug happened to equal another record's id (e.g. a file uploaded as `349444.jpg` gets slug `349444`, colliding with id `349444`) hijacked the lookup, so opening/selecting/editing that id returned the wrong record. `Folio::File` slugs are now also prevented from being purely numeric, so the slug and id namespaces never overlap.
 - **Tiptap toolbar groups**: Only render custom node group dropdowns in the toolbar when the configured `node_groups` entry has `toolbar_slot`, so nodes with only `group` remain slash-menu grouped without appearing in the toolbar.
 - **Console file search by filename**: `Folio::File.by_query` now matches a raw `file_name` substring in addition to full-text search. Filenames that look like hostnames (e.g. `name.com_123456.mp4`) are stored by PostgreSQL full-text search as a single `host` lexeme, while pg_search splits the query on dots and ANDs the resulting terms — so searching the whole filename never matched. Searching by filename in the console file/video list now finds the file.
 - **Ordered multi-select**: Remote autocomplete now shows localized minimum-input guidance for short non-blank queries instead of a normal no-results state.
 - **Uppy drag-and-drop**: Only the first active uploader handles window-level file drops, preventing duplicate uploads when a page renders multiple `Folio::UppyComponent` instances.
 - **Ordered multi-select**: Handle text overflow gracefully - line clamp 2 and text-overflow: ellipsis
+- **Embed loaders**: Explicitly use `border-box` sizing for loader pseudo-elements so the host page and standalone iframe retain the same spinner dimensions regardless of CSS resets.
 
 ## [7.7.1] - 2026-06-16
 

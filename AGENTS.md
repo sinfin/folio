@@ -33,6 +33,7 @@ If no existing skill fits, suggest updating this `AGENTS.md` or creating a new
 | **folio-javascript** | JavaScript conventions: ES6+, StandardJS, `Folio.Api`, flash events, debounce/throttle, DOM APIs; `.js` files |
 | **folio-component-json-api** | `render_component_json` HTML-over-wire APIs: JSON body with string `data` (component HTML), `Folio.Api.apiGet`/`apiPost` and `response.data`, integration tests with `as: :json` |
 | **folio-console** | Folio Console controllers/views, catalogue DSL, nested/through resources, scaffolded CRUD, route helpers, position controls, admin tests |
+| **folio-embed-data** | `folio_embed_data`, `as: :embed`, canonical Folio embed JSON, replacing legacy embed fields, and embed validation, rendering, migration, or console forms |
 | **folio-icons** | Add icons from Figma to `data/icons`, `currentColor` fills/strokes, `bin/icons`, sprite and `folio_icons.yaml`, restart server |
 | **folio-stimulus** | Stimulus controllers: registration, StimulusHelper data attributes, values/targets/actions, `inline: true`; uses **folio-javascript** |
 | **folio-simple-form-inputs** | SimpleForm inputs/extensions: `app/inputs`, overrides/prepends, `register_stimulus`, `input_controls`, `custom_html`, standalone input JS/Sass |

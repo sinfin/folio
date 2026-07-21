@@ -54,6 +54,14 @@ implementation across incidental private helpers there.
   same keyword form for that argument across the set, even if an individual
   helper currently takes only that one argument.
 
+## Method extraction
+
+- Do not add local helper or predicate methods that only call another similarly
+  named helper and add no behavior. Call the existing method directly instead.
+- Extract a method when it combines conditions, names a distinct domain concept,
+  removes real duplication, or provides a framework-required entrypoint such as
+  `render?`.
+
 ## Jobs
 
 Jobs are already focused classes that perform one unit of work. Do not extract

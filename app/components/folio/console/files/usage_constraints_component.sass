@@ -1,6 +1,19 @@
 .f-c-files-usage-constraints
   &__max-usage-count,
-  &__sites
+  &__sites,
+  &__media-source
     display: flex
     align-items: center
+    flex-wrap: wrap
     gap: px-to-rem(4px)
+
+  &__sites-value
+    flex: 1 1 auto
+    min-width: 0
+    overflow-wrap: anywhere
+
+  &__sites
+    flex-wrap: nowrap
+
+  &__sites-icon
+    flex: 0 0 auto

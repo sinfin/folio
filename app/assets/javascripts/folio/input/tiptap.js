@@ -10,6 +10,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
   static values = {
     loaded: { type: Boolean, default: false },
     readonly: { type: Boolean, default: false },
+    defaultResponsivePreview: { type: Boolean, default: false },
     ignoreValueChanges: { type: Boolean, default: true },
     origin: String,
     type: String,
@@ -236,6 +237,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       windowWidth: this.windowWidth,
       tiptapScrollTop: this.tiptapScrollTop || 0,
       readonly: this.readonlyValue,
+      defaultResponsivePreview: this.defaultResponsivePreviewValue,
       autosaveIndicatorInfo: {
         newRecord: this.newRecordValue,
         hasUnsavedChanges: this.hasUnsavedChangesValue,

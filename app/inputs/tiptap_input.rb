@@ -23,6 +23,7 @@ class TiptapInput < SimpleForm::Inputs::StringInput
                         has_unsaved_changes: has_unsaved_changes?,
                         readonly: readonly?,
                         editor_context_json: editor_context_json,
+                        default_responsive_preview: default_responsive_preview,
                         tiptap_config_json:,
                         tiptap_content_json_structure_json: Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE.to_json,
                       }.compact,
@@ -69,6 +70,13 @@ class TiptapInput < SimpleForm::Inputs::StringInput
   private
     def editor_context_json
       options[:editor_context].to_json if options[:editor_context].present?
+    end
+
+    # When the current user opted into "mobile first" editing, start the editor
+    # in the responsive (mobile) preview. Returns nil when unset so the value is
+    # compacted away and the JS controller falls back to its desktop default.
+    def default_responsive_preview
+      Folio::Current.user&.console_preferences&.dig("mobile_first")
     end
 
     def tiptap_config_json
