@@ -7,7 +7,8 @@ class Folio::Embed::BoxComponent < ApplicationComponent
                  background_color: nil,
                  light_mode_background_color: nil,
                  dark_mode_background_color: nil,
-                 class_name: nil)
+                 class_name: nil,
+                 lazy: true)
     @folio_embed_data = folio_embed_data.is_a?(Hash) ? folio_embed_data : {}
     @data = data
     @centered = centered
@@ -15,6 +16,7 @@ class Folio::Embed::BoxComponent < ApplicationComponent
     @light_mode_background_color = light_mode_background_color
     @dark_mode_background_color = dark_mode_background_color
     @class_name = class_name
+    @lazy = lazy
   end
 
   private
@@ -46,6 +48,7 @@ class Folio::Embed::BoxComponent < ApplicationComponent
                               values: {
                                 folio_embed_data: @folio_embed_data.to_json,
                                 intersected: false,
+                                lazy: @lazy,
                                 centered: @centered,
                                 background_color: @background_color,
                                 light_mode_background_color: @light_mode_background_color,
