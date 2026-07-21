@@ -22,6 +22,7 @@ $f-player-control-bar-spacer: 18px !default
 $f-player-transition-duration: $transition-duration !default
 $f-player-progress-primary: $gray-medium-dark !default
 $f-player-progress-secondary: $gray !default
+$f-player-video-vertical-max-width: 224px !default
 
 .f-player
   position: relative
@@ -474,6 +475,11 @@ $f-player-progress-secondary: $gray !default
     &__player.video-js
      .vjs-folio-player-title
        order: 1
+
+  // Portrait video: cap the width so the aspect-ratio-driven height stays in
+  // line with the landscape preview instead of filling the column vertically.
+  &--video.f-player--vertical
+    max-width: $f-player-video-vertical-max-width
 
   &--audio
     &__player.video-js
