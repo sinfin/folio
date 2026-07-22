@@ -47,11 +47,16 @@ class Folio::File::AudioProcessingService
     mapped_metadata = build_mapped_metadata(metadata)
     playable_data = create_playable_derivative(metadata)
     waveform_payload = safely_generate_waveform_payload(playable_data:, mapped_metadata:)
-    seed_artwork_cover(metadata)
+    artwork_initialized = seed_artwork_cover(metadata)
 
     persist!(
       file_metadata: mapped_metadata,
-      remote_services_data: processed_remote_services_data(playable_data:, mapped_metadata:, waveform_payload:),
+      remote_services_data: processed_remote_services_data(
+        playable_data:,
+        mapped_metadata:,
+        waveform_payload:,
+        artwork_initialized:,
+      ),
     )
 
     audio_file.processing_done! if audio_file.processing?
@@ -87,7 +92,12 @@ class Folio::File::AudioProcessingService
       JSON.parse(output)
     end
 
-    def processed_remote_services_data(playable_data:, mapped_metadata:, waveform_payload:)
+    def processed_remote_services_data(
+      playable_data:,
+      mapped_metadata:,
+      waveform_payload:,
+      artwork_initialized:
+    )
       remote_data = audio_file.remote_services_data.to_h.dup
       remote_data["playable"] = playable_data
       if waveform_payload.present?
@@ -97,6 +107,9 @@ class Folio::File::AudioProcessingService
       end
       remote_data["quality_warning"] = quality_warning(mapped_metadata)
       remote_data["processed_at"] = Time.current.iso8601
+      if artwork_initialized
+        remote_data["artwork_seeded_at"] ||= remote_data["processed_at"]
+      end
       remote_data
     end
 
@@ -309,12 +322,14 @@ class Folio::File::AudioProcessingService
     end
 
     # The artwork placement is only seeded from the embedded ID3 artwork on
-    # the first processing run — the console owns it afterwards, so neither
-    # a reprocess nor a file replacement may resurrect a removed artwork.
+    # the first successful processing run — the console owns it afterwards,
+    # so neither a reprocess nor a file replacement may resurrect a removed
+    # artwork. Guarded by a dedicated marker instead of processed_at, which
+    # the processing job also writes on failure.
     def seed_artwork_cover(metadata)
-      return audio_file.artwork_cover if audio_file.artwork_cover_placement.present?
-      return nil if audio_file.remote_services_data.to_h["processed_at"].present?
-      return nil unless artwork_stream(metadata).present?
+      return true if audio_file.artwork_cover_placement.present?
+      return true if audio_file.remote_services_data.to_h["artwork_seeded_at"].present?
+      return true unless artwork_stream(metadata).present?
 
       extension = artwork_extension(metadata)
 
@@ -326,15 +341,20 @@ class Folio::File::AudioProcessingService
               "-map", "0:v:0",
               tempfile.path)
 
-        Folio::File::Image.transaction do
-          persist_artwork_image(tempfile).tap do |image|
-            audio_file.create_artwork_cover_placement!(file: image)
-          end
+        image = persist_artwork_image(tempfile)
+
+        begin
+          audio_file.create_artwork_cover_placement!(file: image)
+        rescue StandardError
+          image.destroy
+          raise
         end
       end
+
+      true
     rescue StandardError => e
       Rails.logger.warn("[AudioProcessingService] artwork extraction failed for file ##{audio_file.id}: #{e.message}")
-      nil
+      false
     end
 
     def persist_artwork_image(tempfile)

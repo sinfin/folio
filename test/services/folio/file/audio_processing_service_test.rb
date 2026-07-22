@@ -47,10 +47,9 @@ class Folio::File::AudioProcessingServiceTest < ActiveSupport::TestCase
     end
   end
 
-  test "call persists playable derivative and derived artwork image" do
+  test "call persists playable derivative" do
     audio = create(:folio_file_audio)
     service = Folio::File::AudioProcessingService.new(audio)
-    artwork = create(:folio_file_image)
 
     inspect_media_result = {
       "format" => {
@@ -77,15 +76,14 @@ class Folio::File::AudioProcessingServiceTest < ActiveSupport::TestCase
 
     service.stub(:inspect_media, inspect_media_result) do
       service.stub(:create_playable_derivative, playable_result) do
-        service.stub(:seed_artwork_cover, artwork) do
-          service.call
-        end
+        service.call
       end
     end
 
     assert_equal "ready", audio.reload.aasm_state
     assert_equal "audio/encoded/1/1/audio-playable.mp3", audio.remote_services_data["playable"]["path"]
     assert audio.file_metadata_extracted_at.present?
+    assert audio.remote_services_data["artwork_seeded_at"].present?
   end
 
   test "call persists waveform generated from playable derivative" do
@@ -121,10 +119,8 @@ class Folio::File::AudioProcessingServiceTest < ActiveSupport::TestCase
 
     service.stub(:inspect_media, inspect_media_result) do
       service.stub(:create_playable_derivative, playable_result) do
-        service.stub(:seed_artwork_cover, nil) do
-          service.stub(:generate_waveform_payload, waveform_result) do
-            service.call
-          end
+        service.stub(:generate_waveform_payload, waveform_result) do
+          service.call
         end
       end
     end
@@ -170,10 +166,8 @@ class Folio::File::AudioProcessingServiceTest < ActiveSupport::TestCase
 
     service.stub(:inspect_media, inspect_media_result) do
       service.stub(:create_playable_derivative, playable_result) do
-        service.stub(:seed_artwork_cover, nil) do
-          service.stub(:shell, shell) do
-            service.call
-          end
+        service.stub(:shell, shell) do
+          service.call
         end
       end
     end
@@ -213,10 +207,8 @@ class Folio::File::AudioProcessingServiceTest < ActiveSupport::TestCase
 
     service.stub(:inspect_media, inspect_media_result) do
       service.stub(:create_playable_derivative, playable_result) do
-        service.stub(:seed_artwork_cover, nil) do
-          service.stub(:generate_waveform_payload, -> (*) { raise "waveform failed" }) do
-            service.call
-          end
+        service.stub(:generate_waveform_payload, -> (*) { raise "waveform failed" }) do
+          service.call
         end
       end
     end
@@ -316,21 +308,6 @@ class Folio::File::AudioProcessingServiceTest < ActiveSupport::TestCase
     assert_equal [old_path], delete_calls
   end
 
-  test "seed_artwork_cover keeps a console-owned placement untouched" do
-    audio = create(:folio_file_audio)
-    manual = create(:folio_file_image)
-    audio.create_artwork_cover_placement!(file: manual)
-    service = Folio::File::AudioProcessingService.new(audio)
-
-    shell_calls = 0
-    service.stub(:shell, -> (*) { shell_calls += 1; "" }) do
-      metadata = { "streams" => [{ "disposition" => { "attached_pic" => 1 }, "codec_name" => "mjpeg" }] }
-      assert_equal manual, service.send(:seed_artwork_cover, metadata)
-    end
-
-    assert_equal 0, shell_calls
-    assert_equal manual, audio.reload.artwork_cover
-  end
   test "call seeds artwork cover from embedded artwork on first processing only" do
     audio = create(:folio_file_audio)
     service = Folio::File::AudioProcessingService.new(audio)
@@ -382,5 +359,95 @@ class Folio::File::AudioProcessingServiceTest < ActiveSupport::TestCase
     audio.artwork_cover_placement.destroy!
     run_processing.call
     assert_nil audio.reload.artwork_cover
+  end
+
+  test "call seeds artwork on retry after a failed first processing" do
+    audio = create(:folio_file_audio)
+    # the processing job stamps processed_at and the error into remote data
+    # on failure — that must not block artwork seeding on a successful retry
+    audio.update_columns(remote_services_data: { "error" => "boom", "processed_at" => Time.current.iso8601 })
+    service = Folio::File::AudioProcessingService.new(audio)
+
+    inspect_media_result = {
+      "format" => { "duration" => "120", "bit_rate" => "128000", "tags" => {} },
+      "streams" => [
+        { "codec_type" => "audio", "codec_name" => "mp3", "sample_rate" => "44100", "channels" => 1 },
+        { "codec_type" => "video", "codec_name" => "mjpeg", "disposition" => { "attached_pic" => 1 } }
+      ]
+    }
+
+    playable_result = {
+      "storage" => "s3",
+      "path" => "audio/encoded/1/1/audio-playable.mp3",
+      "extension" => "mp3",
+      "content_type" => "audio/mpeg",
+    }
+
+    write_fixture_artwork = -> (*args) do
+      FileUtils.cp(Folio::Engine.root.join("test/fixtures/folio/test.gif"), args.last)
+      ""
+    end
+
+    service.stub(:inspect_media, inspect_media_result) do
+      service.stub(:create_playable_derivative, playable_result) do
+        service.stub(:safely_generate_waveform_payload, nil) do
+          service.stub(:shell, write_fixture_artwork) do
+            service.call
+          end
+        end
+      end
+    end
+
+    assert audio.reload.artwork_cover.present?
+    assert audio.remote_services_data["artwork_seeded_at"].present?
+  end
+
+  test "call retries artwork seeding after extraction failure" do
+    audio = create(:folio_file_audio)
+    service = Folio::File::AudioProcessingService.new(audio)
+
+    inspect_media_result = {
+      "format" => { "duration" => "120", "bit_rate" => "128000", "tags" => {} },
+      "streams" => [
+        { "codec_type" => "audio", "codec_name" => "mp3", "sample_rate" => "44100", "channels" => 1 },
+        { "codec_type" => "video", "codec_name" => "mjpeg", "disposition" => { "attached_pic" => 1 } }
+      ]
+    }
+
+    playable_result = {
+      "storage" => "s3",
+      "path" => "audio/encoded/1/1/audio-playable.mp3",
+      "extension" => "mp3",
+      "content_type" => "audio/mpeg",
+    }
+
+    run_processing = lambda do |shell|
+      service.stub(:inspect_media, inspect_media_result) do
+        service.stub(:create_playable_derivative, playable_result) do
+          service.stub(:safely_generate_waveform_payload, nil) do
+            service.stub(:shell, shell) do
+              service.call
+            end
+          end
+        end
+      end
+    end
+
+    run_processing.call(-> (*) { raise "artwork failed" })
+    audio.reload
+
+    assert_equal "ready", audio.aasm_state
+    assert_nil audio.artwork_cover
+    assert_nil audio.remote_services_data["artwork_seeded_at"]
+
+    write_fixture_artwork = -> (*args) do
+      FileUtils.cp(Folio::Engine.root.join("test/fixtures/folio/test.gif"), args.last)
+      ""
+    end
+
+    run_processing.call(write_fixture_artwork)
+
+    assert audio.reload.artwork_cover.present?
+    assert audio.remote_services_data["artwork_seeded_at"].present?
   end
 end

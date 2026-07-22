@@ -22,11 +22,13 @@ class Folio::Console::Files::ArtworkFormComponentTest < Folio::Console::Componen
     image = create(:folio_file_image, author: nil, attribution_source: nil, description: nil)
     audio.create_artwork_cover_placement!(file: image)
 
-    with_controller_class(Folio::Console::File::AudiosController) do
-      with_request_url "/console/file/audios/#{audio.id}" do
-        render_inline(Folio::Console::Files::ArtworkFormComponent.new(file: audio))
+    Rails.application.config.stub(:folio_files_require_attribution, true) do
+      with_controller_class(Folio::Console::File::AudiosController) do
+        with_request_url "/console/file/audios/#{audio.id}" do
+          render_inline(Folio::Console::Files::ArtworkFormComponent.new(file: audio))
 
-        assert_selector(".f-c-files-artwork-form__validation-box")
+          assert_selector(".f-c-files-artwork-form__validation-box")
+        end
       end
     end
   end

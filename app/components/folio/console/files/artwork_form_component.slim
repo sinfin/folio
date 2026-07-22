@@ -4,7 +4,10 @@
                                                             record: @file,
                                                             class_name: "f-c-files-artwork-form__validation-box"))
 
-  = helpers.simple_form_for [:console, @file], as: :file, html: { class: "f-c-files-artwork-form__form" } do |f|
+  = helpers.simple_form_for [:console, @file],
+                            as: :file,
+                            html: { class: "f-c-files-artwork-form__form",
+                                    data: stimulus_target("form") } do |f|
     = helpers.file_picker(f:,
                           placement_key: :artwork_cover_placement,
                           file_klass: Folio::File::Image,
