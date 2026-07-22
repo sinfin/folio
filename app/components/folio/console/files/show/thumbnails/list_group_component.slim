@@ -14,8 +14,7 @@
         .f-c-files-show-thumbnails-list-group__meta
           span.f-c-files-show-thumbnails-list-group__ratio-label = display_ratio_label
 
-          - if label?
-            span.f-c-files-show-thumbnails-list-group__label = @label
+          span.f-c-files-show-thumbnails-list-group__label = display_label
 
         = render(Folio::Console::Files::Show::Thumbnails::CropEditComponent.new(file: @file,
                                                                                   ratio: @ratio,

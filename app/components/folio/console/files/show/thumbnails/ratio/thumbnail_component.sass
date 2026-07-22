@@ -18,6 +18,12 @@
     text-overflow: ellipsis
     white-space: nowrap
 
+  &__extension
+    color: $dark-gray
+
+  &__dimensions
+    color: $text-muted
+
   &__img-wrap
     align-items: center
     display: flex
@@ -32,7 +38,17 @@
     max-width: 100%
 
   &--detail &__variant
-    width: px-to-rem(128px)
+    align-items: flex-start
+    width: px-to-rem(100px)
+
+  &--detail
+    gap: $grid-gutter-width
+
+  &--detail &__title
+    align-self: stretch
+    font-size: px-to-rem(12px)
+    text-align: left
+    white-space: normal
 
   &--detail &__img-wrap
     height: auto

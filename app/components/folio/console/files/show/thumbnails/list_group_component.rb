@@ -26,6 +26,10 @@ class Folio::Console::Files::Show::Thumbnails::ListGroupComponent < Folio::Conso
       @label.present?
     end
 
+    def display_label
+      @label.presence || " "
+    end
+
     def root_class_name
       "f-c-files-show-thumbnails-list-group--regular" if regular?
     end

@@ -57,4 +57,11 @@ class Folio::Console::Files::Show::Thumbnails::Ratio::ThumbnailComponent < Folio
 
       "aspect-ratio: #{width} / #{height};"
     end
+
+    def dimensions_label
+      width, height = @thumbnail_size_key.delete_suffix("#").split("x", 2)
+      return @thumbnail_size_key unless width.match?(/\A\d+\z/) && height.match?(/\A\d+\z/)
+
+      "#{width}×#{height}px"
+    end
 end

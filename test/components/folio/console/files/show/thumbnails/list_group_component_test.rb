@@ -15,7 +15,7 @@ class Folio::Console::Files::Show::Thumbnails::ListGroupComponentTest < Folio::C
     end
   end
 
-  test "renders a detail crop preview with thumbnails to the right" do
+  test "renders a detail crop preview with aligned thumbnails when its label is absent" do
     file = create(:folio_file_image)
     file.update!(thumbnail_sizes: {
       "160x90#" => { url: "https://example.com/160x90.jpg" },
@@ -26,7 +26,7 @@ class Folio::Console::Files::Show::Thumbnails::ListGroupComponentTest < Folio::C
 
     assert_selector('.f-c-files-show-thumbnails-list-group[data-ratio="16:9"]')
     assert_selector(".f-c-files-show-thumbnails-list-group__ratio-label", text: "16×9")
-    assert_no_selector(".f-c-files-show-thumbnails-list-group__label")
+    assert_selector(".f-c-files-show-thumbnails-list-group__label")
     assert_selector(".f-c-files-show-thumbnails-list-group__preview .f-c-files-show-thumbnails-crop-edit--detail")
     assert_selector(".f-c-files-show-thumbnails-list-group__thumbs .f-c-files-show-thumbnails-ratio-thumbnail--detail", count: 2)
     assert_no_selector(".f-c-files-show-thumbnails-list-group__count")

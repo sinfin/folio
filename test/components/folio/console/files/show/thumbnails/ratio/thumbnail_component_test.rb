@@ -21,5 +21,7 @@ class Folio::Console::Files::Show::Thumbnails::Ratio::ThumbnailComponentTest < F
 
     assert_selector(".f-c-files-show-thumbnails-ratio-thumbnail--detail")
     assert_selector(".f-c-files-show-thumbnails-ratio-thumbnail__img-wrap[style='aspect-ratio: 250 / 167;']")
+    assert_selector(".f-c-files-show-thumbnails-ratio-thumbnail__extension", text: "JPG")
+    assert_selector(".f-c-files-show-thumbnails-ratio-thumbnail__dimensions", text: "250×167px")
   end
 end

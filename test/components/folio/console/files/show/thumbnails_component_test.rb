@@ -91,6 +91,9 @@ class Folio::Console::Files::Show::ThumbnailsComponentTest < Folio::Console::Com
         render_inline(Folio::Console::Files::Show::ThumbnailsComponent.new(file:))
 
         assert_selector("details.f-c-files-show-thumbnails__all summary .f-c-files-show-thumbnails__all-summary-chevron svg")
+        assert_selector("details.f-c-files-show-thumbnails__all .f-c-files-show-thumbnails__all-heading",
+                        text: "Verze a velikosti",
+                        visible: :all)
       end
     end
   end
