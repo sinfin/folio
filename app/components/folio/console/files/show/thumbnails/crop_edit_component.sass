@@ -19,26 +19,25 @@
     justify-content: center
 
   &__crop-btn
-    align-items: center
-    background: rgba($white, 0.85)
+    appearance: none
+    background: transparent
+    border-radius: 0
     border: none
-    border-radius: $border-radius
-    color: $dark-gray
+    color: $black
     cursor: pointer
-    display: flex
-    justify-content: center
-    padding: px-to-rem(4px)
+    inset: 0
+    padding: 0
     position: absolute
-    right: px-to-rem(4px)
-    top: px-to-rem(4px)
 
-    &:hover
-      background: $white
+  &__crop-btn-icon
+    background: rgba($white, 0.3)
+    position: absolute
+    right: 0
+    top: 0
 
-    svg
-      display: block
-      height: px-to-rem(16px)
-      width: px-to-rem(16px)
+  &__crop-btn:hover &__crop-btn-icon
+    background: rgba($white, 0.75)
+    background: $white
 
   &__editor
     align-items: center

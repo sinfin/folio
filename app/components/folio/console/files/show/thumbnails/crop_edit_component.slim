@@ -9,6 +9,7 @@
         src=image_url
         data=image_data
       ]
+
     - else
       .f-c-files-show-thumbnails-crop-edit__thumb-empty
         = folio_icon(:close)
@@ -19,7 +20,9 @@
         title=t('.edit')
         data=stimulus_action(click: "startEditing")
       ]
-        = folio_icon(:crop)
+        = folio_icon(:crop,
+                     height: 24,
+                     class_name: "f-c-files-show-thumbnails-crop-edit__crop-btn-icon")
 
   .f-c-files-show-thumbnails-crop-edit__overlay
     .f-c-files-show-thumbnails-crop-edit__backdrop[
