@@ -1,7 +1,8 @@
 .f-c-files-show-thumbnails-ratio
-  p.f-c-files-show-thumbnails-ratio__label = label
+  p.f-c-files-show-thumbnails-ratio__label = ratio_label
 
   = render(Folio::Console::Files::Show::Thumbnails::CropEditComponent.new(file: @file,
                                                                           ratio: @ratio,
+                                                                          ratio_label: @ratio_label,
                                                                           thumbnail_size_keys: @thumbnail_size_keys,
                                                                           updated_thumbnails_crop: @updated_thumbnails_crop))

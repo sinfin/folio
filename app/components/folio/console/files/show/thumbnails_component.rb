@@ -10,14 +10,22 @@ class Folio::Console::Files::Show::ThumbnailsComponent < Folio::Console::Applica
     @file = file
   end
 
-  # Crop aspect-ratio groups (proximity-clustered), keyed by reduced ratio label.
-  def crop_ratios
-    grouped["crop"] || {}
+  # Crop aspect-ratio groups, configurable by the host app per current site.
+  def crop_groups
+    thumbnail_groups["crop"]
   end
 
-  # Non-crop sizes for the trailing "regular" group of the disclosure.
-  def regular_size_keys
-    grouped.dig("regular", "regular") || []
+  def regular_groups
+    thumbnail_groups["regular"]
+  end
+
+  def self.thumbnail_groups(file)
+    groups = group_thumbnail_size_keys(file.thumbnail_sizes.keys)
+    Rails.application.config.folio_console_thumbnail_groups_proc.call(groups:, site: Folio::Current.site)
+  end
+
+  def self.crop_group(file:, ratio:)
+    thumbnail_groups(file).fetch("crop").find { |group| group["ratio"] == ratio }
   end
 
   def self.group_thumbnail_size_keys(keys)
@@ -116,17 +124,21 @@ class Folio::Console::Files::Show::ThumbnailsComponent < Folio::Console::Applica
       end
     end
 
-    # Ensure order: crop first, then regular
-    result = {}
-    result["crop"] = grouped["crop"] if grouped["crop"]
-    result["regular"] = grouped["regular"] if grouped["regular"]
-
-    result
+    {
+      "crop" => grouped.fetch("crop", {}).map { |ratio, sizes| group_data(ratio:, sizes:) },
+      "regular" => grouped.fetch("regular", {}).map { |ratio, sizes| group_data(ratio:, sizes:) },
+    }
   end
 
   private
-    def grouped
-      @grouped ||= self.class.group_thumbnail_size_keys(@file.thumbnail_sizes.keys)
+    def self.group_data(ratio:, sizes:)
+      { "ratio" => ratio, "ratio_label" => ratio.tr(":", "×"), "label" => nil, "sizes" => sizes }
+    end
+
+    private_class_method :group_data
+
+    def thumbnail_groups
+      @thumbnail_groups ||= self.class.thumbnail_groups(@file)
     end
 
     def before_render

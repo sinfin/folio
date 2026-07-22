@@ -18,28 +18,32 @@ class Folio::Console::Files::Show::ThumbnailsComponentTest < Folio::Console::Com
     ].sort
 
     result = Folio::Console::Files::Show::ThumbnailsComponent.group_thumbnail_size_keys(keys)
-    crop = result["crop"]
+    crop = result["crop"].index_by { |group| group["ratio"] }
 
     # all square sizes have the exact same ratio 1.0 -> one bucket labelled 1:1
     assert_equal %w[60x60# 70x70# 100x100# 120x120# 140x140# 200x200# 527x527# 648x648# 1054x1054# 1296x1296#].sort,
-                 crop["1:1"].sort
+                 crop["1:1"]["sizes"].sort
+    assert_equal "1×1", crop["1:1"]["ratio_label"]
+    assert_nil crop["1:1"]["label"]
 
     # 3:2 and 37:24 are now SEPARATE (2.8 % apart > 0.02 tolerance)
-    assert_equal %w[120x80# 240x160# 480x320#].sort, crop["3:2"].sort
-    assert_equal %w[370x240# 740x480#].sort, crop["37:24"].sort
+    assert_equal %w[120x80# 240x160# 480x320#].sort, crop["3:2"]["sizes"].sort
+    assert_equal %w[370x240# 740x480#].sort, crop["37:24"]["sizes"].sort
 
     # 2:1 and 4:1 are separate
-    assert_equal %w[200x100#], crop["2:1"]
-    assert_equal %w[400x100#], crop["4:1"]
+    assert_equal %w[200x100#], crop["2:1"]["sizes"]
+    assert_equal %w[400x100#], crop["4:1"]["sizes"]
 
     # near-1.7 cluster collapses into ONE bucket labelled by the cleanest member (12:7)
-    assert_equal %w[240x140# 673x394# 708x421# 743x442# 975x568#].sort, crop["12:7"].sort
+    assert_equal %w[240x140# 673x394# 708x421# 743x442# 975x568#].sort, crop["12:7"]["sizes"].sort
 
     # 16:9 stays separate from the near-1.7 cluster (3.6 % from 12:7)
-    assert_equal %w[800x450#], crop["16:9"]
+    assert_equal %w[800x450#], crop["16:9"]["sizes"]
 
     # regular unchanged
-    assert_equal %w[250x250 500x500 400x700 800x1400 120x x240 2560x2048>], result["regular"]["regular"]
+    assert_equal [{ "ratio" => "regular", "ratio_label" => "regular", "label" => nil,
+                    "sizes" => %w[250x250 500x500 400x700 800x1400 120x x240 2560x2048>] }],
+                 result["regular"]
   end
 
   test "group_thumbnail_size_keys clusters the real-world set into 10 buckets" do
@@ -55,14 +59,15 @@ class Folio::Console::Files::Show::ThumbnailsComponentTest < Folio::Console::Com
     ]
 
     crop = Folio::Console::Files::Show::ThumbnailsComponent.group_thumbnail_size_keys(keys)["crop"]
+                                                           .index_by { |group| group["ratio"] }
 
     assert_equal %w[1:1 3:2 4:3 12:7 13:10 16:9 37:24 40:21 50:27 244:175].sort, crop.keys.sort
 
-    assert_includes crop["3:2"], "140x93#"          # near-3:2 merges despite a far bucket anchor
-    assert_includes crop["3:2"], "306x208#"
-    assert_equal %w[370x240# 740x480#].sort, crop["37:24"].sort
-    assert_includes crop["50:27"], "436x238#"
-    assert_equal keys.count { |k| k.end_with?("#") }, crop.values.flatten.size
+    assert_includes crop["3:2"]["sizes"], "140x93#"          # near-3:2 merges despite a far bucket anchor
+    assert_includes crop["3:2"]["sizes"], "306x208#"
+    assert_equal %w[370x240# 740x480#].sort, crop["37:24"]["sizes"].sort
+    assert_includes crop["50:27"]["sizes"], "436x238#"
+    assert_equal keys.count { |k| k.end_with?("#") }, crop.values.sum { |group| group["sizes"].size }
   end
 
   test "render" do
@@ -86,6 +91,42 @@ class Folio::Console::Files::Show::ThumbnailsComponentTest < Folio::Console::Com
         render_inline(Folio::Console::Files::Show::ThumbnailsComponent.new(file:))
 
         assert_selector("details.f-c-files-show-thumbnails__all summary .f-c-files-show-thumbnails__all-summary-chevron svg")
+      end
+    end
+  end
+
+  test "render uses configured group labels and ordering for the current site" do
+    with_controller_class(Folio::Console::File::ImagesController) do
+      with_request_url "/console/file/images" do
+        file = create(:folio_file_image)
+        site = file.site
+        expected_site = site
+        file.update!(thumbnail_sizes: {
+          "100x100#" => { url: "https://example.com/100x100.jpg" },
+          "200x100#" => { url: "https://example.com/200x100.jpg" },
+        })
+        groups_proc = lambda do |groups:, site:|
+          assert_equal expected_site, site
+
+          groups.merge("crop" => groups["crop"].reverse.map do |group|
+            group.merge("label" => group["ratio"] == "2:1" ? "Hero" : "Card")
+          end)
+        end
+
+        Folio::Current.stub(:site, site) do
+          Rails.application.config.stub(:folio_console_thumbnail_groups_proc, -> { groups_proc }) do
+            render_inline(Folio::Console::Files::Show::ThumbnailsComponent.new(file:))
+          end
+        end
+
+        document = Nokogiri::HTML(rendered_content)
+        ratio_labels = document.css(".f-c-files-show-thumbnails-ratio__label").map(&:text)
+        list_ratio_labels = document.css(".f-c-files-show-thumbnails-list-group__ratio-label").map(&:text)
+        labels = document.css(".f-c-files-show-thumbnails-list-group__label").map(&:text)
+
+        assert_equal %w[2×1 1×1], ratio_labels
+        assert_equal %w[2×1 1×1], list_ratio_labels
+        assert_equal %w[Hero Card], labels
       end
     end
   end

@@ -15,6 +15,7 @@ class Folio::Console::Files::Show::Thumbnails::CropEditComponentTest < Folio::Co
 
         render_inline(Folio::Console::Files::Show::Thumbnails::CropEditComponent.new(file:,
                                                                                      ratio: "1:1",
+                                                                                     ratio_label: "1×1",
                                                                                      thumbnail_size_keys:))
 
         assert_selector(".f-c-files-show-thumbnails-crop-edit")
@@ -31,7 +32,7 @@ class Folio::Console::Files::Show::Thumbnails::CropEditComponentTest < Folio::Co
       with_request_url "/console/file/images" do
         file = create(:folio_file_image, file_width: 1200, file_height: 800)
         render_inline(Folio::Console::Files::Show::Thumbnails::CropEditComponent.new(
-          file:, ratio: "2:1", thumbnail_size_keys: %w[200x100#]))
+          file:, ratio: "2:1", ratio_label: "2×1", thumbnail_size_keys: %w[200x100#]))
 
         # the tile box and its corner crop trigger
         assert_selector ".f-c-files-show-thumbnails-crop-edit__thumb"

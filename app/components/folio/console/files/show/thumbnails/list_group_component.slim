@@ -9,10 +9,10 @@
         ]
 
     .f-c-files-show-thumbnails-list-group__meta
-      span.f-c-files-show-thumbnails-list-group__label = ratio_label
+      span.f-c-files-show-thumbnails-list-group__ratio-label = display_ratio_label
 
-      - if usage_label
-        span.f-c-files-show-thumbnails-list-group__usage = "· #{usage_label}"
+      - if label?
+        span.f-c-files-show-thumbnails-list-group__label = @label
 
       - unless regular?
         span.f-c-files-show-thumbnails-list-group__count[

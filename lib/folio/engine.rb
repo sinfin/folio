@@ -42,6 +42,7 @@ module Folio
     config.folio_console_clonable_enabled = true
     config.folio_console_audited_revisions_limit = 50
     config.folio_console_preview_url_for_procs = nil
+    config.folio_console_thumbnail_groups_proc = -> (groups:, site:) { groups }
 
     config.folio_rewriter_lambda_for_has_console_url = nil
 

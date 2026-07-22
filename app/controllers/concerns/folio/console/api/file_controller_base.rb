@@ -334,14 +334,18 @@ module Folio::Console::Api::FileControllerBase
     uids = thumb_uids_to_destroy.compact.uniq
     Folio::DestroyThumbnailUidsJob.perform_later(uids) if uids.any?
 
+    group = Folio::Console::Files::Show::ThumbnailsComponent.crop_group(file: @file, ratio:)
     list_group_html = render_to_string(Folio::Console::Files::Show::Thumbnails::ListGroupComponent.new(file: @file,
                                                                                                        ratio:,
+                                                                                                       ratio_label: group.fetch("ratio_label"),
+                                                                                                       label: group["label"],
                                                                                                        thumbnail_size_keys:,
                                                                                                        updated_thumbnails_crop: true),
                                        layout: false)
 
     render_component_json(Folio::Console::Files::Show::Thumbnails::RatioComponent.new(file: @file,
                                                                                       ratio:,
+                                                                                      ratio_label: group.fetch("ratio_label"),
                                                                                       thumbnail_size_keys:,
                                                                                       updated_thumbnails_crop: true),
                           meta: { list_group_html: })

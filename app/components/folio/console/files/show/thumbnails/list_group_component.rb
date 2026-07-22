@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 class Folio::Console::Files::Show::Thumbnails::ListGroupComponent < Folio::Console::ApplicationComponent
-  def initialize(file:, ratio:, thumbnail_size_keys:, updated_thumbnails_crop: false)
+  def initialize(file:, ratio:, ratio_label:, label: nil, thumbnail_size_keys:, updated_thumbnails_crop: false)
     @file = file
     @ratio = ratio
+    @ratio_label = ratio_label
+    @label = label
     @thumbnail_size_keys = thumbnail_size_keys
     @updated_thumbnails_crop = updated_thumbnails_crop
   end
@@ -14,15 +16,14 @@ class Folio::Console::Files::Show::Thumbnails::ListGroupComponent < Folio::Conso
       @ratio == "regular"
     end
 
-    def ratio_label
-      regular? ? t(".regular") : @ratio.tr(":", "×")
+    def display_ratio_label
+      return t(".regular") if regular? && @ratio_label == @ratio
+
+      @ratio_label
     end
 
-    # Optional host-app usage label (Folio::File#thumbnail_ratio_label override).
-    def usage_label
-      return if regular?
-
-      @file.thumbnail_ratio_label(@ratio, @thumbnail_size_keys).presence
+    def label?
+      @label.present?
     end
 
     def variants_count

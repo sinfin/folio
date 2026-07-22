@@ -1,17 +1,15 @@
 # frozen_string_literal: true
 
 class Folio::Console::Files::Show::Thumbnails::CropEditComponent < Folio::Console::ApplicationComponent
-  def initialize(file:, ratio:, thumbnail_size_keys:, updated_thumbnails_crop: false)
+  def initialize(file:, ratio:, ratio_label:, thumbnail_size_keys:, updated_thumbnails_crop: false)
     @file = file
     @ratio = ratio
+    @ratio_label = ratio_label
     @thumbnail_size_keys = thumbnail_size_keys
     @updated_thumbnails_crop = updated_thumbnails_crop
   end
 
-  # Reduced aspect-ratio label using the multiplication sign, e.g. "16×9".
-  def label
-    @ratio.tr(":", "×")
-  end
+  attr_reader :ratio_label
 
   private
     def before_render
