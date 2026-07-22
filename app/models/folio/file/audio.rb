@@ -2,6 +2,10 @@
 
 class Folio::File::Audio < Folio::File
   include Folio::S3::Client
+  extend Folio::HasAttachments::ClassMethods
+
+  has_one_placement(:artwork_cover,
+                    placement: "Folio::FilePlacement::ArtworkCover")
 
   ACCEPTED_FILE_FORMATS = %w[
     audio/mpeg
@@ -31,17 +35,40 @@ class Folio::File::Audio < Folio::File
     end
   end
 
-  def artwork_image
-    return @artwork_image if defined?(@artwork_image)
+  def should_validate_file_placements_attribution_if_needed?(for_console_form_warning: false)
+    return false unless Rails.application.config.folio_files_require_attribution
 
-    image_id = remote_services_data.to_h["artwork_image_id"]
-    @artwork_image = image_id.present? ? Folio::File::Image.find_by(id: image_id) : nil
+    for_console_form_warning
+  end
+
+  def should_validate_file_placements_alt_if_needed?(for_console_form_warning: false)
+    return false unless Rails.application.config.folio_files_require_alt
+
+    for_console_form_warning
+  end
+
+  def should_validate_file_placements_description_if_needed?(for_console_form_warning: false)
+    return false unless Rails.application.config.folio_files_require_description
+
+    for_console_form_warning
+  end
+
+  def update_file_placement_count_if_needed!(placement_key:)
+    return unless respond_to?("#{placement_key}_count=")
+
+    count = send(placement_key).count
+
+    if send("#{placement_key}_count") != count
+      update_column("#{placement_key}_count", count)
+    end
+  end
+
+  def artwork_image
+    artwork_cover
   end
 
   def artwork_image_placement
-    return unless artwork_image.present?
-
-    Folio::FilePlacement::Cover.new(file: artwork_image)
+    artwork_cover_placement
   end
 
   def playable_storage_data

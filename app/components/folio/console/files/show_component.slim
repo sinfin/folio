@@ -8,6 +8,10 @@
           .f-c-files-show__additional-preview-wrap
             = render(@file.console_show_additional_preview_component)
 
+        - if @file.class.human_type == "audio" && can_now?(:update, @file)
+          .f-c-files-show__artwork-wrap
+            = render(Folio::Console::Files::ArtworkFormComponent.new(file: @file))
+
     .col-lg
       .f-c-files-show__buttons-outer.mb-h
         .f-c-files-show__buttons

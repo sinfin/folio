@@ -262,6 +262,7 @@ en:
         few: Attribute
         other: Attributes
 
+      folio/file_placement/artwork_cover: Player artwork
       folio/file_placement/audio_cover: Audio
       folio/file_placement/cover: Image
       folio/file_placement/document: File
@@ -283,6 +284,7 @@ en:
     aasm_state: State
     address_secondary: Secondary address
     article: Article
+    artwork_cover_placement: Player artwork
     atoms: Chapters
     audio_cover_placement: Audio
     button_label: Button label

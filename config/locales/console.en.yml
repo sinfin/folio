@@ -433,6 +433,9 @@ en:
           label: Automatic save
 
       files:
+        artwork_form_component:
+          hint: Seeded automatically from the artwork embedded in the audio file; you can replace it with a custom image.
+
         subtitle_form_component:
           enabled_label: Enable subtitles
           validation_errors_title: "Validation errors:"

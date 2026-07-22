@@ -196,29 +196,28 @@ class Folio::File::AudioTest < ActiveSupport::TestCase
     assert_equal "2:03:04", audio.formatted_duration
   end
 
-  test "artwork image placement wraps derived image" do
+  test "artwork image is exposed through the artwork cover placement" do
     artwork = create(:folio_file_image)
-    audio = create(:folio_file_audio, remote_services_data: { "artwork_image_id" => artwork.id })
+    audio = create(:folio_file_audio)
 
-    placement = audio.artwork_image_placement
+    assert_nil audio.artwork_image
+    assert_nil audio.artwork_image_placement
 
-    assert_instance_of Folio::FilePlacement::Cover, placement
-    assert_equal artwork, placement.file
+    audio.create_artwork_cover_placement!(file: artwork)
+    audio.reload
+
+    assert_equal artwork, audio.artwork_image
+    assert_instance_of Folio::FilePlacement::ArtworkCover, audio.artwork_image_placement
+    assert_equal artwork, audio.artwork_image_placement.file
   end
 
-  test "artwork image memoizes missing derived image" do
-    audio = create(:folio_file_audio, remote_services_data: { "artwork_image_id" => -1 })
-    find_calls = 0
-    missing_image_lookup = -> (*, **) do
-      find_calls += 1
-      nil
-    end
+  test "artwork cover placement accepts only images" do
+    audio = create(:folio_file_audio)
+    other_audio = create(:folio_file_audio)
 
-    Folio::File::Image.stub(:find_by, missing_image_lookup) do
-      2.times { assert_nil audio.artwork_image }
-    end
+    audio.update(artwork_cover_placement_attributes: { file_id: other_audio.id })
 
-    assert_equal 1, find_calls
+    assert_nil audio.reload.artwork_cover
   end
 
   test "waveform payload exposes persisted peak envelope" do
