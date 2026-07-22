@@ -15,7 +15,7 @@ class Folio::Console::Files::Show::Thumbnails::ListGroupComponentTest < Folio::C
     end
   end
 
-  test "renders representative, ratio label and variants count" do
+  test "renders a detail crop preview with thumbnails to the right" do
     file = create(:folio_file_image)
     file.update!(thumbnail_sizes: {
       "160x90#" => { url: "https://example.com/160x90.jpg" },
@@ -27,10 +27,10 @@ class Folio::Console::Files::Show::Thumbnails::ListGroupComponentTest < Folio::C
     assert_selector('.f-c-files-show-thumbnails-list-group[data-ratio="16:9"]')
     assert_selector(".f-c-files-show-thumbnails-list-group__ratio-label", text: "16×9")
     assert_no_selector(".f-c-files-show-thumbnails-list-group__label")
-    assert_selector(".f-c-files-show-thumbnails-list-group__count", text: "(2)")
-    assert_selector("img.f-c-files-show-thumbnails-list-group__representative-img")
-    assert_selector(".f-c-files-show-thumbnails-ratio-thumbnail", count: 2)
-    assert_no_selector(".f-c-files-show-thumbnails-list-group__usage")
+    assert_selector(".f-c-files-show-thumbnails-list-group__preview .f-c-files-show-thumbnails-crop-edit--detail")
+    assert_selector(".f-c-files-show-thumbnails-list-group__thumbs .f-c-files-show-thumbnails-ratio-thumbnail--detail", count: 2)
+    assert_no_selector(".f-c-files-show-thumbnails-list-group__count")
+    assert_no_selector(".f-c-files-show-thumbnails-list-group__representative-img")
   end
 
   test "renders configured secondary group label" do
@@ -43,13 +43,14 @@ class Folio::Console::Files::Show::Thumbnails::ListGroupComponentTest < Folio::C
     assert_selector(".f-c-files-show-thumbnails-list-group__label", text: "Karta · Infobox")
   end
 
-  test "regular group renders without representative and count" do
+  test "regular group renders without a crop preview or count" do
     file = create(:folio_file_image)
     file.update!(thumbnail_sizes: { "250x250" => { url: "https://example.com/250x250.jpg" } })
 
     render_group(file:, ratio: "regular", ratio_label: "regular", keys: %w[250x250])
 
     assert_selector(".f-c-files-show-thumbnails-list-group__ratio-label", text: "Verze bez ořezu")
+    assert_no_selector(".f-c-files-show-thumbnails-list-group__preview")
     assert_no_selector(".f-c-files-show-thumbnails-list-group__representative-img")
     assert_no_selector(".f-c-files-show-thumbnails-list-group__count")
   end

@@ -18,7 +18,7 @@ class Folio::Console::Files::Show::Thumbnails::RatioComponentTest < Folio::Conso
                                                                                   ratio_label: "1×1",
                                                                                   thumbnail_size_keys:))
 
-        assert_selector(".f-c-files-show-thumbnails-ratio")
+        assert_selector('.f-c-files-show-thumbnails-ratio[data-ratio="1:1"]')
       end
     end
   end

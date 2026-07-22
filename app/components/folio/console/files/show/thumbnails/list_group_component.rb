@@ -26,20 +26,7 @@ class Folio::Console::Files::Show::Thumbnails::ListGroupComponent < Folio::Conso
       @label.present?
     end
 
-    def variants_count
-      @thumbnail_size_keys.size
-    end
-
-    def representative_url
-      return if regular?
-
-      @representative_url ||= Folio::Console::Files::Show::Thumbnails::RepresentativeImage
-                                .representative_url(file: @file,
-                                                    keys: @thumbnail_size_keys,
-                                                    include_doader: @updated_thumbnails_crop)
-    end
-
-    def representative_data
-      stimulus_thumbnail(src: representative_url)
+    def root_class_name
+      "f-c-files-show-thumbnails-list-group--regular" if regular?
     end
 end

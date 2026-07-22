@@ -1,9 +1,15 @@
 .f-c-files-show-thumbnails-crop-edit
   &__thumb
     background: $medium-gray
-    height: px-to-rem(120px)
     overflow: hidden
     position: relative
+
+  &--tile &__thumb
+    height: px-to-rem(120px)
+
+  &--detail &__thumb
+    max-width: 100%
+    width: 290px
 
   &__thumb-img
     display: block

@@ -44,4 +44,17 @@ class Folio::Console::Files::Show::Thumbnails::CropEditComponentTest < Folio::Co
   ensure
     Folio::Current.user = nil
   end
+
+  test "detail variant keeps a fixed-width preview with the crop ratio" do
+    with_controller_class(Folio::Console::File::ImagesController) do
+      with_request_url "/console/file/images" do
+        file = create(:folio_file_image)
+
+        render_inline(Folio::Console::Files::Show::Thumbnails::CropEditComponent.new(
+          file:, ratio: "2:1", ratio_label: "2×1", thumbnail_size_keys: %w[200x100#], variant: :detail))
+
+        assert_selector(".f-c-files-show-thumbnails-crop-edit--detail .f-c-files-show-thumbnails-crop-edit__thumb[style='aspect-ratio: 2 / 1;']")
+      end
+    end
+  end
 end

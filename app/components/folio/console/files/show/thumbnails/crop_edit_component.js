@@ -75,8 +75,6 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
 
     this.stateValue = 'saving'
 
-    const ratioEl = this.element.closest('.f-c-files-show-thumbnails-ratio')
-
     window.Folio.Api.apiPatch(this.apiUrlValue, data).then((res) => {
       if (res && res.data) {
         const ratio = this.apiDataValue.ratio
@@ -87,7 +85,8 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
           if (listGroupEl) listGroupEl.outerHTML = listGroupHtml
         }
 
-        ratioEl.outerHTML = res.data
+        const ratioEl = document.querySelector(`.f-c-files-show-thumbnails-ratio[data-ratio="${ratio}"]`)
+        if (ratioEl) ratioEl.outerHTML = res.data
       } else {
         throw new Error('Invalid response from server')
       }

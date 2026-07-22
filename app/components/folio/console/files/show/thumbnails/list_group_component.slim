@@ -1,26 +1,32 @@
-.f-c-files-show-thumbnails-list-group data-ratio=@ratio
-  .f-c-files-show-thumbnails-list-group__header
-    - unless regular?
-      - if representative_url
-        img.f-c-files-show-thumbnails-list-group__representative-img[
-          loading="lazy"
-          src=representative_url
-          data=representative_data
-        ]
+.f-c-files-show-thumbnails-list-group[
+  class=root_class_name
+  data-ratio=@ratio
+]
+  .f-c-files-show-thumbnails-list-group__content
+    - if regular?
+      .f-c-files-show-thumbnails-list-group__meta
+        span.f-c-files-show-thumbnails-list-group__ratio-label = display_ratio_label
 
-    .f-c-files-show-thumbnails-list-group__meta
-      span.f-c-files-show-thumbnails-list-group__ratio-label = display_ratio_label
+        - if label?
+          span.f-c-files-show-thumbnails-list-group__label = @label
+    - else
+      .f-c-files-show-thumbnails-list-group__preview
+        .f-c-files-show-thumbnails-list-group__meta
+          span.f-c-files-show-thumbnails-list-group__ratio-label = display_ratio_label
 
-      - if label?
-        span.f-c-files-show-thumbnails-list-group__label = @label
+          - if label?
+            span.f-c-files-show-thumbnails-list-group__label = @label
 
-      - unless regular?
-        span.f-c-files-show-thumbnails-list-group__count[
-          title=t('.variants_count', count: variants_count)
-        ] = "(#{variants_count})"
+        = render(Folio::Console::Files::Show::Thumbnails::CropEditComponent.new(file: @file,
+                                                                                  ratio: @ratio,
+                                                                                  ratio_label: @ratio_label,
+                                                                                  thumbnail_size_keys: @thumbnail_size_keys,
+                                                                                  updated_thumbnails_crop: @updated_thumbnails_crop,
+                                                                                  variant: :detail))
 
-  .f-c-files-show-thumbnails-list-group__thumbs
-    - @thumbnail_size_keys.each do |thumbnail_size_key|
-      = render(Folio::Console::Files::Show::Thumbnails::Ratio::ThumbnailComponent.new(thumbnail_size_key:,
-                                                                                      thumbnail: @file.thumbnail_sizes[thumbnail_size_key],
-                                                                                      file: @file))
+    .f-c-files-show-thumbnails-list-group__thumbs
+      - @thumbnail_size_keys.each do |thumbnail_size_key|
+        = render(Folio::Console::Files::Show::Thumbnails::Ratio::ThumbnailComponent.new(thumbnail_size_key:,
+                                                                                        thumbnail: @file.thumbnail_sizes[thumbnail_size_key],
+                                                                                        file: @file,
+                                                                                        variant: :detail))

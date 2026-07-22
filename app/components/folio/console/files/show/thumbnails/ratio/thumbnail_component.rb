@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 class Folio::Console::Files::Show::Thumbnails::Ratio::ThumbnailComponent < Folio::Console::ApplicationComponent
-  def initialize(thumbnail:, thumbnail_size_key:, file:)
+  def initialize(thumbnail:, thumbnail_size_key:, file:, variant: :default)
     @thumbnail = thumbnail.is_a?(Hash) ? thumbnail : {}
     @thumbnail_size_key = thumbnail_size_key
     @file = file
+    @variant = variant
   end
 
   private
@@ -42,5 +43,18 @@ class Folio::Console::Files::Show::Thumbnails::Ratio::ThumbnailComponent < Folio
       else
         [jpg]
       end
+    end
+
+    def variant_class
+      "f-c-files-show-thumbnails-ratio-thumbnail--detail" if @variant == :detail
+    end
+
+    def image_wrap_style
+      return unless @variant == :detail
+
+      width, height = @thumbnail_size_key.delete_suffix("#").split("x", 2).map(&:to_i)
+      return if width.zero? || height.zero?
+
+      "aspect-ratio: #{width} / #{height};"
     end
 end

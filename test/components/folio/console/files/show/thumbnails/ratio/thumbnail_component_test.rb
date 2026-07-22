@@ -12,4 +12,14 @@ class Folio::Console::Files::Show::Thumbnails::Ratio::ThumbnailComponentTest < F
 
     assert_selector(".f-c-files-show-thumbnails-ratio-thumbnail")
   end
+
+  test "detail variant keeps the thumbnail aspect ratio" do
+    thumbnail = { url: "https://a/b/c/d.jpg" }
+
+    render_inline(Folio::Console::Files::Show::Thumbnails::Ratio::ThumbnailComponent.new(
+      thumbnail:, thumbnail_size_key: "250x167#", file: create(:folio_file_image), variant: :detail))
+
+    assert_selector(".f-c-files-show-thumbnails-ratio-thumbnail--detail")
+    assert_selector(".f-c-files-show-thumbnails-ratio-thumbnail__img-wrap[style='aspect-ratio: 250 / 167;']")
+  end
 end

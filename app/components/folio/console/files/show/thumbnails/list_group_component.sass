@@ -2,28 +2,26 @@
   & + &
     margin-top: $grid-gutter-width
 
-  &__header
-    align-items: center
+  &__content
+    align-items: flex-start
     display: flex
-    gap: $grid-gutter-half
-    margin-bottom: $grid-gutter-half
+    flex-wrap: wrap
+    gap: $grid-gutter-width
 
-  &__representative-img
-    border-radius: $border-radius
-    display: block
-    max-height: 48px
-    max-width: 96px
-    object-fit: contain
+  &__preview
+    flex: 0 1 290px
+    max-width: 100%
 
   &__ratio-label,
   &__label
     display: block
     font-weight: bold
 
-  &__count
-    color: $text-muted
+  &__meta
+    margin-bottom: $grid-gutter-half
 
   &__thumbs
     display: flex
-    flex-direction: column
-    gap: $grid-gutter-half
+    flex: 1 1 290px
+    flex-wrap: wrap
+    gap: $grid-gutter-base

@@ -1,4 +1,4 @@
-.f-c-files-show-thumbnails-ratio-thumbnail
+.f-c-files-show-thumbnails-ratio-thumbnail class=variant_class
   - variants.each do |extension, url|
     .f-c-files-show-thumbnails-ratio-thumbnail__variant
       .f-c-files-show-thumbnails-ratio-thumbnail__title
@@ -8,6 +8,7 @@
       - if url
         a.f-c-files-show-thumbnails-ratio-thumbnail__img-wrap[
           href=url
+          style=image_wrap_style
           target="_blank"
         ]
           img.f-c-files-show-thumbnails-ratio-thumbnail__img[
@@ -16,5 +17,5 @@
             data=stimulus_thumbnail
           ]
       - else
-        .f-c-files-show-thumbnails-ratio-thumbnail__img-wrap
+        .f-c-files-show-thumbnails-ratio-thumbnail__img-wrap style=image_wrap_style
           = folio_icon(:close)
