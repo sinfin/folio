@@ -332,27 +332,49 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
     def validate_usage_limit_if_published_placement
       return if file.blank? || placement.blank?
       return unless file.class.included_modules.include?(Folio::File::HasUsageConstraints)
-      return unless placement.respond_to?(:published) && placement.published == true
+      return unless usage_validation_record&.respond_to?(:published) && usage_validation_record.published == true
 
-      # Check if this file is already used in this placement - if so, no new usage is added
-      existing_placement = Folio::FilePlacement::Base
-        .where(placement_id: placement_id, placement_type: placement_type, file_id: file_id)
-        .where.not(id: id)
-        .exists?
+      validation_site = usage_validation_site
 
-      return if existing_placement
-
-      if file.usage_limit_exceeded?
-        errors.add(:file, I18n.t("errors.messages.cannot_publish_with_files_over_usage_limit",
-                                  name: file.file_name,
-                                  limit: file.attribution_max_usage_count))
+      unless file_usage_already_represented?
+        if file.usage_limit_exceeded?(site: validation_site)
+          errors.add(:file, I18n.t("errors.messages.cannot_publish_with_files_over_usage_limit",
+                                    name: file.file_name,
+                                    limit: file.effective_attribution_max_usage_count(site: validation_site)))
+        end
       end
 
-      if !file.can_be_used_on_site?(Folio::Current.site)
+      unless file.can_be_used_on_site?(validation_site)
         errors.add(:base, I18n.t("errors.messages.cannot_publish_with_files_restricted_to_site",
                                  name: file.file_name,
-                                 allowed_sites: file.allowed_sites.pluck(:title).join(", ")))
+                                 allowed_sites: file.allowed_sites_for_usage_constraints.pluck(:title).join(", ")))
       end
+    end
+
+    def usage_validation_record
+      if placement.is_a?(Folio::Atom::Base) && placement.placement.present?
+        placement.placement
+      else
+        placement
+      end
+    end
+
+    def usage_validation_site
+      usage_validation_record.respond_to?(:site) ? usage_validation_record.site : Folio::Current.site
+    end
+
+    def file_usage_already_represented?
+      validation_record = usage_validation_record
+      placement_type = validation_record.class.base_class.name
+      scope = Folio::FilePlacement::Base.where(file_id: file.id).where.not(id:)
+      direct_placements = scope.where(placement_type:,
+                                      placement_id: validation_record.id)
+      atom_ids = Folio::Atom::Base.where(placement_type:,
+                                         placement_id: validation_record.id)
+      atom_placements = scope.where(placement_type: "Folio::Atom::Base",
+                                    placement_id: atom_ids.select(:id))
+
+      direct_placements.or(atom_placements).exists?
     end
 
     def update_placement_counts_unless_inside_nested_attributes

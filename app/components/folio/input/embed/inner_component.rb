@@ -6,11 +6,13 @@ class Folio::Input::Embed::InnerComponent < ApplicationComponent
   def initialize(folio_embed_data:,
                  compact: false,
                  centered: false,
-                 background_color: nil)
+                 background_color: nil,
+                 error: nil)
     @folio_embed_data = folio_embed_data
     @compact = compact
     @centered = centered
     @background_color = background_color
+    @error = error
   end
 
   private

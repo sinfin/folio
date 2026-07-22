@@ -409,6 +409,22 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       assert_equal(file.id, response.parsed_body["data"]["id"].to_i)
     end
 
+    test "#{klass} - file_picker_file_hash resolves numeric :id by primary key, not a colliding numeric slug" do
+      target = create(klass.model_name.singular)
+      decoy = create(klass.model_name.singular)
+      # Legacy file whose (file-name derived) slug equals another file's id,
+      # e.g. a file uploaded as "349444.jpg" -> slug "349444" colliding with id 349444.
+      decoy.update_column(:slug, target.id.to_s)
+
+      # The console JS sends the file's numeric id (not its slug) in :id.
+      slug_url = url_for([:file_picker_file_hash, :console, :api, target, format: :json])
+      get slug_url.sub("/#{target.to_param}/", "/#{target.id}/")
+
+      assert_response(:success)
+      assert_equal(target.id, response.parsed_body["data"]["id"].to_i,
+                   "numeric :id must resolve by primary key, not by decoy ##{decoy.id}'s colliding numeric slug")
+    end
+
     if klass.human_type == "image"
       test "#{klass} - update_thumbnails_crop writes crop under the bucket label and every exact ratio of the keys" do
         file = create(klass.model_name.singular)

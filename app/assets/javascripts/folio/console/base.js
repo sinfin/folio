@@ -100,6 +100,7 @@
 //= require folio/console/console_notes/catalogue_tooltip/catalogue_tooltip
 //= require folio/console/current_users/console_url_bar_component
 //= require folio/console/current_users/preference_toggle_component
+//= require folio/console/current_users/presence_ping_component
 //= require folio/console/current_users/show_component
 //= require folio/console/file/preview_reloader/preview_reloader
 //= require folio/console/file/processing_notifier/processing_notifier
