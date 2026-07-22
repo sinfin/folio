@@ -358,14 +358,17 @@ class Folio::File::AudioProcessingService
     end
 
     def persist_artwork_image(tempfile)
+      base_name = audio_file.file_name.to_s.sub(/\.[^.]+\z/, "")
+
       image = Folio::File::Image.new(
         site: audio_file.site,
         author: audio_file.author,
         description: audio_file.description,
-        headline: [audio_file.file_name.to_s.sub(/\.[^.]+\z/, ""), "artwork"].join(" "),
+        headline: [base_name, "artwork"].join(" "),
       )
 
-      image.file = tempfile
+      image.file = ::File.open(tempfile.path)
+      image.file.name = "#{base_name.presence || "audio"}-artwork#{::File.extname(tempfile.path)}"
       image.save!
       image
     end

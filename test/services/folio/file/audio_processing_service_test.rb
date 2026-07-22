@@ -350,6 +350,8 @@ class Folio::File::AudioProcessingServiceTest < ActiveSupport::TestCase
     seeded = audio.artwork_cover
     assert seeded.present?
     assert_instance_of Folio::FilePlacement::ArtworkCover, audio.artwork_cover_placement
+    assert seeded.file_width.present?
+    assert seeded.valid?
 
     # a reprocess keeps the seeded artwork untouched
     run_processing.call
