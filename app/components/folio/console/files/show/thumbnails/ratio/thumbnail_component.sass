@@ -22,7 +22,7 @@
     color: $dark-gray
 
   &__dimensions
-    color: $text-muted
+    color: #A8A9AA
 
   &__img-wrap
     align-items: center
@@ -39,7 +39,7 @@
 
   &--detail &__variant
     align-items: flex-start
-    width: px-to-rem(100px)
+    width: auto
 
   &--detail
     gap: $grid-gutter-width
@@ -51,5 +51,5 @@
     white-space: normal
 
   &--detail &__img-wrap
-    height: auto
-    width: 100%
+    max-height: px-to-rem(100px)
+    max-width: px-to-rem(100px)

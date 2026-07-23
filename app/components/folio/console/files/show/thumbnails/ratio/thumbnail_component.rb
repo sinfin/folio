@@ -52,10 +52,49 @@ class Folio::Console::Files::Show::Thumbnails::Ratio::ThumbnailComponent < Folio
     def image_wrap_style
       return unless @variant == :detail
 
-      width, height = @thumbnail_size_key.delete_suffix("#").split("x", 2).map(&:to_i)
-      return if width.zero? || height.zero?
+      width, height = thumbnail_dimensions
+      return unless width && height
 
-      "aspect-ratio: #{width} / #{height};"
+      scale = [100.0 / width, 100.0 / height].min
+      scale = [scale, 1].min if regular?
+      display_width = image_dimension(width * scale)
+      display_height = image_dimension(height * scale)
+
+      "width: #{display_width}px; height: #{display_height}px;"
+    end
+
+    def image_dimension(value)
+      rounded_value = value.round(2)
+      rounded_value.to_i == rounded_value ? rounded_value.to_i : rounded_value
+    end
+
+    def thumbnail_dimensions
+      thumbnail_dimensions_from_metadata ||
+        (thumbnail_dimensions_from_file if regular?) ||
+        thumbnail_dimensions_from_size_key
+    end
+
+    def regular?
+      !@thumbnail_size_key.end_with?("#")
+    end
+
+    def thumbnail_dimensions_from_metadata
+      dimensions_from(@thumbnail[:width] || @thumbnail["width"],
+                      @thumbnail[:height] || @thumbnail["height"])
+    end
+
+    def thumbnail_dimensions_from_file
+      dimensions_from(@file.file_width, @file.file_height)
+    end
+
+    def thumbnail_dimensions_from_size_key
+      dimensions_from(*@thumbnail_size_key.delete_suffix("#").split("x", 2))
+    end
+
+    def dimensions_from(width, height)
+      width = width.to_i
+      height = height.to_i
+      [width, height] if width.positive? && height.positive?
     end
 
     def dimensions_label

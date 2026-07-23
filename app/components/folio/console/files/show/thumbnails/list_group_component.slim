@@ -2,14 +2,15 @@
   class=root_class_name
   data-ratio=@ratio
 ]
-  .f-c-files-show-thumbnails-list-group__content
-    - if regular?
-      .f-c-files-show-thumbnails-list-group__meta
-        span.f-c-files-show-thumbnails-list-group__ratio-label = display_ratio_label
+  - if regular?
+    .f-c-files-show-thumbnails-list-group__meta
+      span.f-c-files-show-thumbnails-list-group__ratio-label = display_ratio_label
 
-        - if label?
-          span.f-c-files-show-thumbnails-list-group__label = @label
-    - else
+      - if label?
+        span.f-c-files-show-thumbnails-list-group__label = @label
+
+  .f-c-files-show-thumbnails-list-group__content
+    - unless regular?
       .f-c-files-show-thumbnails-list-group__preview
         .f-c-files-show-thumbnails-list-group__meta
           span.f-c-files-show-thumbnails-list-group__ratio-label = display_ratio_label
