@@ -62,6 +62,7 @@ cs:
           thumbnails:
             crop_edit_component:
               edit: Upravit ořez
+              regenerate: Znovu vygenerovat náhledy
 
             list_group_component:
               regular: Verze bez ořezu

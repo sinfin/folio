@@ -30,14 +30,14 @@ class Folio::Console::Files::Show::Thumbnails::Ratio::ThumbnailComponent < Folio
         ["jpg", nil]
       end
 
-      webp = if @thumbnail[:webp_url].present? && !@thumbnail[:webp_url].include?("doader.com")
-        extension = begin
-          File.extname(@thumbnail[:webp_url]).delete_prefix(".").downcase
-        rescue StandardError
-          "webp"
+      webp = if @thumbnail[:webp_url].present?
+        url = if @thumbnail[:webp_url].include?("doader.com")
+          @file.temporary_url("#{@thumbnail_size_key}.webp")
+        else
+          Folio::S3.cdn_url_rewrite(@thumbnail[:webp_url])
         end
 
-        [extension || "webp", Folio::S3.cdn_url_rewrite(@thumbnail[:webp_url])]
+        ["webp", url]
       end
 
       if webp

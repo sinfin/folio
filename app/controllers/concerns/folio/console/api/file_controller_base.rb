@@ -300,11 +300,10 @@ module Folio::Console::Api::FileControllerBase
       end
 
       # hackily extracted from app/models/concerns/folio/thumbnails.rb
-      match = size_key.match(/\d+x?\d+/)
-      next unless match
-      size = match[0]
+      next unless size_key.match?(/\d+x?\d+/)
       width, height = size_key.split("x").map(&:to_i)
-      url = "https://doader.com/#{size}?image=#{@file.id}"
+      url = @file.temporary_url(size_key)
+      webp_url = @file.temporary_url("#{size_key}.webp")
 
       # Clear existing thumbnail and mark for regeneration
       # With activejob-uniqueness, we don't need started_generating_at coordination
@@ -314,6 +313,7 @@ module Folio::Console::Api::FileControllerBase
         x: nil,
         y: nil,
         url:,
+        webp_url:,
         width:,
         height:,
         quality: Folio::Thumbnails::DEFAULT_QUALITY,

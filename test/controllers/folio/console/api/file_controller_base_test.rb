@@ -507,12 +507,14 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
         assert_equal 160, file.thumbnail_sizes["160x90#"][:width]
         assert_equal 90, file.thumbnail_sizes["160x90#"][:height]
         assert file.thumbnail_sizes["160x90#"][:url].present?
+        assert_equal file.temporary_url("160x90#.webp"), file.thumbnail_sizes["160x90#"][:webp_url]
 
         assert_nil file.thumbnail_sizes["320x180#"][:uid]
         assert_nil file.thumbnail_sizes["320x180#"][:signature]
         assert_equal 320, file.thumbnail_sizes["320x180#"][:width]
         assert_equal 180, file.thumbnail_sizes["320x180#"][:height]
         assert file.thumbnail_sizes["320x180#"][:url].present?
+        assert_equal file.temporary_url("320x180#.webp"), file.thumbnail_sizes["320x180#"][:webp_url]
       end
 
       test "#{klass} - update_thumbnails_crop destroys old thumbnail uids asynchronously" do

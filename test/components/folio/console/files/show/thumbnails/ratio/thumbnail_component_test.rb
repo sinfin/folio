@@ -13,6 +13,21 @@ class Folio::Console::Files::Show::Thumbnails::Ratio::ThumbnailComponentTest < F
     assert_selector(".f-c-files-show-thumbnails-ratio-thumbnail")
   end
 
+  test "renders a temporary webp variant while a crop is regenerating" do
+    file = create(:folio_file_image)
+    thumbnail_size_key = "250x167#"
+    thumbnail = {
+      url: file.temporary_url(thumbnail_size_key),
+      webp_url: file.temporary_url("#{thumbnail_size_key}.webp")
+    }
+
+    render_inline(Folio::Console::Files::Show::Thumbnails::Ratio::ThumbnailComponent.new(
+      thumbnail:, thumbnail_size_key:, file:, variant: :detail))
+
+    assert_selector(".f-c-files-show-thumbnails-ratio-thumbnail__extension", text: "JPG")
+    assert_selector(".f-c-files-show-thumbnails-ratio-thumbnail__extension", text: "WEBP")
+  end
+
   test "detail variant fits a landscape thumbnail within 100 pixels" do
     thumbnail = { url: "https://a/b/c/d.jpg" }
 

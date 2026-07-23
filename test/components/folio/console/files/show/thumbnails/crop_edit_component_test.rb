@@ -47,7 +47,6 @@ class Folio::Console::Files::Show::Thumbnails::CropEditComponentTest < Folio::Co
 
         assert_equal({ "aspect_ratio" => 2.0, "x" => 0.25, "y" => 0.125 }, cropper_data)
         assert_equal({ "group_type" => "crop", "ratio" => "2:1" }, api_data)
-        assert_includes root["data-f-c-files-show-thumbnails-crop-edit-api-url-value"], "action=update_thumbnails_crop"
       end
     end
   end

@@ -12,17 +12,13 @@
   .f-c-files-show-thumbnails-list-group__content
     - unless regular?
       .f-c-files-show-thumbnails-list-group__preview
-        .f-c-files-show-thumbnails-list-group__meta
-          span.f-c-files-show-thumbnails-list-group__ratio-label = display_ratio_label
-
-          span.f-c-files-show-thumbnails-list-group__label = display_label
-
         = render(Folio::Console::Files::Show::Thumbnails::CropEditComponent.new(file: @file,
                                                                                   ratio: @ratio,
                                                                                   ratio_label: @ratio_label,
                                                                                   thumbnail_size_keys: @thumbnail_size_keys,
                                                                                   updated_thumbnails_crop: @updated_thumbnails_crop,
-                                                                                  variant: :detail))
+                                                                                  variant: :detail,
+                                                                                  group_label: @label))
 
     .f-c-files-show-thumbnails-list-group__thumbs
       - @thumbnail_size_keys.each do |thumbnail_size_key|

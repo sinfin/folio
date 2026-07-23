@@ -17,17 +17,26 @@ class Folio::Console::Files::Show::Thumbnails::ListGroupComponentTest < Folio::C
 
   test "renders a detail crop preview with aligned thumbnails when its label is absent" do
     file = create(:folio_file_image)
+    file.update_columns(file_width: 160, file_height: 90)
     file.update!(thumbnail_sizes: {
       "160x90#" => { url: "https://example.com/160x90.jpg" },
       "320x180#" => { url: "https://example.com/320x180.jpg" },
     })
 
-    render_group(file:, ratio: "16:9", ratio_label: "16×9", keys: %w[160x90# 320x180#])
+    user = create(:folio_user, :superadmin)
+    ability = Folio::Ability.new(user, get_any_site)
+
+    Folio::Current.stub(:user, user) do
+      Folio::Current.stub(:ability, ability) do
+        render_group(file:, ratio: "16:9", ratio_label: "16×9", keys: %w[160x90# 320x180#])
+      end
+    end
 
     assert_selector('.f-c-files-show-thumbnails-list-group[data-ratio="16:9"]')
-    assert_selector(".f-c-files-show-thumbnails-list-group__ratio-label", text: "16×9")
-    assert_selector(".f-c-files-show-thumbnails-list-group__label")
+    assert_selector(".f-c-files-show-thumbnails-crop-edit__ratio-label", text: "16×9")
+    assert_selector(".f-c-files-show-thumbnails-crop-edit__label")
     assert_selector(".f-c-files-show-thumbnails-list-group__preview .f-c-files-show-thumbnails-crop-edit--detail")
+    assert_selector(".f-c-files-show-thumbnails-crop-edit__regenerate")
     assert_selector(".f-c-files-show-thumbnails-list-group__thumbs .f-c-files-show-thumbnails-ratio-thumbnail--detail", count: 2)
     assert_no_selector(".f-c-files-show-thumbnails-list-group__count")
     assert_no_selector(".f-c-files-show-thumbnails-list-group__representative-img")
@@ -39,8 +48,8 @@ class Folio::Console::Files::Show::Thumbnails::ListGroupComponentTest < Folio::C
 
     render_group(file:, ratio: "16:9", ratio_label: "16×9", label: "Karta · Infobox", keys: %w[160x90#])
 
-    assert_selector(".f-c-files-show-thumbnails-list-group__ratio-label", text: "16×9")
-    assert_selector(".f-c-files-show-thumbnails-list-group__label", text: "Karta · Infobox")
+    assert_selector(".f-c-files-show-thumbnails-crop-edit__ratio-label", text: "16×9")
+    assert_selector(".f-c-files-show-thumbnails-crop-edit__label", text: "Karta · Infobox")
   end
 
   test "regular group renders without a crop preview or count" do
@@ -50,6 +59,7 @@ class Folio::Console::Files::Show::Thumbnails::ListGroupComponentTest < Folio::C
     render_group(file:, ratio: "regular", ratio_label: "regular", keys: %w[250x250])
 
     assert_selector(".f-c-files-show-thumbnails-list-group__ratio-label", text: "Verze bez ořezu")
+    assert_no_selector(".f-c-files-show-thumbnails-crop-edit__regenerate")
     assert_no_selector(".f-c-files-show-thumbnails-list-group__preview")
     assert_no_selector(".f-c-files-show-thumbnails-list-group__representative-img")
     assert_no_selector(".f-c-files-show-thumbnails-list-group__count")

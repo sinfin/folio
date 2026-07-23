@@ -2,6 +2,21 @@
   data=data
   class="f-c-files-show-thumbnails-crop-edit--#{@variant}"
 ]
+  - if detail?
+    .f-c-files-show-thumbnails-crop-edit__meta
+      .f-c-files-show-thumbnails-crop-edit__meta-content
+        span.f-c-files-show-thumbnails-crop-edit__ratio-label = ratio_label
+        span.f-c-files-show-thumbnails-crop-edit__label = display_group_label
+
+      - if @can_update
+        button.f-c-files-show-thumbnails-crop-edit__regenerate[
+          type="button"
+          title=t(".regenerate")
+          aria-label=t(".regenerate")
+          data=stimulus_action(click: "regenerate")
+        ]
+          = folio_icon(:reload, height: 16)
+
   .f-c-files-show-thumbnails-crop-edit__thumb[style=thumb_style]
     - if image_url
       img.f-c-files-show-thumbnails-crop-edit__thumb-img[

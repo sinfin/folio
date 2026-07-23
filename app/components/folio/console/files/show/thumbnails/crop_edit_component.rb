@@ -7,6 +7,7 @@ class Folio::Console::Files::Show::Thumbnails::CropEditComponent < Folio::Consol
                  thumbnail_size_keys:,
                  updated_thumbnails_crop: false,
                  variant: :tile,
+                 group_label: nil,
                  group_type: "crop")
     @file = file
     @ratio = ratio
@@ -14,6 +15,7 @@ class Folio::Console::Files::Show::Thumbnails::CropEditComponent < Folio::Consol
     @thumbnail_size_keys = thumbnail_size_keys
     @updated_thumbnails_crop = updated_thumbnails_crop
     @variant = variant
+    @group_label = group_label
     @group_type = group_type
   end
 
@@ -48,6 +50,14 @@ class Folio::Console::Files::Show::Thumbnails::CropEditComponent < Folio::Consol
       return "" if width.zero? || height.zero?
 
       "aspect-ratio: #{width} / #{height};"
+    end
+
+    def detail?
+      @variant == :detail
+    end
+
+    def display_group_label
+      @group_label.presence || " "
     end
 
     def modal_buttons

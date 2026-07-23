@@ -32,7 +32,20 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
 
     event?.preventDefault()
 
-    const crop = this.currentCropPosition()
+    this.saveCrop(this.currentCropPosition(), { closeEditing: true })
+  }
+
+  regenerate (event) {
+    if (this.stateValue === 'saving') return
+
+    event.preventDefault()
+    event.currentTarget.disabled = true
+
+    this.saveCrop(this.initialCropPosition(), { trigger: event.currentTarget })
+  }
+
+  saveCrop (crop, { closeEditing = false, trigger = null } = {}) {
+    const previousState = this.stateValue
     const data = {
       ...this.apiDataValue,
       crop
@@ -43,12 +56,16 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
     window.Folio.Api.apiPatch(this.apiUrlValue, data).then((res) => {
       if (!res || !res.data) throw new Error('Invalid response from server')
 
-      this.closeOverlay()
-      this.unbindCropper()
+      if (closeEditing) {
+        this.closeOverlay()
+        this.unbindCropper()
+      }
+
       this.replaceThumbnails(res.data)
     }).catch((error) => {
       console.error('Failed to save crop', error)
-      this.stateValue = 'editing'
+      trigger?.removeAttribute('disabled')
+      this.stateValue = previousState
     })
   }
 
