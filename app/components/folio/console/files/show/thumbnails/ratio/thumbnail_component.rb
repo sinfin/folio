@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Folio::Console::Files::Show::Thumbnails::Ratio::ThumbnailComponent < Folio::Console::ApplicationComponent
+  CROP_KEY_SUFFIX_PATTERN = /#\w*\z/
+
   def initialize(thumbnail:, thumbnail_size_key:, file:, variant: :default)
     @thumbnail = thumbnail.is_a?(Hash) ? thumbnail : {}
     @thumbnail_size_key = thumbnail_size_key
@@ -75,7 +77,7 @@ class Folio::Console::Files::Show::Thumbnails::Ratio::ThumbnailComponent < Folio
     end
 
     def regular?
-      !@thumbnail_size_key.end_with?("#")
+      !@thumbnail_size_key.match?(CROP_KEY_SUFFIX_PATTERN)
     end
 
     def thumbnail_dimensions_from_metadata

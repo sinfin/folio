@@ -43,6 +43,15 @@ class Folio::Console::Files::Show::Thumbnails::Ratio::ThumbnailComponentTest < F
     assert_selector(".f-c-files-show-thumbnails-ratio-thumbnail__img-wrap[style='width: 100px; height: 100px;']")
   end
 
+  test "detail variant enlarges a small forced-gravity crop thumbnail" do
+    thumbnail = { url: "https://a/b/c/d.jpg", width: 40, height: 40 }
+
+    render_inline(Folio::Console::Files::Show::Thumbnails::Ratio::ThumbnailComponent.new(
+      thumbnail:, thumbnail_size_key: "40x40#c", file: create(:folio_file_image), variant: :detail))
+
+    assert_selector(".f-c-files-show-thumbnails-ratio-thumbnail__img-wrap[style='width: 100px; height: 100px;']")
+  end
+
   test "detail variant uses the generated thumbnail dimensions" do
     thumbnail = { url: "https://a/b/c/d.jpg", width: 400, height: 600 }
 

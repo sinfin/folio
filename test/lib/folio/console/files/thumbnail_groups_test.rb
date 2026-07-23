@@ -8,7 +8,7 @@ class Folio::Console::Files::ThumbnailGroupsTest < ActiveSupport::TestCase
       120x x240
       400x700 800x1400
       250x250 500x500
-      60x60# 70x70# 100x100# 200x200# 120x120# 140x140# 648x648# 1296x1296# 527x527# 1054x1054#
+      40x40# 40x40#c 60x60# 70x70# 100x100# 200x200# 120x120# 140x140# 648x648# 1296x1296# 527x527# 1054x1054#
       120x80# 240x160# 480x320#
       370x240# 740x480#
       200x100# 400x100#
@@ -21,7 +21,7 @@ class Folio::Console::Files::ThumbnailGroupsTest < ActiveSupport::TestCase
     result = described_class.call(file:, site: file.site)
     crop = result["crop"].index_by { |group| group["ratio"] }
 
-    assert_equal %w[60x60# 70x70# 100x100# 120x120# 140x140# 200x200# 527x527# 648x648# 1054x1054# 1296x1296#].sort,
+    assert_equal %w[40x40# 40x40#c 60x60# 70x70# 100x100# 120x120# 140x140# 200x200# 527x527# 648x648# 1054x1054# 1296x1296#].sort,
                  crop["1:1"]["sizes"].sort
     assert_equal "1×1", crop["1:1"]["ratio_label"]
     assert_nil crop["1:1"]["label"]

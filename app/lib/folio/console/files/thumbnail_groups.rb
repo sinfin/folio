@@ -3,6 +3,7 @@
 class Folio::Console::Files::ThumbnailGroups
   GROUP_TYPES = %w[crop main_crop].freeze
   RATIO_TOLERANCE = 0.02
+  CROP_KEY_SUFFIX_PATTERN = /#\w*\z/
 
   def self.call(file:, site:)
     new(file:, site:).call
@@ -35,8 +36,8 @@ class Folio::Console::Files::ThumbnailGroups
       crop_entries = []
 
       keys.each do |key|
-        if key.end_with?("#")
-          width_str, height_str = key[0..-2].split("x", 2)
+        if key.match?(CROP_KEY_SUFFIX_PATTERN)
+          width_str, height_str = key.sub(CROP_KEY_SUFFIX_PATTERN, "").split("x", 2)
           width = width_str.to_i
           height = height_str.to_i
           next if width.zero? || height.zero?
@@ -122,7 +123,7 @@ class Folio::Console::Files::ThumbnailGroups
 
       grouped["crop"].each_value do |sizes|
         sizes.sort_by! do |key|
-          dimensions = key.delete_suffix("#")
+          dimensions = key.sub(CROP_KEY_SUFFIX_PATTERN, "")
           width_str, height_str = dimensions.split("x", 2)
           width_str.to_i * height_str.to_i
         end
