@@ -27,8 +27,10 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
     })
   }
 
-  saveEditing () {
+  saveEditing (event) {
     if (this.stateValue !== 'editing' || !this.cropperSelection) return
+
+    event?.preventDefault()
 
     const crop = this.currentCropPosition()
     const data = {
@@ -93,6 +95,7 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
       this.cropperCanvas = this.cropper.getCropperCanvas()
       this.cropperImage = this.cropper.getCropperImage()
       this.cropperSelection = this.cropper.getCropperSelection()
+      this.bindSelectionSaveShortcut()
     } catch (error) {
       console.error('Failed to initialize cropper', error)
       this.cancelEditing()
@@ -219,6 +222,11 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
     this.cropperCanvas.addEventListener('actionend', this.boundaryEndHandler)
   }
 
+  bindSelectionSaveShortcut () {
+    this.selectionDoubleClickHandler = (event) => this.saveEditing(event)
+    this.cropperSelection.addEventListener('dblclick', this.selectionDoubleClickHandler)
+  }
+
   constrainSelection () {
     // $change emits another change event; avoid scheduling recursively.
     this.isConstrainingSelection = true
@@ -330,11 +338,28 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
     if (!this.overlayTarget.open) {
       this.overlayTarget.showModal()
       document.activeElement?.blur()
+      this.bindKeyboardSaveShortcut()
     }
   }
 
   closeOverlay () {
+    this.unbindKeyboardSaveShortcut()
     if (this.overlayTarget.open) this.overlayTarget.close()
+  }
+
+  bindKeyboardSaveShortcut () {
+    this.keydownHandler = (event) => {
+      if (event.key === 'Enter') this.saveEditing(event)
+    }
+
+    document.addEventListener('keydown', this.keydownHandler)
+  }
+
+  unbindKeyboardSaveShortcut () {
+    if (!this.keydownHandler) return
+
+    document.removeEventListener('keydown', this.keydownHandler)
+    this.keydownHandler = null
   }
 
   unbindCropper () {
@@ -357,6 +382,9 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
     if (this.cropperCanvas && this.boundaryEndHandler) {
       this.cropperCanvas.removeEventListener('actionend', this.boundaryEndHandler)
     }
+    if (this.cropperSelection && this.selectionDoubleClickHandler) {
+      this.cropperSelection.removeEventListener('dblclick', this.selectionDoubleClickHandler)
+    }
 
     window.cancelAnimationFrame(this.boundaryConstraintFrame)
     this.cropperCanvas?.remove()
@@ -371,6 +399,7 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
     this.boundaryEndHandler = null
     this.boundaryConstraintFrame = null
     this.isConstrainingSelection = false
+    this.selectionDoubleClickHandler = null
     this.initializationTimeout = null
     this.initializationFrame = null
   }

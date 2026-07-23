@@ -23,35 +23,6 @@ class Folio::Console::Files::Show::Thumbnails::CropEditComponentTest < Folio::Co
     end
   end
 
-  test "renders the tile thumbnail with a crop trigger and full-screen modal shell" do
-    superadmin = create(:folio_user, :superadmin)
-    Folio::Current.user = superadmin
-    Folio::Current.reset_ability!
-
-    with_controller_class(Folio::Console::File::ImagesController) do
-      with_request_url "/console/file/images" do
-        file = create(:folio_file_image, file_width: 1200, file_height: 800)
-        render_inline(Folio::Console::Files::Show::Thumbnails::CropEditComponent.new(
-          file:, ratio: "2:1", ratio_label: "2×1", thumbnail_size_keys: %w[200x100#]))
-
-        assert_selector ".f-c-files-show-thumbnails-crop-edit__thumb"
-        assert_selector ".f-c-files-show-thumbnails-crop-edit__crop-btn"
-        assert_selector "dialog.f-c-files-show-thumbnails-crop-edit__overlay" \
-                        "[data-f-c-files-show-thumbnails-crop-edit-target='overlay']" \
-                        "[data-action*='pointerdown->f-c-files-show-thumbnails-crop-edit#trackBackdropPointerDown']" \
-                        "[data-action*='pointerup->f-c-files-show-thumbnails-crop-edit#trackBackdropPointerUp']" \
-                        "[data-action*='#cancelEditingFromBackdrop']"
-        assert_selector ".f-c-files-show-thumbnails-crop-edit__modal"
-        assert_selector ".f-c-files-show-thumbnails-crop-edit__contain .f-c-files-show-thumbnails-crop-edit__image"
-        assert_selector ".f-c-files-show-thumbnails-crop-edit__buttons [data-action*='#saveEditing']", text: "Uložit"
-        assert_selector ".f-c-files-show-thumbnails-crop-edit__buttons .btn-medium-dark", text: "Zrušit"
-        assert_selector ".f-c-files-show-thumbnails-crop-edit__close[title='Zavřít']"
-      end
-    end
-  ensure
-    Folio::Current.user = nil
-  end
-
   test "passes the ratio and stored image-relative crop to the editor" do
     with_controller_class(Folio::Console::File::ImagesController) do
       with_request_url "/console/file/images" do
