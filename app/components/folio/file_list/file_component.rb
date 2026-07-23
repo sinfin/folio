@@ -139,7 +139,8 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
 
   def usage_limit_exceeded_html
     icon_html = folio_icon(:speedometer, height: 12, class: "text-danger")
-    text_html = content_tag(:span, I18n.t("errors.messages.file_published_usage_limit_exceeded", count: @file.attribution_max_usage_count).capitalize)
+    text_html = content_tag(:span, I18n.t("errors.messages.file_published_usage_limit_exceeded",
+                                         count: @file.effective_attribution_max_usage_count).capitalize)
 
     content_tag(:span, class: "d-flex align-items-center gap-2") do
       icon_html + text_html
@@ -148,7 +149,7 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
 
   def site_restriction_html
     icon_html = folio_icon(:form_select, height: 12, class: "text-danger")
-    text_html = content_tag(:span, @file.allowed_sites.map(&:title).join(", "))
+    text_html = content_tag(:span, @file.allowed_sites_for_usage_constraints.map(&:title).join(", "))
 
     content_tag(:span, class: "d-flex align-items-center gap-2") do
       icon_html + text_html

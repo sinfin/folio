@@ -21,6 +21,7 @@ window.Folio.Embed.Box.load = (element) => {
 window.Folio.Stimulus.register('f-embed-box', class extends window.Stimulus.Controller {
   static values = {
     intersected: Boolean,
+    lazy: Boolean,
     folioEmbedData: Object,
     centered: Boolean,
     backgroundColor: String,
@@ -35,7 +36,11 @@ window.Folio.Stimulus.register('f-embed-box', class extends window.Stimulus.Cont
   }
 
   connect () {
-    this.bindIntersectionObserver()
+    if (this.lazyValue) {
+      this.bindIntersectionObserver()
+    } else {
+      this.intersectedValue = true
+    }
   }
 
   disconnect () {

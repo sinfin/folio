@@ -1,3 +1,6 @@
+const FOLIO_CONSOLE_BLUE = '#4C84FD'
+const FOLIO_CONSOLE_BLUE_CONTRAST = '#fff'
+
 export default {
   container: (base) => ({
     ...base,
@@ -18,6 +21,15 @@ export default {
     ...base,
     maxHeight: '304px'
   }),
+  groupHeading: (base) => ({
+    ...base,
+    color: 'inherit',
+    fontSize: 'inherit',
+    fontWeight: 700,
+    margin: 0,
+    padding: '0px 12px 8px 12px',
+    textTransform: 'none'
+  }),
   dropdownIndicator: (base) => ({
     ...base,
     padding: '6px'
@@ -32,18 +44,27 @@ export default {
   }),
   option: (base, state) => {
     let { color, backgroundColor } = base
+    const activeStyles = state.isDisabled
+      ? base[':active']
+      : {
+        ...base[':active'],
+        backgroundColor: FOLIO_CONSOLE_BLUE,
+        color: FOLIO_CONSOLE_BLUE_CONTRAST
+      }
 
     if (state.isFocused) {
-      backgroundColor = '#c7e4f4'
-      color = 'inherit'
+      backgroundColor = FOLIO_CONSOLE_BLUE
+      color = FOLIO_CONSOLE_BLUE_CONTRAST
     } else if (state.isSelected) {
-      backgroundColor = '#2684FF'
+      backgroundColor = FOLIO_CONSOLE_BLUE
+      color = FOLIO_CONSOLE_BLUE_CONTRAST
     }
 
     return ({
       ...base,
       color,
       backgroundColor,
+      ':active': activeStyles,
       whiteSpace: 'normal'
     })
   }

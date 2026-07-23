@@ -23,7 +23,8 @@ class Folio::NestedFieldsComponent < Folio::ApplicationComponent
                  destroy_label: nil,
                  virtual: nil,
                  duplicate: false,
-                 control_tooltips: nil)
+                 control_tooltips: nil,
+                 hide_selected_value_for: nil)
     @f = f
     @key = key
     @virtual = virtual
@@ -43,6 +44,7 @@ class Folio::NestedFieldsComponent < Folio::ApplicationComponent
     @destroy_label = destroy_label
     @duplicate = duplicate
     @control_tooltips = control_tooltips
+    @hide_selected_value_for = hide_selected_value_for
   end
 
   def data
@@ -51,11 +53,13 @@ class Folio::NestedFieldsComponent < Folio::ApplicationComponent
                           key: @key,
                           sortableBound: false,
                           virtual: virtual?,
-                        },
+                          hide_selected_value_for: @hide_selected_value_for.presence,
+                        }.compact,
                         action: {
                           "f-nested-fields:addMultipleWithAttributes" => "onAddMultipleWithAttributesTrigger",
                           "f-nested-fields:removeFields" => "onRemoveFieldsTrigger",
-                        })
+                          change: ("onHideSelectedValueSelectChange" if @hide_selected_value_for.present?),
+                        }.compact)
   end
 
   def new_object

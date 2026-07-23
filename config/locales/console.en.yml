@@ -77,6 +77,11 @@ en:
           success: Selected records were restored.
           error: Failed to restore some of the records.
       blank: "Not specified"
+      media_sources:
+        form:
+          add_site_rule: Add site rule
+          site_rules: Site rules
+          site_rules_hint: Blank field inherits from the main source. If no sites are selected, the source is usable everywhere.
       boolean:
         "yes": "Yes"
         "no": "No"
@@ -501,6 +506,7 @@ en:
         usage_constraints_component:
           max_usage_count: "Max usage count:"
           allowed_sites_blank: Blank
+          media_source: "Media source:"
 
       eleven_labs:
         transcribe_subtitles_job:

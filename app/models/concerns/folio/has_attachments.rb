@@ -414,14 +414,17 @@ module Folio::HasAttachments
     end
 
     def update_file_usage_counts_on_publish_change
-      files = Folio::FilePlacement::Base
-               .where(placement_id: id, placement_type: self.class.base_class.name)
-               .includes(:file)
-               .map(&:file)
-               .uniq
-               .compact
+      placements = Folio::FilePlacement::Base.where(placement_id: id,
+                                                     placement_type: self.class.base_class.name)
 
-      files.each(&:update_file_placements_counts!)
+      if respond_to?(:all_atoms_in_array)
+        atom_ids = Folio::Atom::Base.where(placement: self).select(:id)
+        atom_placements = Folio::FilePlacement::Base.where(placement_id: atom_ids,
+                                                           placement_type: "Folio::Atom::Base")
+        placements = placements.or(atom_placements)
+      end
+
+      Folio::File.where(id: placements.select(:file_id)).find_each(&:update_file_placements_counts!)
     end
 
     def validate_files_usage_limits_if_publishing
@@ -430,16 +433,18 @@ module Folio::HasAttachments
       return unless published_changed? && published == true
 
       get_files_with_usage_constraints.each do |file|
-        if file.usage_limit_exceeded?
+        validation_site = respond_to?(:site) ? site : Folio::Current.site
+
+        if file.usage_limit_exceeded?(site: validation_site)
           errors.add(:base, I18n.t("errors.messages.cannot_publish_with_files_over_usage_limit",
                                    name: file.file_name,
-                                   limit: file.attribution_max_usage_count))
+                                   limit: file.effective_attribution_max_usage_count(site: validation_site)))
         end
 
-        unless file.can_be_used_on_site?(Folio::Current.site)
+        unless file.can_be_used_on_site?(validation_site)
           errors.add(:base, I18n.t("errors.messages.cannot_publish_with_files_restricted_to_site",
                                    name: file.file_name,
-                                   allowed_sites: file.allowed_sites.pluck(:title).join(", ")))
+                                   allowed_sites: file.allowed_sites_for_usage_constraints.pluck(:title).join(", ")))
         end
       end
     end
@@ -448,9 +453,36 @@ module Folio::HasAttachments
       # Collect placements from in-memory associations to respect unsaved changes from nested attributes
       placements = collect_all_placements.reject(&:marked_for_destruction?)
 
+      if should_validate_atom_file_placements?
+        atoms_for_attachment_validation.each do |atom|
+          next if atom.marked_for_destruction?
+
+          placements += atom.collect_all_placements.reject(&:marked_for_destruction?)
+        end
+      end
+
       # Get files from placements that have HasUsageConstraints concern
       files = placements.filter_map(&:file).compact.uniq
 
       files.select { |file| file.class.included_modules.include?(Folio::File::HasUsageConstraints) }
+    end
+
+    def should_validate_atom_file_placements?
+      respond_to?(:all_atoms_in_array) &&
+        (!respond_to?(:has_folio_tiptap?) || !has_folio_tiptap?)
+    end
+
+    def atoms_for_attachment_validation
+      atoms = all_atoms_in_array
+
+      if persisted?
+        destroyed_atom_ids = atoms.select(&:marked_for_destruction?).filter_map(&:id)
+        persisted_atoms = Folio::Atom::Base.where(placement: self)
+        persisted_atoms = persisted_atoms.where.not(id: destroyed_atom_ids) if destroyed_atom_ids.any?
+
+        atoms += persisted_atoms.to_a
+      end
+
+      atoms.uniq { |atom| atom.id || atom.object_id }
     end
 end

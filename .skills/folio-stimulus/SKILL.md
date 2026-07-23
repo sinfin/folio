@@ -84,6 +84,14 @@ button data=stimulus_action(click: "submit")
 a data=stimulus_action({ click: "open" }, { id: item_id })   / action + params
 ```
 
+When one element needs both target and action data for the same controller, use
+`stimulus_data` directly instead of merging helper hashes:
+
+```ruby
+stimulus_data(target: "input",
+              action: { input: "update" })
+```
+
 Prefer Stimulus targets over selectors for controller-owned elements. When an
 element is read or controlled by multiple Stimulus controllers, add a target for
 each relevant controller instead of querying by `querySelector` from another
@@ -142,6 +150,13 @@ All utility helpers use `inline: true` internally — they are designed to be me
 
 - **Controller-to-controller communication** — use `this.dispatch('eventName', { detail })` which bubbles by default. Parent controllers listen via `stimulus_action("child-controller:event-name": "handler")`.
 - Use `connect()` / `disconnect()` for setup/teardown — no global `$(document).on`.
+
+## Initial state
+
+When a component's initial hidden, disabled, or selected state derives entirely
+from server-rendered record data, render that state in the server markup. Do
+not rely on `connect()` solely to establish it; reserve Stimulus for subsequent
+interaction or genuinely client-derived state.
 
 ## Pitfalls
 
