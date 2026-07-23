@@ -43,21 +43,19 @@ class Folio::Console::Files::Show::Thumbnails::CropEditComponent < Folio::Consol
       "aspect-ratio: #{width} / #{height};"
     end
 
-    def buttons_while_editing
-      render(Folio::Console::Ui::ButtonsComponent.new(class_name: "f-c-files-show-thumbnails-crop-edit__buttons-while-editing",
-                                                      buttons: [{
-                                                        variant: :success,
-                                                        size: :sm,
-                                                        icon: :check,
-                                                        data: stimulus_action(click: "saveEditing"),
-                                                        label: t("folio.console.actions.save"),
-                                                      }, {
-                                                        variant: :danger,
-                                                        size: :sm,
-                                                        icon: :close,
-                                                        data: stimulus_action(click: "cancelEditing"),
-                                                        label: t("folio.console.actions.cancel")
-                                                      }]))
+    def modal_buttons
+      render(Folio::Console::Ui::ButtonsComponent.new(
+        class_name: "f-c-files-show-thumbnails-crop-edit__buttons",
+        buttons: [{
+          variant: :light,
+          data: stimulus_action(click: "saveEditing"),
+          label: t("folio.console.actions.save"),
+        }, {
+          variant: :medium_dark,
+          data: stimulus_action(click: "cancelEditing"),
+          label: t("folio.console.actions.cancel")
+        }]
+      ))
     end
 
     def data
@@ -67,86 +65,74 @@ class Folio::Console::Files::Show::Thumbnails::CropEditComponent < Folio::Consol
                             cropper_data: cropper_data.to_json,
                             api_url: url_for([:console, :api, @file, action: :update_thumbnails_crop]),
                             api_data: api_data.to_json,
-                            mode:,
                           },
                           action: {
                             "f-thumbnail:newData" => "thumbnailUpdated"
                           })
     end
 
-    def editor_inner_style
-      "width: #{image_width}px; height: #{image_height}px;"
+    def cropper_data
+      crop = @file.thumbnail_configuration&.dig("ratios", @ratio, "crop") || {}
+
+      {
+        aspect_ratio: cropper_aspect_ratio,
+        **(stored_crop_position(crop) || gravity_crop_position),
+      }
     end
 
     def cropper_aspect_ratio
-      @cropper_aspect_ratio ||= begin
-        width, height = @ratio.split(":", 2).map(&:to_i)
-        width.to_f / height.to_f
-      end
+      width, height = @ratio.split(":", 2).map(&:to_f)
+      width / height
     end
 
-    def cropper_data
-      data = {
-        aspect_ratio: cropper_aspect_ratio,
-        relative_x: 0,
-        relative_y: 0,
+    def stored_crop_position(crop)
+      x, y = crop.values_at("x", "y")
+      return unless x.is_a?(Numeric) || y.is_a?(Numeric)
+
+      {
+        x: x.is_a?(Numeric) ? x.to_f : 0,
+        y: y.is_a?(Numeric) ? y.to_f : 0,
       }
-
-      if @file.thumbnail_configuration.present? &&
-         @file.thumbnail_configuration["ratios"].present? &&
-         @file.thumbnail_configuration["ratios"][@ratio].present? &&
-         @file.thumbnail_configuration["ratios"][@ratio]["crop"].present?
-        crop = @file.thumbnail_configuration["ratios"][@ratio]["crop"]
-        data[:relative_x] = crop["x"].to_f if crop["x"].is_a?(Numeric)
-        data[:relative_y] = crop["y"].to_f if crop["y"].is_a?(Numeric)
-      end
-
-      data[:x] = image_width * data[:relative_x]
-      data[:y] = image_height * data[:relative_y]
-
-      if mode == "fixed-width"
-        data[:selection_width] = image_width
-        data[:selection_height] = data[:selection_width] / cropper_aspect_ratio
-      else
-        data[:selection_height] = image_height
-        data[:selection_width] = data[:selection_height] * cropper_aspect_ratio
-      end
-
-      data
     end
 
-    def image_width
-      @image_width ||= if file_aspect_ratio >= 1
-        290
+    def gravity_crop_position
+      horizontal_range, vertical_range = crop_position_ranges
+      horizontal_factor, vertical_factor = gravity_factors
+
+      {
+        x: horizontal_range * horizontal_factor,
+        y: vertical_range * vertical_factor,
+      }
+    end
+
+    def crop_position_ranges
+      width = @file.file_width.to_f
+      height = @file.file_height.to_f
+      return [0, 0] unless width.positive? && height.positive?
+
+      image_ratio = width / height
+
+      if image_ratio > cropper_aspect_ratio
+        [1 - cropper_aspect_ratio / image_ratio, 0]
       else
-        (290 * @file.file_width.to_f / @file.file_height.to_f).round(4)
+        [0, 1 - image_ratio / cropper_aspect_ratio]
       end
     end
 
-    def image_height
-      @image_height ||= if file_aspect_ratio >= 1
-        (290 * @file.file_height.to_f / @file.file_width.to_f).round(4)
-      else
-        290
+    def gravity_factors
+      case @file.default_gravity
+      when "east" then [1, 0.5]
+      when "west" then [0, 0.5]
+      when "north" then [0.5, 0]
+      when "south" then [0.5, 1]
+      else [0.5, 0.5]
       end
     end
 
     def api_data
       {
-        thumbnail_size_keys: @thumbnail_size_keys,
         ratio: @ratio,
+        thumbnail_size_keys: @thumbnail_size_keys,
       }
-    end
-
-    def file_aspect_ratio
-      @file_aspect_ratio ||= @file.file_width.to_f / @file.file_height.to_f
-    end
-
-    def mode
-      @mode ||= if file_aspect_ratio > cropper_aspect_ratio
-        "fixed-height"
-      else
-        "fixed-width"
-      end
     end
 end

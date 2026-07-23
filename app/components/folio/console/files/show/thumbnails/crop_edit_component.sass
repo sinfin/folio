@@ -1,4 +1,11 @@
 .f-c-files-show-thumbnails-crop-edit
+  cropper-canvas
+    pointer-events: none
+
+  cropper-image,
+  cropper-selection
+    pointer-events: auto
+
   &__thumb
     background: $medium-gray
     overflow: hidden
@@ -45,41 +52,28 @@
     background: rgba($white, 0.75)
     background: $white
 
-  &__editor
-    align-items: center
-    background: $gray
-    display: flex
-    justify-content: center
-    position: relative
-    width: 290px
-    height: 290px
-
-  &__editor-inner
-    display: block
-    background: $gray-medium-dark
-    flex: 0 0 auto
-    overflow: hidden
-
-  &__editor-img
-    width: auto
-    height: auto
-    max-width: none
-
   // Overlay / modal
 
   &__overlay
+    background: transparent
     bottom: 0
-    display: flex
-    align-items: center
-    justify-content: center
+    border: 0
+    height: 100dvh
     left: 0
+    margin: 0
+    max-height: none
+    max-width: none
+    padding: 0
     position: fixed
     right: 0
     top: 0
-    z-index: $zindex-modal
+    width: 100vw
+
+    &::backdrop
+      background: transparent
 
   &__backdrop
-    background: rgba(0, 0, 0, 0.5)
+    background: rgba($black, 0.8)
     bottom: 0
     left: 0
     position: fixed
@@ -87,25 +81,50 @@
     top: 0
 
   &__modal
-    background: #fff
-    border-radius: $border-radius
-    max-height: 90vh
-    overflow-y: auto
-    padding: $grid-gutter-base
+    display: grid
+    gap: px-to-rem(16px)
+    grid-template-rows: minmax(0, 1fr) auto
+    height: 100%
+    padding: px-to-rem(64px) px-to-rem(16px) px-to-rem(16px)
+    pointer-events: none
     position: relative
-    z-index: 1
+    width: 100%
 
-  &__modal-header
-    align-items: center
-    display: flex
-    justify-content: space-between
-    margin-bottom: $grid-gutter-base
+  &__contain
+    min-height: 0
+    min-width: 0
+    overflow: auto
+    pointer-events: none
+
+    // Size Cropper's public canvas host without overriding its native minimum.
+    > cropper-canvas
+      height: 100%
+      width: 100%
+
+  &__image
+    display: block
+    height: 100%
+    object-fit: contain
+    pointer-events: auto
+    width: 100%
+
+  &__buttons
+    justify-self: center
+    pointer-events: auto
 
   &__close
-    background: none
+    align-items: center
+    appearance: none
+    background: transparent
     border: none
+    color: $white
     cursor: pointer
+    display: flex
     padding: 0
+    pointer-events: auto
+    position: absolute
+    right: $grid-gutter-base * 2
+    top: $grid-gutter-base * 2
 
   // State-driven visibility
 
@@ -113,26 +132,3 @@
   &[data-f-c-files-show-thumbnails-crop-edit-state-value="viewing"] &__overlay,
   &[data-f-c-files-show-thumbnails-crop-edit-state-value="waiting-for-thumbnail"] &__overlay
     display: none
-
-  // Hide buttons-while-editing when not editing
-  &:not([data-f-c-files-show-thumbnails-crop-edit-state-value="editing"]) &__buttons-while-editing
-    display: none
-
-  // Hide editor-inner (cropper) when not editing
-  &:not([data-f-c-files-show-thumbnails-crop-edit-state-value="editing"]) &__editor-inner
-    visibility: hidden
-
-  // Hide editor-loader when editing
-  &[data-f-c-files-show-thumbnails-crop-edit-state-value="editing"] &__editor-loader
-    display: none
-
-  &__editor cropper-canvas
-    width: 100%
-    height: 100%
-
-  &__editor cropper-image
-    width: 100% !important
-    height: 100% !important
-
-    img
-      width: auto
