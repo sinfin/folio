@@ -17,7 +17,7 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
 
     window.Folio.RemoteScripts.run({
       key: 'cropperjs',
-      urls: ['https://cdnjs.cloudflare.com/ajax/libs/cropperjs/2.0.1/cropper.min.js']
+      urls: ['https://cdnjs.cloudflare.com/ajax/libs/cropperjs/2.1.1/cropper.min.js']
     }, () => {
       if (!this.overlayTarget.open) return
 
@@ -55,6 +55,26 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
     this.closeOverlay()
     this.unbindCropper()
     this.stateValue = 'viewing'
+  }
+
+  trackBackdropPointerDown (event) {
+    this.backdropPointerDown = event.target === this.overlayTarget
+    this.backdropPointerUp = false
+  }
+
+  trackBackdropPointerUp (event) {
+    this.backdropPointerUp = event.target === this.overlayTarget
+  }
+
+  cancelEditingFromBackdrop (event) {
+    const shouldCancel = this.backdropPointerDown &&
+      this.backdropPointerUp &&
+      event.target === this.overlayTarget
+
+    this.backdropPointerDown = false
+    this.backdropPointerUp = false
+
+    if (shouldCancel) this.cancelEditing(event)
   }
 
   disconnect () {
@@ -95,6 +115,7 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
           if (cropperImage !== this.cropperImage || !this.overlayTarget.open) return
 
           this.cropperImageBounds = this.measureImageBounds()
+          this.clipCropperCanvasToImage()
           this.layoutSelection(this.cropPosition)
           this.bindSelectionBoundary()
           this.observeContain()
@@ -112,7 +133,7 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
     return `
       <cropper-canvas>
         <cropper-image initial-center-size="contain" scalable translatable></cropper-image>
-        <cropper-selection aspect-ratio="${this.cropperDataValue.aspect_ratio}" movable outlined precise>
+        <cropper-selection aspect-ratio="${this.cropperDataValue.aspect_ratio}" movable precise>
           <cropper-grid role="grid" bordered covered></cropper-grid>
           <cropper-crosshair centered></cropper-crosshair>
           <cropper-handle action="move" theme-color="transparent"></cropper-handle>
@@ -159,16 +180,69 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
       x: imageRect.left - canvasRect.left,
       y: imageRect.top - canvasRect.top,
       width: imageRect.width,
-      height: imageRect.height
+      height: imageRect.height,
+      canvasWidth: canvasRect.width,
+      canvasHeight: canvasRect.height
     }
   }
 
+  clipCropperCanvasToImage () {
+    const bounds = this.cropperImageBounds
+    if (!bounds || !this.cropperCanvas) return
+
+    const right = this.clamp(bounds.canvasWidth - bounds.x - bounds.width, 0, bounds.canvasWidth)
+    const bottom = this.clamp(bounds.canvasHeight - bounds.y - bounds.height, 0, bounds.canvasHeight)
+
+    this.cropperCanvas.style.clipPath = `inset(${bounds.y}px ${right}px ${bottom}px ${bounds.x}px)`
+  }
+
   bindSelectionBoundary () {
-    this.boundaryConstraintHandler = (event) => {
-      if (!this.selectionWithinImage(event.detail)) event.preventDefault()
+    // Cropper has no axis lock. Coalesce corrections instead of canceling
+    // every change event, which makes dragging laggy.
+    this.boundaryChangeHandler = () => {
+      if (this.isConstrainingSelection || this.boundaryConstraintFrame) return
+
+      this.boundaryConstraintFrame = window.requestAnimationFrame(() => {
+        this.boundaryConstraintFrame = null
+        this.constrainSelection()
+      })
     }
 
-    this.cropperSelection.addEventListener('change', this.boundaryConstraintHandler)
+    // Flush the correction when the pointer interaction ends.
+    this.boundaryEndHandler = () => {
+      window.cancelAnimationFrame(this.boundaryConstraintFrame)
+      this.boundaryConstraintFrame = null
+      this.constrainSelection()
+    }
+
+    this.cropperSelection.addEventListener('change', this.boundaryChangeHandler)
+    this.cropperCanvas.addEventListener('actionend', this.boundaryEndHandler)
+  }
+
+  constrainSelection () {
+    // $change emits another change event; avoid scheduling recursively.
+    this.isConstrainingSelection = true
+
+    try {
+      this.constrainSelectionToImage()
+    } finally {
+      this.isConstrainingSelection = false
+    }
+  }
+
+  constrainSelectionToImage () {
+    const bounds = this.cropperImageBounds
+    const selection = this.cropperSelection
+    if (!bounds || !selection || this.selectionWithinImage(selection)) return
+
+    const x = this.clamp(selection.x, bounds.x, bounds.x + bounds.width - selection.width)
+    const y = this.clamp(selection.y, bounds.y, bounds.y + bounds.height - selection.height)
+
+    selection.$change(x,
+      y,
+      selection.width,
+      selection.height,
+      this.cropperDataValue.aspect_ratio)
   }
 
   selectionWithinImage (selection) {
@@ -277,10 +351,14 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
     window.clearTimeout(this.initializationTimeout)
     window.cancelAnimationFrame(this.initializationFrame)
 
-    if (this.cropperSelection && this.boundaryConstraintHandler) {
-      this.cropperSelection.removeEventListener('change', this.boundaryConstraintHandler)
+    if (this.cropperSelection && this.boundaryChangeHandler) {
+      this.cropperSelection.removeEventListener('change', this.boundaryChangeHandler)
+    }
+    if (this.cropperCanvas && this.boundaryEndHandler) {
+      this.cropperCanvas.removeEventListener('actionend', this.boundaryEndHandler)
     }
 
+    window.cancelAnimationFrame(this.boundaryConstraintFrame)
     this.cropperCanvas?.remove()
     this.imageTarget.style.display = ''
 
@@ -289,7 +367,10 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
     this.cropperImage = null
     this.cropperImageBounds = null
     this.cropperSelection = null
-    this.boundaryConstraintHandler = null
+    this.boundaryChangeHandler = null
+    this.boundaryEndHandler = null
+    this.boundaryConstraintFrame = null
+    this.isConstrainingSelection = false
     this.initializationTimeout = null
     this.initializationFrame = null
   }

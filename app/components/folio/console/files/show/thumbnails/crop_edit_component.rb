@@ -65,6 +65,16 @@ class Folio::Console::Files::Show::Thumbnails::CropEditComponent < Folio::Consol
       ))
     end
 
+    def overlay_data
+      stimulus_data(target: "overlay",
+                    action: {
+                      cancel: "cancelEditing",
+                      click: "cancelEditingFromBackdrop",
+                      pointerdown: "trackBackdropPointerDown",
+                      pointerup: "trackBackdropPointerUp",
+                    })
+    end
+
     def data
       stimulus_controller("f-c-files-show-thumbnails-crop-edit",
                           values: {

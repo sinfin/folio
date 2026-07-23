@@ -36,8 +36,11 @@ class Folio::Console::Files::Show::Thumbnails::CropEditComponentTest < Folio::Co
 
         assert_selector ".f-c-files-show-thumbnails-crop-edit__thumb"
         assert_selector ".f-c-files-show-thumbnails-crop-edit__crop-btn"
-        assert_selector "dialog.f-c-files-show-thumbnails-crop-edit__overlay[data-f-c-files-show-thumbnails-crop-edit-target='overlay']"
-        assert_selector ".f-c-files-show-thumbnails-crop-edit__backdrop"
+        assert_selector "dialog.f-c-files-show-thumbnails-crop-edit__overlay" \
+                        "[data-f-c-files-show-thumbnails-crop-edit-target='overlay']" \
+                        "[data-action*='pointerdown->f-c-files-show-thumbnails-crop-edit#trackBackdropPointerDown']" \
+                        "[data-action*='pointerup->f-c-files-show-thumbnails-crop-edit#trackBackdropPointerUp']" \
+                        "[data-action*='#cancelEditingFromBackdrop']"
         assert_selector ".f-c-files-show-thumbnails-crop-edit__modal"
         assert_selector ".f-c-files-show-thumbnails-crop-edit__contain .f-c-files-show-thumbnails-crop-edit__image"
         assert_selector ".f-c-files-show-thumbnails-crop-edit__buttons [data-action*='#saveEditing']", text: "Uložit"

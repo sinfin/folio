@@ -26,12 +26,8 @@
 
   dialog.f-c-files-show-thumbnails-crop-edit__overlay[
     aria-label=t('.edit')
-    data=stimulus_data(target: "overlay", action: { cancel: "cancelEditing" })
+    data=overlay_data
   ]
-    .f-c-files-show-thumbnails-crop-edit__backdrop[
-      data=stimulus_action(click: "cancelEditing")
-    ]
-
     .f-c-files-show-thumbnails-crop-edit__modal
       .f-c-files-show-thumbnails-crop-edit__contain[
         data=stimulus_target("contain")

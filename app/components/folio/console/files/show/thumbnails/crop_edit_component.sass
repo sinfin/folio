@@ -6,6 +6,9 @@
   cropper-selection
     pointer-events: auto
 
+  cropper-selection
+    box-shadow: 0 0 0 100vmax rgba($black, 0.65)
+
   &__thumb
     background: $medium-gray
     overflow: hidden
@@ -70,15 +73,7 @@
     width: 100vw
 
     &::backdrop
-      background: transparent
-
-  &__backdrop
-    background: rgba($black, 0.8)
-    bottom: 0
-    left: 0
-    position: fixed
-    right: 0
-    top: 0
+      background: rgba($black, 0.8)
 
   &__modal
     display: grid
