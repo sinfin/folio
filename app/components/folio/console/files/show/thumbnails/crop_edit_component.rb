@@ -1,13 +1,20 @@
 # frozen_string_literal: true
 
 class Folio::Console::Files::Show::Thumbnails::CropEditComponent < Folio::Console::ApplicationComponent
-  def initialize(file:, ratio:, ratio_label:, thumbnail_size_keys:, updated_thumbnails_crop: false, variant: :tile)
+  def initialize(file:,
+                 ratio:,
+                 ratio_label:,
+                 thumbnail_size_keys:,
+                 updated_thumbnails_crop: false,
+                 variant: :tile,
+                 group_type: "crop")
     @file = file
     @ratio = ratio
     @ratio_label = ratio_label
     @thumbnail_size_keys = thumbnail_size_keys
     @updated_thumbnails_crop = updated_thumbnails_crop
     @variant = variant
+    @group_type = group_type
   end
 
   attr_reader :ratio_label
@@ -131,8 +138,8 @@ class Folio::Console::Files::Show::Thumbnails::CropEditComponent < Folio::Consol
 
     def api_data
       {
+        group_type: @group_type,
         ratio: @ratio,
-        thumbnail_size_keys: @thumbnail_size_keys,
       }
     end
 end

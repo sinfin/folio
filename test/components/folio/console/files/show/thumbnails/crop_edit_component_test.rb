@@ -72,8 +72,28 @@ class Folio::Console::Files::Show::Thumbnails::CropEditComponentTest < Folio::Co
         api_data = JSON.parse(root["data-f-c-files-show-thumbnails-crop-edit-api-data-value"])
 
         assert_equal({ "aspect_ratio" => 2.0, "x" => 0.25, "y" => 0.125 }, cropper_data)
-        assert_equal({ "ratio" => "2:1", "thumbnail_size_keys" => ["200x100#"] }, api_data)
+        assert_equal({ "group_type" => "crop", "ratio" => "2:1" }, api_data)
         assert_includes root["data-f-c-files-show-thumbnails-crop-edit-api-url-value"], "action=update_thumbnails_crop"
+      end
+    end
+  end
+
+  test "passes the main crop group type to the API" do
+    with_controller_class(Folio::Console::File::ImagesController) do
+      with_request_url "/console/file/images" do
+        file = create(:folio_file_image)
+
+        render_inline(Folio::Console::Files::Show::Thumbnails::CropEditComponent.new(
+          file:,
+          ratio: "16:9",
+          ratio_label: "16×9",
+          thumbnail_size_keys: %w[200x120# 400x250# 800x450#],
+          group_type: "main_crop"))
+
+        root = Nokogiri::HTML.fragment(rendered_content).at_css(".f-c-files-show-thumbnails-crop-edit")
+        api_data = JSON.parse(root["data-f-c-files-show-thumbnails-crop-edit-api-data-value"])
+
+        assert_equal({ "group_type" => "main_crop", "ratio" => "16:9" }, api_data)
       end
     end
   end

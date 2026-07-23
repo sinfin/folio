@@ -43,7 +43,7 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
 
       this.closeOverlay()
       this.unbindCropper()
-      this.replaceThumbnailGroups(res)
+      this.replaceThumbnails(res.data)
     }).catch((error) => {
       console.error('Failed to save crop', error)
       this.stateValue = 'editing'
@@ -236,17 +236,20 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
       Math.abs(size.height - this.containSize.height) < 0.5
   }
 
-  replaceThumbnailGroups (response) {
-    const ratio = this.apiDataValue.ratio
-    const listGroupHtml = response.meta && response.meta.list_group_html
+  replaceThumbnails (html) {
+    const current = this.element.closest('.f-c-files-show-thumbnails')
+    if (!current) return
 
-    if (listGroupHtml) {
-      const listGroup = document.querySelector(`.f-c-files-show-thumbnails-list-group[data-ratio="${ratio}"]`)
-      if (listGroup) listGroup.outerHTML = listGroupHtml
-    }
+    const disclosureWasOpen = current.querySelector('.f-c-files-show-thumbnails__all')?.open
+    const template = document.createElement('template')
+    template.innerHTML = html.trim()
+    const replacement = template.content.firstElementChild
+    if (!replacement) return
 
-    const ratioElement = document.querySelector(`.f-c-files-show-thumbnails-ratio[data-ratio="${ratio}"]`)
-    if (ratioElement) ratioElement.outerHTML = response.data
+    const replacementDisclosure = replacement.querySelector('.f-c-files-show-thumbnails__all')
+    if (disclosureWasOpen && replacementDisclosure) replacementDisclosure.open = true
+
+    current.replaceWith(replacement)
   }
 
   openOverlay () {

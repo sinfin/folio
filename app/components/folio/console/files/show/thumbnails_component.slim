@@ -1,14 +1,16 @@
 .f-c-files-show-thumbnails
   - if @file.thumbnail_sizes.present?
-    - if crop_groups.present?
+    - if main_crop_groups.present?
       h3.f-c-files-show-thumbnails__heading.mt-0 = t('.crops_title')
 
       .f-c-files-show-thumbnails__tiles
-        - crop_groups.each do |group|
+        - main_crop_groups.each do |group|
           = render(Folio::Console::Files::Show::Thumbnails::RatioComponent.new(file: @file,
                                                                                ratio: group["ratio"],
                                                                                ratio_label: group["ratio_label"],
-                                                                               thumbnail_size_keys: group["sizes"]))
+                                                                               thumbnail_size_keys: group["sizes"],
+                                                                               updated_thumbnails_crop: group_updated?(group),
+                                                                               group_type: "main_crop"))
 
     details.f-c-files-show-thumbnails__all
       summary.f-c-files-show-thumbnails__all-summary
@@ -23,7 +25,8 @@
                                                                                    ratio: group["ratio"],
                                                                                    ratio_label: group["ratio_label"],
                                                                                    label: group["label"],
-                                                                                   thumbnail_size_keys: group["sizes"]))
+                                                                                   thumbnail_size_keys: group["sizes"],
+                                                                                   updated_thumbnails_crop: group_updated?(group)))
 
         - regular_groups.each do |group|
           = render(Folio::Console::Files::Show::Thumbnails::ListGroupComponent.new(file: @file,

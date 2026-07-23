@@ -261,8 +261,14 @@ module Folio::Console::Api::FileControllerBase
     ratio = params.require(:ratio)
     fail ActionController::BadRequest.new("Invalid crop params") unless ratio.is_a?(String) && ratio.match?(/\A\d+:\d+\z/)
 
-    thumbnail_size_keys = params.require(:thumbnail_size_keys)
-    fail ActionController::BadRequest.new("Invalid crop params") unless thumbnail_size_keys.is_a?(Array) && thumbnail_size_keys.all? { |k| k.is_a?(String) }
+    group_type = params[:group_type].presence || "crop"
+    group = Folio::Console::Files::ThumbnailGroups.find(file: @file,
+                                                        site: Folio::Current.site,
+                                                        ratio:,
+                                                        group_type:)
+    fail ActionController::BadRequest.new("Invalid crop group") unless group
+
+    thumbnail_size_keys = group.fetch("sizes")
 
     thumbnail_configuration = @file.thumbnail_configuration || {}
     thumbnail_configuration["ratios"] ||= {}
@@ -317,7 +323,6 @@ module Folio::Console::Api::FileControllerBase
 
     @file.try(:dont_run_after_save_jobs=, true)
 
-
     @file.update!(thumbnail_configuration:,
                   thumbnail_sizes:,
                   updated_at: @file.send(:current_time_from_proper_timezone))
@@ -334,21 +339,10 @@ module Folio::Console::Api::FileControllerBase
     uids = thumb_uids_to_destroy.compact.uniq
     Folio::DestroyThumbnailUidsJob.perform_later(uids) if uids.any?
 
-    group = Folio::Console::Files::Show::ThumbnailsComponent.crop_group(file: @file, ratio:)
-    list_group_html = render_to_string(Folio::Console::Files::Show::Thumbnails::ListGroupComponent.new(file: @file,
-                                                                                                       ratio:,
-                                                                                                       ratio_label: group.fetch("ratio_label"),
-                                                                                                       label: group["label"],
-                                                                                                       thumbnail_size_keys:,
-                                                                                                       updated_thumbnails_crop: true),
-                                       layout: false)
-
-    render_component_json(Folio::Console::Files::Show::Thumbnails::RatioComponent.new(file: @file,
-                                                                                      ratio:,
-                                                                                      ratio_label: group.fetch("ratio_label"),
-                                                                                      thumbnail_size_keys:,
-                                                                                      updated_thumbnails_crop: true),
-                          meta: { list_group_html: })
+    render_component_json(Folio::Console::Files::Show::ThumbnailsComponent.new(
+      file: @file,
+      updated_thumbnail_size_keys: thumbnail_size_keys,
+    ))
   end
 
   private

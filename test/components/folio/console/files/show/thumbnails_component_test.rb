@@ -3,73 +3,6 @@
 require "test_helper"
 
 class Folio::Console::Files::Show::ThumbnailsComponentTest < Folio::Console::ComponentTest
-  test "group_thumbnail_size_keys" do
-    keys = %w[
-      120x x240
-      400x700 800x1400
-      250x250 500x500
-      60x60# 70x70# 100x100# 200x200# 120x120# 140x140# 648x648# 1296x1296# 527x527# 1054x1054#
-      120x80# 240x160# 480x320#
-      370x240# 740x480#
-      200x100# 400x100#
-      240x140# 673x394# 708x421# 743x442# 975x568#
-      800x450#
-      2560x2048>
-    ].sort
-
-    result = Folio::Console::Files::Show::ThumbnailsComponent.group_thumbnail_size_keys(keys)
-    crop = result["crop"].index_by { |group| group["ratio"] }
-
-    # all square sizes have the exact same ratio 1.0 -> one bucket labelled 1:1
-    assert_equal %w[60x60# 70x70# 100x100# 120x120# 140x140# 200x200# 527x527# 648x648# 1054x1054# 1296x1296#].sort,
-                 crop["1:1"]["sizes"].sort
-    assert_equal "1×1", crop["1:1"]["ratio_label"]
-    assert_nil crop["1:1"]["label"]
-
-    # 3:2 and 37:24 are now SEPARATE (2.8 % apart > 0.02 tolerance)
-    assert_equal %w[120x80# 240x160# 480x320#].sort, crop["3:2"]["sizes"].sort
-    assert_equal %w[370x240# 740x480#].sort, crop["37:24"]["sizes"].sort
-
-    # 2:1 and 4:1 are separate
-    assert_equal %w[200x100#], crop["2:1"]["sizes"]
-    assert_equal %w[400x100#], crop["4:1"]["sizes"]
-
-    # near-1.7 cluster collapses into ONE bucket labelled by the cleanest member (12:7)
-    assert_equal %w[240x140# 673x394# 708x421# 743x442# 975x568#].sort, crop["12:7"]["sizes"].sort
-
-    # 16:9 stays separate from the near-1.7 cluster (3.6 % from 12:7)
-    assert_equal %w[800x450#], crop["16:9"]["sizes"]
-
-    # regular unchanged
-    assert_equal [{ "ratio" => "regular", "ratio_label" => "regular", "label" => nil,
-                    "sizes" => %w[250x250 500x500 400x700 800x1400 120x x240 2560x2048>] }],
-                 result["regular"]
-  end
-
-  test "group_thumbnail_size_keys clusters the real-world set into 10 buckets" do
-    keys = %w[
-      1000x540# 1200x630# 120x80# 1346x788# 1390x784# 1390x928# 140x93# 1416x796# 1416x842#
-      1486x832# 1486x834# 1486x884# 1488x838# 160x160# 1950x1098# 1950x1136# 200x150# 200x200#
-      240x140# 240x160# 240x240# 260x145# 260x200# 280x186# 300x175# 306x208# 348x196# 370x240#
-      400x400# 424x243# 424x283# 436x238# 480x280# 480x320# 480x480# 488x350# 500x270# 520x290#
-      520x400# 540x360# 600x350# 612x416# 673x394# 695x392# 695x464# 696x392# 708x398# 708x421#
-      740x480# 743x416# 743x417# 743x442# 744x419# 800x450# 80x80# 848x486# 848x566# 870x580#
-      872x476# 975x549# 975x568# 976x700#
-      250x250 400x700 500x500 800x1400 2560x2048>
-    ]
-
-    crop = Folio::Console::Files::Show::ThumbnailsComponent.group_thumbnail_size_keys(keys)["crop"]
-                                                           .index_by { |group| group["ratio"] }
-
-    assert_equal %w[1:1 3:2 4:3 12:7 13:10 16:9 37:24 40:21 50:27 244:175].sort, crop.keys.sort
-
-    assert_includes crop["3:2"]["sizes"], "140x93#"          # near-3:2 merges despite a far bucket anchor
-    assert_includes crop["3:2"]["sizes"], "306x208#"
-    assert_equal %w[370x240# 740x480#].sort, crop["37:24"]["sizes"].sort
-    assert_includes crop["50:27"]["sizes"], "436x238#"
-    assert_equal keys.count { |k| k.end_with?("#") }, crop.values.sum { |group| group["sizes"].size }
-  end
-
   test "render" do
     with_controller_class(Folio::Console::File::ImagesController) do
       with_request_url "/console/file/images" do
@@ -110,14 +43,18 @@ class Folio::Console::Files::Show::ThumbnailsComponentTest < Folio::Console::Com
         })
         groups_proc = lambda do |groups:, site:|
           assert_equal expected_site, site
+          assert_equal %w[1×1 2×1], groups.fetch("main_crop").pluck("ratio_label")
 
-          groups.merge("crop" => groups["crop"].reverse.map do |group|
-            group.merge("label" => group["ratio"] == "2:1" ? "Hero" : "Card")
-          end)
+          groups.merge(
+            "main_crop" => groups.fetch("main_crop").reverse,
+            "crop" => groups["crop"].reverse.map do |group|
+              group.merge("label" => group["ratio"] == "2:1" ? "Hero" : "Card")
+            end
+          )
         end
 
         Folio::Current.stub(:site, site) do
-          Rails.application.config.stub(:folio_console_thumbnail_groups_proc, -> { groups_proc }) do
+          Rails.application.config.stub(:folio_console_files_thumbnail_groups_proc, -> { groups_proc }) do
             render_inline(Folio::Console::Files::Show::ThumbnailsComponent.new(file:))
           end
         end
@@ -130,6 +67,34 @@ class Folio::Console::Files::Show::ThumbnailsComponentTest < Folio::Console::Com
         assert_equal %w[2×1 1×1], ratio_labels
         assert_equal %w[2×1 1×1], list_ratio_labels
         assert_equal %w[Hero Card], labels
+      end
+    end
+  end
+
+  test "render uses main families for tiles and detailed ratios for the disclosure" do
+    with_controller_class(Folio::Console::File::ImagesController) do
+      with_request_url "/console/file/images" do
+        file = create(:folio_file_image)
+        file.update!(thumbnail_sizes: {
+          "100x100#" => { url: "https://example.com/100x100.jpg" },
+          "200x120#" => { url: "https://example.com/200x120.jpg" },
+          "400x250#" => { url: "https://example.com/400x250.jpg" },
+          "800x450#" => { url: "https://example.com/800x450.jpg" },
+        })
+
+        render_inline(Folio::Console::Files::Show::ThumbnailsComponent.new(file:))
+
+        assert_selector(".f-c-files-show-thumbnails__tiles .f-c-files-show-thumbnails-ratio__label",
+                        text: "1×1",
+                        count: 1)
+        assert_selector(".f-c-files-show-thumbnails__tiles .f-c-files-show-thumbnails-ratio__label",
+                        text: "16×9",
+                        count: 1)
+        assert_selector(".f-c-files-show-thumbnails__tiles .f-c-files-show-thumbnails-ratio",
+                        count: 2)
+        assert_selector(".f-c-files-show-thumbnails__all-list .f-c-files-show-thumbnails-list-group__ratio-label",
+                        count: 4,
+                        visible: :all)
       end
     end
   end
