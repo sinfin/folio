@@ -94,6 +94,7 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
         this.initializationFrame = window.requestAnimationFrame(() => {
           if (cropperImage !== this.cropperImage || !this.overlayTarget.open) return
 
+          this.cropperImageBounds = this.measureImageBounds()
           this.layoutSelection(this.cropPosition)
           this.bindSelectionBoundary()
           this.observeContain()
@@ -121,7 +122,7 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
   }
 
   layoutSelection (cropPosition) {
-    const bounds = this.imageBounds()
+    const bounds = this.cropperImageBounds
     if (!bounds) return
 
     const size = this.selectionSize(bounds)
@@ -147,7 +148,7 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
     }
   }
 
-  imageBounds () {
+  measureImageBounds () {
     if (!this.cropperCanvas || !this.cropperImage) return null
 
     const canvasRect = this.cropperCanvas.getBoundingClientRect()
@@ -171,7 +172,7 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
   }
 
   selectionWithinImage (selection) {
-    const bounds = this.imageBounds()
+    const bounds = this.cropperImageBounds
     if (!bounds) return false
 
     const tolerance = 0.5
@@ -182,8 +183,7 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
       selection.y + selection.height <= bounds.y + bounds.height + tolerance
   }
 
-  currentCropPosition () {
-    const bounds = this.imageBounds()
+  currentCropPosition (bounds = this.cropperImageBounds) {
     if (!bounds || !this.cropperSelection) return this.cropPosition || this.initialCropPosition()
 
     return {
@@ -213,7 +213,7 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
       this.resizeTimeout = window.setTimeout(() => {
         if (this.stateValue !== 'editing') return
 
-        this.cropPosition = this.currentCropPosition()
+        this.cropPosition = this.currentCropPosition(this.measureImageBounds())
         this.initializeCropper()
       }, 150)
     })
@@ -287,6 +287,7 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
     this.cropper = null
     this.cropperCanvas = null
     this.cropperImage = null
+    this.cropperImageBounds = null
     this.cropperSelection = null
     this.boundaryConstraintHandler = null
     this.initializationTimeout = null
