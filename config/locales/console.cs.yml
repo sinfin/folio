@@ -446,6 +446,9 @@ cs:
           label: Automatické ukládání
 
       files:
+        artwork_form_component:
+          hint: Vyplní se automaticky z obrázku vloženého v audio souboru; můžete ho nahradit vlastním obrázkem.
+
         subtitle_form_component:
           enabled_label: Povolit titulky
           validation_errors_title: "Chyby validace:"

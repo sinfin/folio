@@ -64,6 +64,30 @@ class Folio::S3::ClientTest < ActiveSupport::TestCase
     end
   end
 
+  test "test_aware_presign_url passes expires_in to s3 presigner" do
+    s3_path = "soubory/1.png"
+    fake_presigner = Class.new do
+      attr_reader :method_name, :options
+
+      def presigned_url(method_name, options)
+        @method_name = method_name
+        @options = options
+        "https://signed.example.test/file.png"
+      end
+    end.new
+
+    @instance.stub(:use_local_file_system?, false) do
+      @instance.stub(:s3_presigner, fake_presigner) do
+        assert_equal "https://signed.example.test/file.png",
+                     @instance.test_aware_presign_url(s3_path:, expires_in: 1.hour.to_i)
+      end
+    end
+
+    assert_equal :get_object, fake_presigner.method_name
+    assert_equal 1.hour.to_i, fake_presigner.options[:expires_in]
+    assert_equal "test_files/#{s3_path}", fake_presigner.options[:key]
+  end
+
   test "test_aware_s3_delete" do
     s3_path = "test_aware_s3_delete-#{Time.current.to_i}.pdf"
     file_path = Folio::Engine.root.join("test", "fixtures", "folio", "empty.pdf")
