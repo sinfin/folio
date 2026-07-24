@@ -23,7 +23,7 @@ class Folio::Console::Files::Show::Thumbnails::ListGroupComponent < Folio::Conso
     end
 
     def label?
-      @label.present?
+      !regular? && @label.present?
     end
 
     def root_class_name
