@@ -61,8 +61,8 @@ class Folio::Console::Files::Show::ThumbnailsComponentTest < Folio::Console::Com
 
         document = Nokogiri::HTML(rendered_content)
         ratio_labels = document.css(".f-c-files-show-thumbnails-ratio__label").map(&:text)
-        list_ratio_labels = document.css(".f-c-files-show-thumbnails-list-group__ratio-label").map(&:text)
-        labels = document.css(".f-c-files-show-thumbnails-list-group__label").map(&:text)
+        list_ratio_labels = document.css(".f-c-files-show-thumbnails-crop-edit__ratio-label").map(&:text)
+        labels = document.css(".f-c-files-show-thumbnails-crop-edit__label").map(&:text)
 
         assert_equal %w[2×1 1×1], ratio_labels
         assert_equal %w[2×1 1×1], list_ratio_labels
@@ -92,7 +92,7 @@ class Folio::Console::Files::Show::ThumbnailsComponentTest < Folio::Console::Com
                         count: 1)
         assert_selector(".f-c-files-show-thumbnails__tiles .f-c-files-show-thumbnails-ratio",
                         count: 2)
-        assert_selector(".f-c-files-show-thumbnails__all-list .f-c-files-show-thumbnails-list-group__ratio-label",
+        assert_selector(".f-c-files-show-thumbnails__all-list .f-c-files-show-thumbnails-crop-edit__ratio-label",
                         count: 4,
                         visible: :all)
       end
