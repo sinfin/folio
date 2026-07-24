@@ -23,6 +23,8 @@ $f-player-transition-duration: $transition-duration !default
 $f-player-progress-primary: $gray-medium-dark !default
 $f-player-progress-secondary: $gray !default
 $f-player-video-vertical-max-width: 224px !default
+$f-player-video-vertical-control-bar-gap: 6px !default
+$f-player-video-vertical-control-bar-padding: 8px !default
 
 .f-player
   position: relative
@@ -480,6 +482,13 @@ $f-player-video-vertical-max-width: 224px !default
   // line with the landscape preview instead of filling the column vertically.
   &--video.f-player--vertical
     max-width: $f-player-video-vertical-max-width
+
+    // At the capped width the control-bar buttons (incl. the Folio edit/remove
+    // form controls) overflow one row; tighten gap/padding so they stay on a
+    // single row instead of wrapping the remove button onto its own line.
+    .video-js .vjs-control-bar
+      gap: $f-player-video-vertical-control-bar-gap
+      padding: $f-player-video-vertical-control-bar-padding
 
   &--audio
     &__player.video-js
