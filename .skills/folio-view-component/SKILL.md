@@ -61,6 +61,7 @@ Generator parent is configurable via **`folio_component_generator_parent_compone
 
 - **Templates:** Slim; keep templates thin; logic in the component class (mostly **`private`** methods). Follow [`.skills/folio-slim/SKILL.md`](../folio-slim/SKILL.md) for formatting conventions (multi-line attributes, multiple `class` attrs, avoiding inline Ruby and `==`).
 - **BEM block** from the component class name (`Folio::Console::…` → **`f-c-…`** prefix). Elements **`__`**, modifiers **`--`**. See `AGENTS.md` View Components section.
+- **BEM root:** Keep the generated BEM root element in every component template, including composition-only components with no local styles. Nest all rendered output inside it rather than removing the root to mirror a parent’s DOM.
 - **Styles:** colocated **`_component.sass`** (or `.scss`) next to the Ruby/Slim file; scope to the block. Follow [`.skills/folio-scss/SKILL.md`](../folio-scss/SKILL.md) for BEM nesting, scoping rules, and avoiding cross-component styling.
 - **Composition:** prefer **`render ChildComponent.new(...)`** or **slots** over subclassing another ViewComponent that has its own template. Avoid passing large HTML strings / `html_safe` where a slot fits.
 
