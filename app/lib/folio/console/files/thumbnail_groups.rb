@@ -4,6 +4,7 @@ class Folio::Console::Files::ThumbnailGroups
   GROUP_TYPES = %w[crop main_crop].freeze
   RATIO_TOLERANCE = 0.02
   CROP_KEY_SUFFIX_PATTERN = /#\w*\z/
+  CROP_KEY_PATTERN = /\A(\d+)x(\d+)#\w*\z/
 
   def self.call(file:, site:)
     new(file:, site:).call
@@ -13,6 +14,18 @@ class Folio::Console::Files::ThumbnailGroups
     return unless GROUP_TYPES.include?(group_type)
 
     call(file:, site:).fetch(group_type).find { |group| group["ratio"] == ratio }
+  end
+
+  def self.parse_crop_key(key)
+    return unless key.is_a?(String)
+
+    match = key.match(CROP_KEY_PATTERN)
+    return unless match
+
+    width, height = match.captures.map(&:to_i)
+    return unless width.positive? && height.positive?
+
+    [width, height]
   end
 
   def initialize(file:, site:)
@@ -36,13 +49,13 @@ class Folio::Console::Files::ThumbnailGroups
       crop_entries = []
 
       keys.each do |key|
-        if key.match?(CROP_KEY_SUFFIX_PATTERN)
-          width_str, height_str = key.sub(CROP_KEY_SUFFIX_PATTERN, "").split("x", 2)
-          width = width_str.to_i
-          height = height_str.to_i
-          next if width.zero? || height.zero?
+        crop_dimensions = self.class.parse_crop_key(key)
 
+        if crop_dimensions
+          width, height = crop_dimensions
           crop_entries << [key, width.to_f / height, width, height]
+        elsif key.match?(CROP_KEY_SUFFIX_PATTERN)
+          next
         else
           grouped["regular"] ||= {}
           grouped["regular"]["regular"] ||= []
@@ -123,9 +136,8 @@ class Folio::Console::Files::ThumbnailGroups
 
       grouped["crop"].each_value do |sizes|
         sizes.sort_by! do |key|
-          dimensions = key.sub(CROP_KEY_SUFFIX_PATTERN, "")
-          width_str, height_str = dimensions.split("x", 2)
-          width_str.to_i * height_str.to_i
+          width, height = self.class.parse_crop_key(key)
+          width * height
         end
       end
     end

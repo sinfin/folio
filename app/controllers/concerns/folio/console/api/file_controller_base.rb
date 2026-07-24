@@ -274,12 +274,11 @@ module Folio::Console::Api::FileControllerBase
     thumbnail_configuration["ratios"] ||= {}
 
     target_ratios = ([ratio] + thumbnail_size_keys.filter_map { |key|
-      m = key.match(/\A(\d+)x(\d+)#?\z/)
-      next unless m
-      w, h = m[1].to_i, m[2].to_i
-      next if w.zero? || h.zero?
-      gcd = w.gcd(h)
-      "#{w / gcd}:#{h / gcd}"
+      width, height = Folio::Console::Files::ThumbnailGroups.parse_crop_key(key)
+      next unless width && height
+
+      gcd = width.gcd(height)
+      "#{width / gcd}:#{height / gcd}"
     }).uniq
 
     target_ratios.each do |r|

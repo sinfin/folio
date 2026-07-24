@@ -70,10 +70,9 @@ class Folio::Console::Files::ThumbnailGroups::MainRatioGroups
 
     def exact_ratios(group)
       group.fetch("sizes").filter_map do |size|
-        match = size.match(/\A(\d+)x(\d+)#\z/)
-        next unless match
+        width, height = Folio::Console::Files::ThumbnailGroups.parse_crop_key(size)
+        next unless width && height
 
-        width, height = match.captures.map(&:to_i)
         gcd = width.gcd(height)
         "#{width / gcd}:#{height / gcd}"
       end

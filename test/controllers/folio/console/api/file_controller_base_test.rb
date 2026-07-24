@@ -474,6 +474,22 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
         ).size
       end
 
+      test "#{klass} - update_thumbnails_crop persists forced-gravity sizes under their intrinsic ratio" do
+        file = create(klass.model_name.singular)
+        file.update!(thumbnail_sizes: { "400x250#c" => { "uid" => "test_uid_1" } })
+
+        patch url_for([:update_thumbnails_crop, :console, :api, file, format: :json]), params: {
+          ratio: "16:9",
+          group_type: "main_crop",
+          crop: { x: 0.4, y: 0.6 }
+        }
+
+        assert_response(:success)
+        ratios = file.reload.thumbnail_configuration["ratios"]
+        assert_equal({ "x" => 0.4, "y" => 0.6 }, ratios["16:9"]["crop"])
+        assert_equal({ "x" => 0.4, "y" => 0.6 }, ratios["8:5"]["crop"])
+      end
+
       test "#{klass} - update_thumbnails_crop" do
         file = create(klass.model_name.singular)
 
