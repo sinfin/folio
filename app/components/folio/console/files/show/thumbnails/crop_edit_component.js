@@ -366,16 +366,22 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
 
   bindKeyboardSaveShortcut () {
     this.keydownHandler = (event) => {
-      if (event.key === 'Enter') this.saveEditing(event)
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        event.stopImmediatePropagation()
+        this.cancelEditing()
+      } else if (event.key === 'Enter') {
+        this.saveEditing(event)
+      }
     }
 
-    document.addEventListener('keydown', this.keydownHandler)
+    document.addEventListener('keydown', this.keydownHandler, true)
   }
 
   unbindKeyboardSaveShortcut () {
     if (!this.keydownHandler) return
 
-    document.removeEventListener('keydown', this.keydownHandler)
+    document.removeEventListener('keydown', this.keydownHandler, true)
     this.keydownHandler = null
   }
 
