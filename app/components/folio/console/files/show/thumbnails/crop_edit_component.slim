@@ -15,7 +15,10 @@
           aria-label=t(".regenerate")
           data=stimulus_action(click: "regenerate")
         ]
-          = folio_icon(:reload, height: 16)
+          = folio_icon(:reload,
+                       height: 16,
+                       class_name: "f-c-files-show-thumbnails-crop-edit__regenerate-icon")
+          span.folio-loader.folio-loader--tiny.folio-loader--transparent.f-c-files-show-thumbnails-crop-edit__regenerate-loader
 
   .f-c-files-show-thumbnails-crop-edit__thumb[style=thumb_style]
     - if image_url

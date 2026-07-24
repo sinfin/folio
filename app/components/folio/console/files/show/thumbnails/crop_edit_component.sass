@@ -56,11 +56,20 @@
     height: px-to-rem(16px)
     justify-content: center
     padding: 0
+    position: relative
     width: px-to-rem(16px)
 
     &[disabled]
       cursor: wait
-      opacity: 0.5
+
+  &__regenerate-loader
+    visibility: hidden
+
+  &[data-f-c-files-show-thumbnails-crop-edit-state-value="saving"] &__regenerate-icon
+    visibility: hidden
+
+  &[data-f-c-files-show-thumbnails-crop-edit-state-value="saving"] &__regenerate-loader
+    visibility: visible
 
   &__thumb-img
     display: block
