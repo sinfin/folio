@@ -1,55 +1,179 @@
 .f-c-files-show-thumbnails-crop-edit
-  &__top
-    align-items: center
-    display: flex
-    flex-wrap: wrap
-    gap: $grid-gutter-base
-    justify-content: space-between
-    min-height: 28px
+  cropper-canvas
+    pointer-events: none
 
-  &__editor,
-  &__img-wrap
-    align-items: center
-    background: $gray
-    display: flex
-    justify-content: center
-    position: relative
-    width: 290px
-    height: 290px
+  cropper-image,
+  cropper-selection
+    pointer-events: auto
 
-  &__img
-    display: block
-    max-height: 100%
-    max-width: 100%
+  cropper-selection
+    box-shadow: 0 0 0 100vmax rgba($black, 0.65)
 
-  &__editor-inner
-    display: block
-    background: $gray-medium-dark
-    flex: 0 0 auto
+  &__thumb
+    background: $medium-gray
     overflow: hidden
+    position: relative
 
-  &__editor-img
-    width: auto
-    height: auto
-    max-width: none
+  &--tile &__thumb
+    height: px-to-rem(120px)
 
-  &:not([data-f-c-files-show-thumbnails-crop-edit-state-value="viewing"]) &__buttons,
-  &:not([data-f-c-files-show-thumbnails-crop-edit-state-value="editing"]) &__buttons-while-editing,
-  &:not([data-f-c-files-show-thumbnails-crop-edit-state-value="viewing"]) &__img-wrap,
-  &[data-f-c-files-show-thumbnails-crop-edit-state-value="viewing"] &__editor,
-  &[data-f-c-files-show-thumbnails-crop-edit-state-value="editing"] &__editor-loader
-    display: none
+  &--detail
+    max-width: 100%
+    width: px-to-rem(240px)
 
-  &:not([data-f-c-files-show-thumbnails-crop-edit-state-value="editing"]) &__editor-inner
+  &--detail &__thumb
+    width: 100%
+
+  &__meta
+    align-items: flex-start
+    display: flex
+    justify-content: space-between
+    margin-bottom: px-to-rem(4px)
+
+  &__meta-content
+    min-width: 0
+
+  &__ratio-label
+    display: block
+    font-weight: bold
+    line-height: 1.2
+
+  &__label
+    display: block
+    font-size: px-to-rem(12px)
+    font-weight: bold
+    line-height: 1.4
+
+  &__regenerate
+    align-items: center
+    appearance: none
+    background: transparent
+    border: 0
+    color: $dark-gray
+    cursor: pointer
+    display: flex
+    flex: 0 0 auto
+    height: px-to-rem(16px)
+    justify-content: center
+    padding: 0
+    position: relative
+    width: px-to-rem(16px)
+
+    &[disabled]
+      cursor: wait
+
+  &__regenerate-loader
     visibility: hidden
 
-  &__editor cropper-canvas
-    width: 100%
+  &[data-f-c-files-show-thumbnails-crop-edit-state-value="saving"] &__regenerate-icon
+    visibility: hidden
+
+  &[data-f-c-files-show-thumbnails-crop-edit-state-value="saving"] &__regenerate-loader
+    visibility: visible
+
+  &__thumb-img
+    display: block
     height: 100%
+    object-fit: cover
+    width: 100%
 
-  &__editor cropper-image
-    width: 100% !important
-    height: 100% !important
+  &__thumb-empty
+    align-items: center
+    color: $text-muted
+    display: flex
+    height: 100%
+    justify-content: center
 
-    img
-      width: auto
+  &__crop-btn
+    appearance: none
+    background: transparent
+    border-radius: 0
+    border: none
+    color: $black
+    cursor: pointer
+    inset: 0
+    padding: 0
+    position: absolute
+
+  &__crop-btn-icon
+    background: rgba($white, 0.3)
+    position: absolute
+    right: 0
+    top: 0
+
+  &__crop-btn:hover &__crop-btn-icon
+    background: rgba($white, 0.75)
+    background: $white
+
+  // Overlay / modal
+
+  &__overlay
+    background: transparent
+    bottom: 0
+    border: 0
+    height: 100dvh
+    left: 0
+    margin: 0
+    max-height: none
+    max-width: none
+    padding: 0
+    position: fixed
+    right: 0
+    top: 0
+    width: 100vw
+
+    &::backdrop
+      background: rgba($black, 0.8)
+
+  &__modal
+    display: grid
+    gap: px-to-rem(16px)
+    grid-template-rows: minmax(0, 1fr) auto
+    height: 100%
+    padding: px-to-rem(64px) px-to-rem(16px) px-to-rem(16px)
+    pointer-events: none
+    position: relative
+    width: 100%
+
+  &__contain
+    min-height: 0
+    min-width: 0
+    overflow: auto
+    pointer-events: none
+
+    // Size Cropper's public canvas host without overriding its native minimum.
+    > cropper-canvas
+      height: 100%
+      width: 100%
+
+  &__image
+    display: block
+    height: 100%
+    object-fit: contain
+    pointer-events: auto
+    width: 100%
+
+  &__buttons
+    justify-self: center
+    pointer-events: auto
+
+  &__close
+    align-items: center
+    appearance: none
+    background: transparent
+    border: none
+    color: $white
+    cursor: pointer
+    display: flex
+    padding: 0
+    pointer-events: auto
+    position: absolute
+    right: $grid-gutter-base * 2
+    top: $grid-gutter-base * 2
+
+  // State-driven visibility
+
+  // Hide overlay in viewing/waiting-for-thumbnail states
+  &[data-f-c-files-show-thumbnails-crop-edit-state-value="viewing"] &__overlay,
+  &[data-f-c-files-show-thumbnails-crop-edit-state-value="waiting-for-thumbnail"] &__overlay
+    display: none

@@ -1,14 +1,38 @@
 .f-c-files-show-thumbnails
-  h2.mt-0 = t('.title')
-
   - if @file.thumbnail_sizes.present?
-    - self.class.group_thumbnail_size_keys(@file.thumbnail_sizes.keys).each do |type, ratios|
-      h3 = t(".type/#{type}")
+    - if main_crop_groups.present?
+      h3.f-c-files-show-thumbnails__heading.mt-0 = t('.crops_title')
 
-      - ratios.each do |ratio, thumbnail_size_keys|
-        = render(Folio::Console::Files::Show::Thumbnails::RatioComponent.new(file: @file,
-                                                                             ratio:,
-                                                                             thumbnail_size_keys:))
+      .f-c-files-show-thumbnails__tiles
+        - main_crop_groups.each do |group|
+          = render(Folio::Console::Files::Show::Thumbnails::RatioComponent.new(file: @file,
+                                                                               ratio: group["ratio"],
+                                                                               ratio_label: group["ratio_label"],
+                                                                               thumbnail_size_keys: group["sizes"],
+                                                                               updated_thumbnails_crop: group_updated?(group),
+                                                                               group_type: "main_crop"))
 
+    details.f-c-files-show-thumbnails__all
+      summary.f-c-files-show-thumbnails__all-summary
+        span.f-c-files-show-thumbnails__all-summary-label = t('.show_all_thumbnails')
+        span.f-c-files-show-thumbnails__all-summary-chevron = folio_icon(:chevron_down, height: 16)
+
+      h2.f-c-files-show-thumbnails__all-heading = t('.title')
+
+      .f-c-files-show-thumbnails__all-list
+        - crop_groups.each do |group|
+          = render(Folio::Console::Files::Show::Thumbnails::ListGroupComponent.new(file: @file,
+                                                                                   ratio: group["ratio"],
+                                                                                   ratio_label: group["ratio_label"],
+                                                                                   label: group["label"],
+                                                                                   thumbnail_size_keys: group["sizes"],
+                                                                                   updated_thumbnails_crop: group_updated?(group)))
+
+        - regular_groups.each do |group|
+          = render(Folio::Console::Files::Show::Thumbnails::ListGroupComponent.new(file: @file,
+                                                                                   ratio: group["ratio"],
+                                                                                   ratio_label: group["ratio_label"],
+                                                                                   label: group["label"],
+                                                                                   thumbnail_size_keys: group["sizes"]))
   - else
     p = t('.no_thumbnails_yet')

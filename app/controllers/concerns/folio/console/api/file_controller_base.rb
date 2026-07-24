@@ -261,33 +261,48 @@ module Folio::Console::Api::FileControllerBase
     ratio = params.require(:ratio)
     fail ActionController::BadRequest.new("Invalid crop params") unless ratio.is_a?(String) && ratio.match?(/\A\d+:\d+\z/)
 
-    thumbnail_size_keys = params.require(:thumbnail_size_keys)
-    fail ActionController::BadRequest.new("Invalid crop params") unless thumbnail_size_keys.is_a?(Array) && thumbnail_size_keys.all? { |k| k.is_a?(String) }
+    group_type = params[:group_type].presence || "crop"
+    group = Folio::Console::Files::ThumbnailGroups.find(file: @file,
+                                                        site: Folio::Current.site,
+                                                        ratio:,
+                                                        group_type:)
+    fail ActionController::BadRequest.new("Invalid crop group") unless group
+
+    thumbnail_size_keys = group.fetch("sizes")
 
     thumbnail_configuration = @file.thumbnail_configuration || {}
     thumbnail_configuration["ratios"] ||= {}
-    thumbnail_configuration["ratios"][ratio] ||= {}
-    thumbnail_configuration["ratios"][ratio]["crop"] = { "x" => x, "y" => y }
+
+    target_ratios = ([ratio] + thumbnail_size_keys.filter_map { |key|
+      width, height = Folio::Console::Files::ThumbnailGroups.parse_crop_key(key)
+      next unless width && height
+
+      gcd = width.gcd(height)
+      "#{width / gcd}:#{height / gcd}"
+    }).uniq
+
+    target_ratios.each do |r|
+      thumbnail_configuration["ratios"][r] ||= {}
+      thumbnail_configuration["ratios"][r]["crop"] = { "x" => x, "y" => y }
+    end
 
     thumb_uids_to_destroy = []
     thumbnail_sizes = @file.thumbnail_sizes || {}
 
     thumbnail_size_keys.each do |size_key|
       if thumbnail_sizes[size_key].is_a?(Hash)
-        if thumbnail_sizes[size_key]["uid"].is_a?(String)
-          thumb_uids_to_destroy << thumbnail_sizes[size_key]["uid"]
-        end
-        if thumbnail_sizes[size_key]["webp_uid"].is_a?(String)
-          thumb_uids_to_destroy << thumbnail_sizes[size_key]["webp_uid"]
-        end
+        uid = thumbnail_sizes[size_key][:uid] || thumbnail_sizes[size_key]["uid"]
+        webp_uid = thumbnail_sizes[size_key][:webp_uid] || thumbnail_sizes[size_key]["webp_uid"]
+
+        thumb_uids_to_destroy << uid if uid.is_a?(String)
+        thumb_uids_to_destroy << webp_uid if webp_uid.is_a?(String)
       end
 
       # hackily extracted from app/models/concerns/folio/thumbnails.rb
-      match = size_key.match(/\d+x?\d+/)
-      next unless match
-      size = match[0]
+      next unless size_key.match?(/\d+x?\d+/)
       width, height = size_key.split("x").map(&:to_i)
-      url = "https://doader.com/#{size}?image=#{@file.id}"
+      url = @file.temporary_url(size_key)
+      webp_url = @file.temporary_url("#{size_key}.webp")
 
       # Clear existing thumbnail and mark for regeneration
       # With activejob-uniqueness, we don't need started_generating_at coordination
@@ -297,6 +312,7 @@ module Folio::Console::Api::FileControllerBase
         x: nil,
         y: nil,
         url:,
+        webp_url:,
         width:,
         height:,
         quality: Folio::Thumbnails::DEFAULT_QUALITY,
@@ -305,7 +321,6 @@ module Folio::Console::Api::FileControllerBase
     end
 
     @file.try(:dont_run_after_save_jobs=, true)
-
 
     @file.update!(thumbnail_configuration:,
                   thumbnail_sizes:,
@@ -320,18 +335,13 @@ module Folio::Console::Api::FileControllerBase
                                                 y:)
     end
 
-    begin
-      thumb_uids_to_destroy.uniq.each do |uid|
-        Dragonfly.app.datastore.destroy(uid)
-      end
-    rescue StandardError => e
-      Rails.logger.error("Failed to destroy old thumbnail UID #{uid}: #{e.message}")
-    end
+    uids = thumb_uids_to_destroy.compact.uniq
+    Folio::DestroyThumbnailUidsJob.perform_later(uids) if uids.any?
 
-    render_component_json(Folio::Console::Files::Show::Thumbnails::RatioComponent.new(file: @file,
-                                                                                      ratio:,
-                                                                                      thumbnail_size_keys:,
-                                                                                      updated_thumbnails_crop: true))
+    render_component_json(Folio::Console::Files::Show::ThumbnailsComponent.new(
+      file: @file,
+      updated_thumbnail_size_keys: thumbnail_size_keys,
+    ))
   end
 
   private

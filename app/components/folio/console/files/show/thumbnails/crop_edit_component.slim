@@ -1,40 +1,66 @@
 .f-c-files-show-thumbnails-crop-edit[
   data=data
-  class="f-c-files-show-thumbnails-crop-edit--mode-#{mode}"
+  class="f-c-files-show-thumbnails-crop-edit--#{@variant}"
 ]
-  .f-c-files-show-thumbnails-crop-edit__top
-    h4.f-c-files-show-thumbnails-crop-edit__title.m-0
-      = @ratio
+  - if detail?
+    .f-c-files-show-thumbnails-crop-edit__meta
+      .f-c-files-show-thumbnails-crop-edit__meta-content
+        span.f-c-files-show-thumbnails-crop-edit__ratio-label = ratio_label
+        span.f-c-files-show-thumbnails-crop-edit__label = display_group_label
 
-    - if @can_update
-      = buttons
-      = buttons_while_editing
+      - if @can_update
+        button.f-c-files-show-thumbnails-crop-edit__regenerate[
+          type="button"
+          title=t(".regenerate")
+          aria-label=t(".regenerate")
+          data=stimulus_action(click: "regenerate")
+        ]
+          = folio_icon(:reload,
+                       height: 16,
+                       class_name: "f-c-files-show-thumbnails-crop-edit__regenerate-icon")
+          span.folio-loader.folio-loader--tiny.folio-loader--transparent.f-c-files-show-thumbnails-crop-edit__regenerate-loader
 
-  .f-c-files-show-thumbnails-crop-edit__editor.mt-3[
-    data=stimulus_target("editor")
-  ]
-    .f-c-files-show-thumbnails-crop-edit__editor-inner[
-      style=editor_inner_style
-      data=stimulus_target("editorInner")
-    ]
-      img.f-c-files-show-thumbnails-crop-edit__editor-img[
-        src=Folio::S3.url_rewrite(@file.file.remote_url)
-        data=stimulus_target("editorImage")
-        width=image_width
-        height=image_height
-      ]
-
-    span.f-c-files-show-thumbnails-crop-edit__editor-loader[
-      class="folio-loader"
-      class="folio-loader--transparent"
-    ]
-
-  .f-c-files-show-thumbnails-crop-edit__img-wrap.mt-3
+  .f-c-files-show-thumbnails-crop-edit__thumb[style=thumb_style]
     - if image_url
-      img.f-c-files-show-thumbnails-crop-edit__img[
+      img.f-c-files-show-thumbnails-crop-edit__thumb-img[
         loading="lazy"
         src=image_url
         data=image_data
       ]
+
     - else
-      = folio_icon(:close)
+      .f-c-files-show-thumbnails-crop-edit__thumb-empty
+        = folio_icon(:close)
+
+    - if @can_update
+      button.f-c-files-show-thumbnails-crop-edit__crop-btn[
+        type="button"
+        title=t('.edit')
+        data=stimulus_action(click: "startEditing")
+      ]
+        = folio_icon(:crop,
+                     height: 24,
+                     class_name: "f-c-files-show-thumbnails-crop-edit__crop-btn-icon")
+
+  dialog.f-c-files-show-thumbnails-crop-edit__overlay[
+    aria-label=t('.edit')
+    data=overlay_data
+  ]
+    .f-c-files-show-thumbnails-crop-edit__modal
+      .f-c-files-show-thumbnails-crop-edit__contain[
+        data=stimulus_target("contain")
+      ]
+        img.f-c-files-show-thumbnails-crop-edit__image[
+          alt=""
+          src=Folio::S3.url_rewrite(@file.file.remote_url)
+          data=stimulus_target("image")
+        ]
+
+      = modal_buttons
+
+      button.f-c-files-show-thumbnails-crop-edit__close[
+        type="button"
+        title=t("folio.console.actions.close")
+        data=stimulus_action(click: "cancelEditing")
+      ]
+        = folio_icon(:close, height: 24)
