@@ -36,6 +36,7 @@ class Folio::Console::Files::Show::Thumbnails::CropEditComponent < Folio::Consol
       @image_url = Folio::Console::Files::Show::Thumbnails::RepresentativeImage
                      .representative_url(file: @file,
                                          keys: @thumbnail_size_keys,
+                                         preferred_ratio: @group_type == "main_crop" ? @ratio : nil,
                                          include_doader: @updated_thumbnails_crop)
     end
 

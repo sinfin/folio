@@ -71,6 +71,27 @@ class Folio::Console::Files::Show::Thumbnails::CropEditComponentTest < Folio::Co
     end
   end
 
+  test "uses an exact-ratio thumbnail for a main crop preview" do
+    with_controller_class(Folio::Console::File::ImagesController) do
+      with_request_url "/console/file/images" do
+        file = create(:folio_file_image)
+        file.update!(thumbnail_sizes: {
+          "400x300#" => { url: "https://example.com/exact.jpg" },
+          "480x320#" => { url: "https://example.com/larger.jpg" },
+        })
+
+        render_inline(Folio::Console::Files::Show::Thumbnails::CropEditComponent.new(
+          file:,
+          ratio: "4:3",
+          ratio_label: "4×3",
+          thumbnail_size_keys: %w[400x300# 480x320#],
+          group_type: "main_crop"))
+
+        assert_selector ".f-c-files-show-thumbnails-crop-edit__thumb-img[src='https://example.com/exact.jpg']"
+      end
+    end
+  end
+
   test "centers an uncropped landscape image when gravity is unset" do
     file = image_with_dimensions(width: 1200, height: 800)
 
