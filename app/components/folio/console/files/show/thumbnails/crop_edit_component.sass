@@ -159,9 +159,19 @@
     pointer-events: auto
     width: 100%
 
-  &__buttons
-    justify-self: center
+  &__actions
+    justify-self: stretch
+    padding: 0 px-to-rem(12px)
+    min-height: px-to-rem(36px)
+    position: relative
     pointer-events: auto
+
+  &__saving-loader,
+  &[data-f-c-files-show-thumbnails-crop-edit-state-value="saving"] &__buttons
+    display: none
+
+  &[data-f-c-files-show-thumbnails-crop-edit-state-value="saving"] &__saving-loader
+    display: block
 
   &__close
     align-items: center

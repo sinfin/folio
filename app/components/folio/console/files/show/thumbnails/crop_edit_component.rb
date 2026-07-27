@@ -64,6 +64,7 @@ class Folio::Console::Files::Show::Thumbnails::CropEditComponent < Folio::Consol
     def modal_buttons
       render(Folio::Console::Ui::ButtonsComponent.new(
         class_name: "f-c-files-show-thumbnails-crop-edit__buttons",
+        centered: true,
         buttons: [{
           variant: :light,
           data: stimulus_action(click: "saveEditing"),
