@@ -49,16 +49,15 @@ en:
             in_atom: content chapter
             no_thumbnails_yet: No versions generated yet
 
-          thumbnails_component:
-            title: Versions and sizes
-            crops_title: Crops to various aspect ratios
-            show_all_thumbnails: All generated thumbnails
-            type/regular: Versions without crop
-            type/crop: Versions with crop (#)
-            type/shrink: Versions with shrink only (>)
-            type/cover: Versions with fit (^)
-
           thumbnails:
+            main_component:
+              crops_title: Crops to various aspect ratios
+              show_all_thumbnails: All generated thumbnails
+
+            details_component:
+              title: Versions and sizes
+              no_thumbnails_yet: No versions generated yet
+
             crop_edit_component:
               edit: Edit crop
               regenerate: Regenerate thumbnails

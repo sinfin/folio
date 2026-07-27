@@ -1,0 +1,24 @@
+.f-c-files-show-thumbnails-details[
+  id=@details_id
+  hidden=thumbnails?
+]
+  - if thumbnails?
+    h2.f-c-files-show-thumbnails-details__heading = t('.title')
+
+    .f-c-files-show-thumbnails-details__all-list
+      - crop_groups.each do |group|
+        = render(Folio::Console::Files::Show::Thumbnails::ListGroupComponent.new(file: @file,
+                                                                                   ratio: group["ratio"],
+                                                                                   ratio_label: group["ratio_label"],
+                                                                                   label: group["label"],
+                                                                                   thumbnail_size_keys: group["sizes"],
+                                                                                   updated_thumbnails_crop: group_updated?(group)))
+
+      - regular_groups.each do |group|
+        = render(Folio::Console::Files::Show::Thumbnails::ListGroupComponent.new(file: @file,
+                                                                                   ratio: group["ratio"],
+                                                                                   ratio_label: group["ratio_label"],
+                                                                                   label: group["label"],
+                                                                                   thumbnail_size_keys: group["sizes"]))
+  - else
+    p = t('.no_thumbnails_yet')

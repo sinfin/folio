@@ -54,7 +54,7 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
     this.stateValue = 'saving'
 
     window.Folio.Api.apiPatch(this.apiUrlValue, data).then((res) => {
-      if (!res || !res.data) throw new Error('Invalid response from server')
+      if (!res || !res.data || !res.data.main || !res.data.details) throw new Error('Invalid response from server')
 
       if (closeEditing) {
         this.closeOverlay()
@@ -335,20 +335,28 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
       Math.abs(size.height - this.containSize.height) < 0.5
   }
 
-  replaceThumbnails (html) {
-    const current = this.element.closest('.f-c-files-show-thumbnails')
-    if (!current) return
+  replaceThumbnails ({ main, details }) {
+    const show = this.element.closest('.f-c-files-show')
+    const currentMain = show?.querySelector('.f-c-files-show-thumbnails-main')
+    const currentDetails = show?.querySelector('.f-c-files-show-thumbnails-details')
+    const replacementMain = this.componentFromHtml(main)
+    const replacementDetails = this.componentFromHtml(details)
 
-    const disclosureWasOpen = current.querySelector('.f-c-files-show-thumbnails__all')?.open
+    if (!currentMain || !currentDetails || !replacementMain || !replacementDetails) return
+
+    const expanded = currentMain.dataset.fCFilesShowThumbnailsMainExpandedValue === 'true'
+    replacementMain.dataset.fCFilesShowThumbnailsMainExpandedValue = expanded
+    replacementDetails.hidden = !expanded
+
+    currentMain.replaceWith(replacementMain)
+    currentDetails.replaceWith(replacementDetails)
+  }
+
+  componentFromHtml (html) {
     const template = document.createElement('template')
     template.innerHTML = html.trim()
-    const replacement = template.content.firstElementChild
-    if (!replacement) return
 
-    const replacementDisclosure = replacement.querySelector('.f-c-files-show-thumbnails__all')
-    if (disclosureWasOpen && replacementDisclosure) replacementDisclosure.open = true
-
-    current.replaceWith(replacement)
+    return template.content.firstElementChild
   }
 
   openOverlay () {

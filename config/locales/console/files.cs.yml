@@ -49,17 +49,15 @@ cs:
             in_atom: kapitola obsahu
             no_thumbnails_yet: Zatím nebyly vygenerovány žádné verze
 
-          thumbnails_component:
-            title: Verze a velikosti
-            crops_title: Ořezy do různých poměrů stran
-            show_all_thumbnails: Všechny vygenerované náhledy
-            type/regular: Verze bez ořezu
-            type/crop: Verze s ořezem (#)
-            type/shrink: Verze pouze se zmenšením (>)
-            type/cover: Verze s přizpůsobením (^)
-            no_thumbnails_yet: Zatím nebyly vygenerovány žádné verze
-
           thumbnails:
+            main_component:
+              crops_title: Ořezy do různých poměrů stran
+              show_all_thumbnails: Všechny vygenerované náhledy
+
+            details_component:
+              title: Verze a velikosti
+              no_thumbnails_yet: Zatím nebyly vygenerovány žádné verze
+
             crop_edit_component:
               edit: Upravit ořez
               regenerate: Znovu vygenerovat náhledy

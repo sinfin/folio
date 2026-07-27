@@ -1,0 +1,36 @@
+.f-c-files-show-thumbnails-main
+  --f-c-files-show-thumbnails-main__spacer: #{px-to-rem(16px)}
+
+  margin-top: var(--f-c-files-show-thumbnails-main__spacer)
+
+  &__heading
+    color: $dark-gray
+    font-size: px-to-rem(14px)
+    font-weight: bold
+    margin: 0 0 var(--f-c-files-show-thumbnails-main__spacer)
+
+  &__tiles
+    align-items: flex-start
+    display: flex
+    flex-wrap: wrap
+    gap: var(--f-c-files-show-thumbnails-main__spacer)
+
+  &__toggle
+    align-items: center
+    appearance: none
+    background: transparent
+    border: 0
+    color: $text-muted
+    cursor: pointer
+    display: inline-flex
+    gap: $grid-gutter-half
+    margin-top: var(--f-c-files-show-thumbnails-main__spacer)
+    min-height: px-to-rem(28px)
+    padding: 0
+
+  &__toggle-chevron
+    display: inline-flex
+    transition: transform 0.2s ease
+
+  &[data-f-c-files-show-thumbnails-main-expanded-value="true"] &__toggle-chevron
+    transform: rotate(180deg)

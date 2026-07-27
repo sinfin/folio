@@ -338,10 +338,22 @@ module Folio::Console::Api::FileControllerBase
     uids = thumb_uids_to_destroy.compact.uniq
     Folio::DestroyThumbnailUidsJob.perform_later(uids) if uids.any?
 
-    render_component_json(Folio::Console::Files::Show::ThumbnailsComponent.new(
-      file: @file,
-      updated_thumbnail_size_keys: thumbnail_size_keys,
-    ))
+    details_id = Folio::Console::Files::Show::Thumbnails::MainComponent.details_id(@file)
+
+    render json: {
+      data: {
+        main: render_to_string(Folio::Console::Files::Show::Thumbnails::MainComponent.new(
+          file: @file,
+          details_id:,
+          updated_thumbnail_size_keys: thumbnail_size_keys,
+        ), layout: false),
+        details: render_to_string(Folio::Console::Files::Show::Thumbnails::DetailsComponent.new(
+          file: @file,
+          details_id:,
+          updated_thumbnail_size_keys: thumbnail_size_keys,
+        ), layout: false),
+      }
+    }
   end
 
   private

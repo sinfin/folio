@@ -468,10 +468,14 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
         assert_equal({ "x" => 0.4, "y" => 0.6 }, ratios["8:5"]["crop"])
         assert_equal({ "x" => 0.4, "y" => 0.6 }, ratios["16:9"]["crop"])
 
-        component = Nokogiri::HTML.fragment(response.parsed_body["data"])
-        assert_equal 4, component.css(
-          '[data-f-c-files-show-thumbnails-crop-edit-state-value="waiting-for-thumbnail"]'
-        ).size
+        components = response.parsed_body.fetch("data")
+        waiting_for_thumbnail_count = %w[main details].sum do |section|
+          Nokogiri::HTML.fragment(components.fetch(section)).css(
+            '[data-f-c-files-show-thumbnails-crop-edit-state-value="waiting-for-thumbnail"]'
+          ).size
+        end
+
+        assert_equal 4, waiting_for_thumbnail_count
       end
 
       test "#{klass} - update_thumbnails_crop persists forced-gravity sizes under their intrinsic ratio" do
@@ -509,7 +513,8 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
         }
 
         assert_response(:success)
-        assert response.parsed_body["data"].present?
+        assert response.parsed_body.dig("data", "main").present?
+        assert response.parsed_body.dig("data", "details").present?
 
         file.reload
 
@@ -544,7 +549,7 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
         end
       end
 
-      test "#{klass} - update_thumbnails_crop returns the complete thumbnails component" do
+      test "#{klass} - update_thumbnails_crop returns main and details components" do
         file = create(klass.model_name.singular)
         file.update!(thumbnail_sizes: { "160x90#" => { "uid" => "u1", "url" => "https://example.com/160x90.jpg" } })
 
@@ -555,13 +560,16 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
         }
 
         assert_response(:success)
-        component_html = response.parsed_body["data"]
-        assert component_html.include?("f-c-files-show-thumbnails")
-        assert component_html.include?("f-c-files-show-thumbnails-ratio")
-        assert component_html.include?("f-c-files-show-thumbnails-list-group")
+        components = response.parsed_body.fetch("data")
+        main = Nokogiri::HTML.fragment(components.fetch("main"))
+        details = Nokogiri::HTML.fragment(components.fetch("details"))
 
-        component = Nokogiri::HTML.fragment(component_html)
-        assert_equal 2, component.css(
+        assert_equal 1, main.css(".f-c-files-show-thumbnails-main").size
+        assert_equal 1, details.css(".f-c-files-show-thumbnails-details").size
+        assert_equal 1, main.css(
+          '[data-f-c-files-show-thumbnails-crop-edit-state-value="waiting-for-thumbnail"]'
+        ).size
+        assert_equal 1, details.css(
           '[data-f-c-files-show-thumbnails-crop-edit-state-value="waiting-for-thumbnail"]'
         ).size
       end
