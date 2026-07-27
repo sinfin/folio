@@ -89,6 +89,11 @@ Full conventions in **[`.skills/folio-stimulus/SKILL.md`](../folio-stimulus/SKIL
 - Follow [`.skills/folio-testing/SKILL.md`](../folio-testing/SKILL.md).
 - Subclass **`Folio::ComponentTest`** or **`Folio::Console::ComponentTest`** (`test/test_helper_base.rb`).
 - Path: **`test/components/.../name_component_test.rb`**.
+- Do not add tests that only assert static markup or presentation. Cover
+  conditional rendering, interaction, or another user-visible behavior instead.
+- Keep component tests minimal: asserting the root BEM class is usually enough.
+  Do not enumerate static child buttons, paragraphs, or images unless they
+  express rendering logic or the user explicitly requests that contract.
 
 ## Quality gates
 
