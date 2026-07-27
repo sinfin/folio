@@ -51,6 +51,10 @@ class Folio::Console::Files::Show::Thumbnails::Ratio::ThumbnailComponent < Folio
       "f-c-files-show-thumbnails-ratio-thumbnail--detail" if @variant == :detail
     end
 
+    def loader_class
+      "folio-loader--tiny" if @variant == :detail
+    end
+
     def image_wrap_style
       return unless @variant == :detail
 
