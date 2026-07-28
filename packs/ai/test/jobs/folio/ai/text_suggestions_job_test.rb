@@ -66,13 +66,13 @@ class Folio::Ai::TextSuggestionsJobTest < ActiveJob::TestCase
 
     message = perform_text_suggestions_job
 
-    assert_includes message[:payload]["data"]["html"], I18n.t("folio.ai.console.errors.prompt_missing")
+    assert_includes message[:payload]["data"]["html"], I18n.t("folio.ai.console.errors.prompt_missing", locale: @site.console_locale)
   end
 
   test "broadcasts host_ineligible in rendered component html" do
     message = perform_text_suggestions_job(params: job_params(host_eligible: false))
 
-    assert_includes message[:payload]["data"]["html"], I18n.t("folio.ai.console.errors.host_ineligible_article")
+    assert_includes message[:payload]["data"]["html"], I18n.t("folio.ai.console.errors.host_ineligible_article", locale: @site.console_locale)
   end
 
   test "uses fallback form snapshot context when model hooks are missing" do
@@ -106,13 +106,13 @@ class Folio::Ai::TextSuggestionsJobTest < ActiveJob::TestCase
   test "broadcasts record_not_ready when record is not accessible on the current site" do
     message = perform_text_suggestions_job(params: job_params(error_code: :record_not_ready))
 
-    assert_includes message[:payload]["data"]["html"], I18n.t("folio.ai.console.errors.record_not_ready")
+    assert_includes message[:payload]["data"]["html"], I18n.t("folio.ai.console.errors.record_not_ready", locale: @site.console_locale)
   end
 
   test "broadcasts provider timeout in rendered component html" do
     message = perform_text_suggestions_job(params: job_params(provider_adapter_class_name: RaisingProviderAdapter.name))
 
-    assert_includes message[:payload]["data"]["html"], I18n.t("folio.ai.console.errors.provider_timeout")
+    assert_includes message[:payload]["data"]["html"], I18n.t("folio.ai.console.errors.provider_timeout", locale: @site.console_locale)
   end
 
   test "logs unexpected failures without exception messages" do
@@ -123,7 +123,7 @@ class Folio::Ai::TextSuggestionsJobTest < ActiveJob::TestCase
     Rails.stub(:logger, logger) do
       message = perform_text_suggestions_job(params: job_params(provider_adapter_class_name: SecretLeakingProviderAdapter.name))
 
-      assert_includes message[:payload]["data"]["html"], I18n.t("folio.ai.console.errors.provider_error")
+      assert_includes message[:payload]["data"]["html"], I18n.t("folio.ai.console.errors.provider_error", locale: @site.console_locale)
     end
 
     assert_equal 1, logged_messages.length
