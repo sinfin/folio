@@ -1,98 +1,78 @@
 # frozen_string_literal: true
 
+# Calls OpenAI Responses API and extracts text output for suggestion generation.
 class Folio::Ai::Providers::OpenAi < Folio::Ai::Providers::Base
-  MODELS_ENDPOINT = "https://api.openai.com/v1/models"
-  IRRELEVANT_MODEL_PATTERN = /(audio|dall-e|embedding|image|moderation|realtime|search|transcribe|tts|whisper)/i
+  DEFAULT_MODEL = "gpt-5.4-mini"
+  ENDPOINT = "https://api.openai.com/v1/responses"
+  MODELS_ENV_KEY = "FOLIO_AI_OPENAI_MODELS"
 
-  class << self
-    def list_models(api_key:, timeout: Folio::Ai::Providers::Base::DEFAULT_TIMEOUT)
-      parsed = JSON.parse(perform_get(uri: URI(MODELS_ENDPOINT),
-                                      headers: model_list_headers(api_key),
-                                      timeout:))
-
-      Array(parsed["data"]).filter_map { |item| model_from_item(item) }
-    rescue JSON::ParserError
-      raise Folio::Ai::ProviderError, "OpenAI model list response is not valid JSON"
-    end
-
-    private
-      def model_list_headers(api_key)
-        {
-          "Authorization" => "Bearer #{api_key}",
-          "Content-Type" => "application/json",
-        }
-      end
-
-      def model_from_item(item)
-        id = item["id"].to_s
-        return if id.blank?
-        return unless relevant_model_id?(id)
-
-        Folio::Ai::Providers::Base::Model.new(id:,
-                                              label: id,
-                                              created_at: item["created"],
-                                              metadata: item.except("id", "created"))
-      end
-
-      def relevant_model_id?(id)
-        id.start_with?("gpt-") && !id.match?(IRRELEVANT_MODEL_PATTERN)
-      end
+  def self.key
+    :openai
   end
 
-  def build_request(prompt:, field:, suggestion_count:)
-    Request.new(uri: URI(endpoint),
-                headers:,
-                body: request_body(prompt:, field:, suggestion_count:))
+  def self.available?
+    Folio::Ai.openai_api_key.present?
+  end
+
+  def self.models
+    models_from_env.presence || super
+  end
+
+  def self.models_env_value
+    ENV[MODELS_ENV_KEY]
+  end
+
+  def self.models_from_env
+    models_env_value.to_s.split(",").filter_map { |model| model.strip.presence }.uniq
+  end
+
+  def initialize(api_key: Folio::Ai.openai_api_key, **kwargs)
+    raise Folio::Ai::ProviderError, "FOLIO_AI_OPENAI_API_KEY is missing" if api_key.blank?
+
+    @api_key = api_key
+    super(**kwargs)
+  end
+
+  def complete(prompt:, suggestion_count: nil)
+    response_text(post_json(uri: URI(ENDPOINT),
+                            headers:,
+                            body: response_body(prompt:))).presence ||
+      raise(Folio::Ai::ProviderError, "AI provider response did not include text")
   end
 
   private
-    def endpoint
-      "https://api.openai.com/v1/responses"
-    end
+    attr_reader :api_key
 
     def headers
       {
         "Authorization" => "Bearer #{api_key}",
-        "Content-Type" => "application/json",
       }
     end
 
-    def request_body(prompt:, field:, suggestion_count:)
+    def response_body(prompt:)
       {
         model:,
-        store: Folio::Ai.provider_request_storage?,
+        store: false,
         input: [
-          { role: "system", content: json_schema_instruction(suggestion_count) },
-          { role: "user", content: prompt },
+          { role: "system", content: "Return only the requested text." },
+          { role: "user", content: prompt.to_s },
         ],
-        metadata: {
-          folio_ai_field_key: field.key,
-        },
       }
     end
 
-    def extract_response_text(response_body)
-      parsed = JSON.parse(response_body)
+    def response_text(parsed)
+      return parsed["output_text"] if parsed["output_text"].is_a?(String)
 
-      parsed["output_text"].presence ||
-        output_text(parsed).presence ||
-        parsed.dig("choices", 0, "message", "content").presence ||
-        response_body
-    rescue JSON::ParserError
-      response_body
-    end
-
-    def output_text(parsed)
       Array(parsed["output"]).filter_map do |item|
         output_item_text(item)
       end.join("\n")
     end
 
     def output_item_text(item)
-      return item["text"] if item["type"] == "output_text" && item["text"].present?
+      return unless item["type"] == "message"
 
       Array(item["content"]).filter_map do |content|
-        content["text"].presence
+        content["text"].presence if content["type"] == "output_text"
       end.join("\n").presence
     end
 end

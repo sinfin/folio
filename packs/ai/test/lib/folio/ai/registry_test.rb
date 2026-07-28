@@ -1,124 +1,73 @@
 # frozen_string_literal: true
 
 require "test_helper"
+require Folio::Engine.root.join("packs/ai/lib/folio/ai")
 
 class Folio::Ai::RegistryTest < ActiveSupport::TestCase
-  test "registers integration fields" do
+  test "registers records by table name" do
     registry = Folio::Ai::Registry.new
 
-    registry.register_integration(key: :articles,
-                                  record_class_name: "Folio::Page",
-                                  fields: [
-                                    :title,
-                                    { key: :perex, character_limit: 400, auto_attach: true },
-                                  ])
+    registry.register_record(record_class_name: "Folio::Page",
+                             content_requirement: :tiptap_or_atoms,
+                             fields: [
+                               :title,
+                               { key: :slug, label: "Slug", character_limit: 120 },
+                             ],
+                             groups: [
+                               {
+                                 key: :meta,
+                                 label: "Meta",
+                                 fields: %i[title slug],
+                               },
+                               {
+                                 key: :seo,
+                                 fields: %i[title],
+                               },
+                             ])
 
-    assert registry.field_registered?(:articles, :title)
-    assert registry.field_registered?("articles", "perex")
-    assert registry.field(:articles, :perex).auto_attach?
-    assert_equal 400, registry.field(:articles, :perex).character_limit
+    record = registry.record("folio_pages")
+
+    assert_equal "folio_pages", record[:key]
+    assert_equal "Folio::Page", record[:record_class_name]
+    assert_nil record[:label]
+    assert_equal :tiptap_or_atoms, record[:content_requirement]
+    assert_nil registry.field("folio_pages", :title)[:label]
+    assert_nil registry.field("folio_pages", :title)[:character_limit]
+    assert_equal "Slug", registry.field("folio_pages", :slug)[:label]
+    assert_equal 120, registry.field("folio_pages", :slug)[:character_limit]
+    assert_equal "Meta", registry.group("folio_pages", :meta)[:label]
+    assert_equal %w[title slug], registry.group("folio_pages", :meta)[:fields]
+    assert_nil registry.group("folio_pages", :seo)[:label]
+    assert_equal %w[title], registry.group("folio_pages", :seo)[:fields]
   end
 
-  test "derives integration key from record class table name" do
-    registry = Folio::Ai::Registry.new
-
-    registry.register_integration(record_class_name: "Folio::Page")
-
-    assert registry.integration(:folio_pages)
-  end
-
-  test "uses record translations for integration and field labels" do
-    registry = Folio::Ai::Registry.new
-
-    registry.register_integration(record_class_name: "Dummy::Blog::Article",
-                                  fields: %i[title])
-
-    integration = registry.integration(:dummy_blog_articles)
-    field = registry.field(:dummy_blog_articles, :title)
-
-    assert_equal Dummy::Blog::Article.model_name.human(count: 2), integration.label
-    assert_equal Dummy::Blog::Article.human_attribute_name(:title),
-                 field.label(record_class: integration.record_class)
-  end
-
-  test "uses explicit labels when provided" do
-    registry = Folio::Ai::Registry.new
-
-    registry.register_integration(record_class_name: "Folio::Page",
-                                  label: "Content editor",
-                                  fields: [
-                                    Folio::Ai::Field.new(key: :title,
-                                                         label: "Headline"),
-                                  ])
-
-    integration = registry.integration(:folio_pages)
-
-    assert_equal "Content editor", integration.label
-    assert_equal "Headline", registry.field(:folio_pages, :title).label(record_class: integration.record_class)
-  end
-
-  test "infers field input type from record class attributes" do
-    title_field = Folio::Ai::Field.new(key: :title)
-    perex_field = Folio::Ai::Field.new(key: :perex)
-    published_field = Folio::Ai::Field.new(key: :published)
-    missing_field = Folio::Ai::Field.new(key: :missing_ai_field)
-
-    assert_equal :string, title_field.input_type(record_class: Dummy::Blog::Article)
-    assert_equal :text, perex_field.input_type(record_class: Dummy::Blog::Article)
-    assert_nil published_field.input_type(record_class: Dummy::Blog::Article)
-    assert_nil missing_field.input_type(record_class: Dummy::Blog::Article)
-  end
-
-  test "rejects blank record class name" do
+  test "rejects invalid record classes and duplicate fields or groups" do
     registry = Folio::Ai::Registry.new
 
     assert_raises(ArgumentError) do
-      registry.register_integration(record_class_name: "")
+      registry.register_record(record_class_name: "Missing", fields: [:title])
     end
-  end
-
-  test "rejects non record class name" do
-    registry = Folio::Ai::Registry.new
 
     assert_raises(ArgumentError) do
-      registry.register_integration(record_class_name: "String")
+      registry.register_record(record_class_name: "Folio::Page", fields: %i[title title])
     end
-  end
-
-  test "rejects unknown record class name" do
-    registry = Folio::Ai::Registry.new
 
     assert_raises(ArgumentError) do
-      registry.register_integration(record_class_name: "Missing::Article")
+      registry.register_record(record_class_name: "Folio::Page",
+                               fields: %i[title],
+                               groups: [{ key: :meta, fields: %i[missing] }])
     end
-  end
-
-  test "rejects blank explicit integration key" do
-    registry = Folio::Ai::Registry.new
 
     assert_raises(ArgumentError) do
-      registry.register_integration(key: "",
-                                    record_class_name: "Folio::Page")
+      registry.register_record(record_class_name: "Folio::Page",
+                               fields: %i[title],
+                               groups: [{ key: :title, fields: %i[title] }])
     end
-  end
-
-  test "rejects duplicate integrations" do
-    registry = Folio::Ai::Registry.new
-    registry.register_integration(key: :articles,
-                                  record_class_name: "Folio::Page")
 
     assert_raises(ArgumentError) do
-      registry.register_integration(key: "articles",
-                                    record_class_name: "Dummy::Blog::Article")
-    end
-  end
-
-  test "rejects duplicate fields" do
-    registry = Folio::Ai::Registry.new
-
-    assert_raises(ArgumentError) do
-      registry.register_integration(record_class_name: "Folio::Page",
-                                    fields: %i[title title])
+      registry.register_record(record_class_name: "Folio::Page",
+                               fields: %i[title],
+                               content_requirement: :unsupported)
     end
   end
 end

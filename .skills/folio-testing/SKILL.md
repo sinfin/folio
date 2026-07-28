@@ -36,6 +36,9 @@ Instead, exercise the behavior through one of:
   usually prove only implementation shape. Exercise the behavior instead.
 - Avoid pinning private method names, asset contents, exact implementation
   snippets, or incidental markup that is not part of the user-facing contract.
+- Do not test bare `data-action` / Stimulus wiring presence unless the
+  assertion proves behavior. Rendering the component/wrapper is enough for
+  static markup; use behavior-facing tests for JavaScript behavior.
 - Do not test static presentation details that are always present and not part
   of conditional behavior, such as a fixed CSS utility class (`cell--compact`) or
   non-interactive styling option. Let the template/component code carry that.
@@ -75,7 +78,7 @@ Instead, exercise the behavior through one of:
   makes tests cleaner.
 
   ```ruby
-  Folio::Ai.stub(:provider_api_key_env_values, { openai: "secret" }) do
+  MyFeature.stub(:provider_env_values, { primary: "secret" }) do
     # exercise behavior
   end
   ```
@@ -83,7 +86,7 @@ Instead, exercise the behavior through one of:
 - For one-off flags, stub the value method directly:
 
   ```ruby
-  Folio::Ai.stub(:env_disabled_value, "1") do
+  MyFeature.stub(:disabled_env_value, "1") do
     # exercise disabled behavior
   end
   ```

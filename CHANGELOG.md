@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- **Console form layout component**: Add `Folio::Console::Form::LayoutComponent`
+  for console forms with a header area, file picker column, and main content,
+  replacing ad hoc `col-md-auto` picker layouts in page and dummy blog forms.
+- **Input character counter**: Mask long displayed current counts automatically for numeric `character_counter` values, e.g. `150` derives a `999` display limit so `1000` and higher render as `*`. Pass `character_counter_auto_current_count_limit: false` to opt out.
 - **Nested fields**: `folio_nested_fields` now supports `hide_selected_value_for:` to hide values already selected in visible sibling rows. The media-source site rules form uses it for `site_id`, disables the add button when no site value remains, and newly added rules offer the next available site instead of duplicating an existing selection.
 - **Tiptap default responsive preview**: the block editor can start in the mobile (responsive) preview when the host app sets the current user's `mobile_first` console preference. The value flows from `TiptapInput` through the Stimulus controller to the editor's initial responsive-preview state; the toolbar toggle still switches back and the manual choice is not persisted. Applies only to the block editor (rich-text fields have no responsive toggle).
 - **Console collection selects**: Add `filterable: true` for local Select2 filtering over pre-rendered collection options and grouped selects, preserving existing `remote:` autocomplete behavior.
@@ -14,6 +18,9 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- **AI pack configuration**: Move runtime configuration readers and provider
+  helpers onto `Folio::Ai.config`, keeping `Folio::Ai.configure` as the setup
+  API.
 - **Media-source usage constraints**: Current-site usage filtering now aggregates direct and atom placements once and batch-loads displayed file counts instead of running a usage query per file.
 - **Possible future media-source counter refactor (not included)**: A synthetic benchmark measured the set-based query on PostgreSQL 16.14 with 300,000 files and 600,000 placements. With site-specific source rules on 10% of files, all request medians across five runs stayed below 2 seconds, including a deep usable page at 1.85 seconds with 0.97 seconds of SQL. With rules on 100% of files, the usable source/site-filtered request and deep usable page reached 2.35 and 2.38 seconds, although concurrent ordinary queries remained unaffected. If production resembles the 100% case, add a `folio_file_site_published_usage_counts` table with `file_id`, `site_id`, `published_usage_count`, timestamps, foreign keys, and a unique `(file_id, site_id)` index. Backfill it from deduplicated direct and atom usage grouped by parent record and site, then keep it synchronized for placement create/destroy/move, atom parent changes, parent publish/unpublish, parent site changes, and parent destruction. A design review must decide between synchronous updates and queued updates because stale queued counts could allow over-limit publication. Filtering and file-card rendering should join/preload the persisted counter while retaining `folio_files.published_usage_count` as the global fallback; add a reconciliation task and rerun the same 300,000-file HTTP benchmark before removing the dynamic SQL path.
 - **Console private attachments**: Replace the Dropzone/S3Upload add flow with `Folio::UppyComponent`, preserving nested attachment ordering/destroy behavior and hiding move arrows in single-attachment mode.

@@ -1,12 +1,23 @@
 .f-c-tiptap-overlay-form-layout
   &__row
     display: flex
-    gap: 0 $grid-gutter-width
+    flex-direction: column
+    gap: $spacer
+    align-items: stretch
 
   &__col
-    flex: 0 1 auto
-    min-width: 0
+    flex: 0 0 auto
 
-    & + &,
-    &:only-child
-      flex-grow: 1
+  @container f-c-tiptap-overlay-form (min-width: #{$f-c-tiptap-overlay-form__container-breakpoint})
+    &__row
+      display: flex
+      flex-direction: row
+      gap: 0 $grid-gutter-width
+
+    &__col
+      flex: 0 1 auto
+      min-width: 0
+
+      & + &,
+      &:only-child
+        flex-grow: 1
