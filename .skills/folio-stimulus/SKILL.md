@@ -65,14 +65,39 @@ Avoid hand-writing controller-specific attributes such as `data-action`,
 Call on the **root element's** `data` hash. This sets `@stimulus_controller_name` for child helpers.
 
 ```slim
-.my-block data=stimulus_controller("m-my-block",
-                                    values: { url: some_url },
-                                    action: { click: "onClick" },
-                                    classes: %w[active],
-                                    outlets: %w[f-c-other])
+.my-block data=data
 ```
 
+```ruby
+private
+  def data
+    stimulus_controller("m-my-block",
+                        values: { url: some_url },
+                        action: { click: "onClick" },
+                        classes: %w[active],
+                        outlets: %w[f-c-other])
+  end
+```
+
+Avoid multiline `stimulus_controller(...)` calls in Slim. When the root data
+hash is not short enough to stay inline, extract it to a component method.
+Prefer naming that root method `data` so the root reads
+`.my-block data=data`. Use a more specific name only when the component already
+has multiple data helpers or `data` would be ambiguous.
+
 **Do not** pass `inline: true` on the primary root — it skips setting `@stimulus_controller_name` and breaks child helpers.
+
+Use **one primary, non-inline feature controller per ViewComponent**, and make
+its identifier match that component's BEM block. Do not mount another
+component's full controller from a helper on the current component, and do not
+borrow another controller's targets for visible component markup. For example,
+do not use `stimulus_data(controller: "other-block", target: "...")` from the
+current component to wire another component's target. If a section needs
+separate full-feature behavior, extract or generate a child ViewComponent with
+its own root/controller; otherwise merge the behavior into the current
+component's controller. Utility helpers such as `stimulus_tooltip` remain the
+exception because they are inline utility controllers, not component-owned
+feature controllers.
 
 ### Children — `stimulus_target`, `stimulus_action`
 
@@ -108,6 +133,14 @@ private component method and keep Slim concise:
 ```slim
 button data=suggestion_data(suggestion)
 ```
+
+### Composed child components
+
+When a parent ViewComponent extracts a visible child component, do not pass the
+parent controller name or parent-built Stimulus data hashes into that child. A
+passive child should render plain markup. If the child has behavior, give it its
+own controller on its own root and communicate upward with `this.dispatch(...)`;
+the parent listens with `stimulus_action("child-controller:event": "handler")`.
 
 ### Multiple controllers — `stimulus_merge_data`
 
@@ -149,7 +182,21 @@ All utility helpers use `inline: true` internally — they are designed to be me
   ```
 
 - **Controller-to-controller communication** — use `this.dispatch('eventName', { detail })` which bubbles by default. Parent controllers listen via `stimulus_action("child-controller:event-name": "handler")`.
+- When a controller needs to notify a specific element, still prefer Stimulus'
+  `this.dispatch('eventName', { target: element, detail })` over manual
+  `element.dispatchEvent(new CustomEvent(...))`.
 - Use `connect()` / `disconnect()` for setup/teardown — no global `$(document).on`.
+- Do not have a parent controller infer child component state by querying child
+  BEM selectors or modifier classes. Let the child expose state through
+  Stimulus values, targets, or `this.dispatch(...)` event detail, and let the
+  parent track that explicit state.
+
+## Initial state
+
+When a component's initial hidden, disabled, or selected state derives entirely
+from server-rendered record data, render that state in the server markup. Do
+not rely on `connect()` solely to establish it; reserve Stimulus for subsequent
+interaction or genuinely client-derived state.
 
 ## Pitfalls
 

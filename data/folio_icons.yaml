@@ -45,6 +45,9 @@ calendar_filter:
 calendar_range:
   width: 24
   height: 24
+calendar_with_exclamation:
+  width: 24
+  height: 24
 camera:
   width: 24
   height: 24

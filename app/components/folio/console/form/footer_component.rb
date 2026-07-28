@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class Folio::Console::Form::FooterComponent < Folio::Console::ApplicationComponent
+  AUTOSAVE_DISABLED_DATA = {
+    f_c_form_footer_autosave_disabled: "true",
+  }.freeze
+
   bem_class_name :static
 
   def initialize(f: nil,
