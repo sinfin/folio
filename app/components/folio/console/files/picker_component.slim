@@ -39,35 +39,35 @@
 
       span.folio-loader.f-c-files-picker__loader
 
-    - if !@as_file_placement && @in_place_inputs != false
+    - unless @as_file_placement
       - if hint = hint_for(fp)
         small.f-c-files-picker__hint.form-text.text-muted
           = hint
 
-      - if @file_klass.human_type == "image"
-        .f-c-files-picker__in-place-inputs.small.text-muted
-          = render(Folio::Console::Ui::InPlaceInputComponent.new(attribute: :description,
-                                                                 record: fp.object,
-                                                                 f: fp,
-                                                                 compact: true,
-                                                                 textarea: true,
-                                                                 data: stimulus_target('description'),
-                                                                 value_line_clamp: 2,
-                                                                 value_prefix: "#{t('.description')}:"))
-
-          .f-c-files-picker__alt-row
-            = render(Folio::Console::Ui::InPlaceInputComponent.new(attribute: :alt,
+      - if @in_place_inputs != false
+        - if @file_klass.human_type == "image"
+          .f-c-files-picker__in-place-inputs.small.text-muted
+            = render(Folio::Console::Ui::InPlaceInputComponent.new(attribute: :description,
                                                                    record: fp.object,
                                                                    f: fp,
                                                                    compact: true,
                                                                    textarea: true,
-                                                                   data: stimulus_target('alt'),
+                                                                   data: stimulus_target('description'),
                                                                    value_line_clamp: 2,
-                                                                   value_prefix: "#{t('.alt')}:"))
+                                                                   value_prefix: "#{t('.description')}:"))
 
-            - if Rails.application.config.folio_files_require_alt
-              span.f-c-files-picker__alt-ico.text-warning title=t('errors.messages.missing_file_alt')
-                = folio_icon(:alert)
+            .f-c-files-picker__alt-row
+              = render(Folio::Console::Ui::InPlaceInputComponent.new(attribute: :alt,
+                                                                     record: fp.object,
+                                                                     f: fp,
+                                                                     compact: true,
+                                                                     textarea: true,
+                                                                     data: stimulus_target('alt'),
+                                                                     value_line_clamp: 2,
+                                                                     value_prefix: "#{t('.alt')}:"))
 
-    - unless @as_file_placement
+              - if Rails.application.config.folio_files_require_alt
+                span.f-c-files-picker__alt-ico.text-warning title=t('errors.messages.missing_file_alt')
+                  = folio_icon(:alert)
+
       = @f.full_error @placement_key, class: "invalid-feedback d-block"

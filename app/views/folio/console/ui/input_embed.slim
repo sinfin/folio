@@ -3,8 +3,17 @@ ruby:
     {
       label: "Empty",
       href: request.path,
-      active: !params[:tab].in?(%w[html url centered centered-and-background]),
+      active: !params[:tab].in?(%w[html invalid url centered centered-and-background]),
       folio_embed_data: nil,
+    },
+    {
+      label: "Invalid",
+      href: "#{request.path}?tab=invalid",
+      active: params[:tab] == "invalid",
+      folio_embed_data: { "active" => true, "type" => "youtube", "url" => "https://www.youtube.com/watch?v=8DPcXHMGMBc" },
+      error: t("errors.format",
+               attribute: t("folio.input.embed.inner_component.label"),
+               message: t("errors.messages.invalid")),
     },
     {
       label: "HTML",
@@ -49,6 +58,7 @@ h2 Input Embed
                 as: :embed,
                 centered: tab[:label].start_with?("Centered"),
                 background_color: tab[:label] == "Centered and background" ? "#333333" : nil,
+                error: tab[:error],
                 input_html: { value: tab[:folio_embed_data], id: "folio-console-ui-input-embed-demo-input" }
 
   h4 Input value

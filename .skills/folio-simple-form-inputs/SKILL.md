@@ -26,6 +26,13 @@ field-level extensions.
 - Put below-input HTML in `options[:custom_html]`; append instead of overwriting
   when decorating an existing input.
 
+## Existing Folio inputs
+
+- Use `f.input :folio_embed_data, as: :embed` as the canonical embed UI.
+  `EmbedInput` owns the preview and hidden-field JSON serialization. Follow
+  [`.skills/folio-embed-data/SKILL.md`](../folio-embed-data/SKILL.md) for its
+  model and migration guidance.
+
 ## Assets
 
 - Standalone input assets live under `app/assets/javascripts/folio/input/*` and
