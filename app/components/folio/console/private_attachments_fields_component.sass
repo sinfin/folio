@@ -6,9 +6,10 @@
     margin: 0 0 map-get($spacers, 3)
 
   &__attachment
-    margin: 0 0 map-get($spacers, 3)
-    border: 1px solid $border-color
+    background: $medium-gray
     border-radius: $border-radius
+    border: 1px solid $border-color
+    margin: 0 0 map-get($spacers, 3)
     overflow: hidden
     position: relative
 
@@ -34,7 +35,8 @@
     +unbutton
     flex: 0 0 auto
 
-  &__input--title
+  &__input--title,
+  &__file-name
     flex: 1 1 auto
 
   &__add-wrap

@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- **Console private attachments**: `Folio::Console::PrivateAttachmentsFieldsComponent` accepts `title_input: false` to show filenames without editable title fields.
 - **Nested fields**: `folio_nested_fields` now supports `hide_selected_value_for:` to hide values already selected in visible sibling rows. The media-source site rules form uses it for `site_id`, disables the add button when no site value remains, and newly added rules offer the next available site instead of duplicating an existing selection.
 - **Tiptap default responsive preview**: the block editor can start in the mobile (responsive) preview when the host app sets the current user's `mobile_first` console preference. The value flows from `TiptapInput` through the Stimulus controller to the editor's initial responsive-preview state; the toolbar toggle still switches back and the manual choice is not persisted. Applies only to the block editor (rich-text fields have no responsive toggle).
 - **Console collection selects**: Add `filterable: true` for local Select2 filtering over pre-rendered collection options and grouped selects, preserving existing `remote:` autocomplete behavior.
