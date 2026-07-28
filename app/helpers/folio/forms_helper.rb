@@ -19,6 +19,7 @@ module Folio::FormsHelper
                           virtual: nil,
                           duplicate: false,
                           control_tooltips: nil,
+                          hide_selected_value_for: nil,
                           &block)
     render(Folio::NestedFieldsComponent.new(f:,
                                             key:,
@@ -37,7 +38,8 @@ module Folio::FormsHelper
                                             destroy_label:,
                                             virtual:,
                                             duplicate:,
-                                            control_tooltips:)) do |c|
+                                            control_tooltips:,
+                                            hide_selected_value_for:)) do |c|
       if block.arity == 1
         block.call(c.g)
       else

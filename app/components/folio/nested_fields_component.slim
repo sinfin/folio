@@ -63,7 +63,8 @@ div[
 
   - if @add
     .f-nested-fields__add[
-      data=stimulus_action(click: 'onAddClick')
+      data=stimulus_data(target: ('addButton' if @hide_selected_value_for.present?),
+                         action: { click: 'onAddClick' })
       hidden=(@add == :hidden)
     ]
       - if @add == true

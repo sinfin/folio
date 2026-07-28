@@ -56,6 +56,16 @@ implementation across incidental private helpers there.
   removes real duplication, or provides a framework-required entrypoint such as
   `render?`.
 
+## Association identity and loading
+
+- Do not compare Active Record association objects when a type and foreign-key
+  comparison expresses the same intent without loading another association.
+- A `has_one` association keeps its foreign key on the related record, so its
+  owner normally has no `<association>_id` method. When the related record is
+  already needed, use its type and foreign key (for example,
+  `parent.is_a?(RootCategory) && parent.project_id == project.id`) instead of
+  loading `project.root_category` merely to compare identity.
+
 ## Jobs
 
 Jobs are already focused classes that perform one unit of work. Do not extract

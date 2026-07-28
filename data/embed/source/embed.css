@@ -56,6 +56,7 @@
 
 .f-embed__loader:before,
 .f-embed__loader:after {
+  box-sizing: border-box;
   content: '';
   border-radius: 50%;
   width: 3em;

@@ -4,10 +4,11 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
   static values = {
     key: String,
     sortableBound: Boolean,
-    virtual: Boolean
+    virtual: Boolean,
+    hideSelectedValueFor: String
   }
 
-  static targets = ['template', 'fieldsWrap', 'destroyedWrap', 'fields', 'sortableHandle']
+  static targets = ['template', 'fieldsWrap', 'destroyedWrap', 'fields', 'sortableHandle', 'addButton']
 
   connect () {
     this.fieldsTargets.forEach((fieldsTarget) => {
@@ -17,6 +18,7 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
     })
 
     this.redoPositions()
+    this.refreshHiddenSelectedOptions()
   }
 
   disconnect () {
@@ -47,6 +49,9 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
 
   onAddClick (e) {
     e.preventDefault()
+
+    if (this.addButtonDisabled()) return
+
     this.add()
   }
 
@@ -54,7 +59,9 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
     const field = this.nodeFromTemplate()
 
     this.fieldsWrapTarget.appendChild(field)
+    this.selectFirstAvailableHiddenSelectedValue(field)
     this.redoPositions()
+    this.refreshHiddenSelectedOptions()
     this.dispatchRequiredEvents('added', { field })
 
     this.focusAndScrollIntoView(field)
@@ -69,7 +76,9 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
     const field = this.nodeFromTemplate()
 
     fields.insertAdjacentElement('afterend', field)
+    this.selectFirstAvailableHiddenSelectedValue(field)
     this.redoPositions()
+    this.refreshHiddenSelectedOptions()
     this.dispatchRequiredEvents('added', { field })
 
     this.focusAndScrollIntoView(field)
@@ -164,6 +173,7 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
     }
 
     this.redoPositions()
+    this.refreshHiddenSelectedOptions()
     this.dispatchRequiredEvents('destroyed', { field: fields })
   }
 
@@ -185,7 +195,9 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
     this.prepareDuplicatedFields(fields, clone)
 
     fields.after(clone)
+    this.selectFirstAvailableHiddenSelectedValue(clone)
     this.redoPositions()
+    this.refreshHiddenSelectedOptions()
     this.dispatchRequiredEvents('duplicated', { field: clone, sourceField: fields })
 
     this.focusAndScrollIntoView(clone)
@@ -308,6 +320,105 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
           }
         }
       }
+    })
+  }
+
+  onHideSelectedValueSelectChange (e) {
+    if (!this.hideSelectedValueSelects().includes(e.target)) return
+
+    this.refreshHiddenSelectedOptions()
+  }
+
+  refreshHiddenSelectedOptions () {
+    if (!this.hasHideSelectedValueForValue) return
+
+    const selects = this.hideSelectedValueSelects()
+    const selectedValues = this.selectedValues(selects)
+
+    selects.forEach((select) => {
+      Array.from(select.options).forEach((option) => {
+        const hidden = option.value !== '' &&
+                       option.value !== select.value &&
+                       selectedValues.includes(option.value)
+
+        option.hidden = hidden
+        option.disabled = hidden
+      })
+    })
+
+    this.refreshAddButtonDisabled()
+  }
+
+  selectFirstAvailableHiddenSelectedValue (field) {
+    if (!this.hasHideSelectedValueForValue) return
+
+    const selectedValues = this.selectedValues(this.hideSelectedValueSelects().filter((select) => {
+      return !field.contains(select)
+    }))
+
+    this.hideSelectedValueSelects(field).forEach((select) => {
+      if (select.value === '' || !selectedValues.includes(select.value)) return
+
+      const availableOption = Array.from(select.options).find((option) => {
+        return option.value !== '' && !selectedValues.includes(option.value)
+      })
+
+      if (!availableOption) return
+
+      select.value = availableOption.value
+      select.dispatchEvent(new Event('change', { bubbles: true }))
+    })
+  }
+
+  selectedValues (selects) {
+    return selects
+      .map((select) => select.value)
+      .filter((value) => value !== '')
+  }
+
+  refreshAddButtonDisabled () {
+    if (!this.hasAddButtonTarget) return
+
+    const disabled = this.addButtonDisabled()
+    const button = this.addButtonTarget.querySelector('button')
+
+    this.addButtonTarget.classList.toggle('f-nested-fields__add--disabled', disabled)
+    this.addButtonTarget.setAttribute('aria-disabled', disabled ? 'true' : 'false')
+
+    if (button) button.disabled = disabled
+  }
+
+  addButtonDisabled () {
+    if (!this.hasHideSelectedValueForValue) return false
+
+    return this.availableHiddenSelectedValues().length === 0
+  }
+
+  availableHiddenSelectedValues () {
+    const selectedValues = this.selectedValues(this.hideSelectedValueSelects())
+
+    return this.allHiddenSelectedOptionValues().filter((value) => {
+      return !selectedValues.includes(value)
+    })
+  }
+
+  allHiddenSelectedOptionValues () {
+    const select = this.hideSelectedValueSelects()[0] || this.hideSelectedValueSelects(this.templateTarget.content, false)[0]
+
+    if (!select) return []
+
+    return Array.from(new Set(Array.from(select.options)
+      .map((option) => option.value)
+      .filter((value) => value !== '')))
+  }
+
+  hideSelectedValueSelects (root = this.fieldsWrapTarget, visibleOnly = true) {
+    return Array.from(root.querySelectorAll('select')).filter((select) => {
+      const fields = select.closest('.f-nested-fields__fields')
+
+      return fields &&
+             (!visibleOnly || !fields.hidden) &&
+             select.name.endsWith(`[${this.hideSelectedValueForValue}]`)
     })
   }
 
@@ -569,6 +680,7 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
     })
 
     this.redoPositions()
+    this.refreshHiddenSelectedOptions()
     this.dispatchRequiredEvents('added', { field: this.fieldsTargets[this.fieldsTargets.length - 1] })
   }
 

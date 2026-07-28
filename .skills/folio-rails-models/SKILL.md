@@ -36,6 +36,15 @@ behave in Folio console forms.
   actual file. Validate the placement attribute, or pass `required:`, when the
   console form label must show the required marker.
 
+## Embed data
+
+- Normalize `folio_embed_data` on assignment.
+- Use conditional embed validation for mutually exclusive content variants.
+- Keep optional embed persistence nullable to follow the normalizer's `nil`
+  contract, and configure unsafe-HTML sanitization deliberately.
+- Follow [`.skills/folio-embed-data/SKILL.md`](../folio-embed-data/SKILL.md)
+  for the canonical embed contract and implementation details.
+
 ## Related skills
 
 - Use [`.skills/folio-simple-form-inputs/SKILL.md`](../folio-simple-form-inputs/SKILL.md)

@@ -13,7 +13,7 @@
     if Rails.application.config.folio_shared_files_between_sites
       attribute(:allowed_sites) do |record|
         if record.allowed_sites.any?
-          record.allowed_sites.map(&:to_label).join("<br />")
+          safe_join(record.allowed_sites.map { |site| record.site_label_with_max_usage_override(site) }, tag.br)
         else
           "-"
         end

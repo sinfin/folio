@@ -17,6 +17,24 @@ class Folio::Console::Files::Show::FilePlacementsComponent < Folio::Console::App
       placement.try(:to_label) || "##{placement.id}"
     end
 
+    def placement_record(file_placement)
+      if file_placement.placement.is_a?(Folio::Atom::Base) && file_placement.placement.placement.present?
+        file_placement.placement.placement
+      else
+        file_placement.placement
+      end
+    end
+
+    def placement_site_label(placement)
+      return "-" unless placement.respond_to?(:site)
+
+      placement.site&.to_label || "-"
+    end
+
+    def show_site_column?
+      Rails.application.config.folio_shared_files_between_sites
+    end
+
     def placement_action(placement)
       if can_now?(:update, placement)
         return { type: :edit, url: placement_url(placement, action: :edit) }

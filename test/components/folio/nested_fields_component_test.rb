@@ -57,6 +57,14 @@ class Folio::NestedFieldsComponentTest < Folio::ComponentTest
                  rendered_content)
   end
 
+  test "renders selected-value hiding opt-in" do
+    render_virtual_component(hide_selected_value_for: :title)
+
+    assert_selector('[data-f-nested-fields-hide-selected-value-for-value="title"]')
+    assert_selector('[data-action*="change->f-nested-fields#onHideSelectedValueSelectChange"]')
+    assert_selector('.f-nested-fields__add[data-f-nested-fields-target="addButton"]')
+  end
+
   test "renders control tooltips when enabled" do
     render_virtual_component(add_more: true,
                              control_tooltips: true,
@@ -87,7 +95,11 @@ class Folio::NestedFieldsComponentTest < Folio::ComponentTest
   end
 
   private
-    def render_virtual_component(duplicate: false, add: true, add_more: false, control_tooltips: nil)
+    def render_virtual_component(duplicate: false,
+                                 add: true,
+                                 add_more: false,
+                                 control_tooltips: nil,
+                                 hide_selected_value_for: nil)
       record = VirtualRecord.new(cards: [VirtualCard.new(title: "First")])
       view = vc_test_controller.view_context
 
@@ -103,6 +115,7 @@ class Folio::NestedFieldsComponentTest < Folio::ComponentTest
           },
           duplicate:,
           control_tooltips:,
+          hide_selected_value_for:,
         )) do |nested_fields|
           nested_fields.g.input(:title, label: false)
         end
