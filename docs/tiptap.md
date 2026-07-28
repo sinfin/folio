@@ -270,6 +270,40 @@ class MyApp::Tiptap::Node::Contents::Card < Folio::Tiptap::Node
 end
 ```
 
+### Custom Overlay Form Fields
+
+A Tiptap node can replace its built-in console overlay field layout with a host
+application ViewComponent. Configure `form_fields_component:` with a callable
+that accepts the Simple Form builder as `f:` and returns the component to
+render:
+
+```rb
+class MyApp::Tiptap::Node::Contents::ProjectList < Folio::Tiptap::Node
+  tiptap_node structure: {
+    internal_uid: {
+      type: :string,
+      hidden: true,
+    },
+    projects: {
+      class_name: "MyApp::Project",
+      has_many: true,
+    },
+    project_order: :string,
+  }, form_fields_component: lambda { |f:|
+    MyApp::Console::Tiptap::ProjectFieldsComponent.new(f:)
+  }
+end
+```
+
+The callable runs when the overlay form is rendered and may return `nil` to
+intentionally omit the fields body. The component owns every structure field it
+needs to submit, including attributes marked `hidden: true`; Folio continues to
+own the outer form, node type input, validation box, header, and buttons.
+
+When configured, `form_fields_component:` replaces every built-in
+`form_layout` variant. Omit the option to use the default, flat, or custom
+layout behavior.
+
 ### Nested Nodes
 
 Nested nodes let a single top-level `folioTiptapNode` own an ordered list of repeatable child structures. They are useful for card groups, timelines, feature lists, and similar "molecule" blocks where editors configure the whole group in one overlay.

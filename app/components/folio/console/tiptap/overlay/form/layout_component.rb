@@ -12,6 +12,8 @@ class Folio::Console::Tiptap::Overlay::Form::LayoutComponent < Folio::Console::A
     end
 
     def render_layout
+      return render_form_fields_component if form_fields_component
+
       case layout
       when nil
         render_flat_layout
@@ -22,6 +24,15 @@ class Folio::Console::Tiptap::Overlay::Form::LayoutComponent < Folio::Console::A
       else
         fail ArgumentError, "Unsupported Tiptap form layout: #{layout.inspect}"
       end
+    end
+
+    def render_form_fields_component
+      component = form_fields_component.call(f: @f)
+      render(component) if component
+    end
+
+    def form_fields_component
+      @node.class.form_fields_component
     end
 
     def render_flat_layout

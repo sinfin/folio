@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 - **React ordered multi-select**: Support configurable item limits and scalar hidden-input serialization for single-value virtual fields.
 - **Tiptap custom nodes**: Allow attributes configured with `hidden: true` to persist internal values through the console overlay without rendering visible controls.
 - **Tiptap custom-node relation pickers**: Single relations declared with `class_name:` may now specify a no-argument `scope:`. The console picker applies it to both initial suggestions and search results, allowing nodes to exclude unsupported records from a large STI base class.
+- **Tiptap custom-node overlay form fields**: Nodes may now set `form_fields_component:` to replace their overlay field layout with one host-application ViewComponent.
 - **Tiptap block editor forms**: Accept per-field input and footer options, including an explicit read-only editor state. Read-only editors disable autosave, while footer options can hide save and other modification controls.
 - **Tiptap node overlays**: Pass source editor metadata and optional caller-provided context with node edit and save requests, allowing overlay fields to be scoped to the editor that opened them.
 - **`Folio::Site.additional_strong_params`**: the full list of params permitted in the site console form (`site_params`), defaulting to `additional_params`. Override it (e.g. `super + %i[…]`) to permit fields you render yourself — e.g. in a custom `console_form_tabs` tab — without them being auto-rendered in the settings tab.
