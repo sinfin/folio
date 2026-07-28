@@ -572,7 +572,12 @@ class Folio::Tiptap::NodeBuilder
           if value[:type].is_a?(Symbol)
             result[key] = value
           elsif value[:class_name].present?
-            result[key] = { type: :relation, class_name: value[:class_name], has_many: value[:has_many] || false }
+            result[key] = {
+              type: :relation,
+              class_name: value[:class_name],
+              has_many: value[:has_many] || false,
+              scope: value[:scope],
+            }.compact
           else
             fail ArgumentError, "Expected :type or :class_name in hash for #{key}, got #{value.inspect}"
           end

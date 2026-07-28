@@ -576,12 +576,20 @@ category: { class_name: "Category" }  # Creates category_id + category methods
 # has_many relationship
 tags: { class_name: "Tag", has_many: true }  # Creates tag_ids + tags methods
 
+# Scope the single-relation console picker
+category: { class_name: "Category", scope: :published }
+
 # Usage in the node:
 node.category_id = 1
 node.category    # => Category.find(1)
 node.tag_ids = [1, 2, 3]
 node.tags       # => Tag.where(id: [1, 2, 3])
 ```
+
+For single relations, `scope:` adds a no-argument scope from the related model
+to the console picker URL. Folio applies it to both the initial suggestions and
+search results. This is useful for limiting a large STI base class to the
+records the node supports.
 
 ### Data Conversion
 

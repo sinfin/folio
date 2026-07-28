@@ -9,6 +9,7 @@ class Folio::Console::Tiptap::Overlay::Form::InputComponentTest < Folio::Console
       internal_uid: { type: :string, hidden: true },
       url: { type: :url_json, disable_label: true },
       accent_color: :color,
+      related_page: { class_name: "Folio::Page", scope: :published },
     }
   end
 
@@ -72,5 +73,25 @@ class Folio::Console::Tiptap::Overlay::Form::InputComponentTest < Folio::Console
     end
 
     assert_selector('input[type="color"][name="tiptap_node_attrs[data][accent_color]"][value="#ff00aa"]')
+  end
+
+  test "adds a configured scope to a relation picker URL" do
+    node = Node.new
+    view = vc_test_controller.view_context
+
+    view.simple_form_for(node, url: "/", as: "tiptap_node_attrs[data]") do |f|
+      render_inline(Folio::Console::Tiptap::Overlay::Form::InputComponent.new(
+        f:,
+        key: :related_page,
+        attr_config: Node.structure[:related_page],
+      ))
+    end
+
+    select = page.find("select[name='tiptap_node_attrs[data][related_page_id]']")
+    remote_url = URI.parse(select["data-f-input-collection-remote-select-url-value"])
+    remote_params = Rack::Utils.parse_nested_query(remote_url.query)
+
+    assert_equal "Folio::Page", remote_params["klass"]
+    assert_equal "published", remote_params["scope"]
   end
 end

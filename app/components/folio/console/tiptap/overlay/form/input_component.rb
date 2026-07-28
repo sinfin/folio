@@ -163,10 +163,16 @@ class Folio::Console::Tiptap::Overlay::Form::InputComponent < Folio::Console::Ap
 
       @f.input input_name,
                collection:,
-               remote: true,
+               remote: relation_select_remote_options,
                label: @f.object.class.human_attribute_name(@key),
                reflection_class_name: class_name,
                hint:
+    end
+
+    def relation_select_remote_options
+      return true if @attr_config[:scope].blank?
+
+      { scope: @attr_config[:scope] }
     end
 
     def render_embed_input
