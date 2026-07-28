@@ -22,9 +22,13 @@ $f-player-control-bar-spacer: 18px !default
 $f-player-transition-duration: $transition-duration !default
 $f-player-progress-primary: $gray-medium-dark !default
 $f-player-progress-secondary: $gray !default
-$f-player-video-vertical-max-width: 224px !default
+$f-player-video-vertical-max-width-global: 224px !default
+$f-player-video-vertical-max-width-in-files-show-preview: 320px !default
 $f-player-video-vertical-control-bar-gap: 6px !default
 $f-player-video-vertical-control-bar-padding: 8px !default
+
+#{":root"}
+  --f-player__video-vertical-max-width: #{$f-player-video-vertical-max-width-global}
 
 .f-player
   position: relative
@@ -481,7 +485,7 @@ $f-player-video-vertical-control-bar-padding: 8px !default
   // Portrait video: cap the width so the aspect-ratio-driven height stays in
   // line with the landscape preview instead of filling the column vertically.
   &--video.f-player--vertical
-    max-width: $f-player-video-vertical-max-width
+    max-width: var(--f-player__video-vertical-max-width)
 
     // At the capped width the control-bar buttons (incl. the Folio edit/remove
     // form controls) overflow one row; tighten gap/padding so they stay on a
