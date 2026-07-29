@@ -3,6 +3,7 @@ import { type Editor } from "@tiptap/react";
 import { Settings } from "lucide-react";
 
 import translate from "@/lib/i18n";
+import { isSameOriginMessage } from "@/lib/message-origin";
 
 // --- Icons ---
 import { CornerDownLeftIcon } from "@/components/tiptap-icons/corner-down-left-icon";
@@ -364,7 +365,7 @@ export function LinkPopover({
     const handleMessage = (event: MessageEvent) => {
       if (
         process.env.NODE_ENV === "production" &&
-        event.origin !== window.origin
+        !isSameOriginMessage(event.origin)
       )
         return;
 

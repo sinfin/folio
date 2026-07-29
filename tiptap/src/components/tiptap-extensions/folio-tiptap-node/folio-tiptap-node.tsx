@@ -8,6 +8,7 @@ import { postEditMessage } from "./post-edit-message";
 import { InvalidNodeIndicator } from "@/components/tiptap-ui/invalid-node-indicator";
 
 import translate from "@/lib/i18n";
+import { isSameOriginMessage } from "@/lib/message-origin";
 
 import "./folio-tiptap-node.scss";
 
@@ -178,7 +179,7 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
     const handleMessage = (event: MessageEvent) => {
       if (
         process.env.NODE_ENV === "production" &&
-        event.origin !== window.origin
+        !isSameOriginMessage(event.origin)
       )
         return;
 

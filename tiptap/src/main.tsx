@@ -9,6 +9,7 @@ import {
   addUniqueIdsToFolioTiptapNodes,
   removeUniqueIdsFromFolioTiptapNodes,
 } from "@/components/tiptap-extensions/folio-tiptap-node";
+import { isSameOriginMessage } from "@/lib/message-origin";
 import { removeTrailingEmptyParagraph } from "@/lib/remove-trailing-empty-paragraph";
 
 // Initialize the Folio namespace if it doesn't exist
@@ -107,7 +108,7 @@ window.Folio.Tiptap.destroy = () => {
 };
 
 window.addEventListener("message", (e) => {
-  if (process.env.NODE_ENV === "production" && e.origin !== window.origin)
+  if (process.env.NODE_ENV === "production" && !isSameOriginMessage(e.origin))
     return;
   if (!e.data) return;
 
