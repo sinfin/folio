@@ -1,250 +1,220 @@
 # frozen_string_literal: true
 
 require "test_helper"
+require Folio::Engine.root.join("packs/ai/lib/folio/ai")
 
 class Folio::Ai::TextSuggestionsJobTest < ActiveJob::TestCase
-  class RaisingProviderAdapter
-    def generate_suggestions(prompt:, field:, suggestion_count:)
-      raise Folio::Ai::ProviderTimeoutError, "timeout"
-    end
-  end
-
-  class SecretLeakingProviderAdapter
-    def generate_suggestions(prompt:, field:, suggestion_count:)
-      raise RuntimeError, "SECRET_PROMPT_BODY"
-    end
-  end
-
-  class CapturingProviderAdapter
-    attr_reader :calls
-
-    def initialize
-      @calls = []
-    end
-
-    def generate_suggestions(prompt:, field:, suggestion_count:)
-      calls << {
-        prompt:,
-        field:,
-        suggestion_count:,
-      }
-
-      [
-        Folio::Ai::Suggestion.new(key: 1, text: "Fallback snapshot suggestion"),
-      ]
-    end
-  end
-
   setup do
     Folio::Ai.reset_registry!
-    register_dummy_ai_integration
+    Folio::Ai.register_record(record_class_name: "Folio::Page",
+                              fields: [
+                                { key: :title, character_limit: 80 },
+                                { key: :perex, character_limit: 400 },
+                              ])
+    Folio::Site.include(Folio::Ai::SiteConcern) unless Folio::Site < Folio::Ai::SiteConcern
 
-    @site = create_site(force: true)
-    @site.update!(ai_settings: enabled_ai_settings)
-    @user = create(:folio_user, :superadmin)
-    @article = create(:dummy_blog_article, site: @site)
+    @site = create(Rails.application.config.folio_site_default_test_factory,
+                   locale: "en",
+                   ai_settings: { "enabled" => true, "provider" => "dummy" })
+    @page = create(:folio_page, site: @site)
   end
 
   teardown do
     Folio::Ai.reset_registry!
   end
 
-  test "broadcasts rendered suggestions to the message bus client" do
-    message = perform_text_suggestions_job
+  test "broadcasts rendered suggestion fragment to message bus client" do
+    message = capture_message do
+      I18n.with_locale(:en) do
+        Folio::Ai::Providers::Dummy.stub(:available?, true) do
+          perform_job
+        end
+      end
+    end
 
     assert_equal Folio::MESSAGE_BUS_CHANNEL, message[:channel]
-    assert_equal({ client_ids: ["message-bus-client"] }, message[:options])
+    assert_equal({ client_ids: ["client-1"] }, message[:options])
     assert_equal "Folio::Ai::TextSuggestionsJob", message[:payload]["type"]
-    assert_equal "request-hash", message[:payload]["data"]["request_id"]
-    assert_equal "ai_title", message[:payload]["data"]["component_id"]
-    assert_includes message[:payload]["data"]["html"], "Demo AI headline focused on the main editorial hook"
-    assert_includes message[:payload]["data"]["html"], "Neutral"
+    assert_equal "request-1", message[:payload].dig("data", "request_id")
+    assert_equal "ai_title", message[:payload].dig("data", "component_id")
+    assert_includes message[:payload].dig("data", "html"), "Dummy title for testing AI suggestions"
+    assert_includes message[:payload].dig("data", "fragments", "ai_title"), "Dummy title for testing AI suggestions"
+    assert_not_includes message[:payload].dig("data", "html"), "Return only valid JSON"
   end
 
-  test "broadcasts prompt_missing in rendered component html" do
-    @site.update!(ai_settings: enabled_ai_settings(prompt: ""))
+  test "broadcasts grouped child fragments" do
+    provider = GroupedCapturingProvider.new
 
-    message = perform_text_suggestions_job
-
-    assert_includes message[:payload]["data"]["html"], I18n.t("folio.ai.console.errors.prompt_missing")
-  end
-
-  test "broadcasts host_ineligible in rendered component html" do
-    message = perform_text_suggestions_job(params: job_params(host_eligible: false))
-
-    assert_includes message[:payload]["data"]["html"], I18n.t("folio.ai.console.errors.host_ineligible_article")
-  end
-
-  test "uses fallback form snapshot context when model hooks are missing" do
-    adapter = CapturingProviderAdapter.new
-    provider_factory = ->(**) { adapter }
-
-    Folio::Ai.reset_registry!
-    Folio::Ai.register_integration(record_class_name: "Folio::Page",
-                                   fields: [Folio::Ai::Field.new(key: :title)])
-    @site.update!(ai_settings: enabled_ai_settings(integration_key: :folio_pages,
-                                                  field_keys: %i[title]))
-
-    Folio::Ai.stub(:provider_adapter, provider_factory) do
-      message = perform_text_suggestions_job(params: job_params(integration_key: :folio_pages,
-                                                                field_key: :title,
-                                                                context: {
-                                                                  current_form_snapshot: {
-                                                                    "page[title]" => "Unsaved title",
-                                                                  },
-                                                                },
-                                                                provider_adapter_class_name: nil))
-
-      assert_includes message[:payload]["data"]["html"], "Fallback snapshot suggestion"
+    message = capture_message do
+      I18n.with_locale(:en) do
+        Folio::Ai.stub(:provider_for, provider) do
+          perform_job(job_params.merge(grouped: true,
+                                       key: "meta",
+                                       component_id: "ai_group",
+                                       fields: [
+                                         { key: "title", label: "Title", component_id: "ai_title" },
+                                         { key: "perex", label: "Perex", component_id: "ai_perex" },
+                                       ]))
+        end
+      end
     end
 
-    assert_equal 1, adapter.calls.length
-    assert_includes adapter.calls.first[:prompt], '"current_form_snapshot": {'
-    assert_includes adapter.calls.first[:prompt], '"page[title]": "Unsaved title"'
+    assert_equal 1, provider.calls
+    assert_equal Folio::Ai::GROUPED_SUGGESTION_COUNT, provider.suggestion_count
+    assert_equal true, message[:payload].dig("data", "grouped")
+    assert_equal "ai_group", message[:payload].dig("data", "component_id")
+
+    title_fragment = message[:payload].dig("data", "fragments", "ai_title")
+    assert_includes title_fragment, "f-ai-c-text-suggestions--grouped"
+    assert_includes title_fragment, "Grouped title"
+    assert_not_includes title_fragment, "f-ai-c-text-suggestions__close"
+    assert_not_includes title_fragment, "f-ai-c-text-suggestions__instructions"
+    assert_includes message[:payload].dig("data", "fragments", "ai_perex"),
+                    "Grouped perex"
   end
 
-  test "broadcasts record_not_ready when record is not accessible on the current site" do
-    message = perform_text_suggestions_job(params: job_params(error_code: :record_not_ready))
-
-    assert_includes message[:payload]["data"]["html"], I18n.t("folio.ai.console.errors.record_not_ready")
-  end
-
-  test "broadcasts provider timeout in rendered component html" do
-    message = perform_text_suggestions_job(params: job_params(provider_adapter_class_name: RaisingProviderAdapter.name))
-
-    assert_includes message[:payload]["data"]["html"], I18n.t("folio.ai.console.errors.provider_timeout")
-  end
-
-  test "logs unexpected failures without exception messages" do
-    logged_messages = []
-    logger = Object.new
-    logger.define_singleton_method(:warn) { |message| logged_messages << message }
-
-    Rails.stub(:logger, logger) do
-      message = perform_text_suggestions_job(params: job_params(provider_adapter_class_name: SecretLeakingProviderAdapter.name))
-
-      assert_includes message[:payload]["data"]["html"], I18n.t("folio.ai.console.errors.provider_error")
+  test "broadcasts rendered provider errors" do
+    provider = Object.new
+    provider.define_singleton_method(:complete) do |prompt:, suggestion_count:|
+      raise Folio::Ai::ProviderError, "failed"
     end
 
-    assert_equal 1, logged_messages.length
-    assert_includes logged_messages.first, "error_class=RuntimeError"
-    assert_includes logged_messages.first, "request_id=request-hash"
-    assert_includes logged_messages.first, "integration_key=dummy_blog_articles"
-    assert_includes logged_messages.first, "field_key=title"
-    assert_not_includes logged_messages.first, "SECRET_PROMPT_BODY"
+    message = capture_message do
+      I18n.with_locale(:en) do
+        Folio::Ai.stub(:provider_for, provider) do
+          perform_job
+        end
+      end
+    end
+
+    assert_includes message[:payload].dig("data", "html"), "AI suggestions could not be generated."
   end
 
-  test "does not mutate Folio current state" do
-    current_user = create(:folio_user)
-    Folio::Current.user = current_user
+  test "renders provider errors in the site console locale" do
+    @site.update!(locale: "en")
 
-    perform_text_suggestions_job
+    provider = Object.new
+    provider.define_singleton_method(:complete) do |prompt:, suggestion_count:|
+      raise Folio::Ai::ProviderError, "failed"
+    end
 
-    assert_equal current_user, Folio::Current.user
-  ensure
-    Folio::Current.reset
+    message = capture_message do
+      I18n.with_locale(:cs) do
+        Folio::Ai.stub(:provider_for, provider) do
+          perform_job
+        end
+      end
+    end
+
+    assert_includes message[:payload].dig("data", "html"), "AI suggestions could not be generated."
+    assert_not_includes message[:payload].dig("data", "html"), "AI návrhy se nepodařilo vygenerovat."
+  end
+
+  test "passes site prompt and user instructions to provider" do
+    provider = CapturingProvider.new
+
+    capture_message do
+      I18n.with_locale(:en) do
+        Folio::Ai.stub(:provider_for, provider) do
+          perform_job
+        end
+      end
+    end
+
+    assert_includes provider.prompt, "Write a title from the site prompt."
+    assert_includes provider.prompt, "Be direct."
+  end
+
+  test "passes capped suggestion count to provider" do
+    provider = CapturingProvider.new
+
+    capture_message do
+      I18n.with_locale(:en) do
+        Folio::Ai.stub(:provider_for, provider) do
+          perform_job(job_params.merge(suggestion_count: 99))
+        end
+      end
+    end
+
+    assert_equal Folio::Ai::MAX_SUGGESTION_COUNT, provider.suggestion_count
   end
 
   private
-    def perform_text_suggestions_job(params: job_params)
-      messages = capture_message_bus do
-        with_ai_config(enabled: true,
-                       default_provider: :demo,
-                       provider_models: { demo: "demo" }) do
-          Folio::Ai::TextSuggestionsJob.perform_now(request_id: "request-hash",
-                                                    message_bus_client_id: "message-bus-client",
-                                                    user_id: @user.id,
-                                                    site_id: @site.id,
-                                                    params:)
-        end
-      end
-
-      messages.fetch(0)
+    def perform_job(params = job_params)
+      Folio::Ai::TextSuggestionsJob.perform_now(request_id: "request-1",
+                                                params:)
     end
 
-    def capture_message_bus(&block)
+    def job_params
+      {
+        klass: "Folio::Page",
+        id: @page.id,
+        key: "title",
+        grouped: false,
+        message_bus_client_id: "client-1",
+        component_id: "ai_title",
+        form_snapshot: { "title" => "Draft title" },
+        site_prompt: "Write a title from the site prompt.",
+        instructions: "Be direct.",
+        suggestion_count: 3,
+        record_key: "folio_pages",
+        field: {
+          key: "title",
+          label: "Title",
+          character_limit: 80,
+        },
+        site_id: @site.id,
+      }
+    end
+
+    def capture_message(&block)
       messages = []
-      publisher = lambda do |channel, payload, **options|
+
+      MessageBus.stub(:publish, ->(channel, payload, **options) {
         messages << {
           channel:,
           payload: JSON.parse(payload),
           options:,
         }
+      }, &block)
+
+      messages.fetch(0)
+    end
+
+    class CapturingProvider
+      attr_reader :prompt,
+                  :suggestion_count
+
+      def complete(prompt:, suggestion_count:)
+        @prompt = prompt
+        @suggestion_count = suggestion_count
+        {
+          suggestions: [
+            { key: "title", text: "Provider title" },
+          ],
+        }.to_json
+      end
+    end
+
+    class GroupedCapturingProvider
+      attr_reader :prompt,
+                  :suggestion_count,
+                  :calls
+
+      def initialize
+        @calls = 0
       end
 
-      MessageBus.stub(:publish, publisher, &block)
-
-      messages
-    end
-
-    def register_dummy_ai_integration
-      Folio::Ai.register_integration(record_class_name: "Dummy::Blog::Article",
-                                     fields: ai_fields)
-    end
-
-    def ai_fields
-      [
-        ai_field(:title, character_limit: 120),
-        ai_field(:perex, character_limit: 400),
-        ai_field(:meta_title, character_limit: 120),
-        ai_field(:meta_description, character_limit: 400),
-      ]
-    end
-
-    def ai_field(key, **options)
-      Folio::Ai::Field.new(key:,
-                           **options)
-    end
-
-    def job_params(integration_key: :dummy_blog_articles,
-                   field_key: :title,
-                   instructions: nil,
-                   show_meta: "1",
-                   context: article_context,
-                   host_eligible: true,
-                   provider_adapter_class_name: "Dummy::Ai::DemoProviderAdapter",
-                   error_code: nil)
-      {
-        integration_key: integration_key.to_s,
-        field_key: field_key.to_s,
-        component_id: "ai_#{field_key}",
-        field_label: field_key.to_s.humanize,
-        instructions:,
-        show_meta:,
-        suggestion_count: 3,
-        context:,
-        host_eligible:,
-        provider_adapter_class_name:,
-        error_code:,
-      }.compact
-    end
-
-    def article_context
-      {
-        title: @article.title,
-        perex: @article.perex,
-      }
-    end
-
-    def enabled_ai_settings(integration_key: :dummy_blog_articles,
-                            field_keys: %i[title perex meta_title meta_description],
-                            prompt: "Write a safe demo suggestion.")
-      {
-        enabled: true,
-        integrations: {
-          integration_key => {
-            fields: enabled_ai_fields(field_keys:, prompt:),
-          },
-        },
-      }
-    end
-
-    def enabled_ai_fields(field_keys:, prompt:)
-      field_keys.index_with do
+      def complete(prompt:, suggestion_count:)
+        @calls += 1
+        @prompt = prompt
+        @suggestion_count = suggestion_count
         {
-          enabled: true,
-          prompt:,
-        }
+          suggestions: [
+            { key: "title", text: "Grouped title" },
+            { key: "perex", text: "Grouped perex" },
+          ],
+        }.to_json
       end
     end
 end

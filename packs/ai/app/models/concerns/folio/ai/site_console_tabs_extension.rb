@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
+# Adds the AI prompts tab to the console site form when records are registered.
 module Folio::Ai::SiteConsoleTabsExtension
   def console_form_tabs
     tabs = super
+    return tabs unless Folio::Ai.config.enabled?
+    return tabs if Folio::Ai.registry.records.blank?
+    return tabs if tabs.include?(:ai_prompts)
 
-    if Folio::Ai.enabled? && Folio::Ai.registry.integrations_for_select.present?
-      tabs + %i[ai_prompts]
-    else
-      tabs
-    end
+    tabs + %i[ai_prompts]
   end
 end
