@@ -2,8 +2,6 @@ import * as React from "react";
 import type { NodeViewProps } from "@tiptap/react";
 import { NodeViewWrapper } from "@tiptap/react";
 
-import { isSameOriginMessage } from "@/lib/message-origin";
-
 import "./folio-tiptap-node-paste-placeholder.scss";
 import { storeHtmlToCache } from "./folio-tiptap-node";
 import { insertFolioTiptapNodeWithParagraph } from "./insert-folio-tiptap-node-with-paragraph";
@@ -37,7 +35,7 @@ export const FolioTiptapNodePastePlaceholderComponent: React.FC<
     const handleMessage = (event: MessageEvent) => {
       if (
         process.env.NODE_ENV === "production" &&
-        !isSameOriginMessage(event.origin)
+        event.origin !== window.origin
       )
         return;
 
