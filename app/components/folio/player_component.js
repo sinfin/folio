@@ -133,6 +133,7 @@ window.Folio.Player.create = (serializedFile, opts) => {
   player.classList.add(`f-player--${serializedFile.attributes.human_type}`)
   player.dataset.controller = 'f-player'
   player.dataset.fPlayerFileJsonValue = JSON.stringify(serializedFile)
+  player.dataset.fPlayerVerticalValue = serializedFile.attributes.player_vertical ? 'true' : 'false'
 
   if (opts.showFormControls) {
     player.dataset.fPlayerShowFormControlsValue = 'true'
@@ -184,9 +185,7 @@ window.Folio.Player.innerBind = (el, opts, file) => {
       videoSize.height = fileAttributes.file_height
     }
 
-    // Portrait video: cap the width via .f-player--vertical so the preview does
-    // not fill the column vertically (see player_component.sass).
-    el.classList.toggle('f-player--vertical', videoSize.height > videoSize.width)
+    el.classList.toggle('f-player--vertical', opts.vertical)
   }
 
   child.width = videoSize.width
@@ -330,13 +329,15 @@ window.Folio.Stimulus.register('f-player', class extends window.Stimulus.Control
   static values = {
     showFormControls: Boolean,
     fileJson: String,
-    formControlsController: { type: String, default: 'f-c-files-picker' }
+    formControlsController: { type: String, default: 'f-c-files-picker' },
+    vertical: Boolean
   }
 
   connect () {
     window.Folio.Player.bind(this.element, {
       showFormControls: this.showFormControlsValue,
-      formControlsController: this.formControlsControllerValue
+      formControlsController: this.formControlsControllerValue,
+      vertical: this.verticalValue
     })
   }
 

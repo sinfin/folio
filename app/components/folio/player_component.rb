@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 class Folio::PlayerComponent < ApplicationComponent
-  def initialize(file:, file_hash: nil, show_form_controls: false)
+  def initialize(file:, file_hash: nil, show_form_controls: false, vertical: false)
     @file = file
     @file_hash = file_hash
     @show_form_controls = show_form_controls
+    @vertical = vertical
   end
 
   def data
@@ -12,6 +13,7 @@ class Folio::PlayerComponent < ApplicationComponent
                         values: {
                           file_json: (@file_hash || serializer.new(@file).serializable_hash[:data]).to_json,
                           show_form_controls: @show_form_controls,
+                          vertical: @vertical,
                         })
   end
 
@@ -21,15 +23,5 @@ class Folio::PlayerComponent < ApplicationComponent
     else
       Folio::FileSerializer
     end
-  end
-
-  # Portrait video: the preview would otherwise blow up vertically because its
-  # height follows the intrinsic aspect ratio at full width (see .f-player--video
-  # sizing). The modifier lets the stylesheet cap the width instead.
-  def vertical?
-    width = @file.try(:file_width).to_i
-    height = @file.try(:file_height).to_i
-
-    width.positive? && height > width
   end
 end
