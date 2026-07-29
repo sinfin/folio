@@ -389,7 +389,7 @@ class Folio::File::AudioProcessingService
     end
 
     def duration_seconds(format_data:)
-      format_data["duration"]&.to_f&.round || audio_file.file_track_duration
+      format_data["duration"]&.to_f&.floor || audio_file.file_track_duration
     end
 
     def bitrate_kbps(format_data:)

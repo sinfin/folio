@@ -170,6 +170,14 @@ class Folio::File::AudioTest < ActiveSupport::TestCase
     assert_nil audio.formatted_duration
   end
 
+  test "formatted_duration prefers player-compatible metadata duration" do
+    audio = build(:folio_file_audio,
+                  file_track_duration: 48,
+                  file_metadata: { "duration_seconds" => 47 })
+
+    assert_equal "0:47", audio.formatted_duration
+  end
+
   test "formatted_duration returns M:SS for durations under one hour" do
     audio = build(:folio_file_audio)
 

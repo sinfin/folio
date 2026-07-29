@@ -3,13 +3,13 @@
 require "test_helper"
 
 class Folio::File::AudioProcessingServiceTest < ActiveSupport::TestCase
-  test "extract_metadata maps audio stream and tags" do
+  test "extract_metadata maps audio stream, tags, and floored duration" do
     audio = create(:folio_file_audio)
     service = Folio::File::AudioProcessingService.new(audio)
 
     inspect_media_result = {
       "format" => {
-        "duration" => "849.2",
+        "duration" => "849.8",
         "bit_rate" => "128000",
         "tags" => {
           "title" => "Ranni briefing",
