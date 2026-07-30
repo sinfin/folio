@@ -227,7 +227,10 @@ window.Folio.Player.innerBind = (el, opts, file) => {
   } else if (fileAttributes.human_type === 'audio') {
     el.querySelector('.vjs-progress-control').classList.add('vjs-progress-control--waveform')
 
+    window.Folio.Player.updateVolumePanelOrientation(el)
+
     el.folioPlayer.on('playerresize', (e) => {
+      window.Folio.Player.updateVolumePanelOrientation(el)
       window.Folio.Player.waveform(fileAttributes.id || 0, el)
     })
   }
@@ -237,6 +240,29 @@ window.Folio.Player.innerBind = (el, opts, file) => {
   errorDisplay.el_.appendChild(window.Folio.Ui.Icon.create('alert', { class: 'f-player__error-ico' }))
 
   el.classList.add('f-player--bound')
+}
+
+// Use a vertical volume popup when the inline slider would wrap.
+window.Folio.Player.updateVolumePanelOrientation = (el) => {
+  const player = el.folioPlayer
+  if (!player) return
+
+  const controlBar = player.getChild('ControlBar')
+  if (!controlBar) return
+
+  const width = player.currentWidth()
+  if (!width) return
+
+  const inline = width > ((player.options_.breakpoints || {}).medium || 554)
+  const volumePanel = controlBar.getChild('VolumePanel')
+  if (!volumePanel || (volumePanel.options_.inline !== false) === inline) return
+
+  const index = controlBar.children().indexOf(volumePanel)
+  const options = { ...volumePanel.options_, inline }
+  controlBar.removeChild(volumePanel)
+  volumePanel.dispose()
+  // addChild does not update the direct named reference.
+  controlBar.volumePanel = controlBar.addChild('VolumePanel', options, index)
 }
 
 window.Folio.Player.bind = (el, opts) => {

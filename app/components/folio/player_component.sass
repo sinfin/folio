@@ -318,6 +318,10 @@ $f-player-progress-secondary: $gray !default
     .vjs-volume-bar
       margin: 0
 
+      // Restore Video.js's centered vertical slider.
+      &.vjs-slider-vertical
+        margin: 1.35em auto
+
     .vjs-mute-control
       margin-right: 10px
 
@@ -339,6 +343,40 @@ $f-player-progress-secondary: $gray !default
 
       &.vjs-hover
         margin-right: 0
+
+      // Overlay the slider to avoid reflowing narrow control bars.
+      &.vjs-volume-panel-vertical
+        position: relative
+
+        &.vjs-hover
+          margin-right: -22px
+
+        .vjs-volume-control.vjs-volume-vertical
+          display: flex
+          position: absolute
+          z-index: 3
+          // Video.js CSS is loaded later.
+          left: 50% !important
+          bottom: calc(100% - 6px)
+          transform: translateX(-50%)
+          margin: 0
+          background: $f-player-background
+          border-radius: $f-player-border-radius
+          box-shadow: 0 2px 8px rgba($black, .2)
+          transition-property: visibility, opacity
+          opacity: 0
+          pointer-events: none
+
+          .vjs-volume-level
+            background: $f-player-progress-primary
+
+        // Keep open during hover, keyboard focus, and dragging.
+        &:hover .vjs-volume-control.vjs-volume-vertical,
+        &.vjs-hover .vjs-volume-control.vjs-volume-vertical,
+        &:has(:focus-visible) .vjs-volume-control.vjs-volume-vertical,
+        .vjs-volume-control.vjs-volume-vertical.vjs-slider-active
+          opacity: 1
+          pointer-events: auto
 
     .vjs-playback-rate.vjs-control
       padding-left: 10px
