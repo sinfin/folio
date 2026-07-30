@@ -34,6 +34,9 @@ Instead, exercise the behavior through one of:
 - Avoid trivial existence tests that add noise without behavior coverage:
   method/constant existence, `respond_to?`, `defined?`, and similar assertions
   usually prove only implementation shape. Exercise the behavior instead.
+- Do not test static constants, declarative lookup tables, or trivial data
+  assembly by restating their values in test expectations. Test observable
+  behavior through consumers; omit the test when no meaningful behavior exists.
 - Avoid pinning private method names, asset contents, exact implementation
   snippets, or incidental markup that is not part of the user-facing contract.
 - Do not test bare `data-action` / Stimulus wiring presence unless the
