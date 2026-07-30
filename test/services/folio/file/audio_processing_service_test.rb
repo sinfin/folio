@@ -53,7 +53,7 @@ class Folio::File::AudioProcessingServiceTest < ActiveSupport::TestCase
 
     inspect_media_result = {
       "format" => {
-        "duration" => "120",
+        "duration" => "47.9",
         "bit_rate" => "128000",
         "tags" => {},
       },
@@ -81,6 +81,7 @@ class Folio::File::AudioProcessingServiceTest < ActiveSupport::TestCase
     end
 
     assert_equal "ready", audio.reload.aasm_state
+    assert_equal 47, audio.file_track_duration
     assert_equal "audio/encoded/1/1/audio-playable.mp3", audio.remote_services_data["playable"]["path"]
     assert audio.file_metadata_extracted_at.present?
     assert audio.remote_services_data["artwork_seeded_at"].present?

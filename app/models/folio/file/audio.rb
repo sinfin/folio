@@ -138,10 +138,9 @@ class Folio::File::Audio < Folio::File
   end
 
   def formatted_duration
-    duration = mapped_metadata[:duration_seconds] || file_track_duration
-    return nil if duration.nil?
+    return nil if file_track_duration.nil?
 
-    total = duration.to_i
+    total = file_track_duration.to_i
     h = total / 3600
     m = (total % 3600) / 60
     s = total % 60

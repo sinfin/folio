@@ -121,6 +121,7 @@ class Folio::File::AudioProcessingService
       if file_metadata
         updates[:file_metadata] = file_metadata
         updates[:file_metadata_extracted_at] = Time.current
+        updates[:file_track_duration] = file_metadata["duration_seconds"] if file_metadata.key?("duration_seconds")
       end
 
       updates[:remote_services_data] = remote_services_data if remote_services_data
