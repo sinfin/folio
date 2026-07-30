@@ -14,6 +14,7 @@
     "format:file": "prettier --write",
     "format:check": "prettier --check .",
     "preview": "vite preview",
+    "test": "node --experimental-strip-types --test src/**/*.test.ts",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
