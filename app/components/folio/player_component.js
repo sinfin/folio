@@ -11,8 +11,7 @@ window.Folio.Player.defaultOptions = {
   audio: {
     playbackRates: [2, 1.5, 1.25, 1, 0.75, 0.5, 0.25],
     controlBar: {
-      fullscreenToggle: false,
-      volumePanel: { inline: false }
+      fullscreenToggle: false
     }
   }
 }
