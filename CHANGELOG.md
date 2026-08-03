@@ -41,6 +41,7 @@ All notable changes to this project will be documented in this file.
 - **Uppy drag-and-drop**: Only the first active uploader handles window-level file drops, preventing duplicate uploads when a page renders multiple `Folio::UppyComponent` instances.
 - **Ordered multi-select**: Handle text overflow gracefully - line clamp 2 and text-overflow: ellipsis
 - **Embed loaders**: Explicitly use `border-box` sizing for loader pseudo-elements so the host page and standalone iframe retain the same spinner dimensions regardless of CSS resets.
+- **Multi picker fields "add embed"**: The add-embed button now resolves the multi picker and adds the row to its `f-nested-fields`, instead of taking the first `f-nested-fields` in the whole form. Previously the click silently added the embed row to an unrelated nested-fields collection whenever the form rendered another `folio_nested_fields` before the picker, so the button appeared to do nothing. The lookup falls back to the picker within the form because the source header holding the button is detached into `.f-c-tiptap-simple-form-wrap` and is then no longer a descendant of its own picker.
 
 ## [7.7.1] - 2026-06-16
 
