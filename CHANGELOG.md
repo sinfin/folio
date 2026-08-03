@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- **Tiptap content rendering**: `Folio::Tiptap::ContentComponent` accepts an explicit `prose_mirror_node:` while retaining the original record as rendering context.
 - **Console form layout component**: Add `Folio::Console::Form::LayoutComponent`
   for console forms with a header area, file picker column, and main content,
   replacing ad hoc `col-md-auto` picker layouts in page and dummy blog forms.

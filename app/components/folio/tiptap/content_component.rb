@@ -6,6 +6,7 @@ class Folio::Tiptap::ContentComponent < ApplicationComponent
   def initialize(record:,
                  attribute: :tiptap_content,
                  class_name: nil,
+                 prose_mirror_node: nil,
                  lambda_before_root_node: nil,
                  lambda_after_root_node: nil,
                  node_type_blacklist: nil,
@@ -13,6 +14,7 @@ class Folio::Tiptap::ContentComponent < ApplicationComponent
     @record = record
     @attribute = attribute
     @class_name = class_name
+    @prose_mirror_node = prose_mirror_node
     @lambda_before_root_node = lambda_before_root_node
     @lambda_after_root_node = lambda_after_root_node
     @node_type_blacklist = node_type_blacklist
