@@ -103,6 +103,7 @@
 
 .f-embed__container iframe {
   display: block;
+  max-width: 100%;
 }
 
 .f-embed__container--centered .instagram-media,
