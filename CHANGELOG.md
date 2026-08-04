@@ -29,6 +29,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- **Embed HTML rendering**: Iframes pasted as raw HTML (e.g. a copied YouTube `<iframe>` embed code) now scale responsively using the aspect ratio derived from their `width`/`height` attributes, instead of keeping a fixed pixel size that overflowed and got clipped in narrower containers.
 - **Console sidebar**: Only highlight the most specific active sidebar link when multiple prefix matches apply, so nested console pages no longer mark parent links active too.
 - **Console ancestry position buttons**: Refresh the same ancestry catalogue after moving rows when a page renders multiple ancestry catalogues, instead of replacing the moved catalogue with the first catalogue from the refreshed page.
 - **Embed inputs**: Server validation messages now appear directly beneath the HTML/URL field, before the preview, rather than above its label.
