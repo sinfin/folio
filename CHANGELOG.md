@@ -30,6 +30,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - **Embed HTML rendering**: Iframes pasted as raw HTML (e.g. a copied YouTube `<iframe>` embed code) now scale responsively using the aspect ratio derived from their `width`/`height` attributes, instead of keeping a fixed pixel size that overflowed and got clipped in narrower containers.
+- **Embed YouTube rendering**: YouTube iframes embedded by URL now fill the container width instead of staying at their literal `width` attribute, so they scale up in containers wider than 560px (360px for Shorts) rather than only shrinking in narrower ones.
 - **Embed inputs**: Server validation messages now appear directly beneath the HTML/URL field, before the preview, rather than above its label.
 - **Media-source usage constraints**: Usage counts include files placed through atoms, media-source rules are authoritative in the file console, and site-specific limits remain attached to the media source instead of being copied to files.
 - **Media source site rules**: Persisted rules can now be removed and re-added for the same site in one edit without tripping uniqueness validation.
