@@ -24,6 +24,7 @@ window.Folio.Stimulus.register('f-embed-box', class extends window.Stimulus.Cont
     lazy: Boolean,
     folioEmbedData: Object,
     centered: Boolean,
+    fullWidthIframes: Boolean,
     backgroundColor: String,
     lightModeBackgroundColor: String,
     darkModeBackgroundColor: String
@@ -79,6 +80,10 @@ window.Folio.Stimulus.register('f-embed-box', class extends window.Stimulus.Cont
 
     if (this.centeredValue) {
       params.set('centered', '1')
+    }
+
+    if (this.fullWidthIframesValue) {
+      params.set('fullWidthIframes', '1')
     }
 
     if (this.hasDualBackgroundColors) {
