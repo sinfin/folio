@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file.
 - **Tiptap node overlays**: Pass source editor metadata and optional caller-provided context with node edit and save requests, allowing overlay fields to be scoped to the editor that opened them.
 - **`Folio::Site.additional_strong_params`**: the full list of params permitted in the site console form (`site_params`), defaulting to `additional_params`. Override it (e.g. `super + %i[…]`) to permit fields you render yourself — e.g. in a custom `console_form_tabs` tab — without them being auto-rendered in the settings tab.
 - **Embed lazy loading**: `Folio::Embed::BoxComponent` accepts `lazy: false` to load immediately instead of waiting for intersection; the default remains `lazy: true`.
+- **Embed full-width iframes**: `Folio::Embed::BoxComponent` accepts `full_width_iframes: true` to let embedded iframes grow to the container width instead of stopping at their `width` attribute (560px for a URL-embedded YouTube video, 360px for Shorts). The default is `false`, so host apps opt in per site or per placement. The same option is accepted by `input as: :embed` and by `:embed` tiptap node attributes (where it may be a Proc resolved at render time) so console previews match the frontend.
 
 ### Changed
 
@@ -29,8 +30,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
-- **Embed HTML rendering**: Iframes pasted as raw HTML (e.g. a copied YouTube `<iframe>` embed code) now scale responsively using the aspect ratio derived from their `width`/`height` attributes, instead of keeping a fixed pixel size that overflowed and got clipped in narrower containers.
-- **Embed YouTube rendering**: YouTube iframes embedded by URL now fill the container width instead of staying at their literal `width` attribute, so they scale up in containers wider than 560px (360px for Shorts) rather than only shrinking in narrower ones.
+- **Embed HTML rendering**: Iframes pasted as raw HTML (e.g. a copied YouTube `<iframe>` embed code) now scale down using the aspect ratio derived from their `width`/`height` attributes, instead of keeping a fixed pixel size that overflowed and got clipped in narrower containers. They still stop at their attribute width in wider containers unless `full_width_iframes: true` is passed.
 - **Console sidebar**: Only highlight the most specific active sidebar link when multiple prefix matches apply, so nested console pages no longer mark parent links active too.
 - **Console ancestry position buttons**: Refresh the same ancestry catalogue after moving rows when a page renders multiple ancestry catalogues, instead of replacing the moved catalogue with the first catalogue from the refreshed page.
 - **Embed inputs**: Server validation messages now appear directly beneath the HTML/URL field, before the preview, rather than above its label.

@@ -138,7 +138,6 @@
 }
 
 .f-embed__youtube-iframe {
-  width: 100%;
   max-width: 100%;
   height: auto;
   aspect-ratio: 560 / 315;
@@ -146,4 +145,8 @@
 
 .f-embed__youtube-iframe--shorts {
   aspect-ratio: 360 / 640;
+}
+
+.f-embed__container--full-width-iframes .f-embed__youtube-iframe {
+  width: 100%;
 }

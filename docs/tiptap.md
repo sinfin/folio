@@ -508,6 +508,17 @@ node.folio_embed_data  # => nil
 
 **Supported embed types**: YouTube, Instagram, Pinterest, Twitter/X. The `Folio::Embed` module handles URL detection and validation for supported platforms.
 
+The console overlay preview keeps iframes at their literal `width`/`height` attributes. Pass `full_width_iframes: true` to let them fill the container instead (see [Embed](embed.md#iframe-sizing)). A Proc is resolved at render time, which lets a multi-site app follow the current site:
+
+```rb
+tiptap_node structure: {
+  folio_embed_data: {
+    type: :embed,
+    full_width_iframes: -> (_node) { Folio::Current.site.is_a?(MyApp::Site::Blog) },
+  },
+}
+```
+
 #### Integer Attribute Behavior
 
 Integer attributes (`:integer` or `{ type: :integer }`) provide automatic type conversion and validation:

@@ -179,7 +179,14 @@ class Folio::Console::Tiptap::Overlay::Form::InputComponent < Folio::Console::Ap
       @f.input @key,
                as: :embed,
                centered: true,
+               full_width_iframes: attr_config_value(:full_width_iframes) == true,
                hint:
+    end
+
+    # Allows attr configs to be resolved at render time, e.g. per current site.
+    def attr_config_value(key)
+      raw = @attr_config[key]
+      raw.is_a?(Proc) ? raw.call(@f.object) : raw
     end
 
     def default_value
