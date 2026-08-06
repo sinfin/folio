@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- **Console catalogue sorting**: Sort controls now cycle through ascending, descending, and back to the default order while preserving active filters.
 - **AI pack configuration**: Move runtime configuration readers and provider
   helpers onto `Folio::Ai.config`, keeping `Folio::Ai.configure` as the setup
   API.
