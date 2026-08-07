@@ -56,8 +56,8 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::Tiptap::Node
 
     render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
 
-    assert_selector(".f-tiptap-node .d-tiptap-node-card")
-    assert_selector(".d-tiptap-node-card")
+    assert_selector(".f-tiptap-node.f-tiptap-node--d-tiptap-node-card .d-tiptap-node-card")
+    assert_no_selector(".f-tiptap-node[data-folio-tiptap-node-type]")
   end
 
   def test_component_does_not_render_wrapper_when_inner_component_is_hidden

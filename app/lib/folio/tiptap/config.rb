@@ -107,6 +107,7 @@ module Folio
                 en: node_name_in_locale(model_name, :en),
               },
               type: node_name,
+              bem_class_name: node_klass.view_component_bem_class_name,
               config: serialize_tiptap_config(node_klass.tiptap_config),
             }
           end

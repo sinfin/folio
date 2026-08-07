@@ -1,4 +1,6 @@
+import * as React from "react";
 import { Node, ReactNodeViewRenderer } from "@tiptap/react";
+import type { NodeViewProps } from "@tiptap/react";
 import { FolioTiptapNode } from "@/components/tiptap-extensions/folio-tiptap-node";
 import { Plugin } from "@tiptap/pm/state";
 import type { CommandProps } from "@tiptap/core";
@@ -156,11 +158,23 @@ export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
   },
 
   addNodeView() {
-    return ReactNodeViewRenderer(FolioTiptapNode, {
-      // Allow all events to propagate to ProseMirror.
-      // This fixes drop events not working when cursor is over this atomic node.
-      stopEvent: () => false,
-    });
+    return (props) => {
+      const bemClassName = this.options.nodes?.find(
+        (node) => node.type === props.node.attrs.type,
+      )?.bem_class_name;
+      const component = (nodeViewProps: NodeViewProps) =>
+        React.createElement(FolioTiptapNode, {
+          ...nodeViewProps,
+          bemClassName,
+        });
+
+      return ReactNodeViewRenderer(component, {
+        className: bemClassName ? `node-folioTiptapNode--${bemClassName}` : "",
+        // Allow all events to propagate to ProseMirror.
+        // This fixes drop events not working when cursor is over this atomic node.
+        stopEvent: () => false,
+      })(props);
+    };
   },
 
   addProseMirrorPlugins() {

@@ -27,4 +27,11 @@ class Folio::Tiptap::ConfigTest < ActiveSupport::TestCase
 
     assert_equal [Node.name], config.node_names
   end
+
+  test "serializes node view component BEM class name for the editor" do
+    config = Folio::Tiptap::Config.new(node_names: [Dummy::Tiptap::Node::Card.name])
+    node_config = JSON.parse(config.to_input_json).fetch("nodes").sole
+
+    assert_equal "d-tiptap-node-card", node_config.fetch("bem_class_name")
+  end
 end

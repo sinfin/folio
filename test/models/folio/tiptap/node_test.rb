@@ -49,6 +49,10 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
 
   URL_JSON_HASH = { href: "foo", label: "bar" }
 
+  test "view_component_bem_class_name" do
+    assert_equal "d-tiptap-node-card", Dummy::Tiptap::Node::Card.view_component_bem_class_name
+  end
+
   test "attributes" do
     node = Node.new(title: "foo",
                     text: "foo bar",

@@ -28,6 +28,10 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponent < ApplicationComponent
       )
     end
 
+    def wrapper_bem_class_name
+      "f-tiptap-node--#{@node.class.view_component_bem_class_name}"
+    end
+
     def validate_node_type!
       node_type = @prose_mirror_node.dig("attrs", "type")
 

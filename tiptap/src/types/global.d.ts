@@ -58,6 +58,7 @@ declare global {
   interface FolioTiptapNodeFromInput {
     title: { cs: string; en: string };
     type: string;
+    bem_class_name?: string;
     config?: {
       icon?: string;
       toolbar_slot?: string;

@@ -727,6 +727,35 @@ The `tiptap_content_information` hash contains rendering context. It is automati
 
 The component is automatically resolved using the `view_component_class` method.
 
+### Wrapper BEM Modifiers
+
+Folio derives a common BEM suffix from the node's view component. For example,
+`MyProject::Tiptap::Node::LoremIpsum` uses the suffix
+`m-tiptap-node-lorem-ipsum` from its component's `original_bem_class_name`.
+
+The public wrapper uses the suffix as an `f-tiptap-node` modifier:
+
+```html
+<div class="f-tiptap-node f-tiptap-node--m-tiptap-node-lorem-ipsum">
+  ...
+</div>
+```
+
+The editor applies the suffix to both node-view wrapper layers:
+
+```html
+<div
+  class="react-renderer node-folioTiptapNode node-folioTiptapNode--m-tiptap-node-lorem-ipsum"
+>
+  <div class="f-tiptap-node f-tiptap-node--m-tiptap-node-lorem-ipsum">
+    ...
+  </div>
+</div>
+```
+
+Rails serializes the suffix in the editor configuration, so TypeScript does not
+reproduce the Ruby-to-BEM conversion.
+
 ## Custom Node Rendering Process
 
 The `folioTiptapNode` rendering system provides seamless integration between the Tiptap editor and Rails view components through a message-passing architecture.

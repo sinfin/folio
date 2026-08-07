@@ -137,6 +137,10 @@ class Folio::Tiptap::Node
     "#{self}Component".constantize
   end
 
+  def self.view_component_bem_class_name
+    view_component_class.allocate.original_bem_class_name
+  end
+
   def self.new_from_attributes(attrs, allow_nested: false, expected_class: nil)
     new_from_params(ActionController::Parameters.new(attrs), allow_nested:, expected_class:)
   end
