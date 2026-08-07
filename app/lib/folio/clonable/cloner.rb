@@ -35,10 +35,7 @@ class Folio::Clonable::Cloner
       original.class.reflect_on_all_associations.each do |association|
         log("#{original.class}#try to clone association: #{association.name}")
 
-        next if @record.class.clonable_ignored_associations.include?(association.name)
-        next if (original.class.try(:clonable_ignored_associations) || []).include?(association.name)
-        next if @record.class.clonable_referenced_associations.include?(association.name)
-        next if (original.class.try(:clonable_referenced_associations) || []).include?(association.name)
+        next if skip_association?(original, association)
 
         if original.public_send(association.name).present?
           duplicated << association.name
@@ -46,12 +43,53 @@ class Folio::Clonable::Cloner
           if association.macro == :has_many
             associated_record = original.public_send(association.name).map { |a| clone_nested_records_recursively(a).first }
           else
-            associated_record = @record.class.clonable_referenced_associations.include?(association.name) ? original.public_send(association.name) : original.public_send(association.name).deep_dup
+            associated_record = original.public_send(association.name).deep_dup
           end
           cloned.public_send("#{association.name}=", associated_record)
         end
       end
       [cloned, duplicated]
+    end
+
+    def skip_association?(original, association)
+      return true if referenced_names(original).include?(association.name)
+      return true if ignored_names(original).include?(association.name)
+
+      base_class = association_base_class(association)
+      return false if base_class.nil?
+      return false unless ignored_base_classes(original).include?(base_class)
+
+      log("#{original.class}#skipping association: #{association.name} - " \
+          "#{base_class} is opted out via another association")
+
+      true
+    end
+
+    def ignored_names(original)
+      @record.class.clonable_ignored_associations +
+        (original.class.try(:clonable_ignored_associations) || [])
+    end
+
+    def referenced_names(original)
+      @record.class.clonable_referenced_associations +
+        (original.class.try(:clonable_referenced_associations) || [])
+    end
+
+    # An explicit opt-out covers every other association writing the same table -
+    # STI subclasses, scoped variants and the join models behind has_many :through.
+    def ignored_base_classes(original)
+      ignored_names(original).filter_map do |name|
+        reflection = original.class.reflect_on_association(name)
+        association_base_class(reflection) if reflection
+      end
+    end
+
+    def association_base_class(reflection)
+      return nil if reflection.polymorphic?
+
+      reflection.klass.base_class
+    rescue NameError
+      nil
     end
 
     def validate_associations!(associations)

@@ -29,6 +29,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- **Clonable associations**: An association listed in `clonable_ignored_associations` now also covers every other association resolving to the same `base_class` — STI subclasses, scoped variants, and the join models behind `has_many :through`. Previously the opt-out matched association names only, so a scoped duplicate of an ignored join association (e.g. an `accepted_…` variant next to an ignored join association) was still deep-duplicated, taking its `belongs_to` target with it and leaving rows with a `nil` foreign key. `clonable_referenced_associations` is resolved first, so referenced associations are unaffected.
 - **Embed inputs**: Server validation messages now appear directly beneath the HTML/URL field, before the preview, rather than above its label.
 - **Media-source usage constraints**: Usage counts include files placed through atoms, media-source rules are authoritative in the file console, and site-specific limits remain attached to the media source instead of being copied to files.
 - **Media source site rules**: Persisted rules can now be removed and re-added for the same site in one edit without tripping uniqueness validation.

@@ -56,4 +56,30 @@ class Folio::ClonableTest < ActiveSupport::TestCase
     assert_equal image, page.atoms.second.cover
     assert_equal image, clone.atoms.second.cover
   end
+
+  test "opted out association covers other associations on the same base class" do
+    page = create(:folio_page)
+    page.cover = create(:folio_file_image)
+    page.reload
+
+    # :file_placements is opted out and :cover_placement writes the same table,
+    # so the cover placement must not be cloned on its own either
+    Folio::Page.stub(:clonable_referenced_associations, []) do
+      clone = Folio::Clonable::Cloner.new(page).create_clone
+
+      assert_nil clone.cover_placement
+    end
+  end
+
+  test "referenced association is still cloned when it shares a base class with an opted out one" do
+    image = create(:folio_file_image)
+    page = create(:folio_page)
+    page.cover = image
+    page.reload
+
+    clone = Folio::Clonable::Cloner.new(page).create_clone
+
+    assert_equal image, clone.cover
+    assert_not_equal page.cover_placement, clone.cover_placement
+  end
 end
