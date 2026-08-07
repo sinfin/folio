@@ -79,11 +79,7 @@ interface RespnoseFromApiType {
   errorMessage?: string;
 }
 
-interface FolioTiptapNodeProps extends NodeViewProps {
-  bemClassName?: string;
-}
-
-export const FolioTiptapNode: React.FC<FolioTiptapNodeProps> = (props) => {
+export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
   const { uniqueId, ...attrsWithoutUniqueId } = props.node.attrs;
   const { updateAttributes: propsUpdateAttributes } = props;
 
@@ -253,9 +249,6 @@ export const FolioTiptapNode: React.FC<FolioTiptapNodeProps> = (props) => {
 
   return (
     <NodeViewWrapper
-      className={`f-tiptap-node${
-        props.bemClassName ? ` f-tiptap-node--${props.bemClassName}` : ""
-      }`}
       tabIndex={0}
       data-drag-handle=""
       data-folio-tiptap-node-version={props.node.attrs.version}

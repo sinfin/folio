@@ -212,13 +212,6 @@ $f-tiptap__media-min-width--desktop: 708px !default;
     margin-right: calc(var(--f-tiptap-root__padding-x) * -1);
   }
 
-  .node-folioTiptapNode {
-    .f-tiptap-node {
-      margin-left: 0;
-      margin-right: 0;
-    }
-  }
-
   .node-folioTiptapNode,
   .f-tiptap-node {
     white-space: normal;

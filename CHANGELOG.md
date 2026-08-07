@@ -16,7 +16,7 @@ All notable changes to this project will be documented in this file.
 - **`Folio::Site.additional_strong_params`**: the full list of params permitted in the site console form (`site_params`), defaulting to `additional_params`. Override it (e.g. `super + %i[…]`) to permit fields you render yourself — e.g. in a custom `console_form_tabs` tab — without them being auto-rendered in the settings tab.
 - **Embed lazy loading**: `Folio::Embed::BoxComponent` accepts `lazy: false` to load immediately instead of waiting for intersection; the default remains `lazy: true`.
 - **Console icons**: Add the `lock_open_variant` icon.
-- **Tiptap custom node selectors**: Add component-derived BEM modifiers to custom node wrappers in public rendering and the editor.
+- **Tiptap custom node selectors**: Add component-derived BEM modifiers to public custom node wrappers and the editor's outer React node-view wrapper.
 
 ### Changed
 

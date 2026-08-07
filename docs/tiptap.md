@@ -741,14 +741,15 @@ The public wrapper uses the suffix as an `f-tiptap-node` modifier:
 </div>
 ```
 
-The editor applies the suffix to both node-view wrapper layers:
+The editor applies the base class and both modifiers to the outer React
+node-view wrapper. The required inner `NodeViewWrapper` remains classless:
 
 ```html
 <div
-  class="react-renderer node-folioTiptapNode node-folioTiptapNode--m-tiptap-node-lorem-ipsum"
+  class="react-renderer node-folioTiptapNode node-folioTiptapNode--m-tiptap-node-lorem-ipsum f-tiptap-node f-tiptap-node--m-tiptap-node-lorem-ipsum"
 >
-  <div class="f-tiptap-node f-tiptap-node--m-tiptap-node-lorem-ipsum">
-    ...
+  <div data-node-view-wrapper>
+    <div class="f-tiptap-node__html">...</div>
   </div>
 </div>
 ```
