@@ -87,6 +87,47 @@ class Folio::File::AudioProcessingServiceTest < ActiveSupport::TestCase
     assert audio.remote_services_data["artwork_seeded_at"].present?
   end
 
+  test "call stores supported AAC MIME variants as canonical AAC derivatives" do
+    inspect_media_result = {
+      "format" => {
+        "duration" => "47.9",
+        "bit_rate" => "128000",
+        "tags" => {},
+      },
+      "streams" => [
+        {
+          "codec_type" => "audio",
+          "codec_name" => "aac",
+          "sample_rate" => "44100",
+          "channels" => 1,
+        }
+      ]
+    }
+
+    %w[audio/x-aac audio/vnd.dlna.adts].each do |mime_type|
+      audio = create(:folio_file_audio)
+      audio.update_columns(file_mime_type: mime_type)
+      service = Folio::File::AudioProcessingService.new(audio)
+      ffmpeg_command = nil
+
+      service.stub(:inspect_media, inspect_media_result) do
+        service.stub(:shell, -> (*args) { ffmpeg_command = args }) do
+          service.stub(:test_aware_s3_upload, nil) do
+            service.stub(:safely_generate_waveform_payload, nil) do
+              service.call
+            end
+          end
+        end
+      end
+
+      playable = audio.reload.remote_services_data["playable"]
+
+      assert_equal "aac", playable["extension"], mime_type
+      assert_equal "audio/aac", playable["content_type"], mime_type
+      assert_equal ["-c", "copy"], ffmpeg_command.each_cons(2).find { |option, _value| option == "-c" }, mime_type
+    end
+  end
+
   test "call persists waveform generated from playable derivative" do
     audio = create(:folio_file_audio)
     service = Folio::File::AudioProcessingService.new(audio)

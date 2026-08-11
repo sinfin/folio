@@ -34,7 +34,14 @@ class Folio::File::AudioProcessingService
     "audio/mpeg" => "mp3",
     "audio/mp3" => "mp3",
     "audio/aac" => "aac",
+    "audio/x-aac" => "aac",
+    "audio/vnd.dlna.adts" => "aac",
     "audio/x-hx-aac-adts" => "aac",
+  }.freeze
+
+  DIRECT_COPY_CONTENT_TYPES = {
+    "audio/x-aac" => "audio/aac",
+    "audio/vnd.dlna.adts" => "audio/aac",
   }.freeze
 
   def initialize(audio_file)
@@ -278,7 +285,9 @@ class Folio::File::AudioProcessingService
     end
 
     def direct_copy_content_type
-      audio_file.file_mime_type.presence || "audio/mpeg"
+      DIRECT_COPY_CONTENT_TYPES.fetch(audio_file.file_mime_type) do
+        audio_file.file_mime_type.presence || "audio/mpeg"
+      end
     end
 
     def should_reencode?(metadata)
