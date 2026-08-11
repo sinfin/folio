@@ -13,7 +13,8 @@ class Folio::File::AudioProcessingService
   MONO_BITRATE = "128k"
   STEREO_BITRATE = "192k"
   WAVEFORM_POINT_COUNT = 200
-  WAVEFORM_ANALYSIS_SAMPLE_RATE_HZ = 11_025
+  WAVEFORM_ANALYSIS_SAMPLE_RATE_HZ = 8_000
+  WAVEFORM_READ_SAMPLE_COUNT = 32_768
   DERIVATIVE_ROOT = "audio"
   PLAYABLE_SUBPATH = "encoded"
 
@@ -211,17 +212,28 @@ class Folio::File::AudioProcessingService
     end
 
     def waveform_peaks_from_file(path)
-      samples = File.binread(path).unpack("s<*")
-      return [] if samples.empty?
+      total_samples = ::File.size(path) / 2
+      return [] if total_samples.zero?
 
       bucket_peaks = Array.new(WAVEFORM_POINT_COUNT, 0)
-      total_samples = samples.size
+      sample_index = 0
+      bucket_index = 0
+      next_bucket_start = total_samples.ceildiv(WAVEFORM_POINT_COUNT)
 
-      samples.each_with_index do |sample, index|
-        bucket_index = index * WAVEFORM_POINT_COUNT / total_samples
-        peak = sample.abs
+      ::File.open(path, "rb") do |io|
+        while (chunk = io.read(WAVEFORM_READ_SAMPLE_COUNT * 2))
+          chunk.unpack("s<*").each do |sample|
+            while sample_index >= next_bucket_start && bucket_index < WAVEFORM_POINT_COUNT - 1
+              bucket_index += 1
+              next_bucket_start = ((bucket_index + 1) * total_samples).ceildiv(WAVEFORM_POINT_COUNT)
+            end
 
-        bucket_peaks[bucket_index] = peak if peak > bucket_peaks[bucket_index]
+            peak = sample.abs
+            bucket_peaks[bucket_index] = peak if peak > bucket_peaks[bucket_index]
+
+            sample_index += 1
+          end
+        end
       end
 
       normalize_waveform_peaks(bucket_peaks)

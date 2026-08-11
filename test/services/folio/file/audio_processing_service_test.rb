@@ -131,7 +131,7 @@ class Folio::File::AudioProcessingServiceTest < ActiveSupport::TestCase
     assert_equal [0.0, 0.25, 1.0], waveform["peaks"]
   end
 
-  test "call persists normalized fixed-count waveform peaks from decoded playable audio" do
+  test "call persists normalized fixed-count waveform peaks from reduced sample rate audio" do
     audio = create(:folio_file_audio)
     service = Folio::File::AudioProcessingService.new(audio)
 
@@ -158,9 +158,14 @@ class Folio::File::AudioProcessingServiceTest < ActiveSupport::TestCase
       "content_type" => "audio/mpeg",
     }
 
+    waveform_command = nil
     shell = lambda do |*args|
+      waveform_command = args
       output_path = args.last
-      samples = [0, 16, 32, 64] * 13
+      samples = Array.new(32_769, 0)
+      samples[163] = 10_000
+      samples[164] = 5_000
+      samples[-1] = 8_000
       File.binwrite(output_path, samples.pack("s<*"))
       ""
     end
@@ -175,7 +180,10 @@ class Folio::File::AudioProcessingServiceTest < ActiveSupport::TestCase
 
     waveform = audio.reload.remote_services_data["waveform"]
 
+    assert_equal ["-ar", "8000"], waveform_command.each_cons(2).find { |option, _value| option == "-ar" }
     assert_equal 200, waveform["peaks"].size
+    assert_equal [1.0, 0.707, 0.0], waveform["peaks"].first(3)
+    assert_equal 0.894, waveform["peaks"].last
     assert_equal 1.0, waveform["peaks"].max
   end
 
