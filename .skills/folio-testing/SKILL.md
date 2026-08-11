@@ -38,12 +38,18 @@ Instead, exercise the behavior through one of:
 - Avoid trivial existence tests that add noise without behavior coverage:
   method/constant existence, `respond_to?`, `defined?`, and similar assertions
   usually prove only implementation shape. Exercise the behavior instead.
+- Do not test static constants, declarative lookup tables, or trivial data
+  assembly by restating their values in test expectations. Test observable
+  behavior through consumers; omit the test when no meaningful behavior exists.
 - Avoid pinning private method names, asset contents, exact implementation
   snippets, or incidental markup that is not part of the user-facing contract.
 - Avoid asserting exact URLs in component tests when link presence or label is
   enough to prove the behavior. URL generation is often brittle in component
   specs; assert exact hrefs only when the target URL itself is the behavior
   under test.
+- Do not test bare `data-action` / Stimulus wiring presence unless the
+  assertion proves behavior. Rendering the component/wrapper is enough for
+  static markup; use behavior-facing tests for JavaScript behavior.
 - Do not test static presentation details that are always present and not part
   of conditional behavior, such as a fixed CSS utility class (`cell--compact`) or
   non-interactive styling option. Let the template/component code carry that.
@@ -83,7 +89,7 @@ Instead, exercise the behavior through one of:
   makes tests cleaner.
 
   ```ruby
-  Folio::Ai.stub(:provider_api_key_env_values, { openai: "secret" }) do
+  MyFeature.stub(:provider_env_values, { primary: "secret" }) do
     # exercise behavior
   end
   ```
@@ -91,7 +97,7 @@ Instead, exercise the behavior through one of:
 - For one-off flags, stub the value method directly:
 
   ```ruby
-  Folio::Ai.stub(:env_disabled_value, "1") do
+  MyFeature.stub(:disabled_env_value, "1") do
     # exercise disabled behavior
   end
   ```

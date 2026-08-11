@@ -58,18 +58,26 @@ class OrderedMultiselectApp extends React.Component {
       id: itemId,
       label: option.label
     }
-    document.querySelector('.f-c-r-ordered-multiselect-app').dispatchEvent(new window.Event('change', { bubbles: true }))
     this.props.dispatch(addItem(item))
+    this.dispatchChangeEvent()
   }
 
   update = (items) => {
-    document.querySelector('.f-c-r-ordered-multiselect-app').dispatchEvent(new window.Event('change', { bubbles: true }))
     this.props.dispatch(updateItems(items))
+    this.dispatchChangeEvent()
   }
 
   removeItem = (item) => {
-    document.querySelector('.f-c-r-ordered-multiselect-app').dispatchEvent(new window.Event('change', { bubbles: true }))
     this.props.dispatch(removeItem(item))
+    this.dispatchChangeEvent()
+  }
+
+  dispatchChangeEvent = () => {
+    if (!this.wrapRef.current) return
+
+    window.setTimeout(() => {
+      this.wrapRef.current.dispatchEvent(new window.Event('change', { bubbles: true }))
+    }, 0)
   }
 
   settingValue () {

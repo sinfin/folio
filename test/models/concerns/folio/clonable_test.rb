@@ -34,15 +34,22 @@ class Folio::ClonableTest < ActiveSupport::TestCase
     clone.title = "clone"
     assert clone.valid?
 
+    original_text_atom = page.atoms.find { |atom| atom.is_a?(Dummy::Atom::Contents::Text) }
+    original_image_atom = page.atoms.find { |atom| atom.is_a?(Dummy::Atom::Cards::Image) }
+    original_documents_atom = page.atoms.find { |atom| atom.is_a?(Dummy::Atom::Contents::Documents) }
+    clone_text_atom = clone.atoms.find { |atom| atom.is_a?(Dummy::Atom::Contents::Text) }
+    clone_image_atom = clone.atoms.find { |atom| atom.is_a?(Dummy::Atom::Cards::Image) }
+    clone_documents_atom = clone.atoms.find { |atom| atom.is_a?(Dummy::Atom::Contents::Documents) }
+
     assert_not_equal page.atoms.to_a, clone.atoms.to_a
     assert_equal page.cover, clone.cover
     assert_not_equal page.cover_placement, clone.cover_placement
 
-    clone.atoms.first.update!(content: "Změněný text")
-    clone.atoms.second.update!(title: "Změněný titulek", description: "Změněný popis", url_json: { href: "https://example2.com" })
+    clone_text_atom.update!(content: "Změněný text")
+    clone_image_atom.update!(title: "Změněný titulek", description: "Změněný popis", url_json: { href: "https://example2.com" })
 
-    assert_equal page.atoms.last.documents.first, clone.atoms.last.documents.first
-    assert_not_equal page.atoms.last.document_placements, clone.atoms.last.document_placements
+    assert_equal original_documents_atom.documents.first, clone_documents_atom.documents.first
+    assert_not_equal original_documents_atom.document_placements, clone_documents_atom.document_placements
 
     clone.update!(title: "Nový titulek",
                   perex: "Nový perex",
@@ -51,9 +58,9 @@ class Folio::ClonableTest < ActiveSupport::TestCase
 
     page.reload
     assert_equal original_attributes.without("created_at", "updated_at"), page.attributes.without("created_at", "updated_at")
-    assert_equal "Původní text", page.atoms.first.content
-    assert_not_equal page.atoms.first.content, clone.atoms.first.content
-    assert_equal image, page.atoms.second.cover
-    assert_equal image, clone.atoms.second.cover
+    assert_equal "Původní text", original_text_atom.reload.content
+    assert_not_equal original_text_atom.content, clone_text_atom.reload.content
+    assert_equal image, original_image_atom.reload.cover
+    assert_equal image, clone_image_atom.reload.cover
   end
 end

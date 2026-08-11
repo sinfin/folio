@@ -1,32 +1,41 @@
 # frozen_string_literal: true
 
-class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::ApplicationComponent
-  CONTROLLER_NAME = "f-ai-c-text-suggestions"
-  LOADING_SUGGESTION_COUNT = 3
-  MISSING_CONTEXT_ERROR_CODES = %i[host_ineligible missing_context].freeze
+# Renders the console suggestion panel for loading, success, and error states.
 
-  def initialize(result:,
-                 component_id:,
-                 field_label:,
-                 show_meta: false,
-                 integration_key: nil,
-                 field_key: nil,
-                 loading: false)
-    @result = result
+class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::ApplicationComponent
+  def initialize(component_id:,
+                 field:,
+                 suggestions: [],
+                 instructions: nil,
+                 loading: false,
+                 error_code: nil,
+                 show_instructions: true,
+                 show_close: true,
+                 grouped: false,
+                 loading_suggestion_count: Folio::Ai::DEFAULT_SUGGESTION_COUNT)
     @component_id = component_id
-    @field_label = field_label
-    @show_meta = show_meta
-    @integration_key = integration_key
-    @field_key = field_key
+    @field = field.to_h.symbolize_keys
+    @suggestions = Array(suggestions).map { |suggestion| suggestion.to_h.symbolize_keys }
+    @instructions = instructions.to_s
     @loading = loading
+    @error_code = error_code&.to_sym
+    @show_instructions = show_instructions
+    @show_close = show_close
+    @grouped = grouped
+    @loading_suggestion_count = loading_suggestion_count.to_i
   end
 
   private
+    def class_name
+      "f-ai-c-text-suggestions--grouped" if grouped?
+    end
+
     def component_data
-      stimulus_controller(CONTROLLER_NAME,
+      stimulus_controller("f-ai-c-text-suggestions",
                           values: {
-                            integration_key: @integration_key,
-                            field_key: @field_key,
+                            key: @field[:key],
+                            component_id: @component_id,
+                            grouped: grouped?,
                           }.compact,
                           action: {
                             "f-ai-input:suggestionStale" => "clearSuggestionSelection",
@@ -34,30 +43,10 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
                           })
     end
 
-    def panel_data
-      stimulus_action(click: "stopPropagation")
-    end
-
-    def close_data
-      stimulus_action(click: "close")
-    end
-
     def suggestion_data(suggestion)
       stimulus_data(action: { click: "accept" },
                     params: suggestion_params(suggestion),
                     target: "suggestion")
-    end
-
-    def suggestions_data
-      stimulus_target("suggestions")
-    end
-
-    def status_data
-      stimulus_target("status")
-    end
-
-    def status_message_data
-      stimulus_target("statusMessage")
     end
 
     def accept_suggestion_data(suggestion)
@@ -67,160 +56,55 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
     def instructions_data
       stimulus_merge(stimulus_controller("f-input-autosize", inline: true),
                      stimulus_target("instructions"),
-                     stimulus_data(controller: "f-ai-input", target: "instructions"))
+                     Folio::Console::Form::FooterComponent::AUTOSAVE_DISABLED_DATA)
     end
 
-    def regenerate_data
-      stimulus_action(click: "regenerate")
+    def field_label
+      @field[:label].presence || @field[:key].to_s.humanize
     end
 
-    def suggestions
-      Array(@result.suggestions)
+    def loading?
+      @loading
     end
 
-    def loading_suggestions
-      Array.new(LOADING_SUGGESTION_COUNT)
-    end
-
-    def instructions_visible?
-      loading? || successful? || status_message.blank?
-    end
-
-    def suggestion_params(suggestion)
-      {
-        text: suggestion.text,
-        key: suggestion.key,
-      }.compact
+    def grouped?
+      @grouped
     end
 
     def successful?
-      @result.success? && suggestions.present?
+      !loading? && @error_code.blank? && @suggestions.present?
+    end
+
+    def error?
+      !loading? && @error_code.present?
     end
 
     def status_message
-      return if loading?
+      return unless error?
 
-      if successful?
-        warning_messages.presence
-      else
-        error_message
-      end
+      t(".errors.#{@error_code}")
     end
 
     def status_hidden?
       status_message.blank?
     end
 
-    def status_icon
-      :alert
+    def loading_suggestions
+      Array.new(@loading_suggestion_count.positive? ? @loading_suggestion_count : Folio::Ai::DEFAULT_SUGGESTION_COUNT)
     end
 
-    def panel_title
-      I18n.t("folio.ai.console.text_suggestions_component.panel_title_with_field",
-             field: @field_label)
+    def show_instructions?
+      @show_instructions && !error?
     end
 
-    def close_label
-      text_suggestions_label(:close_label)
+    def show_close?
+      @show_close
     end
 
-    def copy_label
-      text_suggestions_label(:copy_label)
-    end
-
-    def copy_button_label
-      text_suggestions_label(:copy_button_label)
-    end
-
-    def accept_label
-      text_suggestions_label(:accept_label)
-    end
-
-    def accept_button_label
-      text_suggestions_label(:accept_button_label)
-    end
-
-    def chars_label
-      text_suggestions_label(:chars_label)
-    end
-
-    def instructions_placeholder
-      text_suggestions_label(:instructions_placeholder)
-    end
-
-    def regenerate_label
-      text_suggestions_label(:regenerate_label)
-    end
-
-    def loading_text
-      text_suggestions_label(:loading_text)
-    end
-
-    def instructions
-      @result.user_instruction.to_s
-    end
-
-    def suggestion_tone_label(suggestion)
-      suggestion.meta[:tone_label] || suggestion.meta["tone_label"] ||
-        suggestion.meta[:toneLabel] || suggestion.meta["toneLabel"]
-    end
-
-    def suggestion_over_limit?(suggestion)
-      suggestion.meta[:over_limit] || suggestion.meta["over_limit"] ||
-        suggestion.meta[:overLimit] || suggestion.meta["overLimit"]
-    end
-
-    def character_limit
-      @result.field&.character_limit
-    end
-
-    def error_message
-      I18n.t(error_translation_key,
-             default: text_suggestions_label(:generic_error_text))
-    end
-
-    def error_translation_key
-      code = public_error_code
-      code = "#{code}_article" if article_missing_context_error?
-
-      "folio.ai.console.errors.#{code}"
-    end
-
-    def article_missing_context_error?
-      MISSING_CONTEXT_ERROR_CODES.include?(public_error_code.to_s.to_sym) &&
-        record_table_name.to_s.include?("articles")
-    end
-
-    def record_table_name
-      return @record_table_name if defined?(@record_table_name)
-
-      @record_table_name = Folio::Ai.registry.integration(@integration_key)&.record_class&.table_name
-    rescue ArgumentError
-      @record_table_name = nil
-    end
-
-    def public_error_code
-      return :feature_disabled if @result.error_code == :global_disabled
-      return :provider_error if @result.error_code.blank?
-
-      @result.error_code
-    end
-
-    def warning_messages
-      Array(@result.warnings).filter_map do |warning|
-        warning = warning.symbolize_keys
-        I18n.t("folio.ai.console.warnings.#{warning[:code]}",
-               requested_model: warning[:requested_model],
-               fallback_model: warning[:fallback_model],
-               default: nil)
-      end.join(" ")
-    end
-
-    def text_suggestions_label(key)
-      I18n.t(key, scope: "folio.ai.console.text_suggestions_component")
-    end
-
-    def loading?
-      @loading
+    def suggestion_params(suggestion)
+      {
+        text: suggestion[:text],
+        key: suggestion[:key],
+      }.compact
     end
 end

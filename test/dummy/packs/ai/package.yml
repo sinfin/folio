@@ -1,8 +1,0 @@
-# Dummy AI pack for host-application AI extensions.
-
-enforce_dependencies: true
-
-dependencies:
-  - "."
-  - "../.."
-  - "../../packs/ai"
