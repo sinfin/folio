@@ -9,6 +9,8 @@ class Folio::Console::Tiptap::Overlay::Form::InputComponent < Folio::Console::Ap
 
   private
     def input
+      return @f.hidden_field(@key) if @attr_config[:hidden]
+
       case @attr_config[:type]
       when :string, :text, :integer, :url_json, :rich_text, :color
         send("render_input_#{@attr_config[:type]}")
@@ -161,10 +163,16 @@ class Folio::Console::Tiptap::Overlay::Form::InputComponent < Folio::Console::Ap
 
       @f.input input_name,
                collection:,
-               remote: true,
+               remote: relation_select_remote_options,
                label: @f.object.class.human_attribute_name(@key),
                reflection_class_name: class_name,
                hint:
+    end
+
+    def relation_select_remote_options
+      return true if @attr_config[:scope].blank?
+
+      { scope: @attr_config[:scope] }
     end
 
     def render_embed_input

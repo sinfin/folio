@@ -17,6 +17,10 @@ Keep tests behavior-facing and close to the code they protect.
 Never test JavaScript or asset-pipeline behavior by asserting that an asset
 file contains a string or implementation snippet.
 
+Do not add rake task tests in this repository. Cover the underlying behavior
+through the model, service, component, or integration code the task calls
+instead.
+
 Instead, exercise the behavior through one of:
 - rendered DOM assertions
 - ViewComponent/component tests
@@ -39,6 +43,10 @@ Instead, exercise the behavior through one of:
   behavior through consumers; omit the test when no meaningful behavior exists.
 - Avoid pinning private method names, asset contents, exact implementation
   snippets, or incidental markup that is not part of the user-facing contract.
+- Avoid asserting exact URLs in component tests when link presence or label is
+  enough to prove the behavior. URL generation is often brittle in component
+  specs; assert exact hrefs only when the target URL itself is the behavior
+  under test.
 - Do not test bare `data-action` / Stimulus wiring presence unless the
   assertion proves behavior. Rendering the component/wrapper is enough for
   static markup; use behavior-facing tests for JavaScript behavior.

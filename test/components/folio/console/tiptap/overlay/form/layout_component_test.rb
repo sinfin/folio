@@ -3,6 +3,21 @@
 require "test_helper"
 
 class Folio::Console::Tiptap::Overlay::Form::LayoutComponentTest < Folio::Console::ComponentTest
+  class CustomFieldsComponent < Folio::Console::ApplicationComponent
+    def initialize(f:)
+      @f = f
+    end
+
+    def call
+      content_tag(:div, class: "custom-fields-component") do
+        safe_join([
+          @f.hidden_field(:internal_uid),
+          @f.input(:title),
+        ])
+      end
+    end
+  end
+
   class DefaultAsideNode < Folio::Tiptap::Node
     tiptap_node structure: {
       url: :string,
@@ -34,6 +49,28 @@ class Folio::Console::Tiptap::Overlay::Form::LayoutComponentTest < Folio::Consol
         },
       ],
     }
+  end
+
+  class CustomFieldsNode < Folio::Tiptap::Node
+    tiptap_node structure: {
+      internal_uid: { type: :string, hidden: true },
+      title: :string,
+    }, form_fields_component: ->(f:) { CustomFieldsComponent.new(f:) }
+  end
+
+  class NilCustomFieldsNode < Folio::Tiptap::Node
+    tiptap_node structure: {
+      title: :string,
+    }, form_fields_component: ->(f:) { nil }
+  end
+
+  class NestedCustomFieldsNode < Folio::Tiptap::Node
+    tiptap_node nested: true,
+                structure: {
+                  internal_uid: { type: :string, hidden: true },
+                  title: :string,
+                },
+                form_fields_component: ->(f:) { CustomFieldsComponent.new(f:) }
   end
 
   test "renders default aside attachment layout" do
@@ -74,6 +111,29 @@ class Folio::Console::Tiptap::Overlay::Form::LayoutComponentTest < Folio::Consol
     assert_selector("[name='tiptap_node_attrs[data][cover_placement_attributes][file_id]']",
                     visible: :all)
     assert_selector("[name='tiptap_node_attrs[data][title]']")
+  end
+
+  test "renders custom fields instead of the built-in layout" do
+    render_layout_component(CustomFieldsNode.new(internal_uid: "stable-uid", title: "Custom title"))
+
+    assert_selector(".custom-fields-component")
+    assert_selector('[name="tiptap_node_attrs[data][internal_uid]"][value="stable-uid"]', visible: :all)
+    assert_selector('[name="tiptap_node_attrs[data][title]"][value="Custom title"]')
+    assert_no_selector(".f-c-tiptap-overlay-form-layout__row")
+  end
+
+  test "allows a custom fields component factory to omit the fields body" do
+    render_layout_component(NilCustomFieldsNode.new(title: "Hidden title"))
+
+    assert_no_selector('[name="tiptap_node_attrs[data][title]"]')
+  end
+
+  test "renders custom fields for nested nodes" do
+    render_layout_component(NestedCustomFieldsNode.new(internal_uid: "nested-uid", title: "Nested title"))
+
+    assert_selector(".custom-fields-component")
+    assert_selector('[name="tiptap_node_attrs[data][internal_uid]"][value="nested-uid"]', visible: :all)
+    assert_selector('[name="tiptap_node_attrs[data][title]"][value="Nested title"]')
   end
 
   private
