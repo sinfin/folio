@@ -4,16 +4,43 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
-
-- **Nested fields**: `folio_nested_fields` now supports `hide_selected_value_for:` to hide values already selected in visible sibling rows. The media-source site rules form uses it for `site_id`, disables the add button when no site value remains, and newly added rules offer the next available site instead of duplicating an existing selection.
-- **Tiptap default responsive preview**: the block editor can start in the mobile (responsive) preview when the host app sets the current user's `mobile_first` console preference. The value flows from `TiptapInput` through the Stimulus controller to the editor's initial responsive-preview state; the toolbar toggle still switches back and the manual choice is not persisted. Applies only to the block editor (rich-text fields have no responsive toggle).
-- **Console collection selects**: Add `filterable: true` for local Select2 filtering over pre-rendered collection options and grouped selects, preserving existing `remote:` autocomplete behavior.
-- **React ordered multi-select**: Support local `collection:` options, including grouped options, for ordered relation pickers that should filter without remote autocomplete.
-- **`Folio::Site.additional_strong_params`**: the full list of params permitted in the site console form (`site_params`), defaulting to `additional_params`. Override it (e.g. `super + %i[…]`) to permit fields you render yourself — e.g. in a custom `console_form_tabs` tab — without them being auto-rendered in the settings tab.
-- **Embed lazy loading**: `Folio::Embed::BoxComponent` accepts `lazy: false` to load immediately instead of waiting for intersection; the default remains `lazy: true`.
+- **Console private attachments**: `Folio::Console::PrivateAttachmentsFieldsComponent` accepts `title_input: false` to show filenames without editable title fields.
+- **Console form layout component**: Add `Folio::Console::Form::LayoutComponent`
+    for console forms with a header area, file picker column, and main content,
+    replacing ad hoc `col-md-auto` picker layouts in page and dummy blog forms.
+- **Input character counter**: Mask long displayed current counts automatically for numeric `character_counter` values, e.g. `150` derives a `999` display limit so `1000` and higher render as `*`. Pass `character_counter_auto_current_count_limit: false` to opt out.
+- **Console icons**: Add the `lock_open_variant` icon.
+- **Embed full-width iframes**: `Folio::Embed::BoxComponent` accepts `full_width_iframes: true` to let embedded iframes grow to the container width instead of stopping at their `width` attribute (560px for a URL-embedded YouTube video, 360px for Shorts). The default is `false`, so host apps opt in per site or per placement. The same option is accepted by `input as: :embed` and by `:embed` tiptap node attributes (where it may be a Proc resolved at render time) so console previews match the frontend.
 
 ### Changed
 
+- **AI pack configuration**: Move runtime configuration readers and provider
+  helpers onto `Folio::Ai.config`, keeping `Folio::Ai.configure` as the setup
+  API.
+
+### Fixed
+- **Embed HTML rendering**: Iframes pasted as raw HTML (e.g. a copied YouTube `<iframe>` embed code) now scale down using the aspect ratio derived from their `width`/`height` attributes, instead of keeping a fixed pixel size that overflowed and got clipped in narrower containers. They still stop at their attribute width in wider containers unless `full_width_iframes: true` is passed.
+- **Multi picker fields "add embed"**: The add-embed button now resolves the multi picker and adds the row to its `f-nested-fields`, instead of taking the first `f-nested-fields` in the whole form. Previously the click silently added the embed row to an unrelated nested-fields collection whenever the form rendered another `folio_nested_fields` before the picker, so the button appeared to do nothing. The lookup falls back to the picker within the form because the source header holding the button is detached into `.f-c-tiptap-simple-form-wrap` and is then no longer a descendant of its own picker.
+
+## [7.7.2] - 2026-07-23
+
+### Added
+- **Nested fields**: `folio_nested_fields` now supports `hide_selected_value_for:` to hide values already selected in visible sibling rows. The media-source site rules form uses it for `site_id`, disables the add button when no site value remains, and newly added rules offer the next available site instead of duplicating an existing selection.
+- **Tiptap default responsive preview**: the block editor can start in the mobile (responsive) preview when the host app sets the current user's `mobile_first` console preference. The value flows from `TiptapInput` through the Stimulus controller to the editor's initial responsive-preview state; the toolbar toggle still switches back and the manual choice is not persisted. Applies only to the block editor (rich-text fields have no responsive toggle).
+- **Console collection selects**: Add `filterable: true` for local Select2 filtering over pre-rendered collection options and grouped selects, preserving existing `remote:` autocomplete behavior.
+- **React ordered multi-select**: Support virtual ID-array fields with remote autocomplete and array hidden-input serialization.
+- **React ordered multi-select**: Support local `collection:` options, including grouped options, for ordered relation pickers that should filter without remote autocomplete.
+- **React ordered multi-select**: Support configurable item limits and scalar hidden-input serialization for single-value virtual fields.
+- **Tiptap custom nodes**: Allow attributes configured with `hidden: true` to persist internal values through the console overlay without rendering visible controls.
+- **Tiptap custom-node relation pickers**: Single relations declared with `class_name:` may now specify a no-argument `scope:`. The console picker applies it to both initial suggestions and search results, allowing nodes to exclude unsupported records from a large STI base class.
+- **Tiptap custom-node overlay form fields**: Nodes may now set `form_fields_component:` to replace their overlay field layout with one host-application ViewComponent.
+- **Tiptap block editor forms**: Accept per-field input and footer options, including an explicit read-only editor state. Read-only editors disable autosave, while footer options can hide save and other modification controls.
+- **Tiptap node overlays**: Pass source editor metadata and optional caller-provided context with node edit and save requests, allowing overlay fields to be scoped to the editor that opened them.
+- **`Folio::Site.additional_strong_params`**: the full list of params permitted in the site console form (`site_params`), defaulting to `additional_params`. Override it (e.g. `super + %i[…]`) to permit fields you render yourself — e.g. in a custom `console_form_tabs` tab — without them being auto-rendered in the settings tab.
+- **Embed lazy loading**: `Folio::Embed::BoxComponent` accepts `lazy: false` to load immediately instead of waiting for intersection; the default remains `lazy: true`.
+
+
+### Changed
 - **Media-source usage constraints**: Current-site usage filtering now aggregates direct and atom placements once and batch-loads displayed file counts instead of running a usage query per file.
 - **Possible future media-source counter refactor (not included)**: A synthetic benchmark measured the set-based query on PostgreSQL 16.14 with 300,000 files and 600,000 placements. With site-specific source rules on 10% of files, all request medians across five runs stayed below 2 seconds, including a deep usable page at 1.85 seconds with 0.97 seconds of SQL. With rules on 100% of files, the usable source/site-filtered request and deep usable page reached 2.35 and 2.38 seconds, although concurrent ordinary queries remained unaffected. If production resembles the 100% case, add a `folio_file_site_published_usage_counts` table with `file_id`, `site_id`, `published_usage_count`, timestamps, foreign keys, and a unique `(file_id, site_id)` index. Backfill it from deduplicated direct and atom usage grouped by parent record and site, then keep it synchronized for placement create/destroy/move, atom parent changes, parent publish/unpublish, parent site changes, and parent destruction. A design review must decide between synchronous updates and queued updates because stale queued counts could allow over-limit publication. Filtering and file-card rendering should join/preload the persisted counter while retaining `folio_files.published_usage_count` as the global fallback; add a reconciliation task and rerun the same 300,000-file HTTP benchmark before removing the dynamic SQL path.
 - **Console private attachments**: Replace the Dropzone/S3Upload add flow with `Folio::UppyComponent`, preserving nested attachment ordering/destroy behavior and hiding move arrows in single-attachment mode.
@@ -21,6 +48,8 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- **Console sidebar**: Only highlight the most specific active sidebar link when multiple prefix matches apply, so nested console pages no longer mark parent links active too.
+- **Console ancestry position buttons**: Refresh the same ancestry catalogue after moving rows when a page renders multiple ancestry catalogues, instead of replacing the moved catalogue with the first catalogue from the refreshed page.
 - **Embed inputs**: Server validation messages now appear directly beneath the HTML/URL field, before the preview, rather than above its label.
 - **Media-source usage constraints**: Usage counts include files placed through atoms, media-source rules are authoritative in the file console, and site-specific limits remain attached to the media source instead of being copied to files.
 - **Media source site rules**: Persisted rules can now be removed and re-added for the same site in one edit without tripping uniqueness validation.

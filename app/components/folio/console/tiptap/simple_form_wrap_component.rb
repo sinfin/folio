@@ -16,6 +16,8 @@ class Folio::Console::Tiptap::SimpleFormWrapComponent < Folio::Console::Applicat
     class_names << "f-c-tiptap-simple-form-wrap__form"
 
     @form_partial_name = @simple_form_options.delete(:form_partial_name) || "form"
+    @form_footer_options = @simple_form_options.delete(:form_footer_options) || {}
+    @tiptap_input_options = @simple_form_options.delete(:tiptap_input_options) || {}
 
     @simple_form_options[:html] ||= {}
     @simple_form_options[:html][:class] = class_names.join(" ")
@@ -112,6 +114,16 @@ class Folio::Console::Tiptap::SimpleFormWrapComponent < Folio::Console::Applicat
   end
 
   private
+    def tiptap_input_options_for(field)
+      field_options = @tiptap_input_options[field.to_sym] || @tiptap_input_options[field.to_s] || {}
+
+      {
+        as: :tiptap,
+        block: true,
+        error: false,
+      }.merge(field_options)
+    end
+
     def build_attribute_tabs
       return [] if grouped_tiptap_fields_for_locale_switcher.present?
       return [] if all_tiptap_fields.size <= 1

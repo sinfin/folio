@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
+# Persists per-user prompt instructions for one registered record field or group.
 class Folio::Ai::UserInstruction < Folio::ApplicationRecord
+  MAX_INSTRUCTION_LENGTH = 10_000
+
   self.table_name = "folio_ai_user_instructions"
 
   belongs_to :user,
@@ -13,31 +16,23 @@ class Folio::Ai::UserInstruction < Folio::ApplicationRecord
   validates :integration_key,
             :field_key,
             presence: true
-
   validates :instruction,
-            length: { maximum: 10_000 }
+            length: { maximum: MAX_INSTRUCTION_LENGTH }
 
-  before_validation :normalize_keys
+  before_validation :normalize_values
 
-  scope :by_site, -> (site) { where(site:) }
-  scope :by_user, -> (user) { where(user:) }
-  scope :by_field, -> (integration_key, field_key) {
-    where(integration_key: normalize_key(integration_key),
-          field_key: normalize_key(field_key))
-  }
-
-  def self.find_or_initialize_for(user:, site:, integration_key:, field_key:)
+  def self.find_or_initialize_for(user:, site:, record_key:, key:)
     find_or_initialize_by(user:,
                           site:,
-                          integration_key: normalize_key(integration_key),
-                          field_key: normalize_key(field_key))
+                          integration_key: normalize_key(record_key),
+                          field_key: normalize_key(key))
   end
 
-  def self.upsert_instruction!(user:, site:, integration_key:, field_key:, instruction:)
-    record = find_or_initialize_for(user:, site:, integration_key:, field_key:)
-    record.instruction = instruction.to_s
-    record.save!
-    record
+  def self.upsert_instruction!(user:, site:, record_key:, key:, instruction:)
+    find_or_initialize_for(user:, site:, record_key:, key:).tap do |record|
+      record.instruction = instruction.to_s
+      record.save!
+    end
   end
 
   def self.normalize_key(key)
@@ -45,7 +40,7 @@ class Folio::Ai::UserInstruction < Folio::ApplicationRecord
   end
 
   private
-    def normalize_keys
+    def normalize_values
       self.integration_key = self.class.normalize_key(integration_key)
       self.field_key = self.class.normalize_key(field_key)
       self.instruction = instruction.to_s

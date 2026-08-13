@@ -78,8 +78,11 @@ window.FolioConsole.React.init = (domRoot) => {
       url: domRoot.dataset.url,
       options: domRoot.dataset.options ? JSON.parse(domRoot.dataset.options) : null,
       sortable: domRoot.dataset.sortable !== '0',
+      maxItems: domRoot.dataset.maxItems ? parseInt(domRoot.dataset.maxItems) : null,
       atomSetting: domRoot.dataset.atomSetting,
-      menuPlacement: domRoot.dataset.menuPlacement
+      menuPlacement: domRoot.dataset.menuPlacement,
+      serialization: domRoot.dataset.serialization,
+      inputName: domRoot.dataset.inputName
     }))
 
     ReactDOM.render((

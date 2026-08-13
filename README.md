@@ -8,11 +8,11 @@ Folio is an open-source engine that turns any Rails application into a modern, m
 
 ## Why Folio?
 
-• **Productive** – Generators for pages, components, mailers, blog, search, …  
-• **Flexible** – Compose pages from CMS blocks (Atoms) rendered by ViewComponent.  
-• **Modern** – Console UI built with Stimulus & ViewComponent, ready for Turbo.  
-• **Ruby First** – 100 % Ruby / Slim / SASS, no proprietary DSLs.  
-• **Upgrade-safe** – Override via `app/overrides/`, keep your customisations isolated.
+- **Productive** – Generators for pages, components, mailers, blog, search, …
+- **Flexible** – Compose pages from CMS blocks (Atoms) rendered by ViewComponent.
+- **Modern** – Console UI built with Stimulus & ViewComponent, ready for Turbo.
+- **Ruby First** – 100 % Ruby / Slim / SASS, no proprietary DSLs.
+- **Upgrade-safe** – Override via `app/overrides/`, keep your customisations isolated.
 
 ---
 
@@ -178,6 +178,7 @@ Full English documentation lives in the `docs/` folder:
 | Help Documents | [docs/help_documents.md](docs/help_documents.md) |
 | Files & Media | [docs/files.md](docs/files.md) |
 | Forms | [docs/forms.md](docs/forms.md) |
+| AI Suggestions | [docs/ai.md](docs/ai.md) |
 | Emails & Templates | [docs/emails.md](docs/emails.md) |
 | Configuration | [docs/configuration.md](docs/configuration.md) |
 | Testing | [docs/testing.md](docs/testing.md) |
@@ -198,7 +199,7 @@ Start with the [Overview](docs/overview.md) and follow the *Quick Start* guide.
 ## Contributing
 
 1. Fork the repo and create your branch (`git checkout -b feature/my-thing`).
-2. Install dummy app for development: 
+2. Install dummy app for development:
     ```
     bundle
     rails app:folio:prepare_dummy_app
