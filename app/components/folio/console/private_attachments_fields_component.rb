@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 class Folio::Console::PrivateAttachmentsFieldsComponent < Folio::Console::ApplicationComponent
-  def initialize(f:, key: :private_attachments, single: false)
+  def initialize(f:, key: :private_attachments, single: false, title_input: true)
     @f = f
     @key = key
     @single = single
+    @title_input = title_input
 
     @file_type = if @f.object.class.reflections[key.to_s]
       @f.object.class.reflections[key.to_s].options[:class_name]
@@ -32,6 +33,7 @@ class Folio::Console::PrivateAttachmentsFieldsComponent < Folio::Console::Applic
                           file_type: @file_type,
                           base_key:,
                           single: @single,
+                          title_input: @title_input,
                         },
                         action: {
                           "f-uppy:upload-start": "onUppyUploadStart",

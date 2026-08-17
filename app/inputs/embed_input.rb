@@ -45,6 +45,7 @@ class EmbedInput < SimpleForm::Inputs::StringInput
       @builder.template.render(Folio::Input::Embed::InnerComponent.new(folio_embed_data:,
                                                                        centered: !!options[:centered],
                                                                        background_color: options[:background_color],
+                                                                       full_width_iframes: !!options[:full_width_iframes],
                                                                        compact: options[:compact],
                                                                        error:))
     end
