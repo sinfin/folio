@@ -62,13 +62,16 @@
         ]
           = folio_icon(:file_document, height: 24)
 
-        input.form-control[
-          class="f-c-private-attachments-fields__input"
-          class="f-c-private-attachments-fields__input--title"
-          type="text"
-          name="title"
-          placeholder=@file_klass.human_attribute_name(:title)
-        ]
+        - if @title_input
+          input.form-control[
+            class="f-c-private-attachments-fields__input"
+            class="f-c-private-attachments-fields__input--title"
+            type="text"
+            name="title"
+            placeholder=@file_klass.human_attribute_name(:title)
+          ]
+        - else
+          .f-c-private-attachments-fields__file-name
 
         - unless @single
           button[

@@ -56,6 +56,7 @@
 
 .f-embed__loader:before,
 .f-embed__loader:after {
+  box-sizing: border-box;
   content: '';
   border-radius: 50%;
   width: 3em;
@@ -102,6 +103,7 @@
 
 .f-embed__container iframe {
   display: block;
+  max-width: 100%;
 }
 
 .f-embed__container--centered .instagram-media,
@@ -143,4 +145,8 @@
 
 .f-embed__youtube-iframe--shorts {
   aspect-ratio: 360 / 640;
+}
+
+.f-embed__container--full-width-iframes .f-embed__youtube-iframe {
+  width: 100%;
 }

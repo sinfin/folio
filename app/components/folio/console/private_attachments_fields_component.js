@@ -12,7 +12,8 @@ window.Folio.Stimulus.register('f-c-private-attachments-fields', class extends w
   static values = {
     fileType: String,
     baseKey: String,
-    single: { type: Boolean, default: false }
+    single: { type: Boolean, default: false },
+    titleInput: { type: Boolean, default: true }
   }
 
   static ERROR_MESSAGES = {
@@ -72,11 +73,17 @@ window.Folio.Stimulus.register('f-c-private-attachments-fields', class extends w
   }
 
   updateAttachment (attachment, hash) {
-    const keys = ['id', '_destroy', 'title', 'position']
+    const keys = ['id', '_destroy', 'position']
+
+    if (this.titleInputValue) keys.push('title')
 
     keys.forEach((key) => {
       this.updateAttachmentInput(attachment, hash, key)
     })
+
+    if (!this.titleInputValue) {
+      attachment.querySelector('.f-c-private-attachments-fields__file-name').textContent = hash.attributes.file_name || ''
+    }
 
     attachment.querySelector('.f-c-private-attachments-fields__attachment-link').href = hash.attributes.expiring_url
 

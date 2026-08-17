@@ -58,18 +58,26 @@ class OrderedMultiselectApp extends React.Component {
       id: itemId,
       label: option.label
     }
-    document.querySelector('.f-c-r-ordered-multiselect-app').dispatchEvent(new window.Event('change', { bubbles: true }))
     this.props.dispatch(addItem(item))
+    this.dispatchChangeEvent()
   }
 
   update = (items) => {
-    document.querySelector('.f-c-r-ordered-multiselect-app').dispatchEvent(new window.Event('change', { bubbles: true }))
     this.props.dispatch(updateItems(items))
+    this.dispatchChangeEvent()
   }
 
   removeItem = (item) => {
-    document.querySelector('.f-c-r-ordered-multiselect-app').dispatchEvent(new window.Event('change', { bubbles: true }))
     this.props.dispatch(removeItem(item))
+    this.dispatchChangeEvent()
+  }
+
+  dispatchChangeEvent = () => {
+    if (!this.wrapRef.current) return
+
+    window.setTimeout(() => {
+      this.wrapRef.current.dispatchEvent(new window.Event('change', { bubbles: true }))
+    }, 0)
   }
 
   settingValue () {
@@ -84,6 +92,7 @@ class OrderedMultiselectApp extends React.Component {
     const { orderedMultiselect } = this.props
     const without = orderedMultiselect.items.map((item) => item.value).join(',')
     const rawOptions = orderedMultiselect.options ? filterOptions(orderedMultiselect.options, orderedMultiselect.items) : null
+    const canAddItem = !orderedMultiselect.maxItems || orderedMultiselect.items.length < orderedMultiselect.maxItems
     const selectProps = {
       onChange: this.onSelect,
       createable: false,
@@ -138,7 +147,7 @@ class OrderedMultiselectApp extends React.Component {
           />
         ) : null}
 
-        <Select {...selectProps} />
+        {canAddItem ? <Select {...selectProps} /> : null}
 
         <Serialized orderedMultiselect={orderedMultiselect} />
       </div>

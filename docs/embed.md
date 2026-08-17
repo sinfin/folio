@@ -246,6 +246,25 @@ For displaying embedded content on the frontend, use the `Folio::Embed::BoxCompo
 - Stimulus controller `f-embed-box` for interaction handling
 - Configurable centering and custom data attributes
 
+#### Iframe sizing
+
+Iframes inside the embed always **shrink** to fit a container narrower than themselves: raw-HTML iframes get an `aspect-ratio` derived from their `width`/`height` attributes plus `max-width: 100%`, so they scale down instead of overflowing and being clipped by the embed box.
+
+They do **not** grow past the size given by their attributes — a raw-HTML YouTube snippet stays 560x315 and a URL-embedded YouTube video stays 560px wide (360px for Shorts) in a wider container.
+
+Pass `full_width_iframes: true` to let them fill the container width as well:
+
+```rb
+<%= render(Folio::Embed::BoxComponent.new(
+  folio_embed_data: @post.folio_embed_data,
+  full_width_iframes: true
+)) %>
+```
+
+With the flag on, the component forwards `fullWidthIframes=1` to `/folio/embed`, which adds `f-embed__container--full-width-iframes` to the embed container and applies `width: 100%` to the iframes.
+
+The same option works on the embed input (`f.input :folio_embed_data, as: :embed, full_width_iframes: true`) so console previews match the frontend. Because it is opt-in, apps that render embeds on several sites can enable it per site.
+
 #### Background options
 
 `Folio::Embed::BoxComponent` supports two background modes:

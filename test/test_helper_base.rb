@@ -73,7 +73,27 @@ class ActiveSupport::TestCase
   require Folio::Engine.root.join("test/support/method_invoking_matchers_helper")
   require Folio::Engine.root.join("test/support/metadata_test_helpers")
 
-  parallelize
+  configured_max_workers = Integer(
+    ENV.fetch("TEST_MAX_WORKERS", "8"),
+    10,
+    exception: false,
+  )
+  configured_threshold = Integer(
+    ENV.fetch("TEST_PARALLELIZATION_THRESHOLD", "100"),
+    10,
+    exception: false,
+  )
+  threshold = configured_threshold && configured_threshold >= 0 ? configured_threshold : 100
+
+  parallelize_options = {}
+  parallelize_options[:threshold] = threshold unless configured_threshold&.zero?
+
+  unless configured_max_workers&.zero?
+    max_workers = configured_max_workers&.positive? ? configured_max_workers : 8
+    parallelize_options[:workers] = [Concurrent.processor_count, max_workers].min
+  end
+
+  parallelize(**parallelize_options)
 
   include FactoryBot::Syntax::Methods
   include MethodInvokingMatchersHelper
@@ -100,21 +120,6 @@ class ActiveSupport::TestCase
     # Restore original values
     original_values.each do |key, value|
       Rails.application.config.send("#{key}=", value)
-    end
-  end
-
-  def with_ai_config(**config_overrides)
-    original_values = {}
-
-    config_overrides.each do |key, value|
-      original_values[key] = Folio::Ai.public_send(key)
-      Folio::Ai.public_send("#{key}=", value)
-    end
-
-    yield
-  ensure
-    original_values.each do |key, value|
-      Folio::Ai.public_send("#{key}=", value)
     end
   end
 

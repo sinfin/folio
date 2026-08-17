@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
 class Folio::Tiptap::NodeBuilder
-  def initialize(klass:, structure:, tiptap_config: nil, form_layout: :aside_attachments)
+  def initialize(klass:, structure:, tiptap_config: nil, form_layout: :aside_attachments,
+                 form_fields_component: nil)
     @klass = klass
     @structure = convert_structure_to_hashes(structure)
+    @form_fields_component = form_fields_component
+    validate_form_fields_component!
     @tiptap_config = get_tiptap_config(tiptap_config)
     @form_layout = Folio::Tiptap::FormLayoutBuilder.call(klass: @klass,
                                                           structure: @structure,
@@ -16,6 +19,7 @@ class Folio::Tiptap::NodeBuilder
     setup_html_sanitization_config!
     handle_config!
     handle_form_layout!
+    handle_form_fields_component!
   end
 
   private
@@ -572,7 +576,12 @@ class Folio::Tiptap::NodeBuilder
           if value[:type].is_a?(Symbol)
             result[key] = value
           elsif value[:class_name].present?
-            result[key] = { type: :relation, class_name: value[:class_name], has_many: value[:has_many] || false }
+            result[key] = {
+              type: :relation,
+              class_name: value[:class_name],
+              has_many: value[:has_many] || false,
+              scope: value[:scope],
+            }.compact
           else
             fail ArgumentError, "Expected :type or :class_name in hash for #{key}, got #{value.inspect}"
           end
@@ -654,6 +663,12 @@ class Folio::Tiptap::NodeBuilder
       if attr_config.key?(:prebuild) && ![true, false].include?(attr_config[:prebuild])
         fail ArgumentError, "Expected nested_nodes prebuild for #{key} to be true or false"
       end
+    end
+
+    def validate_form_fields_component!
+      return if @form_fields_component.nil? || @form_fields_component.respond_to?(:call)
+
+      fail ArgumentError, "Expected form_fields_component to be nil or callable"
     end
 
     def nested_node_class(key:, attr_config:)
@@ -759,6 +774,14 @@ class Folio::Tiptap::NodeBuilder
 
       @klass.define_singleton_method :form_layout do
         class_variable_get(:@@form_layout)
+      end
+    end
+
+    def handle_form_fields_component!
+      @klass.class_variable_set(:@@form_fields_component, @form_fields_component)
+
+      @klass.define_singleton_method :form_fields_component do
+        class_variable_get(:@@form_fields_component)
       end
     end
 
