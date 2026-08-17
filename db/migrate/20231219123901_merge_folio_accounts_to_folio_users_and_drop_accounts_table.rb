@@ -2,7 +2,7 @@
 
 class MergeFolioAccountsToFolioUsersAndDropAccountsTable < ActiveRecord::Migration[7.0]
   def up
-    sites = connection.select_all("SELECT * FROM folio_sites").to_a
+    site_ids = connection.select_values("SELECT id FROM folio_sites")
 
     accounts = connection.select_all("SELECT * FROM folio_accounts")
 
@@ -28,12 +28,9 @@ class MergeFolioAccountsToFolioUsersAndDropAccountsTable < ActiveRecord::Migrati
         update_user_superadmin(user_id, superadmin)
       end
 
-      sites.each do |site|
-        available_user_roles = json_array(site["available_user_roles"])
-        missing_site_roles = roles_to_pass - available_user_roles
-
-        update_site_roles(site["id"], available_user_roles + missing_site_roles) if missing_site_roles.present?
-        upsert_site_user_link(user_id, site["id"], roles_to_pass)
+      site_ids.each do |site_id|
+        update_site_roles(site_id, roles_to_pass)
+        upsert_site_user_link(user_id, site_id, roles_to_pass)
       end
 
       update_console_notes(account["id"], user_id)
@@ -69,9 +66,15 @@ class MergeFolioAccountsToFolioUsersAndDropAccountsTable < ActiveRecord::Migrati
     end
 
     def update_site_roles(site_id, roles)
-      connection.update("UPDATE folio_sites " \
-                        "SET available_user_roles = #{connection.quote(roles.to_json)} " \
-                        "WHERE id = #{connection.quote(site_id)}")
+      current_roles = json_array(connection.select_value("SELECT available_user_roles FROM folio_sites " \
+                                                         "WHERE id = #{connection.quote(site_id)}"))
+      missing_site_roles = roles - current_roles
+
+      if missing_site_roles.present?
+        connection.update("UPDATE folio_sites " \
+                          "SET available_user_roles = #{connection.quote((current_roles + missing_site_roles).to_json)} " \
+                          "WHERE id = #{connection.quote(site_id)}")
+      end
     end
 
     def upsert_site_user_link(user_id, site_id, roles)
