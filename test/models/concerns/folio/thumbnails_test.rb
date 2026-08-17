@@ -60,6 +60,20 @@ class Folio::ThumbnailsTest < ActiveSupport::TestCase
     assert image.reload.thumbnail_sizes[THUMB_SIZE][:uid].ends_with?(".jpg")
   end
 
+  test "stores file datastore thumbnail urls without S3 rewriting" do
+    image = create(:folio_file_image, additional_data: { "generate_thumbnails_in_test" => true })
+
+    perform_enqueued_jobs do
+      image.thumb(THUMB_SIZE)
+    end
+
+    thumb = image.reload.thumbnail_sizes[THUMB_SIZE]
+
+    assert thumb[:url].start_with?("/system/dragonfly/test/files/")
+    assert thumb[:webp_url].start_with?("/system/dragonfly/test/files/")
+    assert_equal thumb[:url], image.thumb(THUMB_SIZE).url
+  end
+
   test "uses default x/y from thumbnail_configuration when cropping" do
     image = create(:folio_file_image, additional_data: { "generate_thumbnails_in_test" => true })
 

@@ -15,6 +15,10 @@ module Folio
 
     config.folio_crossdomain_devise = false
     config.folio_shared_files_between_sites = true
+    config.folio_dragonfly_datastore = :s3
+    config.folio_dragonfly_file_root_path = nil
+    config.folio_dragonfly_file_server_root = nil
+    config.folio_direct_file_upload_root_path = nil
     config.folio_dragonfly_keep_png = true
     config.folio_dragonfly_cwebp_quality = 90
     config.folio_public_page_title_reversed = false

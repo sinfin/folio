@@ -3,18 +3,56 @@
 class Folio::Api::S3Controller < Folio::Api::BaseController
   include Folio::S3::Client
 
-  before_action :authenticate_s3!, except: %i[file_list_file]
+  before_action :authenticate_s3!, except: %i[download file_list_file]
   before_action :get_file_name_and_s3_path, only: %i[before]
 
   def before # return settings for S3 file upload
     presigned_url = test_aware_presign_url(s3_path: @s3_path, method_name: :put_object)
 
-    render json: {
+    data = {
       jwt: "TODO",
       s3_url: presigned_url,
       file_name: @file_name,
       s3_path: @s3_path,
     }
+
+    if use_local_file_system?
+      data[:upload_method] = "PUT"
+      data[:upload_headers] = {
+        "X-CSRF-Token" => form_authenticity_token,
+      }
+    end
+
+    render json: data
+  end
+
+  def upload
+    return head :not_found unless use_local_file_system?
+
+    s3_path = verified_direct_file_s3_path(token: params.require(:token), method_name: :put_object)
+    fail ActionController::BadRequest, "Direct upload path mismatch" if s3_path != params.require(:s3_path)
+
+    test_aware_s3_upload(s3_path:, file: request.body)
+    head :no_content
+  rescue ActiveSupport::MessageVerifier::InvalidSignature, ArgumentError
+    head :forbidden
+  end
+
+  def download
+    return head :not_found unless use_local_file_system?
+
+    s3_path = verified_direct_file_s3_path(token: params.require(:token), method_name: :get_object)
+    fail ActionController::BadRequest, "Direct download path mismatch" if s3_path != params.require(:s3_path)
+
+    path = test_aware_s3_path(s3_path)
+    return head :not_found unless File.file?(path)
+
+    send_file path,
+              filename: File.basename(s3_path),
+              type: Marcel::MimeType.for(Pathname.new(path), name: File.basename(s3_path)),
+              disposition: "attachment"
+  rescue ActiveSupport::MessageVerifier::InvalidSignature, ArgumentError
+    head :forbidden
   end
 
   # somewhere between, JS on FE directly loads file as temporary to S3 and returns it's s3_path

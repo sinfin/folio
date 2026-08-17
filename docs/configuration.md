@@ -18,6 +18,10 @@ This chapter lists the most important configuration options for the Folio Rails 
 |--------|---------|---------|
 | `config.folio_crossdomain_devise` | `false` | Enable shared Devise sessions across sub-domains |
 | `config.folio_shared_files_between_sites` | `true` | Share uploaded files among all sites |
+| `config.folio_dragonfly_datastore` | `:s3` | Dragonfly datastore. Use `:file` for local filesystem storage |
+| `config.folio_dragonfly_file_root_path` | `nil` | Optional root path for `:file` Dragonfly storage |
+| `config.folio_dragonfly_file_server_root` | `nil` | Optional public server root for `:file` Dragonfly URLs |
+| `config.folio_direct_file_upload_root_path` | `nil` | Optional temporary upload root used by direct uploads with `:file` storage |
 | `config.folio_pages_audited` | `false` | Keep an audit trail of page changes |
 | `config.folio_pages_autosave` | `false` | Enable autosave in page forms |
 | `config.folio_console_locale` | `:cs` | Default locale in admin console |
@@ -48,6 +52,8 @@ end
 ```
 
 After changing configuration, restart your Rails server.
+
+Set `config.folio_dragonfly_datastore` in `config/application.rb` or another initializer that runs before Folio's Dragonfly initializer, because Dragonfly storage is selected during boot.
 
 ---
 

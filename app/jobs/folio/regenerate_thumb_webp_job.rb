@@ -45,7 +45,7 @@ class Folio::RegenerateThumbWebpJob < Folio::ApplicationJob
 
       data.merge(
         webp_uid:,
-        webp_url: Folio::S3.url_rewrite(Dragonfly.app.datastore.url_for(webp_uid)),
+        webp_url: Folio::S3.dragonfly_url_for(webp_uid),
         webp_signature: webp.signature,
       )
     end

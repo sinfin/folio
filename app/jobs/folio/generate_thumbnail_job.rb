@@ -221,7 +221,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
       base = {
         uid:,
         signature: thumbnail.signature,
-        url: Folio::S3.url_rewrite(Dragonfly.app.datastore.url_for(uid)),
+        url: Folio::S3.dragonfly_url_for(uid),
         width: thumbnail.width,
         height: thumbnail.height,
         quality:,
@@ -247,7 +247,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
 
         base.merge(
           webp_uid:,
-          webp_url: Folio::S3.url_rewrite(Dragonfly.app.datastore.url_for(webp_uid)),
+          webp_url: Folio::S3.dragonfly_url_for(webp_uid),
           webp_signature: webp.signature,
         )
       else
@@ -260,7 +260,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
         return video_screenshot(image)
       end
 
-      if Rails.env.development? && ENV["DRAGONFLY_PRODUCTION_S3_URL_BASE"] && image.respond_to?(:development_safe_file)
+      if Rails.env.development? && ENV["DRAGONFLY_PRODUCTION_S3_URL_BASE"] && Folio::S3.s3_datastore? && image.respond_to?(:development_safe_file)
         thumbnail = image.development_safe_file(logger)
       else
         thumbnail = image.file

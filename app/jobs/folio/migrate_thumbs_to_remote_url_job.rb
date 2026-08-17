@@ -22,7 +22,7 @@ class Folio::MigrateThumbsToRemoteUrlJob < Folio::ApplicationJob
         next unless data[:uid]
         next unless data[:url]
         next unless data[:url].start_with?("/media")
-        thumbnail_sizes[size] = data.merge(url: Folio::S3.url_rewrite(Dragonfly.app.datastore.url_for(data[:uid])))
+        thumbnail_sizes[size] = data.merge(url: Folio::S3.dragonfly_url_for(data[:uid]))
         changed = true
       end
 

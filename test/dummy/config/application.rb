@@ -22,6 +22,10 @@ module Dummy
     config.folio_newsletter_subscriptions = true
     config.folio_site_default_test_factory = :dummy_site
 
+    if Rails.env.local? && ENV["FOLIO_DEV_LOCAL_FILES"].present?
+      config.folio_dragonfly_datastore = :file
+    end
+
     config.folio_tiptap_use_for_pages = true
 
     I18n.available_locales = [:cs, :en]
