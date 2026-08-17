@@ -176,8 +176,6 @@ handleSplitableJoinTriggerClick = (e) ->
 lastSentHeight = null
 
 sendResizeMessage = ->
-  # the parent measures this same element to set the iframe min-height,
-  # which resizes us back - skipping unchanged heights stops the bounce
   height = $('.f-c-atoms-previews').outerHeight(true)
   return if typeof height is 'number' and height is lastSentHeight
   lastSentHeight = height
@@ -190,9 +188,6 @@ debouncedSendResizeMessage = window.Folio.debounce(sendResizeMessage, 100)
 
 previewsResizeObserver = null
 
-# embeds, lazyloaded images and ads settle long after load and the iframe
-# has no scroll of its own, so without this the parent keeps the min-height
-# it measured first and the tail of the preview gets clipped
 observePreviewsResize = ->
   return unless window.ResizeObserver
   previewsResizeObserver ?= new ResizeObserver(debouncedSendResizeMessage)
