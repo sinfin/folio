@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- **Audio processing**: Process uploaded audio into playback-ready derivatives,
+  extract metadata, waveform, and embedded artwork, and expose cacheable or
+  signed playback sources with backward-compatible fallbacks.
 - **Console private attachments**: `Folio::Console::PrivateAttachmentsFieldsComponent` accepts `title_input: false` to show filenames without editable title fields.
 - **Console form layout component**: Add `Folio::Console::Form::LayoutComponent`
     for console forms with a header area, file picker column, and main content,

@@ -10,6 +10,7 @@ cs:
         thead/info: Informace
         thead/count: Použití
         thead/size: Velikost
+        thead/duration: Délka
         thead/tags: Klíčová slova
         tags_count: 'Celkem %{count} klíčových slov'
         select: Vybrat
