@@ -12,6 +12,10 @@
           = render(Folio::Console::Files::Show::Thumbnails::MainComponent.new(file: @file,
                                                                                details_id: Folio::Console::Files::Show::Thumbnails::MainComponent.details_id(@file)))
 
+        - if @file.class.human_type == "audio" && can_now?(:update, @file)
+          .f-c-files-show__artwork-wrap
+            = render(Folio::Console::Files::ArtworkFormComponent.new(file: @file))
+
     .col-lg
       .f-c-files-show__buttons-outer.mb-h
         .f-c-files-show__buttons
@@ -74,6 +78,8 @@
             .f-c-files-show__td
               - if key == :usage_constraints
                 = render(Folio::Console::Files::UsageConstraintsComponent.new(file: @file))
+              - elsif key == :file_track_duration
+                = @file.formatted_duration
               - else
                 = render(Folio::Console::Ui::InPlaceInputComponent.new(attribute: key,
                                                                        record: @file,

@@ -7,11 +7,13 @@ class Folio::Input::Embed::InnerComponent < ApplicationComponent
                  compact: false,
                  centered: false,
                  background_color: nil,
+                 full_width_iframes: false,
                  error: nil)
     @folio_embed_data = folio_embed_data
     @compact = compact
     @centered = centered
     @background_color = background_color
+    @full_width_iframes = full_width_iframes
     @error = error
   end
 

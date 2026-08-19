@@ -79,6 +79,11 @@ window.Folio.Stimulus.register('f-c-files-show-modal', class extends window.Stim
       return
     }
 
+    // another modal stacked on top (e.g. the file picker) owns the keyboard
+    if (!window.Folio.Modal.isTopmost(this.element)) {
+      return
+    }
+
     if (e.key === 'Escape') {
       e.stopImmediatePropagation()
       e.preventDefault()

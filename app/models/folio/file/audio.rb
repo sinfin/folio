@@ -1,9 +1,183 @@
 # frozen_string_literal: true
 
 class Folio::File::Audio < Folio::File
-  validate_file_format %w[audio/mpeg audio/aac audio/x-hx-aac-adts]
+  include Folio::S3::Client
+  extend Folio::HasAttachments::ClassMethods
+
+  has_one_placement(:artwork_cover,
+                    placement: "Folio::FilePlacement::ArtworkCover")
+
+  ACCEPTED_FILE_FORMATS = %w[
+    audio/mpeg
+    audio/mp3
+    audio/aac
+    audio/x-aac
+    audio/vnd.dlna.adts
+    audio/x-hx-aac-adts
+    audio/mp4
+    audio/x-m4a
+    audio/wav
+    audio/x-wav
+    audio/vnd.wave
+    audio/flac
+    audio/x-flac
+    audio/ogg
+    application/ogg
+  ].freeze
+
+  validate_file_format ACCEPTED_FILE_FORMATS
+
+  def mapped_metadata
+    @mapped_metadata ||= if file_metadata.present?
+      Folio::Metadata::AudioFieldMapper.map_metadata(file_metadata)
+    else
+      {}
+    end
+  end
+
+  def should_validate_file_placements_attribution_if_needed?(for_console_form_warning: false)
+    return false unless Rails.application.config.folio_files_require_attribution
+
+    for_console_form_warning
+  end
+
+  def should_validate_file_placements_alt_if_needed?(for_console_form_warning: false)
+    return false unless Rails.application.config.folio_files_require_alt
+
+    for_console_form_warning
+  end
+
+  def should_validate_file_placements_description_if_needed?(for_console_form_warning: false)
+    return false unless Rails.application.config.folio_files_require_description
+
+    for_console_form_warning
+  end
+
+  def update_file_placement_count_if_needed!(placement_key:)
+    return unless respond_to?("#{placement_key}_count=")
+
+    count = send(placement_key).count
+
+    if send("#{placement_key}_count") != count
+      update_column("#{placement_key}_count", count)
+    end
+  end
+
+  def artwork_image
+    artwork_cover
+  end
+
+  def artwork_image_placement
+    artwork_cover_placement
+  end
+
+  def playable_storage_data
+    remote_services_data.to_h["playable"].to_h
+  end
+
+  def playable_file_path
+    playable_storage_data["path"]
+  end
+
+  def waveform_payload
+    remote_services_data.to_h["waveform"].presence
+  end
+
+  def waveform_peaks
+    Array(waveform_payload&.fetch("peaks", nil))
+  end
+
+  def playable_content_type
+    playable_storage_data["content_type"].presence || file_mime_type
+  end
+
+  def playable_extension
+    playable_storage_data["extension"].presence || file_extension.to_s
+  end
+
+  def playable_download_url(expires_in: 15.minutes.to_i)
+    return unless playable_file_path.present?
+
+    test_aware_presign_url(s3_path: playable_file_path,
+                           method_name: :get_object,
+                           expires_in:)
+  end
+
+  # Immediate playback API for callers that need a playable derivative.
+  # Public/cacheable serializers should use source_payload(intent: :cacheable).
+  def player_source_url(expires_in: 15.minutes.to_i)
+    source_payload(intent: :immediate_playback, expires_in:)[:url]
+  end
+
+  def player_source_mime_type
+    playable_file_path.present? ? playable_content_type : file_mime_type
+  end
+
+  def source_payload(intent: :cacheable, expires_in: 15.minutes.to_i)
+    if intent == :immediate_playback
+      immediate_source_payload(expires_in:)
+    else
+      super(intent:)
+    end
+  end
+
+  def low_quality_source?
+    remote_services_data.to_h["quality_warning"] == "low_bitrate"
+  end
 
   def self.human_type
     "audio"
   end
+
+  def extract_metadata!(force: false, user_id: nil, save: true)
+    Folio::File::AudioProcessingService.new(self).extract_metadata!(force:, save:)
+  end
+
+  def process_attached_file
+    Folio::File::ProcessAudioJob.perform_later(self)
+  end
+
+  def formatted_duration
+    return nil if file_track_duration.nil?
+
+    total = file_track_duration.to_i
+    h = total / 3600
+    m = (total % 3600) / 60
+    s = total % 60
+
+    if h > 0
+      format("%d:%02d:%02d", h, m, s)
+    else
+      format("%d:%02d", m, s)
+    end
+  end
+
+  private
+    def immediate_source_payload(expires_in:)
+      if playable_file_path.present?
+        {
+          url: playable_download_url(expires_in:),
+          mime_type: playable_content_type,
+          cacheable: false,
+        }
+      else
+        original_source_payload(expires_in:)
+      end
+    end
+
+    def original_source_payload(expires_in:)
+      cacheable = !private?
+
+      url = if cacheable
+        Folio::S3.cdn_url_rewrite(file.remote_url)
+      else
+        Folio::S3.url_rewrite(file.remote_url(expires: expires_in.seconds.from_now))
+      end
+
+      {
+        url:,
+        mime_type: file_mime_type,
+        cacheable:,
+      }
+    end
 end

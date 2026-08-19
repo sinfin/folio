@@ -11,6 +11,7 @@ class Folio::Console::PrivateAttachmentsFieldsComponentTest < Folio::Console::Co
     assert_selector('.f-c-private-attachments-fields[data-action*="f-uppy:upload-success->f-c-private-attachments-fields#onUppyUploadSuccess"]')
     assert_selector('.f-uppy.f-uppy--custom-trigger[data-f-uppy-file-type-value="Folio::PrivateAttachment"]')
     assert_selector(".f-uppy__trigger .f-c-ui-button", text: I18n.t("folio.console.actions.add"))
+    assert_selector(".f-c-private-attachments-fields__input--title", visible: :all)
     assert_no_selector(".f-c-private-attachments-fields__attachment-progress", visible: :all)
     assert_selector(".f-c-private-attachments-fields__action--move-up", visible: :all)
     assert_selector(".f-c-private-attachments-fields__action--move-down", visible: :all)
@@ -24,14 +25,22 @@ class Folio::Console::PrivateAttachmentsFieldsComponentTest < Folio::Console::Co
     assert_no_selector(".f-c-private-attachments-fields__action--move-down", visible: :all)
   end
 
+  test "renders the file name without a title input when title input is disabled" do
+    render_component(title_input: false)
+
+    assert_selector('.f-c-private-attachments-fields[data-f-c-private-attachments-fields-title-input-value="false"]')
+    assert_selector(".f-c-private-attachments-fields__file-name", visible: :all)
+    assert_no_selector(".f-c-private-attachments-fields__input--title", visible: :all)
+  end
+
   private
-    def render_component(single: false)
+    def render_component(single: false, title_input: true)
       page = Dummy::Page::WithPrivateAttachments.new(site: get_any_site,
                                                      title: "Page with private attachments")
       view = vc_test_controller.view_context
 
       view.simple_form_for(page, url: "/") do |f|
-        render_inline(Folio::Console::PrivateAttachmentsFieldsComponent.new(f:, single:))
+        render_inline(Folio::Console::PrivateAttachmentsFieldsComponent.new(f:, single:, title_input:))
       end
     end
 end

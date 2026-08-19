@@ -6,13 +6,15 @@ class Folio::Tiptap::Node
   include ActiveModel::Attributes
   include ActiveModel::Translation
 
-  def self.tiptap_node(structure:, tiptap_config: nil, nested: false, form_layout: :aside_attachments)
+  def self.tiptap_node(structure:, tiptap_config: nil, nested: false, form_layout: :aside_attachments,
+                       form_fields_component: nil)
     @nested = nested == true
 
     Folio::Tiptap::NodeBuilder.new(klass: self,
                                    structure:,
                                    tiptap_config:,
-                                   form_layout:).build!
+                                   form_layout:,
+                                   form_fields_component:).build!
   end
 
   def self.nested?
