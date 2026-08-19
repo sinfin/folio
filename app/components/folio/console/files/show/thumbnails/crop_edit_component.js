@@ -228,6 +228,7 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
     this.closeOverlay()
     this.unbindCropper()
     this.stateValue = 'viewing'
+    this.subscribePreviewCandidates()
   }
 
   trackBackdropPointerDown (event) {
@@ -595,6 +596,8 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
   }
 
   thumbnailUpdated (event) {
+    if (this.overlayTarget.open) return
+
     if (!this.hasPreviewCandidatesValue) {
       if (this.stateValue === 'waiting-for-thumbnail') this.stateValue = 'viewing'
       return
@@ -609,7 +612,7 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
     this.thumbImageTarget.src = event.detail.url
     this.thumbImageTarget.hidden = false
     this.previewPriorityValue = candidate.priority
-    if (this.stateValue !== 'saving') this.stateValue = 'viewing'
+    if (this.stateValue === 'waiting-for-thumbnail') this.stateValue = 'viewing'
     this.subscribePreviewCandidates()
   }
 
