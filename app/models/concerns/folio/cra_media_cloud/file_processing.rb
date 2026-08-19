@@ -16,19 +16,6 @@ module Folio::CraMediaCloud::FileProcessing
     nil # override in app to return e.g. "SD", "HD"
   end
 
-  def cra_media_cloud_vertical?
-    data = remote_services_data
-    return false unless data.is_a?(Hash)
-
-    aspect = data["video_aspect"]
-    return false unless aspect.is_a?(Hash)
-
-    width = aspect["width"].to_i
-    height = aspect["height"].to_i
-
-    width.positive? && height > width
-  end
-
   def remote_content_mp4_url_for(profile)
     path = remote_services_data.dig("content_mp4_paths", profile.to_s)
     remote_content_url_base + path if path

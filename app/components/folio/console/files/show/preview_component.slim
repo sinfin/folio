@@ -21,4 +21,4 @@
           | px
 
   - elsif @human_type == "video" || @human_type == "audio"
-    = render(Folio::PlayerComponent.new(file: @file, vertical: player_vertical?))
+    = render(Folio::PlayerComponent.new(file: @file))

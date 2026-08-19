@@ -62,9 +62,7 @@ class Folio::Console::Files::PickerComponent < Folio::Console::ApplicationCompon
   def content_component
     case @file_klass.human_type
     when "audio", "video"
-      Folio::PlayerComponent.new(file: @file_placement.file,
-                                 show_form_controls: true,
-                                 vertical: @file_placement.file.try(:cra_media_cloud_vertical?))
+      Folio::PlayerComponent.new(file: @file_placement.file, show_form_controls: true)
     when "image"
       Folio::Console::Files::Picker::ImageComponent.new(file: @file_placement.file)
     when "document"

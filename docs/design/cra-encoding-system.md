@@ -92,25 +92,6 @@ end
 
 Progress percentage is raw CRA `progress` field × 100 (per-phase, not mapped across phases).
 
-### CRA output metadata
-
-`CheckProgressJob` stores `outputParams.duration` and `outputParams.aspect`
-independently of message parsing. This matters for completed CRA jobs whose
-`messages` array is empty. Output metadata is captured from normal progress/DONE
-responses and when an intermediate phase is persisted.
-
-The aspect is stored as `remote_services_data["video_aspect"]` with `width` and
-`height`. `cra_media_cloud_vertical?` returns true only for a valid stored aspect
-whose positive width is smaller than its height. Missing or invalid metadata is
-horizontal by default.
-
-Console players receive this decision explicitly through
-`Folio::PlayerComponent#vertical:` (or serialized `player_vertical` for a player
-created in the browser). Source `file_width` / `file_height` still preserve the
-media's intrinsic aspect ratio, but do not select the vertical layout modifier.
-Consequently, existing portrait videos without CRA aspect metadata keep the
-horizontal console layout until a new CRA encode returns the metadata.
-
 ### MessageBus real-time updates
 
 `broadcast_encoding_progress` publishes to `Folio::MESSAGE_BUS_CHANNEL` with phase label, progress %, and failure state. The `EncodingInfoComponent` Stimulus controller updates the UI badge in real time.
@@ -166,7 +147,6 @@ Multi-phase adds intermediate data (`phase_N_content_mp4_paths`, `phase_N_comple
   "processing_phases": 2,
   "phases_completed": ["validation", "audio"],
   "video_duration": 120,
-  "video_aspect": { "width": 9, "height": 16 },
 
   "phase_1_content_mp4_paths": { "sd0": "/path/sd0.mp4", "sd1": "/path/sd1.mp4" },
   "phase_1_completed_at": "2026-03-17T11:00:00Z",

@@ -42,10 +42,6 @@ class Folio::Console::FileSerializer
     object.class.human_type
   end
 
-  attribute :player_vertical do |object|
-    object.try(:cra_media_cloud_vertical?) || false
-  end
-
   attribute :thumb do |object|
     object.thumb(ADMIN_THUMBNAIL_SIZE).url if object.class.human_type == "image" && !object.try(:private?)
   end
