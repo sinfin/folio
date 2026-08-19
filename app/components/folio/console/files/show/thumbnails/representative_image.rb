@@ -4,13 +4,19 @@ module Folio::Console::Files::Show::Thumbnails::RepresentativeImage
   module_function
 
   def representative_thumbnail_size_key(keys, preferred_ratio: nil)
-    candidates = if preferred_ratio
-      keys.select { |key| thumbnail_size_key_ratio(key) == preferred_ratio }
-    else
-      keys
-    end
+    ranked_thumbnail_size_keys(keys, preferred_ratio:).first
+  end
 
-    (candidates.presence || keys).max_by { |key| thumbnail_area(key) }
+  def ranked_thumbnail_size_keys(keys, preferred_ratio: nil, minimum_width: nil, minimum_height: nil)
+    candidates = keys.select do |key|
+      thumbnail_covers?(key, minimum_width:, minimum_height:)
+    end
+    candidates = keys if candidates.empty?
+
+    candidates.sort_by do |key|
+      preferred_ratio_rank = preferred_ratio && thumbnail_size_key_ratio(key) != preferred_ratio ? 1 : 0
+      [preferred_ratio_rank, -thumbnail_area(key)]
+    end
   end
 
   # Resolved preview URL for the largest generated size among keys, preferring
@@ -29,13 +35,27 @@ module Folio::Console::Files::Show::Thumbnails::RepresentativeImage
     return nil if candidates.empty?
 
     key = representative_thumbnail_size_key(candidates, preferred_ratio:)
-    url = file.thumbnail_sizes[key][:url]
+    resolved_thumbnail_url(file:, key:)
+  end
+
+  def resolved_thumbnail_url(file:, key:)
+    thumbnail = file.thumbnail_sizes[key]
+    url = thumbnail[:url] || thumbnail["url"]
 
     if url.include?("doader.com")
       file.temporary_url(key)
     else
       Folio::S3.cdn_url_rewrite(url)
     end
+  end
+
+  def thumbnail_covers?(key, minimum_width:, minimum_height:)
+    return true unless minimum_width || minimum_height
+
+    width, height = Folio::Console::Files::ThumbnailGroups.parse_crop_key(key)
+    return false unless width && height
+
+    (!minimum_width || width >= minimum_width) && (!minimum_height || height >= minimum_height)
   end
 
   def thumbnail_area(key)

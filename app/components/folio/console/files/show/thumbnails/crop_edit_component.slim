@@ -21,8 +21,9 @@
           span.folio-loader.folio-loader--tiny.folio-loader--transparent.f-c-files-show-thumbnails-crop-edit__regenerate-loader
 
   .f-c-files-show-thumbnails-crop-edit__thumb[style=thumb_style]
-    - if image_url
+    - if render_thumb_image?
       img.f-c-files-show-thumbnails-crop-edit__thumb-img[
+        hidden=image_url.blank?
         loading="lazy"
         src=image_url
         data=image_data

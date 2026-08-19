@@ -574,6 +574,36 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
         ).size
       end
 
+      test "#{klass} - update_thumbnails_crop keeps previously pending main groups loading" do
+        file = create(klass.model_name.singular)
+        file.update!(thumbnail_sizes: {
+          "120x120#" => { "uid" => "square", "url" => "https://example.com/square.jpg" },
+          "240x135#" => { "uid" => "landscape", "url" => "https://example.com/landscape.jpg" },
+        })
+
+        patch url_for([:update_thumbnails_crop, :console, :api, file, format: :json]), params: {
+          crop: { x: 0.1, y: 0.2 },
+          ratio: "16:9",
+          group_type: "main_crop"
+        }
+        assert_response(:success)
+
+        patch url_for([:update_thumbnails_crop, :console, :api, file, format: :json]), params: {
+          crop: { x: 0.2, y: 0.3 },
+          ratio: "1:1",
+          group_type: "main_crop"
+        }
+        assert_response(:success)
+
+        main = Nokogiri::HTML.fragment(response.parsed_body.dig("data", "main"))
+        pending_group = main.at_css('[data-ratio="16:9"] .f-c-files-show-thumbnails-crop-edit')
+
+        assert_equal "waiting-for-thumbnail",
+                     pending_group["data-f-c-files-show-thumbnails-crop-edit-state-value"]
+        assert pending_group.at_css(".f-c-files-show-thumbnails-crop-edit__thumb-img[hidden]")
+        assert_nil pending_group.at_css(".f-c-files-show-thumbnails-crop-edit__thumb-empty")
+      end
+
       test "#{klass} - update_thumbnails_crop destroys uids stored under symbol keys" do
         file = create(klass.model_name.singular)
         file.update!(thumbnail_sizes: { "200x100#" => { uid: "sym-uid-1", webp_uid: "sym-webp-uid-1" } })

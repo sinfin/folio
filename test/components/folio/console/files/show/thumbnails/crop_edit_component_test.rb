@@ -92,6 +92,90 @@ class Folio::Console::Files::Show::Thumbnails::CropEditComponentTest < Folio::Co
     end
   end
 
+  test "renders a loading main preview for a pending family without an empty state" do
+    with_controller_class(Folio::Console::File::ImagesController) do
+      with_request_url "/console/file/images" do
+        file = create(:folio_file_image)
+        file.update!(thumbnail_sizes: {
+          "100x50#" => pending_thumbnail(file, "100x50#"),
+          "240x120#" => pending_thumbnail(file, "240x120#"),
+        })
+
+        render_inline(Folio::Console::Files::Show::Thumbnails::CropEditComponent.new(
+          file:,
+          ratio: "2:1",
+          ratio_label: "2×1",
+          thumbnail_size_keys: %w[100x50# 240x120#],
+          group_type: "main_crop"))
+
+        root = Nokogiri::HTML.fragment(rendered_content).at_css(".f-c-files-show-thumbnails-crop-edit")
+        candidates = JSON.parse(root["data-f-c-files-show-thumbnails-crop-edit-preview-candidates-value"])
+
+        assert_selector(".f-c-files-show-thumbnails-crop-edit__thumb-img[hidden]", visible: :all)
+        assert_no_selector(".f-c-files-show-thumbnails-crop-edit__thumb-empty")
+        assert_no_selector(".f-c-files-show-thumbnails-crop-edit__thumb-img[data-controller~='f-thumbnail']",
+                           visible: :all)
+        assert_equal ["240x120#"], candidates.pluck("size")
+      end
+    end
+  end
+
+  test "shows a ready main preview while waiting for a better candidate" do
+    with_controller_class(Folio::Console::File::ImagesController) do
+      with_request_url "/console/file/images" do
+        file = create(:folio_file_image)
+        file.update!(thumbnail_sizes: {
+          "240x120#" => { uid: "ready", url: "https://example.com/ready.jpg" },
+          "480x240#" => pending_thumbnail(file, "480x240#"),
+        })
+
+        render_inline(Folio::Console::Files::Show::Thumbnails::CropEditComponent.new(
+          file:,
+          ratio: "2:1",
+          ratio_label: "2×1",
+          thumbnail_size_keys: %w[240x120# 480x240#],
+          group_type: "main_crop"))
+
+        root = Nokogiri::HTML.fragment(rendered_content).at_css(".f-c-files-show-thumbnails-crop-edit")
+        candidates = JSON.parse(root["data-f-c-files-show-thumbnails-crop-edit-preview-candidates-value"])
+
+        assert_selector(".f-c-files-show-thumbnails-crop-edit__thumb-img[src='https://example.com/ready.jpg']:not([hidden])")
+        assert_equal %w[480x240# 240x120#], candidates.pluck("size")
+        assert_equal [true, false], candidates.pluck("pending")
+      end
+    end
+  end
+
+  test "serializes the configured crop for matching main preview events" do
+    with_controller_class(Folio::Console::File::ImagesController) do
+      with_request_url "/console/file/images" do
+        file = create(:folio_file_image)
+        file.update!(
+          thumbnail_configuration: {
+            "ratios" => { "2:1" => { "crop" => { "x" => 0.2, "y" => 0.3 } } }
+          },
+          thumbnail_sizes: {
+            "240x120#" => pending_thumbnail(file, "240x120#"),
+          }
+        )
+
+        render_inline(Folio::Console::Files::Show::Thumbnails::CropEditComponent.new(
+          file:,
+          ratio: "2:1",
+          ratio_label: "2×1",
+          thumbnail_size_keys: %w[240x120#],
+          group_type: "main_crop"))
+
+        root = Nokogiri::HTML.fragment(rendered_content).at_css(".f-c-files-show-thumbnails-crop-edit")
+        preview_crop = JSON.parse(root["data-f-c-files-show-thumbnails-crop-edit-preview-crop-value"])
+
+        assert_equal({ "x" => 0.2, "y" => 0.3 }, preview_crop)
+        assert_equal file.id.to_s,
+                     root["data-f-c-files-show-thumbnails-crop-edit-file-id-value"]
+      end
+    end
+  end
+
   test "centers an uncropped landscape image when gravity is unset" do
     file = image_with_dimensions(width: 1200, height: 800)
 
@@ -169,6 +253,13 @@ class Folio::Console::Files::Show::Thumbnails::CropEditComponentTest < Folio::Co
   end
 
   private
+    def pending_thumbnail(file, size)
+      {
+        uid: nil,
+        url: file.temporary_url(size),
+      }
+    end
+
     def image_with_dimensions(width:, height:, gravity: nil)
       create(:folio_file_image).tap do |file|
         file.update_columns(file_width: width,

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Folio::Console::Files::Show::Thumbnails::CropEditComponent < Folio::Console::ApplicationComponent
+  MAIN_PREVIEW_HEIGHT = 120
+
   def initialize(file:,
                  ratio:,
                  ratio_label:,
@@ -26,22 +28,28 @@ class Folio::Console::Files::Show::Thumbnails::CropEditComponent < Folio::Consol
       @can_update = can_now?(:update, @file) && @file.file_width.present? && @file.file_height.present?
     end
 
-    # Representative preview URL for the tile thumbnail. Picks the largest
-    # already-generated size of this ratio and resolves it through the same
-    # CDN / temporary-url rewriting the detail thumbnails use, so the preview
-    # is not a raw (and on review unreachable) Dragonfly/doader URL.
     def image_url
       return @image_url if defined?(@image_url)
 
-      @image_url = Folio::Console::Files::Show::Thumbnails::RepresentativeImage
-                     .representative_url(file: @file,
-                                         keys: @thumbnail_size_keys,
-                                         preferred_ratio: @group_type == "main_crop" ? @ratio : nil,
-                                         include_doader: @updated_thumbnails_crop)
+      @image_url = if main_preview?
+        resolved_main_preview_url
+      else
+        representative_image.representative_url(file: @file,
+                                                 keys: @thumbnail_size_keys,
+                                                 include_doader: @updated_thumbnails_crop)
+      end
     end
 
     def image_data
-      stimulus_thumbnail(src: image_url)
+      if main_preview?
+        stimulus_target("thumbImage")
+      else
+        stimulus_thumbnail(src: image_url)
+      end
+    end
+
+    def render_thumb_image?
+      image_url.present? || pending_preview_candidates.present?
     end
 
     # Inline aspect-ratio for the tile box so a 16:9 crop renders wide and a
@@ -89,24 +97,120 @@ class Folio::Console::Files::Show::Thumbnails::CropEditComponent < Folio::Consol
 
     def data
       stimulus_controller("f-c-files-show-thumbnails-crop-edit",
-                          values: {
-                            state: @updated_thumbnails_crop ? "waiting-for-thumbnail" : "viewing",
-                            cropper_data: cropper_data.to_json,
-                            api_url: url_for([:console, :api, @file, action: :update_thumbnails_crop]),
-                            api_data: api_data.to_json,
-                          },
+                          values: stimulus_values,
                           action: {
-                            "f-thumbnail:newData" => "thumbnailUpdated"
+                            "f-thumbnail:newData" => "thumbnailUpdated",
+                            "f-c-files-show-thumbnails-crop-edit:preview-ready" => "thumbnailUpdated",
                           })
     end
 
-    def cropper_data
-      crop = @file.thumbnail_configuration&.dig("ratios", @ratio, "crop") || {}
+    def stimulus_values
+      values = {
+        state: waiting_for_thumbnail? ? "waiting-for-thumbnail" : "viewing",
+        cropper_data: cropper_data.to_json,
+        api_url: url_for([:console, :api, @file, action: :update_thumbnails_crop]),
+        api_data: api_data.to_json,
+      }
 
+      return values unless main_preview?
+
+      values.merge(file_id: @file.id.to_s,
+                   preview_candidates: preview_candidates.to_json,
+                   preview_priority: main_preview_priority,
+                   **preview_crop_stimulus_value)
+    end
+
+    def waiting_for_thumbnail?
+      return @updated_thumbnails_crop unless main_preview?
+
+      main_preview_size_key.nil? && pending_preview_candidates.present?
+    end
+
+    def preview_candidates
+      return [] unless main_preview?
+
+      @preview_candidates ||= ranked_main_preview_size_keys.each_with_index.map do |key, priority|
+        { size: key, priority:, pending: thumbnail_pending?(key) }
+      end
+    end
+
+    def pending_preview_candidates
+      preview_candidates.select do |candidate|
+        candidate[:pending] && candidate[:priority] < main_preview_priority
+      end
+    end
+
+    def preview_crop_stimulus_value
+      crop = configured_crop_position
+      crop ? { preview_crop: crop.to_json } : {}
+    end
+
+    def main_preview_priority
+      @main_preview_priority ||= main_preview_size_key ? ranked_main_preview_size_keys.index(main_preview_size_key) : ranked_main_preview_size_keys.length
+    end
+
+    def main_preview_size_key
+      return @main_preview_size_key if defined?(@main_preview_size_key)
+
+      @main_preview_size_key = ranked_main_preview_size_keys.find { |key| thumbnail_ready?(key) }
+    end
+
+    def ranked_main_preview_size_keys
+      @ranked_main_preview_size_keys ||= representative_image.ranked_thumbnail_size_keys(
+        @thumbnail_size_keys,
+        preferred_ratio: @ratio,
+        minimum_width: main_preview_width,
+        minimum_height: MAIN_PREVIEW_HEIGHT,
+      )
+    end
+
+    def main_preview_width
+      width, height = @ratio.split(":", 2).map(&:to_f)
+      return MAIN_PREVIEW_HEIGHT unless width.positive? && height.positive?
+
+      (MAIN_PREVIEW_HEIGHT * width / height).ceil
+    end
+
+    def resolved_main_preview_url
+      return unless main_preview_size_key
+
+      representative_image.resolved_thumbnail_url(file: @file, key: main_preview_size_key)
+    end
+
+    def thumbnail_ready?(key)
+      url = thumbnail_url(key)
+      url.present? && !url.include?("doader.com")
+    end
+
+    def thumbnail_pending?(key)
+      thumbnail_url(key)&.include?("doader.com")
+    end
+
+    def thumbnail_url(key)
+      thumbnail = @file.thumbnail_sizes[key]
+      return unless thumbnail.is_a?(Hash)
+
+      thumbnail[:url] || thumbnail["url"]
+    end
+
+    def main_preview?
+      @group_type == "main_crop"
+    end
+
+    def representative_image
+      Folio::Console::Files::Show::Thumbnails::RepresentativeImage
+    end
+
+    def cropper_data
       {
         aspect_ratio: cropper_aspect_ratio,
-        **(stored_crop_position(crop) || gravity_crop_position),
+        **(configured_crop_position || gravity_crop_position),
       }
+    end
+
+    def configured_crop_position
+      crop = @file.thumbnail_configuration&.dig("ratios", @ratio, "crop") || {}
+      stored_crop_position(crop)
     end
 
     def cropper_aspect_ratio

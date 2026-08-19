@@ -1,12 +1,159 @@
+window.FolioConsole = window.FolioConsole || {}
+
+window.FolioConsole.FilesShowThumbnailPreviews = {
+  eventName: 'f-c-files-show-thumbnails-crop-edit:preview-ready',
+  jobType: 'Folio::GenerateThumbnailJob',
+  subscriptions: new Map(),
+  completed: new Map(),
+  cleanupTimeouts: new Map(),
+
+  subscribe ({ element, fileId, candidates, crop }) {
+    const normalizedFileId = fileId.toString()
+
+    this.cancelCleanup(normalizedFileId)
+    this.subscriptions.set(element, {
+      fileId: normalizedFileId,
+      candidates,
+      crop
+    })
+
+    return candidates
+      .slice()
+      .sort((left, right) => left.priority - right.priority)
+      .map(({ size }) => this.completed.get(this.cacheKey(normalizedFileId, size)))
+      .filter((detail) => detail && this.cropMatches(crop, detail.thumb))
+  },
+
+  beginGeneration ({ element, fileId, candidates, crop }) {
+    const normalizedFileId = fileId.toString()
+
+    for (const candidate of candidates) {
+      this.completed.delete(this.cacheKey(normalizedFileId, candidate.size))
+    }
+
+    this.subscribe({ element, fileId: normalizedFileId, candidates, crop })
+  },
+
+  unsubscribe ({ element }) {
+    const subscription = this.subscriptions.get(element)
+    if (!subscription) return
+
+    this.subscriptions.delete(element)
+    this.scheduleCleanup(subscription.fileId)
+  },
+
+  handleMessage (message) {
+    if (this.subscriptions.size === 0) return
+    if (!message || message.type !== this.jobType) return
+
+    const data = message.data
+    if (!data?.id || !data.size || !data.url) return
+
+    const detail = {
+      id: data.id.toString(),
+      size: data.size,
+      url: data.url,
+      webpUrl: data.webp_url,
+      width: data.width,
+      height: data.height,
+      thumb: data.thumb
+    }
+    const matches = []
+
+    for (const [element, subscription] of this.subscriptions.entries()) {
+      if (this.subscriptionMatches(subscription, detail)) matches.push(element)
+    }
+
+    if (!matches.length) return
+
+    this.completed.set(this.cacheKey(detail.id, detail.size), detail)
+
+    for (const element of matches) {
+      element.dispatchEvent(new CustomEvent(this.eventName, { detail }))
+    }
+  },
+
+  subscriptionMatches (subscription, detail) {
+    if (subscription.fileId !== detail.id) return false
+    if (!subscription.candidates.some(({ size }) => size === detail.size)) return false
+
+    return this.cropMatches(subscription.crop, detail.thumb)
+  },
+
+  cropMatches (expectedCrop, thumb) {
+    if (!expectedCrop) return true
+    if (!thumb) return false
+
+    return ['x', 'y'].every((key) => {
+      if (expectedCrop[key] === null || typeof expectedCrop[key] === 'undefined') return false
+      if (thumb[key] === null || typeof thumb[key] === 'undefined') return false
+
+      const expected = Number(expectedCrop[key])
+      const actual = Number(thumb[key])
+
+      return Number.isFinite(expected) && Number.isFinite(actual) && Math.abs(expected - actual) < 0.000001
+    })
+  },
+
+  cacheKey (fileId, size) {
+    return `${fileId}:${size}`
+  },
+
+  scheduleCleanup (fileId) {
+    const hasSubscription = Array.from(this.subscriptions.values()).some((subscription) => {
+      return subscription.fileId === fileId
+    })
+    if (hasSubscription || this.cleanupTimeouts.has(fileId)) return
+
+    const timeout = window.setTimeout(() => {
+      const stillSubscribed = Array.from(this.subscriptions.values()).some((subscription) => {
+        return subscription.fileId === fileId
+      })
+
+      if (!stillSubscribed) {
+        for (const key of this.completed.keys()) {
+          if (key.startsWith(`${fileId}:`)) this.completed.delete(key)
+        }
+      }
+
+      this.cleanupTimeouts.delete(fileId)
+    }, 60000)
+
+    this.cleanupTimeouts.set(fileId, timeout)
+  },
+
+  cancelCleanup (fileId) {
+    const timeout = this.cleanupTimeouts.get(fileId)
+    if (!timeout) return
+
+    window.clearTimeout(timeout)
+    this.cleanupTimeouts.delete(fileId)
+  }
+}
+
+if (window.Folio?.MessageBus?.callbacks) {
+  window.Folio.MessageBus.callbacks['f-c-files-show-thumbnail-previews'] = (message) => {
+    window.FolioConsole.FilesShowThumbnailPreviews.handleMessage(message)
+  }
+}
+
 window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class extends window.Stimulus.Controller {
   static values = {
     state: String,
     cropperData: Object,
     apiUrl: String,
-    apiData: Object
+    apiData: Object,
+    fileId: String,
+    previewCandidates: Array,
+    previewPriority: Number,
+    previewCrop: Object
   }
 
-  static targets = ['contain', 'image', 'overlay']
+  static targets = ['contain', 'image', 'overlay', 'thumbImage']
+
+  connect () {
+    this.subscribePreviewCandidates()
+  }
 
   startEditing () {
     if (this.overlayTarget.open) return
@@ -51,6 +198,7 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
       crop
     }
 
+    this.beginPreviewGeneration(crop)
     this.stateValue = 'saving'
 
     window.Folio.Api.apiPatch(this.apiUrlValue, data).then((res) => {
@@ -66,6 +214,7 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
       console.error('Failed to save crop', error)
       trigger?.removeAttribute('disabled')
       this.stateValue = previousState
+      this.subscribePreviewCandidates()
     })
   }
 
@@ -97,6 +246,7 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
   }
 
   disconnect () {
+    this.unsubscribePreviewCandidates()
     this.closeOverlay()
     this.unbindCropper()
   }
@@ -439,9 +589,63 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
     return Math.min(Math.max(value, minimum), Math.max(minimum, maximum))
   }
 
-  thumbnailUpdated () {
-    if (this.stateValue === 'waiting-for-thumbnail') {
-      this.stateValue = 'viewing'
+  thumbnailUpdated (event) {
+    if (!this.hasPreviewCandidatesValue) {
+      if (this.stateValue === 'waiting-for-thumbnail') this.stateValue = 'viewing'
+      return
     }
+
+    const candidate = this.previewCandidatesValue.find(({ size }) => size === event.detail.size)
+
+    if (!candidate) return
+
+    if (!event.detail.url || candidate.priority >= this.previewPriorityValue || !this.hasThumbImageTarget) return
+
+    this.thumbImageTarget.src = event.detail.url
+    this.thumbImageTarget.hidden = false
+    this.previewPriorityValue = candidate.priority
+    if (this.stateValue !== 'saving') this.stateValue = 'viewing'
+    this.subscribePreviewCandidates()
+  }
+
+  beginPreviewGeneration (crop) {
+    if (!this.hasPreviewCandidatesValue || !this.hasFileIdValue) return
+
+    this.unsubscribePreviewCandidates()
+    window.FolioConsole.FilesShowThumbnailPreviews.beginGeneration({
+      element: this.element,
+      fileId: this.fileIdValue,
+      candidates: this.previewCandidatesValue,
+      crop
+    })
+    this.previewCandidatesSubscribed = true
+  }
+
+  subscribePreviewCandidates () {
+    this.unsubscribePreviewCandidates()
+
+    if (!this.hasPreviewCandidatesValue || !this.hasFileIdValue) return
+
+    const candidates = this.previewCandidatesValue.filter(({ pending, priority }) => {
+      return pending && priority < this.previewPriorityValue
+    })
+    if (!candidates.length) return
+
+    const completed = window.FolioConsole.FilesShowThumbnailPreviews.subscribe({
+      element: this.element,
+      fileId: this.fileIdValue,
+      candidates,
+      crop: this.hasPreviewCropValue ? this.previewCropValue : null
+    })
+    this.previewCandidatesSubscribed = true
+
+    for (const detail of completed) this.thumbnailUpdated({ detail })
+  }
+
+  unsubscribePreviewCandidates () {
+    if (!this.previewCandidatesSubscribed) return
+
+    window.FolioConsole.FilesShowThumbnailPreviews.unsubscribe({ element: this.element })
+    this.previewCandidatesSubscribed = false
   }
 })
