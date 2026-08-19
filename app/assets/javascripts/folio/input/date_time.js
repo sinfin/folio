@@ -182,6 +182,17 @@ window.Folio.Stimulus.register('f-input-date-time', class extends window.Stimulu
       if (this.maxValue) opts.tempusDominusOptions.restrictions.maxDate = this.maxValue
     }
 
+    if (opts.type === 'date' && !this.element.value) {
+      // Without an initial value, Tempus Dominus seeds viewDate with the current
+      // moment (incl. time-of-day). Clicking a day then compares that leftover
+      // time-of-day against a midnight-based min/maxDate, so e.g. "today" can
+      // fail to be selectable until some other date is picked first. Seed
+      // viewDate at midnight so day clicks always compare cleanly.
+      const todayAtMidnight = new Date()
+      todayAtMidnight.setHours(0, 0, 0, 0)
+      opts.tempusDominusOptions.viewDate = todayAtMidnight
+    }
+
     window.Folio.Input.DateTime.bind(this.element, opts)
   }
 

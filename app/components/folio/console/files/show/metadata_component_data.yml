@@ -249,3 +249,64 @@
         cs: 'Místo'
         en: 'Sublocation'
       type: 'text'
+
+- type: 'audio_id3'
+  label:
+    cs: 'ID3 tagy'
+    en: 'ID3 Tags'
+  fields:
+    - key: 'title'
+      label:
+        cs: 'Název'
+        en: 'Title'
+      type: 'text'
+    - key: 'artist'
+      label:
+        cs: 'Interpret'
+        en: 'Artist'
+      type: 'text'
+    - key: 'album'
+      label:
+        cs: 'Album'
+        en: 'Album'
+      type: 'text'
+    - key: 'track'
+      label:
+        cs: 'Číslo stopy'
+        en: 'Track'
+      type: 'text'
+
+- type: 'audio_technical'
+  label:
+    cs: 'Technické informace'
+    en: 'Technical Information'
+  fields:
+    - key: 'codec_name'
+      label:
+        cs: 'Kodek'
+        en: 'Codec'
+      type: 'text'
+    - key: 'bitrate_kbps'
+      label:
+        cs: 'Bitrate (kbps)'
+        en: 'Bitrate (kbps)'
+      type: 'number'
+      decimals: 0
+    - key: 'sample_rate_hz'
+      label:
+        cs: 'Sample rate (Hz)'
+        en: 'Sample rate (Hz)'
+      type: 'number'
+      decimals: 0
+    - key: 'channels'
+      label:
+        cs: 'Kanály'
+        en: 'Channels'
+      type: 'number'
+      decimals: 0
+    - key: 'duration_seconds'
+      label:
+        cs: 'Délka (s)'
+        en: 'Duration (s)'
+      type: 'number'
+      decimals: 0

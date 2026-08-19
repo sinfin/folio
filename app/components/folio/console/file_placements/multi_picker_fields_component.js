@@ -167,7 +167,16 @@ window.Folio.Stimulus.register('f-c-file-placements-multi-picker-fields', class 
 
 window.Folio.Stimulus.register('f-c-file-placements-multi-picker-fields-add-embed', class extends window.Stimulus.Controller {
   onAddEmbedClick () {
-    const fields = this.element.closest('form').querySelector('.f-nested-fields')
+    // resolve the multi picker rather than the first f-nested-fields in the
+    // form - the form can hold several of them. The source header this button
+    // lives in gets detached into .f-c-tiptap-simple-form-wrap, so it is not
+    // always a descendant of its own multi picker.
+    const form = this.element.closest('form')
+    const picker = this.element.closest('.f-c-file-placements-multi-picker-fields') ||
+                   form.querySelector('.f-c-file-placements-multi-picker-fields')
+    if (!picker) throw new Error('f-c-file-placements-multi-picker-fields not found')
+
+    const fields = picker.querySelector('.f-nested-fields')
     if (!fields) throw new Error('f-nested-fields not found')
 
     const attributesCollection = [{ 'data-embed': 'true' }]

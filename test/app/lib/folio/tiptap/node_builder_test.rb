@@ -106,6 +106,33 @@ class Folio::Tiptap::NodeBuilderTest < ActiveSupport::TestCase
     assert_equal({ type: :color }, Node.structure[:accent_color])
   end
 
+  test "exposes configured form_fields_component" do
+    form_fields_component = ->(f:) { f.hidden_field(:page) }
+    klass = Class.new(Folio::Tiptap::Node) do
+      tiptap_node structure: {
+        page: { class_name: "Folio::Page" },
+      }, form_fields_component:
+    end
+
+    assert_equal form_fields_component, klass.form_fields_component
+  end
+
+  test "exposes nil form_fields_component by default" do
+    assert_nil Node.form_fields_component
+  end
+
+  test "rejects invalid form_fields_component configuration" do
+    error = assert_raises(ArgumentError) do
+      Class.new(Folio::Tiptap::Node) do
+        tiptap_node structure: {
+          title: :string,
+        }, form_fields_component: false
+      end
+    end
+
+    assert_match(/form_fields_component/, error.message)
+  end
+
   test "form_layout defaults to aside_attachments" do
     assert_equal :aside_attachments, Node.form_layout
   end

@@ -45,6 +45,9 @@ calendar_filter:
 calendar_range:
   width: 24
   height: 24
+calendar_with_exclamation:
+  width: 24
+  height: 24
 camera:
   width: 24
   height: 24
@@ -219,6 +222,9 @@ lock:
 lock_open_outline:
   width: 24
   height: 24
+lock_open_variant:
+  width: 24
+  height: 24
 logout_variant:
   width: 24
   height: 24
@@ -262,6 +268,9 @@ minus_circle:
   width: 24
   height: 24
 more_vert:
+  width: 24
+  height: 24
+newspaper_variant_outline:
   width: 24
   height: 24
 open_in_new:

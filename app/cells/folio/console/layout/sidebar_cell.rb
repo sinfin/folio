@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "uri"
+
 class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
   def link_groups
     ::Rails.application
@@ -16,6 +18,18 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
   end
 
   def filtered_link_groups_with_links
+    # First pass chooses the most specific active href; second pass renders HTML.
+    select_active_sidebar_link!
+    @selected_active_sidebar_link_used = false
+    build_filtered_link_groups_with_links
+  ensure
+    @active_sidebar_link_candidates = nil
+    @selected_active_sidebar_link_path = nil
+    @selected_active_sidebar_link_used = false
+    @collecting_active_sidebar_link_candidates = false
+  end
+
+  def build_filtered_link_groups_with_links
     link_groups.filter_map do |group|
       I18n.with_locale(group[:locale] || I18n.locale) do
         next unless group[:links].present?
@@ -56,7 +70,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
     if link_source == :homepage
       if homepage_instance
         path = controller.url_for([:edit, :console, homepage_instance])
-        link(t(".homepage"), path)
+        link(label: t(".homepage"), path:)
       end
     elsif link_source.is_a?(Hash) && (link_source[:klass] || link_source[:label]) && (link_source[:path] || link_source[:url_name])
       if link_source[:klass]
@@ -106,12 +120,12 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
       end
 
       if link_source[:icon]
-        link(nil, path, active_start_with: link_source[:active_start_with] != false) do
+        link(label: nil, path:, active_start_with: link_source[:active_start_with] != false) do
           concat(folio_icon(link_source[:icon], class: "f-c-layout-sidebar__icon", height: 16))
           concat(content_tag(:span, label, class: "f-c-layout-sidebar__span"))
         end
       else
-        link(label, path, paths:,
+        link(label:, path:, paths:,
                           active_start_with: link_source[:active_start_with] != false)
       end
     else
@@ -121,29 +135,25 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
       label = label_from(klass)
       path = controller.url_for([:console, klass])
-      link(label, path)
+      link(label:, path:)
     end
   end
 
-  def link(label, path, paths: [], active_start_with: true, &block)
-    active = ([path] + paths).any? do |p|
-      start = p.split("?").first
-      if active_start_with
-        request.path.start_with?(start) || request.url.start_with?(start)
-      else
-        request.path == p || request.url == p
-      end
-    end
+  def link(label:, path:, paths: [], active_start_with: true, &block)
+    active_match = active_sidebar_link_match(path:, paths:, active_start_with:)
+    active_match = nil if active_match && inactive_homepage_page_link?(path:)
 
-    if active && path.end_with?(url_for([:console, Folio::Page])) && homepage_instance
-      url = url_for([:edit, :console, homepage_instance])
-      if (request.path == url) || (request.url == url)
-        active = false
-      end
+    if @collecting_active_sidebar_link_candidates
+      @active_sidebar_link_candidates << { path: path.to_s, specificity: active_match.length } if active_match
+      return "".html_safe
     end
 
     class_names = ["f-c-layout-sidebar__a"]
-    class_names << "f-c-layout-sidebar__a--active" if active
+    if active_match && !@selected_active_sidebar_link_used && path.to_s == @selected_active_sidebar_link_path
+      class_names << "f-c-layout-sidebar__a--active"
+      # Same href can appear more than once, but the sidebar should highlight once.
+      @selected_active_sidebar_link_used = true
+    end
 
     if block_given?
       link_to(path, class: class_names, &block)
@@ -257,6 +267,75 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
   end
 
   private
+    def select_active_sidebar_link!
+      @collecting_active_sidebar_link_candidates = true
+      @active_sidebar_link_candidates = []
+
+      build_filtered_link_groups_with_links
+
+      @selected_active_sidebar_link_path = @active_sidebar_link_candidates.max_by { |candidate| candidate[:specificity] }&.fetch(:path)
+    ensure
+      @collecting_active_sidebar_link_candidates = false
+    end
+
+    def active_sidebar_link_match(path:, paths:, active_start_with:)
+      ([path] + paths).filter_map do |p|
+        active_sidebar_path_match(path: p, active_start_with:)
+      end.max_by(&:length)
+    end
+
+    def active_sidebar_path_match(path:, active_start_with:)
+      path = path.to_s
+      path_for_match = active_start_with ? path.split("?", 2).first : path
+
+      if active_sidebar_path_match?(path: path_for_match, active_start_with:)
+        normalized_sidebar_link_path(path:)
+      end
+    end
+
+    def active_sidebar_path_match?(path:, active_start_with:)
+      sidebar_active_values_for(path:).any? do |value|
+        if active_start_with
+          request.path.start_with?(value) || request.url.start_with?(value)
+        else
+          request.path == value || request.url == value
+        end
+      end
+    end
+
+    def sidebar_active_values_for(path:)
+      path = path.to_s
+      absolute_path = sidebar_absolute_url(path:)
+
+      [path, absolute_path].uniq
+    end
+
+    def sidebar_absolute_url(path:)
+      path = path.to_s
+
+      if path.start_with?("//")
+        "#{request.protocol}#{path.delete_prefix("//")}"
+      else
+        path
+      end
+    end
+
+    def normalized_sidebar_link_path(path:)
+      path_without_query = path.to_s.split("?", 2).first
+      uri = URI.parse(sidebar_absolute_url(path: path_without_query))
+
+      uri.path.presence || "/"
+    rescue URI::InvalidURIError
+      path_without_query
+    end
+
+    def inactive_homepage_page_link?(path:)
+      return false unless path.to_s.end_with?(url_for([:console, Folio::Page])) && homepage_instance
+
+      url = url_for([:edit, :console, homepage_instance])
+      (request.path == url) || (request.url == url)
+    end
+
     def site_main_links(site)
       return nil unless can_now?(:show, site)
 
