@@ -219,6 +219,11 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
   }
 
   cancelEditing (event) {
+    if (this.stateValue === 'saving') {
+      event?.preventDefault()
+      return
+    }
+
     event?.preventDefault()
     this.closeOverlay()
     this.unbindCropper()
