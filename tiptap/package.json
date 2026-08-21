@@ -26,7 +26,7 @@
     "@tiptap/extension-table": "^3.11.1",
     "@tiptap/extension-text-align": "^3.11.1",
     "@tiptap/extension-typography": "^3.11.1",
-    "@tiptap/extension-unique-id": "^3.11.1",
+    "@tiptap/extension-unique-id": "^3.23.6",
     "@tiptap/extensions": "^3.11.1",
     "@tiptap/pm": "^3.11.1",
     "@tiptap/react": "^3.11.1",
