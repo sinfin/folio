@@ -264,7 +264,7 @@ GEM
     css_parser (1.21.1)
       addressable
     csv (3.3.5)
-    date (3.5.0)
+    date (3.5.1)
     debug_inspector (1.2.0)
     declarative-builder (0.2.0)
       trailblazer-option (~> 0.1.0)
@@ -461,7 +461,7 @@ GEM
     nenv (0.3.0)
     net-http (0.9.1)
       uri (>= 0.11.1)
-    net-imap (0.5.12)
+    net-imap (0.5.15)
       date
       net-protocol
     net-pop (0.1.2)
