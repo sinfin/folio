@@ -100,6 +100,7 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
   def structured_data_hash_for_record
     return structured_data_hash_for_article if article_record?
     return structured_data_hash_for_author if author_record?
+    return structured_data_hash_for_video_record if video_record?
 
     {
       "@type" => "WebSite",
@@ -107,6 +108,14 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
       "name" => Folio::Current.site.title,
       "publisher" => publisher_data,
     }
+  end
+
+  def video_record?
+    @record.is_a?(Folio::File::Video)
+  end
+
+  def structured_data_hash_for_video_record
+    structured_data_hash_for_video(@record, name: @record.video_seo_metadata[:title])
   end
 
   def structured_data_hash_for_article_author_from(name: nil, url: nil, cover: nil)
@@ -122,14 +131,21 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
     video = @record.try(:cache_aware_video_cover) || @record.try(:video_cover)
     return unless video.present?
 
+    structured_data_hash_for_video(video, name: @record.title, description_fallback: @record.perex)
+  end
+
+  def structured_data_hash_for_video(video, name:, description_fallback: nil)
+    metadata = video.respond_to?(:video_seo_metadata) ? video.video_seo_metadata : {}
+
     {
       "@type" => "VideoObject",
-      "name" => @record.title,
-      "description" => video.description || @record.perex,
-      "thumbnailUrl" => video.remote_cover_url,
-      "uploadDate" => video.created_at.iso8601,
-      "contentUrl" => Folio::S3.cdn_url_rewrite(video.file.remote_url),
-      "duration" => ActiveSupport::Duration.build(video.file_track_duration).iso8601,
+      "name" => name.presence || metadata[:title],
+      "description" => metadata[:description].presence || video.description || description_fallback,
+      "thumbnailUrl" => metadata[:thumbnail_url],
+      "uploadDate" => video.created_at&.iso8601,
+      "contentUrl" => metadata[:content_url],
+      "embedUrl" => metadata[:embed_url],
+      "duration" => metadata[:duration],
     }.compact
   end
 
