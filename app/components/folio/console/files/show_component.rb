@@ -89,6 +89,10 @@ class Folio::Console::Files::ShowComponent < Folio::Console::ApplicationComponen
       attribution_licence: {},
     })
 
+    if @file.class.human_type == "audio" && @file.file_track_duration.present?
+      rows[:file_track_duration] = {}
+    end
+
     rows.merge!(@file.console_show_additional_fields)
   end
 

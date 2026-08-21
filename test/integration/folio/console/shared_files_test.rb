@@ -296,7 +296,9 @@ class Folio::Console::SharedFilesTest < Folio::Console::BaseControllerTest
         s3_name = create_downloaded_file(klass)
 
         assert_difference("#{klass}.count", 1) do
-          perform_enqueued_jobs do
+          # Only run the file-creation job (step 3). Downstream processing such as
+          # `ProcessAudioJob` is out of scope here and would run real ffmpeg inline.
+          perform_enqueued_jobs(only: Folio::S3::CreateFileJob) do
             post after_folio_api_s3_path, params: { s3_path: s3_name, type: klass.to_s, existing_id: nil, message_bus_client_id: "foo" }
             assert_response(:ok)
           end
