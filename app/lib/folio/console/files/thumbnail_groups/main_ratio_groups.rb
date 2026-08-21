@@ -4,6 +4,7 @@ class Folio::Console::Files::ThumbnailGroups::MainRatioGroups
   MAX_RELATIVE_DISTANCE = 0.15
   LANDSCAPE_RATIOS = %w[1:1 4:3 16:9 2:1].freeze
   PORTRAIT_RATIOS = %w[1:1 3:4 9:16 1:2].freeze
+  MAIN_RATIO_ORDER = %w[4:3 16:9 1:1 2:1].freeze
   RATIO_PATTERN = /\A\d+:\d+\z/
 
   def self.call(groups:, site:, ratio_proc:)
@@ -30,12 +31,14 @@ class Folio::Console::Files::ThumbnailGroups::MainRatioGroups
   end
 
   def call
-    @groups.each_with_object({}) do |group, grouped|
+    grouped = @groups.each_with_object({}) do |group, result|
       ratio = main_ratio(group)
-      grouped[ratio] ||= group_data(ratio:)
-      grouped[ratio]["sizes"] |= group.fetch("sizes")
-      grouped[ratio]["ratios"] |= exact_ratios(group)
-    end.values
+      result[ratio] ||= group_data(ratio:)
+      result[ratio]["sizes"] |= group.fetch("sizes")
+      result[ratio]["ratios"] |= exact_ratios(group)
+    end
+
+    order_main_ratio_groups(grouped.values)
   end
 
   private
@@ -56,6 +59,12 @@ class Folio::Console::Files::ThumbnailGroups::MainRatioGroups
                                site: @site)
 
       ratio.is_a?(String) && ratio.match?(RATIO_PATTERN) ? ratio : group.fetch("ratio")
+    end
+
+    def order_main_ratio_groups(groups)
+      groups.each_with_index.sort_by do |group, index|
+        [MAIN_RATIO_ORDER.index(group.fetch("ratio")) || MAIN_RATIO_ORDER.size, index]
+      end.map(&:first)
     end
 
     def group_data(ratio:)

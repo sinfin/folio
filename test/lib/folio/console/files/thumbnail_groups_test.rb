@@ -69,7 +69,7 @@ class Folio::Console::Files::ThumbnailGroupsTest < ActiveSupport::TestCase
 
     groups = described_class.call(file:, site: file.site)
 
-    assert_equal %w[1:1 4:3 16:9 2:1], groups["main_crop"].pluck("ratio")
+    assert_equal %w[4:3 16:9 1:1 2:1], groups["main_crop"].pluck("ratio")
     assert_equal ratios.sort, groups["main_crop"].flat_map { |group| group["ratios"] }.sort
     assert_equal ratios.size, groups["main_crop"].sum { |group| group["sizes"].size }
   end
