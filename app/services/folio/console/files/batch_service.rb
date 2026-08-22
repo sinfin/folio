@@ -132,8 +132,6 @@ class Folio::Console::Files::BatchService
         url: ENV.fetch("REDIS_URL", "redis://localhost:6379/0"),
         timeout: ENV.fetch("REDIS_TIMEOUT", 5).to_i,
         reconnect_attempts: ENV.fetch("REDIS_RECONNECT_ATTEMPTS", 3).to_i,
-        reconnect_delay: ENV.fetch("REDIS_RECONNECT_DELAY", 0.5).to_f,
-        reconnect_delay_max: ENV.fetch("REDIS_RECONNECT_DELAY_MAX", 5.0).to_f,
       )
     end
 end
