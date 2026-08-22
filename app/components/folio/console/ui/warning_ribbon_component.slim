@@ -1,0 +1,4 @@
+.f-c-ui-warning-ribbon class=@class_name
+  = render(Folio::Console::Ui::WithIconComponent.new(@text,
+                                                      icon: :alert,
+                                                      icon_options: { width: 16 }))

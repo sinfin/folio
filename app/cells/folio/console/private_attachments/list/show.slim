@@ -3,12 +3,11 @@
     ul.f-c-private-attachments-list__ul
       - model.each do |pa|
         li.f-c-private-attachments-list__li.my-2
-          == cell('folio/console/ui/with_icon',
-                  pa.to_label,
-                  icon: :file_document,
-                  href: Folio::S3.url_rewrite(pa.file.remote_url(expires: 1.hour.from_now)),
-                  target: "_blank",
-                  class: 'f-c-private-attachments-list__a')
+          == render_view_component(Folio::Console::Ui::WithIconComponent.new(pa.to_label,
+                                                                              icon: :file_document,
+                                                                              href: Folio::S3.url_rewrite(pa.file.remote_url(expires: 1.hour.from_now)),
+                                                                              target: "_blank",
+                                                                              html_class: 'f-c-private-attachments-list__a'))
 
   - else
     .text-muted = t('folio.console.blank')

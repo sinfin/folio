@@ -1,22 +1,20 @@
 .f-c-audited-dropdown.small.text-muted
   - unless @audit
-    == cell('folio/console/ui/with_icon',
-            t('.back'),
-            title: t('.back'),
-            href: @audits[1] ? version_url(@audits[1], 1) : nil,
-            icon: :arrow_u_left_top,
-            icon_options: { height: 16 },
-            class: "f-c-audited-dropdown__back #{@audits[1] ? "f-c-audited-dropdown__back--enabled" : "f-c-audited-dropdown__back--disabled"} small text-reset")
+    = render(Folio::Console::Ui::WithIconComponent.new(t('.back'),
+                                                          title: t('.back'),
+                                                          href: @audits[1] ? version_url(@audits[1], 1) : nil,
+                                                          icon: :arrow_u_left_top,
+                                                          icon_options: { height: 16 },
+                                                          html_class: "f-c-audited-dropdown__back #{@audits[1] ? "f-c-audited-dropdown__back--enabled" : "f-c-audited-dropdown__back--disabled"} small text-reset"))
 
   .f-c-audited-dropdown__dropdown.dropdown
     .f-c-audited-dropdown__toggle.dropdown-toggle[
       data-bs-toggle="dropdown"
     ]
-      == cell('folio/console/ui/with_icon',
-              t('.toggle'),
-              hover: :underline,
-              icon: :history,
-              icon_options: { height: 16 })
+      = render(Folio::Console::Ui::WithIconComponent.new(t('.toggle'),
+                                                          hover: :underline,
+                                                          icon: :history,
+                                                          icon_options: { height: 16 }))
 
     .dropdown-menu.dropdown-menu-right.f-c-audited-dropdown__menu.py-0
       - @audits.each_with_index do |version, i|
