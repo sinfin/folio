@@ -296,6 +296,14 @@ module Folio
       end
     end
 
+    initializer "folio.skip_direct_upload_profiling", after: "rack_mini_profiler.configure_rails_initialization" do
+      next unless defined?(Rack::MiniProfiler)
+
+      upload_path = %r{/folio/api/s3/upload\z}
+      skip_paths = Rack::MiniProfiler.config.skip_paths ||= []
+      skip_paths << upload_path unless skip_paths.include?(upload_path)
+    end
+
     initializer :add_folio_embed_middleware do |app|
       load Folio::Engine.root.join("app/lib/rack/folio/embed_middleware.rb")
       app.config.middleware.use(Rack::Folio::EmbedMiddleware)

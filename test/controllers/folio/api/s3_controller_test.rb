@@ -8,6 +8,8 @@ class Folio::Api::S3ControllerTest < Folio::BaseControllerTest
     assert_response :success
 
     json = response.parsed_body
+    assert URI.parse(json.fetch("s3_url")).absolute?
+
     s3_path = json.fetch("s3_path")
     local_path = "#{Folio::S3::Client::LOCAL_TEST_PATH}/#{s3_path}"
 

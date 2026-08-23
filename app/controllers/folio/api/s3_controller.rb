@@ -19,6 +19,7 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
     }
 
     if use_local_file_system?
+      data[:s3_url] = request.base_url + presigned_url
       data[:upload_method] = "PUT"
       data[:upload_headers] = {
         "X-CSRF-Token" => form_authenticity_token,

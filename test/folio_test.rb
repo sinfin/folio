@@ -25,6 +25,12 @@ class Folio::Test < ActiveSupport::TestCase
     assert_includes head, "Folio.enabled_pack_assets(:javascripts)"
   end
 
+  test "direct upload endpoint is skipped by Rack Mini Profiler" do
+    skip unless defined?(Rack::MiniProfiler)
+
+    assert Rack::MiniProfiler.config.skip_paths.any? { |path| path === "/folio/api/s3/upload" }
+  end
+
   test "disabled ai pack does not mount console api route" do
     with_enabled_packs do
       assert_raises(ActionController::RoutingError) do
