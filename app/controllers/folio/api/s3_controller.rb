@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "digest/md5"
+
 class Folio::Api::S3Controller < Folio::Api::BaseController
   include Folio::S3::Client
 
@@ -33,6 +35,7 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
     fail ActionController::BadRequest, "Direct upload path mismatch" if s3_path != params.require(:s3_path)
 
     test_aware_s3_upload(s3_path:, file: request.body)
+    response.headers["ETag"] = %("#{Digest::MD5.file(test_aware_s3_path(s3_path)).hexdigest}")
     head :no_content
   rescue ActiveSupport::MessageVerifier::InvalidSignature, ArgumentError
     head :forbidden

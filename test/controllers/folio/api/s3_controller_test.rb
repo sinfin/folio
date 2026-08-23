@@ -18,6 +18,7 @@ class Folio::Api::S3ControllerTest < Folio::BaseControllerTest
         headers: json.fetch("upload_headers").merge("CONTENT_TYPE" => "application/octet-stream")
 
     assert_response :no_content
+    assert_equal '"8a4e0407dcda7872d44dada38887b8ae"', response.headers["ETag"]
     assert_equal "uploaded content", File.binread(local_path)
   ensure
     FileUtils.rm_f(local_path) if local_path
