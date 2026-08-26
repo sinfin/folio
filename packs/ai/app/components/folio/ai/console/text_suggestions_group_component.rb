@@ -2,10 +2,11 @@
 
 # Renders grouped AI controls that trigger suggestions for child AI inputs.
 class Folio::Ai::Console::TextSuggestionsGroupComponent < Folio::Console::ApplicationComponent
-  def initialize(form:, key:, fields: nil, label: nil, instructions: nil)
+  def initialize(form:, key:, fields: nil, field_keys: nil, label: nil, instructions: nil)
     @form = form
     @record = form.object
     @fields = Array(fields)
+    @field_keys = Array(field_keys).map(&:to_s)
     @key = key.to_s
     @label = label
     @instructions = instructions
@@ -58,13 +59,19 @@ class Folio::Ai::Console::TextSuggestionsGroupComponent < Folio::Console::Applic
     end
 
     def field_items
-      @field_items ||= group.fetch(:fields).filter_map do |field_key|
+      @field_items ||= group_field_keys.filter_map do |field_key|
         field_hash = field_config_by_key[field_key] || {}
         field = Folio::Ai.registry.field(record_key, field_key)
         next unless field
 
         field.merge(component_id: component_id_for_field(field_key, field_hash))
       end
+    end
+
+    def group_field_keys
+      return group.fetch(:fields) if @field_keys.empty?
+
+      group.fetch(:fields).select { |field_key| @field_keys.include?(field_key) }
     end
 
     def field_items_for_payload

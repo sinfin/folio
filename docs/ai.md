@@ -125,6 +125,17 @@ field metadata so grouped results target the rendered inputs:
 Use `component_id` instead of `input_id` only when you need to pass the full AI
 suggestion component id directly.
 
+When a component renders only some fields from a registered group, pass their
+keys with `field_keys`. Omitting `field_keys` keeps the default behaviour and
+includes every registered group field:
+
+```slim
+= render Folio::Ai::Console::TextSuggestionsGroupComponent.new(form: f,
+                                                               key: :meta,
+                                                               field_keys: %i[meta_title]) do
+  = f.input :meta_title, ai: true
+```
+
 ## Prompts And Data
 
 Site admins edit provider, model, field prompts, group prompts, and field/group
