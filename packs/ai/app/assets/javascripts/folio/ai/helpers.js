@@ -106,6 +106,12 @@
 
     input.value = value
 
+    if (input.classList.contains('redactor-source') && window.$R) {
+      const redactor = window.$R(input)
+
+      if (redactor?.source) redactor.source.setCode(value)
+    }
+
     const eventTypes = ['input', 'change', 'folioConsoleCustomChange']
 
     eventTypes.forEach((type) => {

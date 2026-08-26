@@ -3,6 +3,7 @@
 class EmailRedactorInput < SimpleForm::Inputs::TextInput
   def input(wrapper_options = nil)
     register_stimulus("f-input-redactor", wrapper: true)
+    add_text_suggestions(input_type: :text)
 
     input_html_options[:class] << "f-input--redactor-email"
 

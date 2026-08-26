@@ -17,6 +17,7 @@ class RedactorInput < SimpleForm::Inputs::TextInput
     end
 
     register_atom_settings
+    add_text_suggestions(input_type: :text)
 
     merged_input_options = merge_wrapper_options(input_html_options, wrapper_options)
     @builder.text_area(attribute_name, merged_input_options)
