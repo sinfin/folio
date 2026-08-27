@@ -51,7 +51,7 @@
               data=suggestion_data(suggestion)
             ]
               .f-ai-c-text-suggestions__suggestion-body
-                .f-ai-c-text-suggestions__suggestion-text = suggestion_preview(suggestion)
+                .f-ai-c-text-suggestions__suggestion-text = sanitized_suggestion_text(suggestion)
 
               span.f-ai-c-text-suggestions__suggestion-actions
                 span.f-ai-c-text-suggestions__suggestion-copy-wrap data=stimulus_action(click: "stopPropagation")
