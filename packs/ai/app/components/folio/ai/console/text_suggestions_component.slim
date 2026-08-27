@@ -50,8 +50,8 @@
               tabindex="0"
               data=suggestion_data(suggestion)
             ]
-              span.f-ai-c-text-suggestions__suggestion-body
-                span.f-ai-c-text-suggestions__suggestion-text = suggestion[:text]
+              .f-ai-c-text-suggestions__suggestion-body
+                .f-ai-c-text-suggestions__suggestion-text = suggestion_preview(suggestion)
 
               span.f-ai-c-text-suggestions__suggestion-actions
                 span.f-ai-c-text-suggestions__suggestion-copy-wrap data=stimulus_action(click: "stopPropagation")

@@ -3,6 +3,8 @@
 # Renders the console suggestion panel for loading, success, and error states.
 
 class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::ApplicationComponent
+  SUGGESTION_PREVIEW_TAGS = %w[p br ul ol li strong em b i].freeze
+
   def initialize(component_id:,
                  field:,
                  suggestions: [],
@@ -47,6 +49,12 @@ class Folio::Ai::Console::TextSuggestionsComponent < Folio::Console::Application
       stimulus_data(action: { click: "accept" },
                     params: suggestion_params(suggestion),
                     target: "suggestion")
+    end
+
+    def suggestion_preview(suggestion)
+      helpers.sanitize(suggestion[:text],
+                       tags: SUGGESTION_PREVIEW_TAGS,
+                       attributes: [])
     end
 
     def accept_suggestion_data(suggestion)
