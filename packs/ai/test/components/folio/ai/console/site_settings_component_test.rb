@@ -74,6 +74,18 @@ class Folio::Ai::Console::SiteSettingsComponentTest < Folio::Console::ComponentT
     assert_text("Limit: 80")
   end
 
+  test "hides settings excluded by the site" do
+    site = build(:folio_site)
+
+    site.stub(:ai_setting_visible?, false) do
+      render_component(site)
+    end
+
+    assert_no_selector("textarea[name$='[ai_settings][integrations][folio_pages][fields][title][prompt]']")
+    assert_no_selector("textarea[name$='[ai_settings][integrations][folio_pages][groups][meta][prompt]']")
+    assert_no_selector(".f-ai-c-site-settings__record")
+  end
+
   test "renders provider model data for switching providers" do
     site = build(:folio_site,
                  ai_settings: {

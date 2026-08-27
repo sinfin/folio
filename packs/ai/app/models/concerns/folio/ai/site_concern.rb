@@ -62,6 +62,10 @@ module Folio::Ai::SiteConcern
     ActiveModel::Type::Boolean.new.cast(settings["enabled"])
   end
 
+  def ai_setting_visible?(record_key:, key:, grouped: false)
+    true
+  end
+
   def ai_prompt_enabled_for?(record_key:, key:, grouped: false)
     ai_enabled? &&
       ai_enabled_for?(record_key:,

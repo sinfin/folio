@@ -22,7 +22,9 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
     end
 
     def records
-      Folio::Ai.registry.records
+      Folio::Ai.registry.records.select do |record|
+        fields(record).present? || groups(record).present?
+      end
     end
 
     def record_label(record)
@@ -30,7 +32,10 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
     end
 
     def fields(record)
-      record.fetch(:fields).values
+      record.fetch(:fields).values.select do |field|
+        @site.ai_setting_visible?(record_key: record.fetch(:key),
+                                  key: field.fetch(:key))
+      end
     end
 
     def field_label(record, field)
@@ -40,7 +45,11 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
     end
 
     def groups(record)
-      record.fetch(:groups).values
+      record.fetch(:groups).values.select do |group|
+        @site.ai_setting_visible?(record_key: record.fetch(:key),
+                                  key: group.fetch(:key),
+                                  grouped: true)
+      end
     end
 
     def group_label(group)

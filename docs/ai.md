@@ -67,6 +67,18 @@ The record key is the model table name. Fields and groups store simple hashes:
 Registration exposes the field or group in site settings; it does not show
 editor controls until the current site has it enabled with a nonblank prompt.
 
+To hide a registered field or group from AI settings on selected sites, override
+`ai_setting_visible?` on the site model. The default implementation returns
+`true` for every field and group:
+
+```ruby
+def ai_setting_visible?(record_key:, key:, grouped: false)
+  return super unless record_key == "articles" && key == "subscriber_title" && !grouped
+
+  subscriptions_enabled?
+end
+```
+
 `content_requirement` is optional and record-wide. Use
 `:tiptap_or_atoms` when every AI suggestion for the record needs body content
 from Tiptap or atoms. The AI controls still render when prompts are configured,
