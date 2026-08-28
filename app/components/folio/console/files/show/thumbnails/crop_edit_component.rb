@@ -157,11 +157,19 @@ class Folio::Console::Files::Show::Thumbnails::CropEditComponent < Folio::Consol
 
     def ranked_main_preview_size_keys
       @ranked_main_preview_size_keys ||= representative_image.ranked_thumbnail_size_keys(
-        @thumbnail_size_keys,
+        main_preview_candidate_size_keys,
         preferred_ratio: @ratio,
         minimum_width: main_preview_width,
         minimum_height: MAIN_PREVIEW_HEIGHT,
       )
+    end
+
+    def main_preview_candidate_size_keys
+      exact_ratio_keys = @thumbnail_size_keys.select do |key|
+        representative_image.thumbnail_size_key_ratio(key) == @ratio
+      end
+
+      exact_ratio_keys.presence || @thumbnail_size_keys
     end
 
     def main_preview_width

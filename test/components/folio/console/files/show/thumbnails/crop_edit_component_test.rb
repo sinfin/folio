@@ -71,23 +71,48 @@ class Folio::Console::Files::Show::Thumbnails::CropEditComponentTest < Folio::Co
     end
   end
 
-  test "uses an exact-ratio thumbnail for a main crop preview" do
+  test "uses only exact-ratio candidates for a main crop preview when available" do
     with_controller_class(Folio::Console::File::ImagesController) do
       with_request_url "/console/file/images" do
         file = create(:folio_file_image)
         file.update!(thumbnail_sizes: {
-          "400x300#" => { url: "https://example.com/exact.jpg" },
-          "480x320#" => { url: "https://example.com/larger.jpg" },
+          "200x150#" => { url: "https://example.com/exact.jpg" },
+          "400x300#" => pending_thumbnail(file, "400x300#"),
+          "480x320#" => { url: "https://example.com/other-ratio.jpg" },
         })
 
         render_inline(Folio::Console::Files::Show::Thumbnails::CropEditComponent.new(
           file:,
           ratio: "4:3",
           ratio_label: "4×3",
-          thumbnail_size_keys: %w[400x300# 480x320#],
+          thumbnail_size_keys: %w[200x150# 400x300# 480x320#],
           group_type: "main_crop"))
 
+        root = Nokogiri::HTML.fragment(rendered_content).at_css(".f-c-files-show-thumbnails-crop-edit")
+        candidates = JSON.parse(root["data-f-c-files-show-thumbnails-crop-edit-preview-candidates-value"])
+
         assert_selector ".f-c-files-show-thumbnails-crop-edit__thumb-img[src='https://example.com/exact.jpg']"
+        assert_equal %w[400x300# 200x150#], candidates.pluck("size")
+      end
+    end
+  end
+
+  test "uses the main family candidates when no exact ratio is available" do
+    with_controller_class(Folio::Console::File::ImagesController) do
+      with_request_url "/console/file/images" do
+        file = create(:folio_file_image)
+        file.update!(thumbnail_sizes: {
+          "480x320#" => { url: "https://example.com/family.jpg" },
+        })
+
+        render_inline(Folio::Console::Files::Show::Thumbnails::CropEditComponent.new(
+          file:,
+          ratio: "4:3",
+          ratio_label: "4×3",
+          thumbnail_size_keys: %w[480x320#],
+          group_type: "main_crop"))
+
+        assert_selector ".f-c-files-show-thumbnails-crop-edit__thumb-img[src='https://example.com/family.jpg']"
       end
     end
   end
