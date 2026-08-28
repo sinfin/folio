@@ -47,21 +47,27 @@ cs:
             th/site: Web
             th/created_at: Vytvořeno
             in_atom: kapitola obsahu
-
-          thumbnails_component:
-            title: Verze a velikosti
-            type/regular: Verze bez ořezu
-            type/crop: Verze s ořezem (#)
-            type/shrink: Verze pouze se zmenšením (>)
-            type/cover: Verze s přizpůsobením (^)
             no_thumbnails_yet: Zatím nebyly vygenerovány žádné verze
 
           thumbnails:
-            ratio_component:
-              all_versions: "Všechny vygenerované verze:"
+            main_component:
+              crops_title: Ořezy do různých poměrů stran
+              show_all_thumbnails: Všechny vygenerované náhledy
+
+            details_component:
+              title: Verze a velikosti
+              no_thumbnails_yet: Zatím nebyly vygenerovány žádné verze
 
             crop_edit_component:
               edit: Upravit ořez
+              regenerate: Znovu vygenerovat náhledy
+
+            list_group_component:
+              regular: Verze bez ořezu
+              variants_count:
+                one: "%{count} velikost"
+                few: "%{count} velikosti"
+                other: "%{count} velikostí"
 
         batch:
           bar_component:

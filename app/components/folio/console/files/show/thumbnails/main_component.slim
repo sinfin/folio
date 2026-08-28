@@ -1,0 +1,22 @@
+.f-c-files-show-thumbnails-main data=data
+  - if main_crop_groups.present?
+    h3.f-c-files-show-thumbnails-main__heading
+      = t('.crops_title')
+
+    .f-c-files-show-thumbnails-main__tiles
+      - main_crop_groups.each do |group|
+        = render(Folio::Console::Files::Show::Thumbnails::RatioComponent.new(file: @file,
+                                                                               ratio: group["ratio"],
+                                                                               ratio_label: group["ratio_label"],
+                                                                               thumbnail_size_keys: group["sizes"],
+                                                                               updated_thumbnails_crop: group_updated?(group),
+                                                                               group_type: "main_crop"))
+
+  button.f-c-files-show-thumbnails-main__toggle[
+    type="button"
+    aria-controls=@details_id
+    aria-expanded="false"
+    data=toggle_data
+  ]
+    span.f-c-files-show-thumbnails-main__toggle-label = t('.show_all_thumbnails')
+    span.f-c-files-show-thumbnails-main__toggle-chevron = folio_icon(:chevron_down, height: 16)

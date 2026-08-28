@@ -40,4 +40,26 @@ class Folio::GenerateThumbnailJobTest < ActiveJob::TestCase
     assert_not_nil image.thumbnail_sizes["100x100#"][:uid]
     assert_not_nil image.thumbnail_sizes["100x100#"][:url]
   end
+
+  test "broadcasts the generated size and crop coordinates" do
+    image = create(:folio_file_image, additional_data: { "generate_thumbnails_in_test" => true })
+    messages = []
+
+    MessageBus.stub(:publish, -> (_channel, message, **) { messages << JSON.parse(message) }) do
+      Folio::GenerateThumbnailJob.perform_now(image,
+                                              "100x100#",
+                                              Folio::Thumbnails::DEFAULT_QUALITY,
+                                              force: true,
+                                              x: 0.2,
+                                              y: 0.3)
+    end
+
+    message = messages.find { |item| item["type"] == "Folio::GenerateThumbnailJob" }
+
+    assert_equal image.id, message.dig("data", "id")
+    assert_equal "100x100#", message.dig("data", "size")
+    assert_equal 0.2, message.dig("data", "thumb", "x")
+    assert_equal 0.3, message.dig("data", "thumb", "y")
+    assert_predicate message.dig("data", "url"), :present?
+  end
 end
