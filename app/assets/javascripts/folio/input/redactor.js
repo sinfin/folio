@@ -57,6 +57,17 @@ if (window.Redactor) {
     disconnect () {
       window.Folio.Input.Redactor.unbind(this.inputTarget)
     }
+
+    onSpecialCharactersInsertText (event) {
+      const text = event.detail?.text
+      if (typeof text !== 'string' || !text) return
+
+      const redactor = window.$R(this.inputTarget)
+      if (!redactor?.insertion) return
+
+      redactor.insertion.insertText(text)
+      redactor.broadcast('hardsync')
+    }
   })
 } else {
   console.error('Missing Redactor JS')

@@ -131,7 +131,7 @@ window.Folio.Stimulus.register('f-special-characters-popup', class extends windo
       return
     }
 
-    if (target.matches('.f-input-tiptap__iframe')) {
+    if (target.matches('.f-input-tiptap__iframe, .redactor-in')) {
       target.dispatchEvent(new CustomEvent('f-special-characters-popup:insertText', {
         bubbles: true,
         detail: { text: char }
