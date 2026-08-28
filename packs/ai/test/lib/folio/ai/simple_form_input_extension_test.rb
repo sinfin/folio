@@ -65,6 +65,8 @@ class Folio::Ai::SimpleFormInputExtensionTest < ActionView::TestCase
       input = wrapper.find("textarea")
 
       assert_includes wrapper["data-controller"].split, "f-input-redactor"
+      assert_includes wrapper["data-action"].split,
+                      "f-special-characters-popup:insertText->f-input-redactor#onSpecialCharactersInsertText"
       assert_equal "input", input["data-f-input-redactor-target"]
       assert_includes input["data-action"].split, "input->f-ai-input#onInput"
       assert page.has_css?(".f-ai-input__button", count: 1)

@@ -2,7 +2,11 @@
 
 class RedactorInput < SimpleForm::Inputs::TextInput
   def input(wrapper_options = nil)
-    register_stimulus("f-input-redactor", wrapper: true)
+    register_stimulus("f-input-redactor",
+                      wrapper: true,
+                      action: {
+                        "f-special-characters-popup:insertText" => "onSpecialCharactersInsertText",
+                      })
 
     if options[:content_templates]
       ct_klass = options[:content_templates].constantize
