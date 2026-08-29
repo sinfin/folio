@@ -25,6 +25,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - **Embed HTML rendering**: Iframes pasted as raw HTML (e.g. a copied YouTube `<iframe>` embed code) now scale down using the aspect ratio derived from their `width`/`height` attributes, instead of keeping a fixed pixel size that overflowed and got clipped in narrower containers. They still stop at their attribute width in wider containers unless `full_width_iframes: true` is passed.
 - **Multi picker fields "add embed"**: The add-embed button now resolves the multi picker and adds the row to its `f-nested-fields`, instead of taking the first `f-nested-fields` in the whole form. Previously the click silently added the embed row to an unrelated nested-fields collection whenever the form rendered another `folio_nested_fields` before the picker, so the button appeared to do nothing. The lookup falls back to the picker within the form because the source header holding the button is detached into `.f-c-tiptap-simple-form-wrap` and is then no longer a descendant of its own picker.
+- **Console form saving loader**: Use a transparent spinner and keep console loaders light-only, ignoring OS dark mode.
 
 ## [7.7.2] - 2026-07-23
 
