@@ -80,24 +80,3 @@ class Folio::NewsletterSubscription < Folio::ApplicationRecord
       end
     end
 end
-
-# == Schema Information
-#
-# Table name: folio_newsletter_subscriptions
-#
-#  id                :bigint(8)        not null, primary key
-#  email             :string
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
-#  subscribable_type :string
-#  subscribable_id   :bigint(8)
-#  active            :boolean          default(TRUE)
-#  tags              :string
-#  merge_vars        :text
-#  site_id           :bigint(8)
-#
-# Indexes
-#
-#  index_folio_newsletter_subscriptions_on_site_id       (site_id)
-#  index_folio_newsletter_subscriptions_on_subscribable  (subscribable_type,subscribable_id)
-#

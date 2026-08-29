@@ -22,7 +22,6 @@ Gem::Specification.new do |s|
   s.add_dependency "acts-as-taggable-on"
   s.add_dependency "after_commit_everywhere"
   s.add_dependency "ancestry"
-  s.add_dependency "annot8" # Rails 8 compatible fork of annotate
   s.add_dependency "audited"
   s.add_dependency "aws-sdk-s3"
   s.add_dependency "babel-transpiler"

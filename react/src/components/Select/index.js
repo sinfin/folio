@@ -79,8 +79,12 @@ class Select extends React.Component {
     return isValid
   }
 
+  isInputTooShort = (inputValue, minimumInputLength) => {
+    return minimumInputLength && inputValue.length > 0 && inputValue.length < minimumInputLength
+  }
+
   render () {
-    const { isClearable, createable, value, options, rawOptions, onChange, innerRef, async, asyncData, addAtomSettings, defaultOptions, placeholder, dataTestId, menuPlacement, ...rest } = this.props
+    const { isClearable, createable, value, options, rawOptions, onChange, innerRef, async, asyncData, addAtomSettings, defaultOptions, placeholder, dataTestId, menuPlacement, minimumInputLength, ...rest } = this.props
 
     // Format value early so we can use it in loadOptions
     let formattedValue = null
@@ -105,6 +109,11 @@ class Select extends React.Component {
         SelectComponent = AsyncCreatableSelect
 
         loadOptions = (inputValue, handle) => {
+          if (this.isInputTooShort(inputValue, minimumInputLength)) {
+            handle([])
+            return
+          }
+
           let data = ''
           const params = new URLSearchParams()
 
@@ -161,6 +170,13 @@ class Select extends React.Component {
         useDebounceTimeout = true
 
         loadOptions = async (inputValue, loadedOptions, additional) => {
+          if (this.isInputTooShort(inputValue, minimumInputLength)) {
+            return {
+              options: [],
+              hasMore: false
+            }
+          }
+
           let data = ''
           const params = new URLSearchParams()
 
@@ -310,7 +326,7 @@ class Select extends React.Component {
         defaultOptions={handledDefaultOptions}
         formatCreateLabel={formatCreateLabel}
         onChange={this.onChange}
-        noOptionsMessage={makeNoOptionsMessage(options)}
+        noOptionsMessage={makeNoOptionsMessage(options, minimumInputLength)}
         ref={innerRef}
         styles={selectStyles}
         loadOptions={loadOptions}

@@ -152,29 +152,3 @@ class <%= application_namespace %>::Blog::Article < ApplicationRecord
       end
     end
 end
-
-# == Schema Information
-#
-# Table name: <%= application_namespace_path %>_blog_articles
-#
-#  id               :bigint(8)        not null, primary key
-#  title            :string
-#  slug             :string
-#  perex            :text
-#  locale           :string           default("cs")
-#  meta_title       :string
-#  meta_description :text
-#  featured         :boolean
-#  published        :boolean
-#  published_at     :datetime
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
-#
-# Indexes
-#
-#  index_<%= application_namespace_path %>_blog_articles_on_featured      (featured)
-#  index_<%= application_namespace_path %>_blog_articles_on_locale        (locale)
-#  index_<%= application_namespace_path %>_blog_articles_on_published     (published)
-#  index_<%= application_namespace_path %>_blog_articles_on_published_at  (published_at)
-#  index_<%= application_namespace_path %>_blog_articles_on_slug          (slug)
-#

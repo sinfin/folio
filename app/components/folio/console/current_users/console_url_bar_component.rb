@@ -14,7 +14,7 @@ class Folio::Console::CurrentUsers::ConsoleUrlBarComponent < Folio::Console::App
     def other_user_at_url
       return false unless can_now?(:access_console)
       return @other_user_at_url unless @other_user_at_url.nil?
-      @other_user_at_url = Folio::User.currently_editing_url(request.url).where.not(id: Folio::Current.user.id).first || false
+      @other_user_at_url = Folio::User.currently_editing_url(helpers.folio_console_presence_url).where.not(id: Folio::Current.user.id).first || false
     end
 
     def has_tiptap_with_autosave?
@@ -57,11 +57,22 @@ class Folio::Console::CurrentUsers::ConsoleUrlBarComponent < Folio::Console::App
       end
     end
 
+    def variant
+      @variant ||= if outdated_revision.present?
+        :outdated
+      elsif other_user_has_different_revision?
+        :takeover
+      else
+        :other_user
+      end
+    end
+
     def title
-      if outdated_revision.present?
+      case variant
+      when :outdated
         t(".autosave.outdated_title", edited_by: outdated_revision.superseded_by_user.to_label,
                                       edited_at: l(@record.updated_at, format: :short))
-      elsif other_user_has_different_revision?
+      when :takeover
         t(".autosave.title", edited_by: name,
                              edited_at: l(other_user_at_url.console_url_updated_at, format: :short))
       else
@@ -70,9 +81,10 @@ class Folio::Console::CurrentUsers::ConsoleUrlBarComponent < Folio::Console::App
     end
 
     def middle_text
-      if outdated_revision.present?
+      case variant
+      when :outdated
         t(".autosave.outdated_text")
-      elsif other_user_has_different_revision?
+      when :takeover
         t(".autosave.text")
       else
         t(".text")
@@ -80,7 +92,8 @@ class Folio::Console::CurrentUsers::ConsoleUrlBarComponent < Folio::Console::App
     end
 
     def buttons
-      if outdated_revision.present?
+      case variant
+      when :outdated
         [
           {
             variant: :primary,
@@ -88,7 +101,7 @@ class Folio::Console::CurrentUsers::ConsoleUrlBarComponent < Folio::Console::App
             data: stimulus_action(click: "onOutdatedContinueButtonClick")
           }
         ]
-      elsif other_user_has_different_revision?
+      when :takeover
         [
           {
             variant: :primary,
@@ -109,20 +122,12 @@ class Folio::Console::CurrentUsers::ConsoleUrlBarComponent < Folio::Console::App
     def data
       stimulus_controller("f-c-current-users-console-url-bar",
                           values: {
-                            api_url: ping_console_url,
                             takeover_api_url: controller.takeover_revision_console_api_tiptap_revisions_path,
                             delete_revision_url: controller.delete_revision_console_api_tiptap_revisions_path,
                             from_user_id: other_user_at_url.present? ? other_user_at_url.id : nil,
                             record_id: @record&.id,
-                            record_type: @record&.class&.name
+                            record_type: @record&.class&.name,
+                            variant:
                           })
-    end
-
-    def ping_console_url
-      if ["1", "true"].include?(ENV.fetch("DONT_PING_CONSOLE", "").to_s.downcase)
-        "dont_ping"
-      else
-        controller.console_url_ping_console_api_current_user_url(format: :json)
-      end
     end
 end

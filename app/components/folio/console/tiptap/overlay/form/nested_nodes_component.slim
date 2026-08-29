@@ -1,0 +1,6 @@
+fieldset.f-c-tiptap-overlay-form-nested-nodes.form-group
+  .f-c-tiptap-overlay-form-nested-nodes__header
+    legend.f-c-tiptap-overlay-form-nested-nodes__label = label
+
+  = render(nested_fields_component) do |nested_fields|
+    = nested_node_item(nested_fields)

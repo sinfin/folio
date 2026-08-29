@@ -2,6 +2,21 @@
 en:
   activemodel:
     attributes:
+      dummy/tiptap/node/card_group:
+        cards: Cards
+        intro: Intro
+        title: Title
+      dummy/tiptap/node/card_group/card:
+        background: Background
+        background/blue: Blue
+        background/white: White
+        button_url_json: Button
+        content: Rich text
+        cover: Cover
+        text: Text
+        title: Title
       dummy/tiptap/node/embed:
     models:
+      dummy/tiptap/node/card_group: Card group
+      dummy/tiptap/node/card_group/card: Card
       dummy/tiptap/node/embed: Embed

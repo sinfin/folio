@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 class Folio::Console::PrivateAttachmentsFieldsComponent < Folio::Console::ApplicationComponent
-  def initialize(f:, key: :private_attachments, single: false)
+  def initialize(f:, key: :private_attachments, single: false, title_input: true)
     @f = f
     @key = key
     @single = single
+    @title_input = title_input
 
     @file_type = if @f.object.class.reflections[key.to_s]
       @f.object.class.reflections[key.to_s].options[:class_name]
@@ -30,9 +31,15 @@ class Folio::Console::PrivateAttachmentsFieldsComponent < Folio::Console::Applic
     stimulus_controller("f-c-private-attachments-fields",
                         values: {
                           file_type: @file_type,
-                          file_human_type: @file_klass.human_type,
                           base_key:,
                           single: @single,
+                          title_input: @title_input,
+                        },
+                        action: {
+                          "f-uppy:upload-start": "onUppyUploadStart",
+                          "f-uppy:upload-success": "onUppyUploadSuccess",
+                          "f-uppy:upload-error": "onUppyUploadError",
+                          "f-c-private-attachments-fields/message": "onMessage",
                         })
   end
 
@@ -51,9 +58,11 @@ class Folio::Console::PrivateAttachmentsFieldsComponent < Folio::Console::Applic
   def add_button
     render(Folio::Console::Ui::ButtonComponent.new(variant: :success,
                                                    icon: :plus,
-                                                   label: t("folio.console.actions.add"),
-                                                   data: stimulus_target("addButton"),
-                                                   dropzone: true))
+                                                   label: t("folio.console.actions.add")))
+  end
+
+  def uppy_max_number_of_files
+    @single ? 1 : nil
   end
 
   def loader_data

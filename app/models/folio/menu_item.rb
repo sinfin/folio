@@ -127,29 +127,3 @@ class Folio::MenuItem < Folio::ApplicationRecord
       end
     end
 end
-
-# == Schema Information
-#
-# Table name: folio_menu_items
-#
-#  id            :bigint(8)        not null, primary key
-#  menu_id       :bigint(8)
-#  ancestry      :string
-#  title         :string
-#  rails_path    :string
-#  position      :integer
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  target_type   :string
-#  target_id     :bigint(8)
-#  url           :string
-#  open_in_new   :boolean
-#  style         :string
-#  folio_page_id :integer
-#
-# Indexes
-#
-#  index_folio_menu_items_on_ancestry                   (ancestry)
-#  index_folio_menu_items_on_menu_id                    (menu_id)
-#  index_folio_menu_items_on_target_type_and_target_id  (target_type,target_id)
-#

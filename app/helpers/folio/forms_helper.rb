@@ -5,32 +5,48 @@ module Folio::FormsHelper
                           key,
                           collection: nil,
                           add: true,
+                          add_more: false,
                           destroy: true,
                           fully_draggable: false,
                           position: true,
                           class_name: nil,
+                          fields_wrap_class_name: nil,
                           application_namespace: nil,
                           add_icon: nil,
                           add_label: nil,
                           destroy_icon: :close,
                           destroy_icon_height: 24,
                           destroy_label: nil,
+                          virtual: nil,
+                          duplicate: false,
+                          control_tooltips: nil,
+                          hide_selected_value_for: nil,
                           &block)
     render(Folio::NestedFieldsComponent.new(f:,
                                             key:,
                                             collection:,
                                             add:,
+                                            add_more:,
                                             destroy:,
                                             position:,
                                             fully_draggable:,
                                             class_name:,
+                                            fields_wrap_class_name:,
                                             application_namespace:,
                                             add_icon:,
                                             add_label:,
                                             destroy_icon:,
                                             destroy_icon_height:,
-                                            destroy_label:)) do |c|
-      block.call(c.g)
+                                            destroy_label:,
+                                            virtual:,
+                                            duplicate:,
+                                            control_tooltips:,
+                                            hide_selected_value_for:)) do |c|
+      if block.arity == 1
+        block.call(c.g)
+      else
+        block.call(c.g, c.row_key)
+      end
     end
   end
 

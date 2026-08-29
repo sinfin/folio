@@ -22,32 +22,3 @@ class Folio::ConsoleNote < Folio::ApplicationRecord
     self.site = target&.site || Folio::Current.site
   end
 end
-
-# == Schema Information
-#
-# Table name: folio_console_notes
-#
-#  id            :bigint(8)        not null, primary key
-#  content       :text
-#  target_type   :string
-#  target_id     :bigint(8)
-#  created_by_id :bigint(8)
-#  closed_by_id  :bigint(8)
-#  closed_at     :datetime
-#  due_at        :datetime
-#  position      :integer
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  site_id       :bigint(8)        not null
-#
-# Indexes
-#
-#  index_folio_console_notes_on_closed_by_id   (closed_by_id)
-#  index_folio_console_notes_on_created_by_id  (created_by_id)
-#  index_folio_console_notes_on_site_id        (site_id)
-#  index_folio_console_notes_on_target         (target_type,target_id)
-#
-# Foreign Keys
-#
-#  fk_rails_...  (site_id => folio_sites.id)
-#

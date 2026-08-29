@@ -107,33 +107,3 @@ class Dummy::Blog::Author < ApplicationRecord
       errors.add(first_name.present? ? :first_name : :last_name, :taken)
     end
 end
-
-# == Schema Information
-#
-# Table name: dummy_blog_authors
-#
-#  id               :bigint(8)        not null, primary key
-#  first_name       :string
-#  last_name        :string
-#  slug             :string
-#  perex            :text
-#  locale           :string           default("cs")
-#  published        :boolean
-#  featured         :boolean
-#  articles_count   :integer          default(0)
-#  position         :integer
-#  job              :string
-#  meta_title       :string
-#  meta_description :text
-#  social_links     :jsonb
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
-#
-# Indexes
-#
-#  index_dummy_blog_authors_on_featured   (featured)
-#  index_dummy_blog_authors_on_locale     (locale)
-#  index_dummy_blog_authors_on_position   (position)
-#  index_dummy_blog_authors_on_published  (published)
-#  index_dummy_blog_authors_on_slug       (slug)
-#

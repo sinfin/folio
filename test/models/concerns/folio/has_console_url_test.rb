@@ -102,6 +102,46 @@ class Folio::HasConsoleUrlTest < ActiveSupport::TestCase
     end
   end
 
+  test "clear_console_url! clears url and timestamp" do
+    user.update_console_url!("http://example.com/console/pages/1/edit")
+
+    user.clear_console_url!
+
+    assert_nil user.console_url
+    assert_nil user.console_url_updated_at
+  end
+
+  test "clear_console_url! with only_if_url clears when url matches" do
+    url = "http://example.com/console/pages/1/edit"
+    user.update_console_url!(url)
+
+    user.clear_console_url!(only_if_url: url)
+
+    assert_nil user.console_url
+    assert_nil user.console_url_updated_at
+  end
+
+  test "clear_console_url! with only_if_url keeps url when it does not match" do
+    url = "http://example.com/console/pages/1/edit"
+    user.update_console_url!(url)
+
+    user.clear_console_url!(only_if_url: "http://example.com/console/pages/2/edit")
+
+    assert_equal url, user.console_url
+    assert_not_nil user.console_url_updated_at
+  end
+
+  test "clear_console_url! with only_if_url applies rewriter for matching" do
+    with_console_url_rewriter do
+      user.update_console_url!("http://example.com/console/homepages/future")
+
+      user.clear_console_url!(only_if_url: "http://example.com/console/homepages/current")
+
+      assert_nil user.console_url
+      assert_nil user.console_url_updated_at
+    end
+  end
+
   private
     def with_console_url_rewriter
       rewriter = ->(url) { url.gsub(%r{/homepages/(future|current)\z}, "/homepages/*") }

@@ -11,6 +11,7 @@ import type { ButtonProps } from "@/components/tiptap-ui-primitive/button";
 import { Button } from "@/components/tiptap-ui-primitive/button";
 
 import translate from "@/lib/i18n";
+import { isSameOriginMessage } from "@/lib/message-origin";
 
 const TRANSLATIONS = {
   cs: {
@@ -60,7 +61,7 @@ export const FolioTiptapNodeButton = React.forwardRef<
     const handleMessage = (event: MessageEvent) => {
       if (
         process.env.NODE_ENV === "production" &&
-        event.origin !== window.origin
+        !isSameOriginMessage(event.origin)
       )
         return;
       if (!event.data || event.data.type !== "f-c-tiptap-overlay:saved") return;

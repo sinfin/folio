@@ -42,13 +42,15 @@ This creates (under the host app's namespace, e.g. `MyApp`):
 
 Define structure and config with `tiptap_node`. For attribute types, `tiptap_config` options (icons, groups, toolbar slots, paste), and placeholder/hint — see **`docs/tiptap.md`** (Custom Node Implementation).
 
+- Use `group` only with keys defined in the app's `node_groups`.
+- Add `toolbar_slot` to a node rarely, only for the most common quick-access nodes such as "single image". Do not add it just because the node has `group`.
+
 ```ruby
 class MyApp::Tiptap::Node::Contents::Text < Folio::Tiptap::Node
   tiptap_node structure: {
     content: :rich_text,
   }, tiptap_config: {
     icon: "content_text",
-    toolbar_slot: "after_layouts",
     group: "content",
   }
 end
@@ -92,11 +94,16 @@ def self.default_tiptap_config
     ],
     node_groups: [
       { key: "content", title: { cs: "Obsah", en: "Content" },
-        icon: "content", toolbar_slot: "after_layouts" },
+        icon: "content" },
     ],
   )
 end
 ```
+
+Only add `toolbar_slot` to a `node_groups` entry when that group should render
+as a toolbar dropdown. Prefer leaving groups out of the toolbar unless they hold
+very common insertion actions; groups without `toolbar_slot` remain available
+for slash command organization only.
 
 ## i18n
 

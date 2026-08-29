@@ -43,6 +43,35 @@ implementation across incidental private helpers there.
 - In optional packs, use the pack's own `lib/` tree for pack-owned focused
   classes.
 
+## Method signatures
+
+- When a method takes more than two arguments, use keyword arguments instead of
+  positional arguments. This applies to private helpers as well as public APIs.
+- For Ruby helper methods that use keywords, keep related calls keyword-only
+  throughout the class. Do not mix one positional argument with keyword
+  arguments, such as `foo(path, bar:)`; prefer `foo(path:, bar:)`.
+- When a set of related helper methods all accept the same argument, use the
+  same keyword form for that argument across the set, even if an individual
+  helper currently takes only that one argument.
+
+## Method extraction
+
+- Do not add local helper or predicate methods that only call another similarly
+  named helper and add no behavior. Call the existing method directly instead.
+- Extract a method when it combines conditions, names a distinct domain concept,
+  removes real duplication, or provides a framework-required entrypoint such as
+  `render?`.
+
+## Association identity and loading
+
+- Do not compare Active Record association objects when a type and foreign-key
+  comparison expresses the same intent without loading another association.
+- A `has_one` association keeps its foreign key on the related record, so its
+  owner normally has no `<association>_id` method. When the related record is
+  already needed, use its type and foreign key (for example,
+  `parent.is_a?(RootCategory) && parent.project_id == project.id`) instead of
+  loading `project.root_category` merely to compare identity.
+
 ## Jobs
 
 Jobs are already focused classes that perform one unit of work. Do not extract

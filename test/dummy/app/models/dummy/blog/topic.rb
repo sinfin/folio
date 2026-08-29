@@ -79,30 +79,3 @@ class Dummy::Blog::Topic < ApplicationRecord
       end
     end
 end
-
-# == Schema Information
-#
-# Table name: dummy_blog_topics
-#
-#  id               :bigint(8)        not null, primary key
-#  title            :string
-#  slug             :string
-#  perex            :text
-#  locale           :string           default("cs")
-#  published        :boolean
-#  featured         :boolean
-#  articles_count   :integer          default(0)
-#  position         :integer
-#  meta_title       :string
-#  meta_description :text
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
-#
-# Indexes
-#
-#  index_dummy_blog_topics_on_featured   (featured)
-#  index_dummy_blog_topics_on_locale     (locale)
-#  index_dummy_blog_topics_on_position   (position)
-#  index_dummy_blog_topics_on_published  (published)
-#  index_dummy_blog_topics_on_slug       (slug)
-#

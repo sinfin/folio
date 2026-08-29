@@ -5,27 +5,47 @@ class Folio::MediaSourceSiteLink < ApplicationRecord
   belongs_to :media_source, class_name: "Folio::MediaSource"
   belongs_to :site, class_name: "Folio::Site"
 
-  validates :media_source_id, uniqueness: { scope: :site_id }
-end
+  validate :validate_unique_site_for_media_source
+  validates :max_usage_count, numericality: { greater_than: 0, allow_nil: true }
 
-# == Schema Information
-#
-# Table name: folio_media_source_site_links
-#
-#  id              :bigint(8)        not null, primary key
-#  media_source_id :bigint(8)        not null
-#  site_id         :bigint(8)        not null
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#
-# Indexes
-#
-#  index_folio_media_source_site_links_on_media_source_id  (media_source_id)
-#  index_folio_media_source_site_links_on_site_id          (site_id)
-#  index_folio_media_source_site_links_unique              (media_source_id,site_id) UNIQUE
-#
-# Foreign Keys
-#
-#  fk_rails_...  (media_source_id => folio_media_sources.id)
-#  fk_rails_...  (site_id => folio_sites.id)
-#
+  def effective_max_usage_count
+    max_usage_count.presence || media_source.max_usage_count
+  end
+
+  private
+    def validate_unique_site_for_media_source
+      return if site_id.blank? || marked_for_destruction?
+      return errors.add(:media_source_id, :taken) if active_duplicate_sibling?
+      return if media_source_id.blank?
+      return unless persisted_duplicate_exists?
+
+      errors.add(:media_source_id, :taken)
+    end
+
+    def active_duplicate_sibling?
+      return false unless media_source
+
+      media_source.media_source_site_links.any? do |link|
+        link != self &&
+          !link.marked_for_destruction? &&
+          link.site_id == site_id
+      end
+    end
+
+    def persisted_duplicate_exists?
+      self.class
+          .where(media_source_id:, site_id:)
+          .where.not(id: [id, *destroyed_sibling_ids].compact)
+          .exists?
+    end
+
+    def destroyed_sibling_ids
+      return [] unless media_source
+
+      media_source.media_source_site_links.filter_map do |link|
+        link.id if link != self &&
+                   link.marked_for_destruction? &&
+                   link.site_id == site_id
+      end
+    end
+end

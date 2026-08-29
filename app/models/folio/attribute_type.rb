@@ -63,25 +63,3 @@ class Folio::AttributeType < Folio::ApplicationRecord
       end
     end
 end
-
-# == Schema Information
-#
-# Table name: folio_attribute_types
-#
-#  id                     :bigint(8)        not null, primary key
-#  site_id                :bigint(8)
-#  title                  :string
-#  type                   :string
-#  position               :integer
-#  data_type              :string           default("string")
-#  folio_attributes_count :integer
-#  created_at             :datetime         not null
-#  updated_at             :datetime         not null
-#
-# Indexes
-#
-#  index_folio_attribute_types_on_folio_attributes_count  (folio_attributes_count)
-#  index_folio_attribute_types_on_position                (position)
-#  index_folio_attribute_types_on_site_id                 (site_id)
-#  index_folio_attribute_types_on_type                    (type)
-#

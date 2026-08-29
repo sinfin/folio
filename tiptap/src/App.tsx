@@ -10,6 +10,7 @@ interface AppProps {
   type?: "rich-text" | "block";
   folioTiptapConfig: FolioTiptapConfig;
   readonly: boolean;
+  defaultResponsivePreview?: boolean;
   initialScrollTop: number | null;
   autosaveIndicatorInfo?: FolioTiptapAutosaveIndicatorInfo;
 }
@@ -21,6 +22,7 @@ function App({
   type,
   folioTiptapConfig,
   readonly,
+  defaultResponsivePreview,
   initialScrollTop,
   autosaveIndicatorInfo,
 }: AppProps) {
@@ -35,6 +37,7 @@ function App({
           type={type as "block" | "rich-text"}
           folioTiptapConfig={folioTiptapConfig}
           readonly={readonly}
+          defaultResponsivePreview={defaultResponsivePreview}
           initialScrollTop={initialScrollTop}
           autosaveIndicatorInfo={autosaveIndicatorInfo}
         />

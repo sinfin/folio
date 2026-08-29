@@ -14,6 +14,8 @@ class Folio::Files::RestartProcessingMediaJob < Folio::ApplicationJob
         started_at = file.remote_services_data["processing_step_started_at"]
         next if started_at && started_at < 1.hour.ago
 
+        next unless file.respond_to?(:processing_state)
+
         case file.processing_state
         when "enqueued"
           file.create_full_media

@@ -17,6 +17,10 @@ Keep tests behavior-facing and close to the code they protect.
 Never test JavaScript or asset-pipeline behavior by asserting that an asset
 file contains a string or implementation snippet.
 
+Do not add rake task tests in this repository. Cover the underlying behavior
+through the model, service, component, or integration code the task calls
+instead.
+
 Instead, exercise the behavior through one of:
 - rendered DOM assertions
 - ViewComponent/component tests
@@ -34,8 +38,29 @@ Instead, exercise the behavior through one of:
 - Avoid trivial existence tests that add noise without behavior coverage:
   method/constant existence, `respond_to?`, `defined?`, and similar assertions
   usually prove only implementation shape. Exercise the behavior instead.
+- Do not test static constants, declarative lookup tables, or trivial data
+  assembly by restating their values in test expectations. Test observable
+  behavior through consumers; omit the test when no meaningful behavior exists.
 - Avoid pinning private method names, asset contents, exact implementation
   snippets, or incidental markup that is not part of the user-facing contract.
+- Avoid asserting exact URLs in component tests when link presence or label is
+  enough to prove the behavior. URL generation is often brittle in component
+  specs; assert exact hrefs only when the target URL itself is the behavior
+  under test.
+- Do not test bare `data-action` / Stimulus wiring presence unless the
+  assertion proves behavior. Rendering the component/wrapper is enough for
+  static markup; use behavior-facing tests for JavaScript behavior.
+- Do not test static presentation details that are always present and not part
+  of conditional behavior, such as a fixed CSS utility class (`cell--compact`) or
+  non-interactive styling option. Let the template/component code carry that.
+- For rendered form validation, assert the relevant error indicator or count
+  rather than localized error wording, unless that wording is itself the
+  user-facing contract.
+- Use `visible: :all` when asserting `[hidden]` content.
+- Test conditional rendering and state changes, not static presentation that is
+  present in every variant.
+- Controller tests for `as: :embed` must submit `folio_embed_data.to_json`,
+  matching the hidden input's browser contract.
 
 ## ViewComponents
 
@@ -49,12 +74,22 @@ Instead, exercise the behavior through one of:
 
 - Do not mutate `ENV` in tests for application behavior. Avoid save/delete/
   restore patterns around environment keys.
+- Do not mutate `Folio::Current` values directly in tests when the code only
+  reads them. Prefer a scoped block stub so global request state cannot leak
+  past the example:
+
+  ```ruby
+  Folio::Current.stub(:ip_address, "::1") do
+    # exercise behavior
+  end
+  ```
+
 - If production behavior depends on `ENV`, expose a small app-owned accessor and
   stub that in tests. Prefer a method returning related values together when it
   makes tests cleaner.
 
   ```ruby
-  Folio::Ai.stub(:provider_api_key_env_values, { openai: "secret" }) do
+  MyFeature.stub(:provider_env_values, { primary: "secret" }) do
     # exercise behavior
   end
   ```
@@ -62,7 +97,7 @@ Instead, exercise the behavior through one of:
 - For one-off flags, stub the value method directly:
 
   ```ruby
-  Folio::Ai.stub(:env_disabled_value, "1") do
+  MyFeature.stub(:disabled_env_value, "1") do
     # exercise disabled behavior
   end
   ```

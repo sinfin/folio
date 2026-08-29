@@ -4,7 +4,10 @@ class Folio::MediaSource < Folio::ApplicationRecord
   include Folio::BelongsToSite
   # TODO: include Folio::FilesSharedAccrossSites if Rails.application.config.folio_shared_files_between_sites
 
-  has_many :media_source_site_links, class_name: "Folio::MediaSourceSiteLink", dependent: :destroy
+  has_many :media_source_site_links,
+           -> { order(created_at: :asc, id: :asc) },
+           class_name: "Folio::MediaSourceSiteLink",
+           dependent: :destroy
   has_many :allowed_sites, through: :media_source_site_links, source: :site, class_name: "Folio::Site"
   has_many :files, class_name: "Folio::File", foreign_key: :media_source_id
 
@@ -34,6 +37,26 @@ class Folio::MediaSource < Folio::ApplicationRecord
       attributes["assigned_media_count"].to_i
     else
       @assigned_media_count ||= Folio::File.where(media_source_id: id).count
+    end
+  end
+
+  def rule_for_site(site)
+    return unless site
+
+    media_source_site_links.detect { |link| link.site_id == site.id }
+  end
+
+  def effective_max_usage_count(site:)
+    rule_for_site(site)&.effective_max_usage_count || max_usage_count
+  end
+
+  def site_label_with_max_usage_override(site)
+    max_usage_count = rule_for_site(site)&.max_usage_count
+
+    if max_usage_count.present?
+      "#{site.to_label} (#{max_usage_count})"
+    else
+      site.to_label
     end
   end
 
@@ -84,26 +107,3 @@ class Folio::MediaSource < Folio::ApplicationRecord
       @nullified_file_ids = nil
     end
 end
-
-# == Schema Information
-#
-# Table name: folio_media_sources
-#
-#  id              :bigint(8)        not null, primary key
-#  title           :string           not null
-#  licence         :string
-#  copyright_text  :string
-#  max_usage_count :integer          default(1)
-#  site_id         :bigint(8)        not null
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#
-# Indexes
-#
-#  index_folio_media_sources_on_site_id  (site_id)
-#  index_folio_media_sources_on_title    (title) UNIQUE
-#
-# Foreign Keys
-#
-#  fk_rails_...  (site_id => folio_sites.id)
-#

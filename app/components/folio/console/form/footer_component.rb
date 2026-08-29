@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class Folio::Console::Form::FooterComponent < Folio::Console::ApplicationComponent
+  AUTOSAVE_DISABLED_DATA = {
+    f_c_form_footer_autosave_disabled: "true",
+  }.freeze
+
   bem_class_name :static
 
   def initialize(f: nil,
@@ -81,6 +85,8 @@ class Folio::Console::Form::FooterComponent < Folio::Console::ApplicationCompone
                             "f-nested-fields:destroyed@document" => "onNestedFieldsDestroyed",
                             "f-input-collection-remote-select:open@document" => "onSelect2Open",
                             "f-input-collection-remote-select:close@document" => "onSelect2Close",
+                            "f-input-collection-filterable:open@document" => "onSelect2Open",
+                            "f-input-collection-filterable:close@document" => "onSelect2Close",
                             "f-modal:opened@document" => "onModalOpened",
                             "f-c-form-footer:resumeAutosave" => "onResumeAutosave",
                             "f-c-form-footer:pauseAutosave" => "onPauseAutosave",

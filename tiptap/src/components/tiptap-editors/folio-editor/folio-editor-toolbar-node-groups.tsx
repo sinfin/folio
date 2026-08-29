@@ -131,45 +131,29 @@ export function FolioEditorToolbarNodeGroups({
     }
   });
 
-  // Sort groups by toolbar_slot (groups with toolbar_slot come first, then by key)
-  const sortedGroupKeys = Object.keys(groupedNodes).sort((a, b) => {
-    const aConfig = nodeGroups.find((g) => g.key === a);
-    const bConfig = nodeGroups.find((g) => g.key === b);
-    const aHasSlot = !!aConfig?.toolbar_slot;
-    const bHasSlot = !!bConfig?.toolbar_slot;
+  // A node group must opt into toolbar rendering; group alone is for slash menu organization.
+  const toolbarGroups = Object.entries(groupedNodes)
+    .flatMap(([groupKey, groupNodes]) => {
+      const groupConfig = nodeGroups.find((g) => g.key === groupKey);
 
-    // Groups with toolbar_slot come first
-    if (aHasSlot && !bHasSlot) return -1;
-    if (!aHasSlot && bHasSlot) return 1;
+      if (!groupConfig?.toolbar_slot) return [];
 
-    // If both have or don't have toolbar_slot, sort by key
-    return a.localeCompare(b);
-  });
+      return [{ groupKey, groupConfig, nodes: groupNodes }];
+    })
+    .sort((a, b) => a.groupKey.localeCompare(b.groupKey));
 
-  // Build default group configs for groups not defined in nodeGroups
-  const getGroupConfig = (groupKey: string): FolioTiptapNodeGroup => {
-    const defined = nodeGroups.find((g) => g.key === groupKey);
-    if (defined) return defined;
-
-    // Default config
-    return {
-      key: groupKey,
-      title: { cs: groupKey, en: groupKey },
-      icon: groupKey,
-    };
-  };
+  if (toolbarGroups.length === 0) return null;
 
   return (
     <>
       {/* Render grouped nodes as dropdowns */}
-      {sortedGroupKeys.map((groupKey) => {
-        const groupConfig = getGroupConfig(groupKey);
+      {toolbarGroups.map(({ groupKey, groupConfig, nodes }) => {
         return (
           <ToolbarGroup key={groupKey}>
             <NodeDropdown
               groupKey={groupKey}
               groupConfig={groupConfig}
-              nodes={groupedNodes[groupKey]}
+              nodes={nodes}
             />
           </ToolbarGroup>
         );
