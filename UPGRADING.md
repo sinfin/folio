@@ -1,5 +1,21 @@
 # Upgrading
 
+## Unreleased
+
+### Console AASM email modal is a ViewComponent
+
+`cell("folio/console/aasm/email_modal")` is replaced by
+`render(Folio::Console::Aasm::EmailModalComponent.new)`.
+
+The default console layout already renders the component. The cell Ruby, Slim,
+JS, and Sass under `app/cells/folio/console/aasm/email_modal*` have been
+removed.
+
+**Action required:** If a host app still calls the cell (or copies the old
+console layout with `cell("folio/console/aasm/email_modal")`), switch to the
+component. I18n keys moved from `folio.console.aasm.email_modal` to
+`folio.console.aasm.email_modal_component`.
+
 ## 7.2.* to 7.3.0
 
 ### has_folio_tiptap? Method Change

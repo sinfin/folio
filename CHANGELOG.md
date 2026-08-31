@@ -18,6 +18,11 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- **Console AASM email modal**: State events with `email_modal: true` now open
+  `Folio::Console::Aasm::EmailModalComponent` from the default console layout
+  instead of raising unimplemented. `cell("folio/console/aasm/email_modal")` is
+  removed; host apps that still render the cell must switch to the component.
+  See `UPGRADING.md`.
 - **AI pack configuration**: Move runtime configuration readers and provider
   helpers onto `Folio::Ai.config`, keeping `Folio::Ai.configure` as the setup
   API.
