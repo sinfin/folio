@@ -49,17 +49,18 @@ class Folio::Ai::FormSnapshotSanitizer
   MAX_ITEM_TEXT_LENGTH = 1_000
   MAX_COLLECTION_ITEMS = 30
 
-  def self.call(record:, snapshot:)
-    new(record:, snapshot:).call
+  def self.call(record:, snapshot:, field_key: nil)
+    new(record:, snapshot:, field_key:).call
   end
 
-  def initialize(record:, snapshot:)
+  def initialize(record:, snapshot:, field_key: nil)
     @record = record
     @snapshot = snapshot
+    @field_key = field_key
   end
 
   def call
-    expanded_snapshot.each_with_object({}) do |(key, value), hash|
+    transformed_snapshot.each_with_object({}) do |(key, value), hash|
       attribute = attribute_name(key)
       next if ignored_key?(attribute)
       next unless allowed_context_root?(attribute)
@@ -71,7 +72,15 @@ class Folio::Ai::FormSnapshotSanitizer
 
   private
     attr_reader :record,
-                :snapshot
+                :snapshot,
+                :field_key
+
+    def transformed_snapshot
+      return expanded_snapshot unless record.respond_to?(:folio_ai_transform_form_snapshot)
+
+      raw_hash(record.folio_ai_transform_form_snapshot(field_key:,
+                                                       snapshot: expanded_snapshot))
+    end
 
     def expanded_snapshot
       raw = raw_hash(snapshot)
