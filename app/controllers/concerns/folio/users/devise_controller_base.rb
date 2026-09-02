@@ -61,7 +61,7 @@ module Folio::Users::DeviseControllerBase
   end
 
   def email_belongs_to_invited_pending_user?(email)
-    user = Folio::User.find_by(email:)
+    user = Folio::User.find_by(email: email.to_s.strip.downcase)
     user && user.invitation_created_at? && user.invitation_accepted_at.nil? && user.sign_in_count == 0
   end
 

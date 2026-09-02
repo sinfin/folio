@@ -8,5 +8,8 @@ class Folio::Devise::Sessions::NewCellTest < Cell::TestCase
                 resource: Folio::User.new,
                 resource_name: :user).(:show)
     assert html.has_css?(".f-devise-sessions-new")
+    assert html.has_css?('input[name="user[email]"][type="email"]')
+    assert html.has_css?('input[name="user[email]"][autocapitalize="none"]')
+    assert html.has_css?('input[name="user[email]"][autocomplete="email"]')
   end
 end

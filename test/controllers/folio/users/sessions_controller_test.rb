@@ -27,6 +27,26 @@ class Folio::Users::SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to controller.after_sign_in_path_for(@user)
   end
 
+  test "create matches email case-insensitively" do
+    assert_difference("@user.reload.sign_in_count", 1) do
+      post main_app.user_session_path, params: {
+        user: { email: "Email@Email.Email", password: TEST_PASSWORD },
+      }
+    end
+
+    assert_redirected_to controller.after_sign_in_path_for(@user)
+  end
+
+  test "create strips surrounding whitespace from email" do
+    assert_difference("@user.reload.sign_in_count", 1) do
+      post main_app.user_session_path, params: {
+        user: { email: " #{@params[:email]} ", password: TEST_PASSWORD },
+      }
+    end
+
+    assert_redirected_to controller.after_sign_in_path_for(@user)
+  end
+
   test "ajax create" do
     post main_app.user_session_path(format: :json), params: { user: @params }
     assert_response(:ok)
