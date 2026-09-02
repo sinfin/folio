@@ -246,6 +246,10 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     self::STRUCTURE.dup
   end
 
+  def self.console_form_fields(site:)
+    {}
+  end
+
   def self.molecule
     nil
   end

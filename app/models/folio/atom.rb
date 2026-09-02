@@ -20,6 +20,7 @@ module Folio::Atom
 
     klasses_for(klass:, site:).each do |klass|
       structure = {}
+      console_form_fields = klass.console_form_fields(site:)
 
       klass::STRUCTURE.each do |key, value|
         structure[key] = {
@@ -40,6 +41,8 @@ module Folio::Atom
             ]
           end
         end
+
+        structure[key].merge!(console_form_fields.fetch(key, {}))
       end
 
       attachments = klass::ATTACHMENTS.map do |key|

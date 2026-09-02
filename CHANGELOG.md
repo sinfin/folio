@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- **Atom form ordered multi-select**: Allow atom classes to configure virtual JSON-backed ordered multi-select fields, including conditional field visibility and remotely loaded options.
 - **Tiptap content rendering**: `Folio::Tiptap::ContentComponent` accepts an explicit `prose_mirror_node:` while retaining the original record as rendering context.
 - **Audio processing**: Process uploaded audio into playback-ready derivatives,
   extract metadata, waveform, and embedded artwork, and expose cacheable or

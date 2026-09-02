@@ -5,6 +5,7 @@ import TextareaAutosize from 'react-autosize-textarea'
 import RichTextEditor from 'components/RichTextEditor'
 import DateInput from 'components/DateInput'
 import UrlInput from 'components/UrlInput'
+import OrderedMultiselectInput from './OrderedMultiselectInput'
 
 import preventEnterSubmit from 'utils/preventEnterSubmit'
 
@@ -81,6 +82,17 @@ export default function AtomInput ({ field, atom, index, onChange, onValueChange
         onChange={(value) => onValueChange(index, value, key)}
         invalid={Boolean(atom.errors[key])}
         type={type}
+      />
+    )
+  }
+
+  if (type === 'ordered_multiselect') {
+    return (
+      <OrderedMultiselectInput
+        atom={atom}
+        field={field}
+        index={index}
+        onValueChange={onValueChange}
       />
     )
   }
