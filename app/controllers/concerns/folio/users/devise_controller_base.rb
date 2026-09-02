@@ -61,7 +61,10 @@ module Folio::Users::DeviseControllerBase
   end
 
   def email_belongs_to_invited_pending_user?(email)
-    user = Folio::User.find_by(email: email.to_s.strip.downcase)
+    auth_site = Folio::Current.enabled_site_for_crossdomain_devise || Folio::Current.site
+    return false unless auth_site
+
+    user = Folio::User.find_for_authentication(email:, auth_site_id: auth_site.id.to_s)
     user && user.invitation_created_at? && user.invitation_accepted_at.nil? && user.sign_in_count == 0
   end
 

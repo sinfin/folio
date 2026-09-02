@@ -392,8 +392,8 @@ class Folio::User < Folio::ApplicationRecord
 
   private
     # Override of Devise method to scope authentication by zone.
-    # Apply Devise case_insensitive_keys / strip_whitespace_keys here: this
-    # method replaces the default lookup, so Warden does not run the filter.
+    # Default Devise lookup filters email in find_first_by_auth_conditions;
+    # this override skips that, so apply devise_parameter_filter here.
     def self.find_for_authentication(warden_params)
       warden_params = devise_parameter_filter.filter(warden_params.to_h.symbolize_keys)
       email = warden_params[:email]

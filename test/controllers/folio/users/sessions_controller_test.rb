@@ -56,9 +56,18 @@ class Folio::Users::SessionsControllerTest < ActionDispatch::IntegrationTest
     skip unless Rails.application.config.folio_users_publicly_invitable
     user = Folio::User.invite!(email: "invite@email.email", auth_site_id: ::Folio::Current.site.id)
     old_timestamp = user.invitation_created_at
-    post main_app.user_session_path, params: { user: { email: "invite@email.email" } }
+    post main_app.user_session_path, params: { user: { email: "Invite@Email.Email" } }
     assert_redirected_to user_invitation_path
     assert_not_equal old_timestamp, user.reload.invitation_created_at
+  end
+
+  test "create pending invitation is scoped to the current auth site" do
+    skip unless Rails.application.config.folio_users_publicly_invitable
+    other_site = create_site(force: true)
+    Folio::User.invite!(email: "invite@email.email", auth_site_id: other_site.id)
+
+    post main_app.user_session_path, params: { user: { email: "Invite@Email.Email" } }
+    assert_redirected_to main_app.new_user_session_path
   end
 
   test "ajax create pending invitation" do
