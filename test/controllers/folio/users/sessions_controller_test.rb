@@ -63,7 +63,12 @@ class Folio::Users::SessionsControllerTest < ActionDispatch::IntegrationTest
 
   test "create pending invitation is scoped to the current auth site" do
     skip unless Rails.application.config.folio_users_publicly_invitable
-    other_site = create_site(force: true)
+    begin
+      other_site = create_site(key: try(:other_site_key), force: true)
+    rescue ActiveRecord::RecordInvalid => e
+      puts "Cannot create other_site! Try setting other_site_key in Folio::Users::SessionsControllerTest.class_eval to handle singletons in folio_site_default_test_factory."
+      raise e
+    end
     Folio::User.invite!(email: "invite@email.email", auth_site_id: other_site.id)
 
     post main_app.user_session_path, params: { user: { email: "Invite@Email.Email" } }
