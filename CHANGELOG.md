@@ -14,9 +14,18 @@ All notable changes to this project will be documented in this file.
 - **Input character counter**: Mask long displayed current counts automatically for numeric `character_counter` values, e.g. `150` derives a `999` display limit so `1000` and higher render as `*`. Pass `character_counter_auto_current_count_limit: false` to opt out.
 - **Console icons**: Add the `lock_open_variant` icon.
 - **Embed full-width iframes**: `Folio::Embed::BoxComponent` accepts `full_width_iframes: true` to let embedded iframes grow to the container width instead of stopping at their `width` attribute (560px for a URL-embedded YouTube video, 360px for Shorts). The default is `false`, so host apps opt in per site or per placement. The same option is accepted by `input as: :embed` and by `:embed` tiptap node attributes (where it may be a Proc resolved at render time) so console previews match the frontend.
+- **Console icons**: Add the `close_box` icon.
+- **Special characters popup**: Support inserting characters into Redactor,
+  advanced Redactor, and email Redactor inputs while synchronizing editor
+  changes back to their source textareas.
 
 ### Changed
 
+- **Console AASM email modal**: State events with `email_modal: true` now open
+  `Folio::Console::Aasm::EmailModalComponent` from the default console layout
+  instead of raising unimplemented. `cell("folio/console/aasm/email_modal")` is
+  removed; host apps that still render the cell must switch to the component.
+  See `UPGRADING.md`.
 - **AI pack configuration**: Move runtime configuration readers and provider
   helpers onto `Folio::Ai.config`, keeping `Folio::Ai.configure` as the setup
   API.
@@ -24,6 +33,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - **Embed HTML rendering**: Iframes pasted as raw HTML (e.g. a copied YouTube `<iframe>` embed code) now scale down using the aspect ratio derived from their `width`/`height` attributes, instead of keeping a fixed pixel size that overflowed and got clipped in narrower containers. They still stop at their attribute width in wider containers unless `full_width_iframes: true` is passed.
 - **Multi picker fields "add embed"**: The add-embed button now resolves the multi picker and adds the row to its `f-nested-fields`, instead of taking the first `f-nested-fields` in the whole form. Previously the click silently added the embed row to an unrelated nested-fields collection whenever the form rendered another `folio_nested_fields` before the picker, so the button appeared to do nothing. The lookup falls back to the picker within the form because the source header holding the button is detached into `.f-c-tiptap-simple-form-wrap` and is then no longer a descendant of its own picker.
+- **Console form saving loader**: Use a transparent spinner and keep console loaders light-only, ignoring OS dark mode.
 
 ## [7.7.2] - 2026-07-23
 

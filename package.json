@@ -14,7 +14,6 @@
       "/app/assets/javascripts/folio/console/redactor/_definedlinks.js",
       "/app/assets/javascripts/folio/console/redactor/_init.js",
       "/app/assets/javascripts/folio/cstypo.js",
-      "/app/cells/folio/console/aasm/email_modal/email_modal.js",
       "/app/cells/folio/console/atoms/layout_switch/layout_switch.js",
       "/app/cells/folio/console/atoms/locale_switch/locale_switch.js",
       "/app/cells/folio/console/catalogue/catalogue.js",
