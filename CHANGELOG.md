@@ -15,6 +15,9 @@ All notable changes to this project will be documented in this file.
 - **Console icons**: Add the `lock_open_variant` icon.
 - **Embed full-width iframes**: `Folio::Embed::BoxComponent` accepts `full_width_iframes: true` to let embedded iframes grow to the container width instead of stopping at their `width` attribute (560px for a URL-embedded YouTube video, 360px for Shorts). The default is `false`, so host apps opt in per site or per placement. The same option is accepted by `input as: :embed` and by `:embed` tiptap node attributes (where it may be a Proc resolved at render time) so console previews match the frontend.
 - **Console icons**: Add the `close_box` icon.
+- **Special characters popup**: Support inserting characters into Redactor,
+  advanced Redactor, and email Redactor inputs while synchronizing editor
+  changes back to their source textareas.
 
 ### Changed
 
