@@ -392,7 +392,10 @@ class Folio::User < Folio::ApplicationRecord
 
   private
     # Override of Devise method to scope authentication by zone.
+    # Default Devise lookup filters email in find_first_by_auth_conditions;
+    # this override skips that, so apply devise_parameter_filter here.
     def self.find_for_authentication(warden_params)
+      warden_params = devise_parameter_filter.filter(warden_params.to_h.symbolize_keys)
       email = warden_params[:email]
       site = ::Folio::Current.enabled_site_for_crossdomain_devise || ::Folio::Site.find(warden_params[:auth_site_id])
 
