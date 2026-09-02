@@ -18,11 +18,18 @@
     text-overflow: ellipsis
     white-space: nowrap
 
+  &__extension
+    color: $dark-gray
+
+  &__dimensions
+    color: #A8A9AA
+
   &__img-wrap
     align-items: center
     display: flex
     height: 70px
     justify-content: center
+    position: relative
     width: 70px
     background: $gray
 
@@ -30,3 +37,26 @@
     display: block
     max-height: 100%
     max-width: 100%
+
+  &__loader
+    display: none
+
+  &__img[src*="doader.com"] + &__loader
+    display: block
+
+  &--detail &__variant
+    align-items: flex-start
+    width: auto
+
+  &--detail
+    gap: $grid-gutter-width
+
+  &--detail &__title
+    align-self: stretch
+    font-size: px-to-rem(12px)
+    text-align: left
+    white-space: normal
+
+  &--detail &__img-wrap
+    max-height: px-to-rem(100px)
+    max-width: px-to-rem(100px)
