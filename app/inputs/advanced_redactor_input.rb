@@ -7,7 +7,6 @@ class AdvancedRedactorInput < RedactorInput
                       action: {
                         "f-special-characters-popup:insertText" => "onSpecialCharactersInsertText",
                       })
-    add_text_suggestions(input_type: :text)
 
     input_html_options[:class] << "f-input--redactor-advanced"
 
