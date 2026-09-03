@@ -174,4 +174,14 @@ class Folio::UserTest < ActiveSupport::TestCase
     user.password = "Short, but 2 complex!"
     assert user.valid?
   end
+
+  test "find_for_authentication matches email case-insensitively and strips whitespace" do
+    user = create(:folio_user, email: "user@example.com")
+    auth_site_id = user.auth_site_id.to_s
+
+    assert_equal user, Folio::User.find_for_authentication(email: "user@example.com", auth_site_id:)
+    assert_equal user, Folio::User.find_for_authentication(email: "User@Example.COM", auth_site_id:)
+    assert_equal user, Folio::User.find_for_authentication(email: " user@example.com ", auth_site_id:)
+    assert_nil Folio::User.find_for_authentication(email: "other@example.com", auth_site_id:)
+  end
 end
