@@ -2,7 +2,11 @@
 
 class AdvancedRedactorInput < RedactorInput
   def input(wrapper_options = nil)
-    register_stimulus("f-input-redactor", wrapper: true)
+    register_stimulus("f-input-redactor",
+                      wrapper: true,
+                      action: {
+                        "f-special-characters-popup:insertText" => "onSpecialCharactersInsertText",
+                      })
 
     input_html_options[:class] << "f-input--redactor-advanced"
 

@@ -426,6 +426,74 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
     end
 
     if klass.human_type == "image"
+      test "#{klass} - update_thumbnails_crop writes crop under the bucket label and every exact ratio of the keys" do
+        file = create(klass.model_name.singular)
+        file.update!(thumbnail_sizes: {
+          "480x320#" => { "uid" => "test_uid_1" },
+          "306x208#" => { "uid" => "test_uid_2" },
+          "400x250#" => { "uid" => "test_uid_3" },
+        })
+
+        patch url_for([:update_thumbnails_crop, :console, :api, file, format: :json]), params: {
+          ratio: "3:2",
+          group_type: "crop",
+          crop: { x: 0.4, y: 0.6 }
+        }
+
+        assert_response(:success)
+        file.reload
+        ratios = file.thumbnail_configuration["ratios"]
+        assert_equal({ "x" => 0.4, "y" => 0.6 }, ratios["3:2"]["crop"])
+        assert_equal({ "x" => 0.4, "y" => 0.6 }, ratios["153:104"]["crop"])
+        assert_nil ratios["8:5"]
+      end
+
+      test "#{klass} - update_thumbnails_crop propagates a main crop to every detailed ratio in the family" do
+        file = create(klass.model_name.singular)
+        file.update!(thumbnail_sizes: {
+          "200x120#" => { "uid" => "test_uid_1" },
+          "400x250#" => { "uid" => "test_uid_2" },
+          "800x450#" => { "uid" => "test_uid_3" },
+        })
+
+        patch url_for([:update_thumbnails_crop, :console, :api, file, format: :json]), params: {
+          ratio: "16:9",
+          group_type: "main_crop",
+          crop: { x: 0.4, y: 0.6 }
+        }
+
+        assert_response(:success)
+        ratios = file.reload.thumbnail_configuration["ratios"]
+        assert_equal({ "x" => 0.4, "y" => 0.6 }, ratios["5:3"]["crop"])
+        assert_equal({ "x" => 0.4, "y" => 0.6 }, ratios["8:5"]["crop"])
+        assert_equal({ "x" => 0.4, "y" => 0.6 }, ratios["16:9"]["crop"])
+
+        components = response.parsed_body.fetch("data")
+        waiting_for_thumbnail_count = %w[main details].sum do |section|
+          Nokogiri::HTML.fragment(components.fetch(section)).css(
+            '[data-f-c-files-show-thumbnails-crop-edit-state-value="waiting-for-thumbnail"]'
+          ).size
+        end
+
+        assert_equal 4, waiting_for_thumbnail_count
+      end
+
+      test "#{klass} - update_thumbnails_crop persists forced-gravity sizes under their intrinsic ratio" do
+        file = create(klass.model_name.singular)
+        file.update!(thumbnail_sizes: { "400x250#c" => { "uid" => "test_uid_1" } })
+
+        patch url_for([:update_thumbnails_crop, :console, :api, file, format: :json]), params: {
+          ratio: "16:9",
+          group_type: "main_crop",
+          crop: { x: 0.4, y: 0.6 }
+        }
+
+        assert_response(:success)
+        ratios = file.reload.thumbnail_configuration["ratios"]
+        assert_equal({ "x" => 0.4, "y" => 0.6 }, ratios["16:9"]["crop"])
+        assert_equal({ "x" => 0.4, "y" => 0.6 }, ratios["8:5"]["crop"])
+      end
+
       test "#{klass} - update_thumbnails_crop" do
         file = create(klass.model_name.singular)
 
@@ -441,11 +509,12 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
             y: 0.1,
           },
           ratio: "16:9",
-          thumbnail_size_keys: ["160x90#", "320x180#"]
+          group_type: "crop"
         }
 
         assert_response(:success)
-        assert response.parsed_body["data"].present?
+        assert response.parsed_body.dig("data", "main").present?
+        assert response.parsed_body.dig("data", "details").present?
 
         file.reload
 
@@ -459,12 +528,91 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
         assert_equal 160, file.thumbnail_sizes["160x90#"][:width]
         assert_equal 90, file.thumbnail_sizes["160x90#"][:height]
         assert file.thumbnail_sizes["160x90#"][:url].present?
+        assert_equal file.temporary_url("160x90#.webp"), file.thumbnail_sizes["160x90#"][:webp_url]
 
         assert_nil file.thumbnail_sizes["320x180#"][:uid]
         assert_nil file.thumbnail_sizes["320x180#"][:signature]
         assert_equal 320, file.thumbnail_sizes["320x180#"][:width]
         assert_equal 180, file.thumbnail_sizes["320x180#"][:height]
         assert file.thumbnail_sizes["320x180#"][:url].present?
+        assert_equal file.temporary_url("320x180#.webp"), file.thumbnail_sizes["320x180#"][:webp_url]
+      end
+
+      test "#{klass} - update_thumbnails_crop destroys old thumbnail uids asynchronously" do
+        file = create(klass.model_name.singular)
+        file.update!(thumbnail_sizes: { "200x100#" => { "uid" => "uid-async-1", "webp_uid" => "uid-async-2" } })
+
+        assert_enqueued_with(job: Folio::DestroyThumbnailUidsJob) do
+          patch url_for([:update_thumbnails_crop, :console, :api, file, format: :json]),
+                params: { ratio: "2:1", group_type: "crop", crop: { x: 0.5, y: 0.5 } },
+                as: :json
+        end
+      end
+
+      test "#{klass} - update_thumbnails_crop returns main and details components" do
+        file = create(klass.model_name.singular)
+        file.update!(thumbnail_sizes: { "160x90#" => { "uid" => "u1", "url" => "https://example.com/160x90.jpg" } })
+
+        patch url_for([:update_thumbnails_crop, :console, :api, file, format: :json]), params: {
+          crop: { x: 0.0, y: 0.1 },
+          ratio: "16:9",
+          group_type: "crop"
+        }
+
+        assert_response(:success)
+        components = response.parsed_body.fetch("data")
+        main = Nokogiri::HTML.fragment(components.fetch("main"))
+        details = Nokogiri::HTML.fragment(components.fetch("details"))
+
+        assert_equal 1, main.css(".f-c-files-show-thumbnails-main").size
+        assert_equal 1, details.css(".f-c-files-show-thumbnails-details").size
+        assert_equal 1, main.css(
+          '[data-f-c-files-show-thumbnails-crop-edit-state-value="waiting-for-thumbnail"]'
+        ).size
+        assert_equal 1, details.css(
+          '[data-f-c-files-show-thumbnails-crop-edit-state-value="waiting-for-thumbnail"]'
+        ).size
+      end
+
+      test "#{klass} - update_thumbnails_crop keeps previously pending main groups loading" do
+        file = create(klass.model_name.singular)
+        file.update!(thumbnail_sizes: {
+          "120x120#" => { "uid" => "square", "url" => "https://example.com/square.jpg" },
+          "240x135#" => { "uid" => "landscape", "url" => "https://example.com/landscape.jpg" },
+        })
+
+        patch url_for([:update_thumbnails_crop, :console, :api, file, format: :json]), params: {
+          crop: { x: 0.1, y: 0.2 },
+          ratio: "16:9",
+          group_type: "main_crop"
+        }
+        assert_response(:success)
+
+        patch url_for([:update_thumbnails_crop, :console, :api, file, format: :json]), params: {
+          crop: { x: 0.2, y: 0.3 },
+          ratio: "1:1",
+          group_type: "main_crop"
+        }
+        assert_response(:success)
+
+        main = Nokogiri::HTML.fragment(response.parsed_body.dig("data", "main"))
+        pending_group = main.at_css('[data-ratio="16:9"] .f-c-files-show-thumbnails-crop-edit')
+
+        assert_equal "waiting-for-thumbnail",
+                     pending_group["data-f-c-files-show-thumbnails-crop-edit-state-value"]
+        assert pending_group.at_css(".f-c-files-show-thumbnails-crop-edit__thumb-img[hidden]")
+        assert_nil pending_group.at_css(".f-c-files-show-thumbnails-crop-edit__thumb-empty")
+      end
+
+      test "#{klass} - update_thumbnails_crop destroys uids stored under symbol keys" do
+        file = create(klass.model_name.singular)
+        file.update!(thumbnail_sizes: { "200x100#" => { uid: "sym-uid-1", webp_uid: "sym-webp-uid-1" } })
+
+        assert_enqueued_with(job: Folio::DestroyThumbnailUidsJob, args: [["sym-uid-1", "sym-webp-uid-1"]]) do
+          patch url_for([:update_thumbnails_crop, :console, :api, file, format: :json]),
+                params: { ratio: "2:1", group_type: "crop", crop: { x: 0.5, y: 0.5 } },
+                as: :json
+        end
       end
     end
   end

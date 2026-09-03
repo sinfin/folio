@@ -15,6 +15,9 @@ All notable changes to this project will be documented in this file.
 - **Console icons**: Add the `lock_open_variant` icon.
 - **Embed full-width iframes**: `Folio::Embed::BoxComponent` accepts `full_width_iframes: true` to let embedded iframes grow to the container width instead of stopping at their `width` attribute (560px for a URL-embedded YouTube video, 360px for Shorts). The default is `false`, so host apps opt in per site or per placement. The same option is accepted by `input as: :embed` and by `:embed` tiptap node attributes (where it may be a Proc resolved at render time) so console previews match the frontend.
 - **Console icons**: Add the `close_box` icon.
+- **Special characters popup**: Support inserting characters into Redactor,
+  advanced Redactor, and email Redactor inputs while synchronizing editor
+  changes back to their source textareas.
 
 ### Changed
 
@@ -55,6 +58,7 @@ All notable changes to this project will be documented in this file.
 - **Possible future media-source counter refactor (not included)**: A synthetic benchmark measured the set-based query on PostgreSQL 16.14 with 300,000 files and 600,000 placements. With site-specific source rules on 10% of files, all request medians across five runs stayed below 2 seconds, including a deep usable page at 1.85 seconds with 0.97 seconds of SQL. With rules on 100% of files, the usable source/site-filtered request and deep usable page reached 2.35 and 2.38 seconds, although concurrent ordinary queries remained unaffected. If production resembles the 100% case, add a `folio_file_site_published_usage_counts` table with `file_id`, `site_id`, `published_usage_count`, timestamps, foreign keys, and a unique `(file_id, site_id)` index. Backfill it from deduplicated direct and atom usage grouped by parent record and site, then keep it synchronized for placement create/destroy/move, atom parent changes, parent publish/unpublish, parent site changes, and parent destruction. A design review must decide between synchronous updates and queued updates because stale queued counts could allow over-limit publication. Filtering and file-card rendering should join/preload the persisted counter while retaining `folio_files.published_usage_count` as the global fallback; add a reconciliation task and rerun the same 300,000-file HTTP benchmark before removing the dynamic SQL path.
 - **Console private attachments**: Replace the Dropzone/S3Upload add flow with `Folio::UppyComponent`, preserving nested attachment ordering/destroy behavior and hiding move arrows in single-attachment mode.
 - **Test parallelization**: Automatic Rails test runs now use at most 8 workers and begin above 100 loaded test methods. Set `TEST_MAX_WORKERS` or `TEST_PARALLELIZATION_THRESHOLD` to change those automatic defaults; setting either to `0` delegates that setting to Rails' default, while `PARALLEL_WORKERS` remains Rails' exact override.
+- **Console image thumbnails**: Group crop thumbnails by aspect ratio with per-ratio crop editing.
 
 ### Fixed
 
