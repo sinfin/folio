@@ -20,7 +20,18 @@ module Folio::SetCurrentRequestDetails
         Folio::Current.setup!(request:,
                               user: current_user,
                               session:,
-                              cache_key_base: Rails.application.config.action_controller.perform_caching ? try(:cache_key_base) : nil)
+                              site_cache_key_base: Rails.application.config.action_controller.perform_caching ? folio_current_site_cache_key_base : nil)
+      end
+    end
+
+    def folio_current_site_cache_key_base
+      @folio_current_site_cache_key_base ||= Rails.cache.fetch(["Folio::Current.site_cache_key_base", request.host], expires_in: 30.seconds) do
+        [
+          ENV["CURRENT_RELEASE_COMMIT_HASH"],
+          request.host,
+          Folio::Site.maximum(:updated_at)&.to_f,
+          Folio::Site.count,
+        ]
       end
     end
 end
