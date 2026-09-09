@@ -16,6 +16,18 @@ class TiptapInputTest < Folio::Console::CellTest
     assert_not node.has_css?("[data-f-input-tiptap-editor-context-json-value]")
   end
 
+  test "does not include content in the editor context by default" do
+    node = ::Capybara.string(render_tiptap_input)
+
+    assert node.has_css?("[data-f-input-tiptap-include-content-in-editor-context-value='false']")
+  end
+
+  test "can opt into including content in the editor context" do
+    node = ::Capybara.string(render_tiptap_input(include_content_in_editor_context: true))
+
+    assert node.has_css?("[data-f-input-tiptap-include-content-in-editor-context-value='true']")
+  end
+
   test "passes an explicit read-only state to the editor" do
     node = ::Capybara.string(render_tiptap_input(readonly: true))
 

@@ -32,7 +32,7 @@ class Field extends React.PureComponent {
   }
 
   render () {
-    const { atom, field, index, onChange, onValueChange, startSplittingAtom } = this.props
+    const { atom, field, index, onChange, onValueChange, rootAtoms, startSplittingAtom } = this.props
     const { meta } = atom.record
     const isCheck = meta.structure[field] && meta.structure[field].type === 'boolean'
     const visibleIf = meta.structure[field].visible_if
@@ -58,6 +58,7 @@ class Field extends React.PureComponent {
               index={index}
               onChange={onChange}
               onValueChange={onValueChange}
+              rootAtoms={rootAtoms}
             />
           )}
           {isCheck && ' '}
@@ -72,6 +73,7 @@ class Field extends React.PureComponent {
             index={index}
             onChange={onChange}
             onValueChange={onValueChange}
+            rootAtoms={rootAtoms}
             characterCounter={meta.structure[field].character_counter}
           />
         )}

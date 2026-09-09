@@ -6,7 +6,9 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- **Atom insertion constraints**: Allow atom classes to opt out of new console insertion while keeping existing atoms editable. Collection fields can assign the first value not used by sibling atoms, hide sibling-used options, and stop insertion with a configured message when all allowed values are exhausted.
 - **Atom form ordered multi-select**: Allow atom classes to configure virtual JSON-backed ordered multi-select fields, including conditional field visibility and remotely loaded options.
+- **Tiptap node overlay context**: Tiptap inputs can opt into passing their current unsaved document content with node edit and save requests. The option is disabled by default.
 - **Tiptap content rendering**: `Folio::Tiptap::ContentComponent` accepts an explicit `prose_mirror_node:` while retaining the original record as rendering context.
 - **Audio processing**: Process uploaded audio into playback-ready derivatives,
   extract metadata, waveform, and embedded artwork, and expose cacheable or

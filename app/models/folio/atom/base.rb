@@ -278,6 +278,10 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     true
   end
 
+  def self.insertable_in_console?(site:)
+    true
+  end
+
   def self.console_insert_row
     CONSOLE_INSERT_ROWS[:default]
   end

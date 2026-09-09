@@ -33,6 +33,12 @@ class Folio::Atom::BaseTest < ActiveSupport::TestCase
     end
   end
 
+  class NonInsertableAtom < Folio::Atom::Base
+    def self.insertable_in_console?(site:)
+      false
+    end
+  end
+
   test "structures_for merges atom console form field configuration" do
     site = create_site
     field = Folio::Atom.structures_for(klass: Folio::Page, site:)
@@ -41,6 +47,14 @@ class Folio::Atom::BaseTest < ActiveSupport::TestCase
     assert_equal :ordered_multiselect, field[:type]
     assert_equal "/console/options.json", field[:options_url]
     assert_equal({ selection_mode: "manual" }, field[:visible_if])
+  end
+
+  test "structures_for exposes whether an atom can be inserted in the console" do
+    site = create_site
+    structures = Folio::Atom.structures_for(klass: Folio::Page, site:)
+
+    assert_equal false, structures.dig(NonInsertableAtom.name, :insertable)
+    assert_equal true, structures.dig(ConsoleFormFieldsAtom.name, :insertable)
   end
 
   test "associations" do

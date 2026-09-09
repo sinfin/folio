@@ -6,6 +6,8 @@ import {
   addAtomToForm,
   atomsSelector,
   atomTypesSelector,
+  atomsOutsideFormSelector,
+  atomsInFormRootSelector,
   createContentlessAtom,
   newAtoms,
   editAtoms,
@@ -30,6 +32,7 @@ import { openFileModal } from 'ducks/fileModal'
 import AtomForm from 'components/AtomForm'
 import SerializedAtoms from 'components/SerializedAtoms'
 import SplittableJoinModal from 'components/SplittableJoinModal'
+import atomsDefaultDataFromStructure from 'utils/atomsDefaultDataFromStructure'
 
 ReactModal.setAppElement('body')
 
@@ -73,7 +76,14 @@ class Atoms extends React.PureComponent {
       switch (data.type) {
         case 'newAtoms': {
           if (data.contentable) {
-            this.props.dispatch(newAtoms(data.rootKey, data.action, data.indices, data.atomType))
+            const defaultData = this.availableAtomData(
+              data.atomType,
+              this.props.atoms.atoms[data.rootKey]
+            )
+
+            if (defaultData === null) break
+
+            this.props.dispatch(newAtoms(data.rootKey, data.action, data.indices, data.atomType, defaultData))
           } else {
             this.props.dispatch(createContentlessAtom(data.rootKey, data.action, data.indices, data.atomType))
           }
@@ -113,6 +123,31 @@ class Atoms extends React.PureComponent {
     if (!this.props.atoms.form.dirty || window.confirm(window.FolioConsole.translations.cancelChanges)) {
       this.props.dispatch(closeFormAtom())
     }
+  }
+
+  availableAtomData = (atomType, existingAtoms, values) => {
+    const structure = this.props.atoms.structures[atomType].structure
+    const data = atomsDefaultDataFromStructure(structure, existingAtoms, values)
+
+    if (data === null) {
+      const limitedField = Object.values(structure).find(({ first_available_values: values }) => Array.isArray(values))
+      window.alert(limitedField.first_available_values_limit_message)
+    }
+
+    return data
+  }
+
+  updateFormAtomType = (newType, values) => {
+    const data = this.availableAtomData(newType, atomsOutsideFormSelector(this.props.atoms), values)
+    if (data === null) return
+
+    this.props.dispatch(updateFormAtomType(newType, data))
+  }
+
+  addAtom = (atomType) => {
+    if (this.availableAtomData(atomType, atomsInFormRootSelector(this.props.atoms)) === null) return
+
+    this.props.dispatch(addAtomToForm(atomType))
   }
 
   validateAndSaveFormAtom = () => {
@@ -190,16 +225,17 @@ class Atoms extends React.PureComponent {
             saveFormAtoms={this.validateAndSaveFormAtom}
             saveFormAtomsWithoutValidation={this.saveFormAtomsWithoutValidation}
             closeFormAtom={this.confirmedDirtyClose}
-            updateFormAtomType={(newType, values) => this.props.dispatch(updateFormAtomType(newType, values))}
+            updateFormAtomType={this.updateFormAtomType}
             updateFormAtomValue={(index, key, value) => this.props.dispatch(updateFormAtomValue(index, key, value))}
             updateFormAtomAssociation={(index, key, record) => this.props.dispatch(updateFormAtomAssociation(index, key, record))}
             updateFormAtomAttachment={this.updateFormAtomAttachment}
             removeFormAtomAttachment={this.removeFormAtomAttachment}
             atomTypes={this.props.atomTypes}
             structures={structures}
-            addAtom={(type) => this.props.dispatch(addAtomToForm(type))}
+            addAtom={this.addAtom}
             moveFormAtom={(from, to) => this.props.dispatch(moveFormAtom(from, to))}
             removeFormAtom={(index) => this.props.dispatch(removeFormAtom(index))}
+            rootAtoms={atomsInFormRootSelector(this.props.atoms)}
             openFileModal={(fileType, filesUrl, file) => this.props.dispatch(openFileModal(fileType, filesUrl, file))}
             splitFormAtom={(field, parts) => this.props.dispatch(splitFormAtom(field, parts))}
           />
