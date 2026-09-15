@@ -34,6 +34,57 @@ class Folio::CraMediaCloud::MonitorProcessingJobTest < ActiveJob::TestCase
     end
   end
 
+  test "does not schedule a progress check when Sidekiq is already running it" do
+    video = create(:folio_file_video)
+    video.update!(aasm_state: :processing,
+                  remote_services_data: {
+                    "service" => "cra_media_cloud",
+                    "processing_state" => "upload_completed",
+                    "processing_step_started_at" => 10.minutes.ago.iso8601
+                  })
+
+    payload = {
+      "args" => [{
+        "job_class" => "Folio::CraMediaCloud::CheckProgressJob",
+        "arguments" => [{ "_aj_globalid" => video.to_global_id.to_s }]
+      }]
+    }
+    work = Struct.new(:payload).new(payload)
+
+    Sidekiq::WorkSet.stub(:new, [[nil, nil, work]]) do
+      with_unlocked_monitor_job do
+        assert_no_enqueued_jobs only: Folio::CraMediaCloud::CheckProgressJob do
+          Folio::CraMediaCloud::MonitorProcessingJob.perform_now
+        end
+      end
+    end
+  end
+
+  test "does not schedule a progress check from Sidekiq 6 work hashes" do
+    video = create(:folio_file_video)
+    video.update!(aasm_state: :processing,
+                  remote_services_data: {
+                    "service" => "cra_media_cloud",
+                    "processing_state" => "upload_completed",
+                    "processing_step_started_at" => 10.minutes.ago.iso8601
+                  })
+
+    payload = {
+      "args" => [{
+        "job_class" => "Folio::CraMediaCloud::CheckProgressJob",
+        "arguments" => [{ "_aj_globalid" => video.to_global_id.to_s }]
+      }]
+    }
+
+    Sidekiq::WorkSet.stub(:new, [[nil, nil, { "payload" => payload }]]) do
+      with_unlocked_monitor_job do
+        assert_no_enqueued_jobs only: Folio::CraMediaCloud::CheckProgressJob do
+          Folio::CraMediaCloud::MonitorProcessingJob.perform_now
+        end
+      end
+    end
+  end
+
   test "skips videos that are already fully processed" do
     video = create(:folio_file_video)
     video.update!(

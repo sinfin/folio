@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+### Sidekiq 7 changes its Redis integration
+
+Folio allows Sidekiq 6.5 and 7 for a staged worker rollout; its development
+bundle resolves Sidekiq 7. Sidekiq 7 uses `redis-client` internally, requires
+a Redis 6.2+ server, and no longer supports Redis namespaces. Folio's direct
+`redis` dependency remains on 4.x for its batch-service API. Folio's video
+monitor reads live jobs through `Sidekiq::WorkSet`, handling both Sidekiq 6
+work hashes and Sidekiq 7 `Work#payload` objects.
+
+**Action required when moving to Sidekiq 7:** Confirm the host app's Redis
+server and Sidekiq Pro versions support Sidekiq 7. Replace namespace-based
+Sidekiq configuration and review code that calls `Sidekiq.redis` or reads
+live jobs through `Sidekiq::Workers`. Sidekiq 8 and Pro 8 require a separate
+rollout; this Folio version does not permit Sidekiq 8.
+
 ### AASM 6 changes failed persistence behavior
 
 AASM 6 defaults `whiny_persistence` to `true` (it was `false` in AASM 5).

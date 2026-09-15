@@ -372,13 +372,9 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
       end
 
       # Check Sidekiq working set (currently running jobs)
-      Sidekiq::Workers.new.each do |process_id, thread_id, work|
-        if work["payload"]["job_class"] == job_class
-          global_id = work["payload"]["arguments"].first["_aj_globalid"]
-          if global_id.include?("Folio::File::Video")
-            scheduled_ids << global_id.split("/").last.to_i
-          end
-        end
+      Sidekiq::WorkSet.new.each do |_, _, work|
+        video_id = video_id_from_work(work, job_class)
+        scheduled_ids << video_id if video_id
       end
 
       scheduled_ids.compact.uniq
@@ -388,19 +384,26 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
       running_ids = []
 
       # Check only Sidekiq working set (currently running jobs)
-      Sidekiq::Workers.new.each do |process_id, thread_id, work|
-        if work["payload"]["job_class"] == job_class
-          global_id = work["payload"]["arguments"].first["_aj_globalid"]
-          if global_id.include?("Folio::File::Video")
-            running_ids << global_id.split("/").last.to_i
-          end
-        end
+      Sidekiq::WorkSet.new.each do |_, _, work|
+        video_id = video_id_from_work(work, job_class)
+        running_ids << video_id if video_id
       end
 
       running_ids.compact.uniq
     rescue => e
       Rails.logger.error("MonitorProcessingJob: Error checking running jobs: #{e.message}")
       []
+    end
+
+    def video_id_from_work(work, job_class)
+      payload = work.is_a?(Hash) ? work["payload"] : work.payload
+      job_data = payload["args"]&.first
+      return unless job_data.is_a?(Hash) && job_data["job_class"] == job_class
+
+      global_id = job_data.dig("arguments", 0, "_aj_globalid")
+      return unless global_id&.include?("Folio::File::Video")
+
+      global_id.split("/").last.to_i
     end
 
     def extract_video_id_from_job_data(job_data)
