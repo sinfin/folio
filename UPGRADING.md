@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+### ViewComponent templates require an explicit format
+
+ViewComponent now warns when a component template does not declare its format.
+Folio component templates use the `.html.slim` convention.
+
+**Action required:** Rename ViewComponent templates in your app and packs from
+`*_component.slim` to `*_component.html.slim`. Update custom generators that
+create component templates. Ordinary Rails views and legacy Cell templates do
+not need this rename.
+
 ### Console AASM email modal is a ViewComponent
 
 `cell("folio/console/aasm/email_modal")` is replaced by

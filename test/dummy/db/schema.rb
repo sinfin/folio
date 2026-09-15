@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_08_28_090000) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_28_090000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -163,15 +163,15 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_28_090000) do
   end
 
   create_table "dummy_test_records", force: :cascade do |t|
+    t.string "aasm_state"
     t.datetime "created_at", null: false
+    t.string "email"
     t.boolean "published"
     t.datetime "published_at"
     t.datetime "published_from"
     t.datetime "published_until"
     t.string "title"
     t.datetime "updated_at", null: false
-    t.string "aasm_state"
-    t.string "email"
   end
 
   create_table "folio_addresses", force: :cascade do |t|
@@ -194,13 +194,13 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_28_090000) do
   end
 
   create_table "folio_ai_user_instructions", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.bigint "site_id", null: false
-    t.string "integration_key", null: false
+    t.datetime "created_at", null: false
     t.string "field_key", null: false
     t.text "instruction", default: "", null: false
-    t.datetime "created_at", null: false
+    t.string "integration_key", null: false
+    t.bigint "site_id", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
     t.index ["site_id"], name: "index_folio_ai_user_instructions_on_site_id"
     t.index ["user_id", "site_id", "integration_key", "field_key"], name: "index_folio_ai_user_instructions_uniqueness", unique: true
     t.index ["user_id"], name: "index_folio_ai_user_instructions_on_user_id"
@@ -243,17 +243,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_28_090000) do
     t.string "value"
     t.index ["folio_attribute_type_id"], name: "index_folio_attributes_on_folio_attribute_type_id"
     t.index ["placement_type", "placement_id"], name: "index_folio_attributes_on_placement"
-  end
-
-  create_table "folio_cache_versions", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "expires_at"
-    t.jsonb "invalidation_metadata"
-    t.string "key", null: false
-    t.bigint "site_id", null: false
-    t.datetime "updated_at", null: false
-    t.index ["site_id", "key"], name: "index_folio_cache_versions_on_site_id_and_key", unique: true
-    t.index ["site_id"], name: "index_folio_cache_versions_on_site_id"
   end
 
   create_table "folio_console_notes", force: :cascade do |t|
@@ -410,10 +399,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_28_090000) do
 
   create_table "folio_media_source_site_links", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.integer "max_usage_count"
     t.bigint "media_source_id", null: false
     t.bigint "site_id", null: false
     t.datetime "updated_at", null: false
-    t.integer "max_usage_count"
     t.index ["media_source_id", "site_id"], name: "index_folio_media_source_site_links_unique", unique: true
     t.index ["media_source_id"], name: "index_folio_media_source_site_links_on_media_source_id"
     t.index ["site_id"], name: "index_folio_media_source_site_links_on_site_id"
@@ -579,6 +568,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_28_090000) do
   create_table "folio_sites", force: :cascade do |t|
     t.text "address"
     t.text "address_secondary"
+    t.jsonb "ai_settings", default: {}, null: false
     t.jsonb "available_user_roles", default: ["administrator", "manager"]
     t.string "copyright_info_source"
     t.datetime "created_at", precision: nil, null: false
@@ -601,7 +591,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_28_090000) do
     t.string "slug"
     t.json "social_links"
     t.boolean "subtitle_auto_generation_enabled", default: false
-    t.jsonb "ai_settings", default: {}, null: false
     t.jsonb "subtitle_languages", default: ["cs"]
     t.string "system_email"
     t.string "system_email_copy"

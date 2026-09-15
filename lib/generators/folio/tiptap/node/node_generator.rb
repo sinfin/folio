@@ -17,7 +17,7 @@ class Folio::Tiptap::NodeGenerator < Rails::Generators::NamedBase
     end
 
     template "component.rb.tt", "#{pack_path_prefix}app/components/#{component_name}.rb"
-    template "component.slim.tt", "#{pack_path_prefix}app/components/#{component_name}.slim"
+    template "component.html.slim.tt", "#{pack_path_prefix}app/components/#{component_name}.html.slim"
     template "component_test.rb.tt", "#{pack_path_prefix}test/components/#{component_name}_test.rb"
   end
 

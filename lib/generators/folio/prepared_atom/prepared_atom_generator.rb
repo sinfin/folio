@@ -44,8 +44,10 @@ class Folio::PreparedAtomGenerator < Rails::Generators::NamedBase
 
       Dir["#{base}#{key}/component/#{File.basename(key)}_component.*.tt"].each do |path|
         relative_path = path.to_s.delete_prefix(base)
+        template_extension = relative_path.delete_suffix(".tt")
+                                          .delete_prefix("#{File.dirname(relative_path)}/#{File.basename(key)}_component")
 
-        template relative_path, "#{pack_path_prefix}app/components/#{application_namespace_path}/#{component_directory}/#{relative_path.gsub(/\/component\/.+/, "_component#{File.extname(relative_path.delete_suffix('.tt'))}")}"
+        template relative_path, "#{pack_path_prefix}app/components/#{application_namespace_path}/#{component_directory}/#{relative_path.gsub(/\/component\/.+/, "_component#{template_extension}")}"
       end
 
       Dir["#{base}#{key}/component/#{File.basename(key)}_component_test.rb.tt"].each do |path|
