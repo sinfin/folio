@@ -15,6 +15,7 @@ Gem::Specification.new do |s|
   s.summary     = "Summary of Folio."
   s.description = "Description of Folio."
   s.license     = "MIT"
+  s.required_ruby_version = ">= 4.0.7"
 
   s.files = Dir["{app,config,db,lib,packs}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
 
@@ -65,8 +66,8 @@ Gem::Specification.new do |s|
   s.add_dependency "pg"
   s.add_dependency "phonelib"
   s.add_dependency "premailer-rails"
-  s.add_dependency "rails-i18n", "~> 8.0"
-  s.add_dependency "rails", "~> 8.1"
+  s.add_dependency "rails-i18n", "~> 8.1.0"
+  s.add_dependency "rails", "~> 8.1.0"
   s.add_dependency "recaptcha", "4.13.1"
   s.add_dependency "redcarpet"
   s.add_dependency "responders"

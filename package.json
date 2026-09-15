@@ -1,6 +1,9 @@
 {
   "name": "folio",
   "version": "0.0.0",
+  "engines": {
+    "node": "24.21.0"
+  },
   "standard": {
     "ignore": [
       "/app/assets/javascripts/folio/console/_cocoon-set-position.js",
