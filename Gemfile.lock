@@ -65,7 +65,7 @@ PATH
       rails (~> 8.1.0)
       rails-i18n (~> 8.1.0)
       readline
-      recaptcha (= 4.13.1)
+      recaptcha (~> 5.21)
       redcarpet
       redis (~> 4.8)
       responders
@@ -641,8 +641,7 @@ GEM
       tsort
     readline (0.0.4)
       reline
-    recaptcha (4.13.1)
-      json
+    recaptcha (5.21.2)
     redcarpet (3.6.1)
     redis (4.8.1)
     redis-client (0.30.1)
@@ -1071,7 +1070,7 @@ CHECKSUMS
   rb-inotify (0.11.1) sha256=a0a700441239b0ff18eb65e3866236cd78613d6b9f78fea1f9ac47a85e47be6e
   rdoc (7.2.0) sha256=8650f76cd4009c3b54955eb5d7e3a075c60a57276766ebf36f9085e8c9f23192
   readline (0.0.4) sha256=6138eef17be2b98298b672c3ea63bf9cb5158d401324f26e1e84f235879c1d6a
-  recaptcha (4.13.1) sha256=dc6c2cb78afa87034358b7ba1c6f7175972b5709fdf7500e2550623e119e3788
+  recaptcha (5.21.2) sha256=8f7bb6cc9f04c523fff3f38126b7c5f1314c35fcb3691fc8e70d2b464533c12a
   redcarpet (3.6.1) sha256=d444910e6aa55480c6bcdc0cdb057626e8a32c054c29e793fa642ba2f155f445
   redis (4.8.1) sha256=387ee086694fffc9632aaeb1efe4a7b1627ca783bf373320346a8a20cd93333a
   redis-client (0.30.1) sha256=5151bc5c7bbfe48623732cdae3b900d8a22dc691cc7cdfacfb351ac55116522d

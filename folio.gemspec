@@ -69,7 +69,7 @@ Gem::Specification.new do |s|
   s.add_dependency "premailer-rails"
   s.add_dependency "rails-i18n", "~> 8.1.0"
   s.add_dependency "rails", "~> 8.1.0"
-  s.add_dependency "recaptcha", "4.13.1"
+  s.add_dependency "recaptcha", "~> 5.21"
   s.add_dependency "redcarpet"
   s.add_dependency "responders"
   s.add_dependency "rubyzip", "~> 3.4"

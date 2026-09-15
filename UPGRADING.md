@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+### reCAPTCHA 5 renames its view helper module
+
+reCAPTCHA 5 replaces `Recaptcha::ClientHelper` with
+`Recaptcha::Adapters::ViewMethods`. Folio's field component uses the new
+module.
+
+**Action required:** Update host-app components that include
+`Recaptcha::ClientHelper` to include `Recaptcha::Adapters::ViewMethods`.
+
 ### JSON 3 is not yet compatible with Rails 8.1
 
 Folio constrains `json` to versions below 3 because Rails 8.1 passes a
