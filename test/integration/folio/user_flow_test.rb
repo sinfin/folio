@@ -150,21 +150,23 @@ class Folio::UserFlowTest < Folio::CapybaraTest
     regular_user = create(:folio_user, superadmin: false, auth_site: site_b, password:)
     email = regular_user.email
 
-    Rails.application.config.action_controller.stub(:perform_caching, true) do
-      Rails.application.config.stub(:folio_crossdomain_devise, false) do
-        assert_difference("regular_user.reload.sign_in_count", 1) do
-          visit main_app.new_user_session_url(only_path: false, host: site_b.env_aware_domain)
+    with_isolated_cache do
+      Rails.application.config.action_controller.stub(:perform_caching, true) do
+        Rails.application.config.stub(:folio_crossdomain_devise, false) do
+          assert_difference("regular_user.reload.sign_in_count", 1) do
+            visit main_app.new_user_session_url(only_path: false, host: site_b.env_aware_domain)
 
-          assert page.has_css?("h1", text: "Přihlášení")
+            assert page.has_css?("h1", text: "Přihlášení")
 
-          # Reset site_record to test caching behavior - site will be retrieved from request.host
-          # when the form is submitted via set_up_current_from_request
-          Folio::Current.site_record = nil
+            # Reset site_record to test caching behavior - site will be retrieved from request.host
+            # when the form is submitted via set_up_current_from_request
+            Folio::Current.site_record = nil
 
-          within ".d-layout-main" do
-            fill_in "E-mail", with: email
-            fill_in "Heslo", with: password
-            click_on "Přihlásit se"
+            within ".d-layout-main" do
+              fill_in "E-mail", with: email
+              fill_in "Heslo", with: password
+              click_on "Přihlásit se"
+            end
           end
         end
       end
@@ -183,24 +185,31 @@ class Folio::UserFlowTest < Folio::CapybaraTest
     regular_user = create(:folio_user, superadmin: false, auth_site: site_b, password:)
     email = regular_user.email
 
-    Rails.application.config.action_controller.stub(:perform_caching, true) do
-      Rails.application.config.stub(:folio_crossdomain_devise, false) do
-        assert_difference("regular_user.reload.sign_in_count", 0) do
-          visit main_app.new_user_session_url(only_path: false, host: site_a.env_aware_domain)
+    with_isolated_cache do
+      Rails.application.config.action_controller.stub(:perform_caching, true) do
+        Rails.application.config.stub(:folio_crossdomain_devise, false) do
+          assert_difference("regular_user.reload.sign_in_count", 0) do
+            visit main_app.new_user_session_url(only_path: false, host: site_a.env_aware_domain)
 
-          assert page.has_css?("h1", text: "Přihlášení")
+            assert page.has_css?("h1", text: "Přihlášení")
 
-          # Reset site_record to test caching behavior - site will be retrieved from request.host
-          # when the form is submitted via set_up_current_from_request
-          Folio::Current.site_record = nil
+            # Reset site_record to test caching behavior - site will be retrieved from request.host
+            # when the form is submitted via set_up_current_from_request
+            Folio::Current.site_record = nil
 
-          within ".d-layout-main" do
-            fill_in "E-mail", with: email
-            fill_in "Heslo", with: password
-            click_on "Přihlásit se"
+            within ".d-layout-main" do
+              fill_in "E-mail", with: email
+              fill_in "Heslo", with: password
+              click_on "Přihlásit se"
+            end
           end
         end
       end
     end
   end
+
+  private
+    def with_isolated_cache(&block)
+      Rails.stub(:cache, ActiveSupport::Cache::MemoryStore.new, &block)
+    end
 end
