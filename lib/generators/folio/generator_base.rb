@@ -82,6 +82,8 @@ module Folio::GeneratorBase
     end
 
     def add_atom_to_i18n_ymls(values = {})
+      return if options[:pretend]
+
       I18n.available_locales.each do |locale|
         path = folio_generators_root.join("config/locales/atom.#{locale}.yml")
         i18n_key = "#{application_namespace_path}/atom/#{atom_name}"

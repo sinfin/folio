@@ -59,6 +59,8 @@ class Folio::Tiptap::NodeGenerator < Rails::Generators::NamedBase
     end
 
     def add_tiptap_node_to_i18n_ymls
+      return if options[:pretend]
+
       I18n.available_locales.each do |locale|
         locale_s = locale.to_s
         file_path = Rails.root.join("config/locales/tiptap/nodes.#{locale_s}.yml")
