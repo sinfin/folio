@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+### Mux Ruby 5 renames asset request fields
+
+Mux Ruby 5 replaces `CreateAssetRequest#input` with `#inputs` and
+`#playback_policy` with `#playback_policies`. Folio uses the new fields when
+creating assets. The SDK still accepts the old fields but deprecates them.
+
+**Action required:** Update direct Mux SDK asset creation in the host app to
+the plural fields. Mux 4 also deprecated `mp4_support` and its update API in
+favor of static renditions; Folio retains the old MP4 behavior for this
+release because existing rendition URLs differ from the new API. Review any
+direct host-app calls to those APIs before changing rendition formats.
+
 ### SitemapGenerator 7 no longer pings search engines by default
 
 SitemapGenerator 7 leaves `search_engines` empty, so `sitemap:refresh` no

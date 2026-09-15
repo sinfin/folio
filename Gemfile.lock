@@ -47,7 +47,7 @@ PATH
       logger
       message_bus
       multi_exiftool
-      mux_ruby (~> 3.9.0)
+      mux_ruby (~> 5.1)
       net-sftp
       nokogiri
       omniauth
@@ -474,7 +474,7 @@ GEM
     multi_json (1.19.1)
     multi_xml (0.8.1)
       bigdecimal (>= 3.1, < 5)
-    mux_ruby (3.9.0)
+    mux_ruby (5.1.0)
       typhoeus (~> 1.0, >= 1.0.1)
     nenv (0.3.0)
     net-http (0.9.1)
@@ -1011,7 +1011,7 @@ CHECKSUMS
   multi_exiftool (0.19.0) sha256=f4264ba44a75696e7b76215f550c2430518e0a6565f129e0f61e9650e22f2465
   multi_json (1.19.1) sha256=7aefeff8f2c854bf739931a238e4aea64592845e0c0395c8a7d2eea7fdd631b7
   multi_xml (0.8.1) sha256=addba0290bac34e9088bfe73dc4878530297a82a7bbd66cb44dcd0a4b86edf5a
-  mux_ruby (3.9.0) sha256=f63ac336a1255da5ef709ce9dfb9fcbd073901b2e49343776b818a6adcbb196b
+  mux_ruby (5.1.0) sha256=1e52bf4bf224cfbd285b826f05cce608b707abcde9bc6844f4710db1022d5e22
   nenv (0.3.0) sha256=d9de6d8fb7072228463bf61843159419c969edb34b3cef51832b516ae7972765
   net-http (0.9.1) sha256=25ba0b67c63e89df626ed8fac771d0ad24ad151a858af2cc8e6a716ca4336996
   net-imap (0.6.7) sha256=b5c9573be975d856de252ee851871724da66aa2d449b2482d5690bd12bc23660

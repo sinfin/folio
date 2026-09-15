@@ -53,7 +53,7 @@ Gem::Specification.new do |s|
   s.add_dependency "json", "< 3"
   s.add_dependency "message_bus"
   s.add_dependency "multi_exiftool"
-  s.add_dependency "mux_ruby", "~> 3.9.0"
+  s.add_dependency "mux_ruby", "~> 5.1"
   s.add_dependency "net-sftp"
   s.add_dependency "nokogiri"
   s.add_dependency "omniauth-facebook"
