@@ -182,7 +182,7 @@ class Folio::File < Folio::ApplicationRecord
 
   attr_accessor :dont_run_after_save_jobs
 
-  aasm do
+  aasm whiny_persistence: false do
     state :unprocessed, initial: true, color: :yellow
     state :processing, color: :orange
     state READY_STATE, color: :green

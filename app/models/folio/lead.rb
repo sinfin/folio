@@ -28,7 +28,7 @@ class Folio::Lead < Folio::ApplicationRecord
                     tsearch: { prefix: true }
                   }
 
-  aasm do
+  aasm whiny_persistence: false do
     state :submitted, initial: true, color: "red"
     state :pending, color: "orange"
     state :handled, color: "green"

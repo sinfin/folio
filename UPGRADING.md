@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+### AASM 6 changes failed persistence behavior
+
+AASM 6 defaults `whiny_persistence` to `true` (it was `false` in AASM 5).
+Folio explicitly sets `whiny_persistence: false` on its state machines so a
+bang event that cannot persist an invalid record returns `false` instead of
+raising `ActiveRecord::RecordInvalid`.
+
+**Action required:** Supply `whiny_persistence` explicitly in every host-app
+`aasm` declaration. Use `aasm whiny_persistence: false do` to keep the previous
+behavior, or `true` if the app intends to raise on failed persistence. Check
+any error handling around bang events when choosing the value.
+
 ### ViewComponent templates require an explicit format
 
 ViewComponent now warns when a component template does not declare its format.
