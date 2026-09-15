@@ -135,14 +135,16 @@ class Folio::Console::ReactHelperTest < ActionView::TestCase
   end
 
   test "react_ordered_multiselect keeps visible error feedback" do
-    article = build(:dummy_blog_article)
-    article.errors.add(:authors, "must be present")
-    form = ordered_multiselect_form(article)
-    feedback = form.find(".invalid-feedback")
+    I18n.with_locale(:cs) do
+      article = build(:dummy_blog_article)
+      article.errors.add(:authors, "must be present")
+      form = ordered_multiselect_form(article)
+      feedback = form.find(".invalid-feedback")
 
-    assert_includes form.find(".form-group")["class"].split, "form-group-invalid"
-    assert_includes feedback["class"].split, "d-block"
-    assert_equal "Autoři must be present", feedback.text
+      assert_includes form.find(".form-group")["class"].split, "form-group-invalid"
+      assert_includes feedback["class"].split, "d-block"
+      assert_equal "Autoři must be present", feedback.text
+    end
   end
 
   test "react_ordered_multiselect renders local collection options" do

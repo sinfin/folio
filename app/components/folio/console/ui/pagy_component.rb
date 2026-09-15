@@ -23,6 +23,14 @@ class Folio::Console::Ui::PagyComponent < Folio::Console::ApplicationComponent
     @link ||= pagy_anchor(@pagy)
   end
 
+  def middle_component?
+    @options[:middle_component].present?
+  end
+
+  def middle_component
+    @options[:middle_component].call
+  end
+
   # Override pagy_url_for to use custom request_path when provided
   def pagy_url_for(page, opts = {})
     url = super(page, opts)

@@ -140,7 +140,7 @@ module Folio::Console::FileControllerBase
       }
 
       if %w[image video].include?(@klass.human_type)
-        @pagy_options[:middle_component] = Folio::Console::Files::DisplayToggleComponent.new
+        @pagy_options[:middle_component] = -> { Folio::Console::Files::DisplayToggleComponent.new }
       end
 
       @pagy_options

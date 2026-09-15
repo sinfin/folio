@@ -1,6 +1,6 @@
 .small[
   class=bem_class_name
-  class=(@options[:middle_component] ? "f-c-ui-pagy--with-middle" : nil)
+  class=(middle_component? ? "f-c-ui-pagy--with-middle" : nil)
   hidden=(@pagy.count == 0)
   data=data
 ]
@@ -8,9 +8,9 @@
     .f-c-ui-pagy__info
       == pagy_info(@pagy)
 
-    - if @options[:middle_component]
+    - if middle_component?
       .f-c-ui-pagy__middle
-        = render(@options[:middle_component])
+        = render(middle_component)
 
     - if @pagy.pages > 1
       .f-c-ui-pagy__nav

@@ -7,6 +7,12 @@ class Folio::ThumbnailsTest < ActiveSupport::TestCase
 
   THUMB_SIZE = "111x111#"
 
+  test "does not require image dimensions when updating a PDF document" do
+    document = create(:folio_file_document)
+
+    assert document.update(author: "updated author")
+  end
+
   test "should not generate duplicate jobs" do
     image = create(:folio_file_image, additional_data: { "generate_thumbnails_in_test" => true })
 
