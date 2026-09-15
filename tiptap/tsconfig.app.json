@@ -17,12 +17,11 @@
     "jsx": "react-jsx",
 
     /* Path mapping */
-    "baseUrl": "./src",
     "paths": {
-      "@/*": ["./*"],
-      "@/components/*": ["./components/*"],
-      "@/hooks/*": ["./hooks/*"],
-      "@/lib/*": ["./lib/*"]
+      "@/*": ["./src/*"],
+      "@/components/*": ["./src/components/*"],
+      "@/hooks/*": ["./src/hooks/*"],
+      "@/lib/*": ["./src/lib/*"]
     },
 
     /* Linting */

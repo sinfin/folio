@@ -317,29 +317,35 @@ export function FolioEditor({
               table: false, // disable default table to use our custom one
             }),
             FolioTiptapCommandsExtension.configure({
-              suggestion: blockEditor
-                ? {
-                    ...folioTiptapCommandsSuggestionWithoutItems,
-                    items: makeFolioTiptapCommandsSuggestionItems([
+              suggestion: {
+                ...FolioTiptapCommandsExtension.options.suggestion,
+                ...(blockEditor
+                  ? {
+                      ...folioTiptapCommandsSuggestionWithoutItems,
+                      items: makeFolioTiptapCommandsSuggestionItems([
+                        textStylesCommandGroup,
+                        ListsCommandGroup,
+                        layoutsCommandGroup,
+                        ...(folioTiptapConfig.nodes &&
+                        folioTiptapConfig.nodes.length
+                          ? (() => {
+                              const nodeGroups =
+                                makeFolioTiptapNodesCommandGroup(
+                                  folioTiptapConfig.nodes,
+                                  folioTiptapConfig.node_groups,
+                                );
+                              // Handle both single group and array of groups
+                              return Array.isArray(nodeGroups)
+                                ? nodeGroups
+                                : [nodeGroups];
+                            })()
+                          : []),
+                      ]),
+                    }
+                  : makeFolioTiptapCommandsSuggestion({
                       textStylesCommandGroup,
-                      ListsCommandGroup,
-                      layoutsCommandGroup,
-                      ...(folioTiptapConfig.nodes &&
-                      folioTiptapConfig.nodes.length
-                        ? (() => {
-                            const nodeGroups = makeFolioTiptapNodesCommandGroup(
-                              folioTiptapConfig.nodes,
-                              folioTiptapConfig.node_groups,
-                            );
-                            // Handle both single group and array of groups
-                            return Array.isArray(nodeGroups)
-                              ? nodeGroups
-                              : [nodeGroups];
-                          })()
-                        : []),
-                    ]),
-                  }
-                : makeFolioTiptapCommandsSuggestion({ textStylesCommandGroup }),
+                    })),
+              },
             }),
           ]
         : []),
