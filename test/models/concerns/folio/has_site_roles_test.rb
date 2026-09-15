@@ -14,6 +14,23 @@ class Folio::HasSiteRolesTest < ActiveSupport::TestCase
     end
   end
 
+  test "role test helper persists roles for an existing user" do
+    safely_set_roles_for(user, ["administrator"], site)
+
+    assert_equal ["administrator"], Folio::User.find(user.id).roles_for(site:)
+  end
+
+  test "role test helper does not persist a built user" do
+    new_user = build(:folio_user)
+
+    assert_no_difference("Folio::User.count") do
+      safely_set_roles_for(new_user, ["manager"], site)
+    end
+
+    assert new_user.new_record?
+    assert_equal ["manager"], new_user.roles_for(site:)
+  end
+
   test "differentiate roles against different sites" do
     I18n.with_locale(:cs) do
       site2 = build(Rails.application.config.folio_site_default_test_factory, available_user_roles: ["administrator", "manager"])
