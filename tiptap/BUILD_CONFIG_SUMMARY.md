@@ -106,8 +106,8 @@ npm run build:check       # Type check without building
 npm run type-check        # TypeScript type checking
 
 # Linting
-npm run lint              # Run ESLint
-npm run lint:fix          # Auto-fix ESLint issues
+npm run lint              # Run Oxlint
+npm run lint:fix          # Auto-fix Oxlint issues
 
 # Preview
 npm run preview           # Preview production build (port 4173)

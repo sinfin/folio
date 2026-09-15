@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+### TipTap source builds use TypeScript 7 and Oxlint
+
+Folio's TipTap package now type-checks with TypeScript 7 and lints with
+Oxlint rather than ESLint and `typescript-eslint`. The shipped editor assets
+and host-app integration are unchanged.
+
+**Action required for custom TipTap builds:** Update any copied TipTap tooling
+to TypeScript 7 and replace `typescript-eslint` with a TypeScript 7-compatible
+linter before running `npm ci` and `npm run build`. Apps that only consume
+Folio's built editor assets need no change.
+
 ### Mux Ruby 5 renames asset request fields
 
 Mux Ruby 5 replaces `CreateAssetRequest#input` with `#inputs` and
