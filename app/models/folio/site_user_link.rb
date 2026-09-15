@@ -8,6 +8,8 @@ class Folio::SiteUserLink < Folio::ApplicationRecord
 
   validate :validate_roles_from_site
 
+  before_save :revoke_site_email_login_verifications, if: -> { will_save_change_to_locked_at? && locked_at? }
+
   scope :without_role, -> (role_to_check) {
     where.not("roles ? :role", role: role_to_check)
   }
@@ -94,6 +96,16 @@ class Folio::SiteUserLink < Folio::ApplicationRecord
   def locked
     locked?
   end
+
+  private
+    def revoke_site_email_login_verifications
+      return unless user.has_attribute?(:email_authentication_version)
+
+      user.with_lock do
+        user.email_login_challenges.where(site_id:, consumed_at: nil, revoked_at: nil).update_all(revoked_at: Time.current)
+        user.trusted_browsers.where(site_id:, revoked_at: nil).update_all(revoked_at: Time.current)
+      end
+    end
 end
 
 # == Schema Information

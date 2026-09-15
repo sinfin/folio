@@ -8,6 +8,14 @@ class Folio::DeviseMailer < Devise::Mailer
 
   layout "folio/mailer"
 
+  around_deliver(if: -> { action_name == "email_login" }) do |_mailer, delivery|
+    if logger = ActionMailer::Base.logger
+      logger.silence(Logger::INFO, &delivery)
+    else
+      delivery.call
+    end
+  end
+
   default from: ->(*) { site.email },
           bcc: Rails.application.config.folio_mailer_global_bcc
 
@@ -15,6 +23,9 @@ class Folio::DeviseMailer < Devise::Mailer
     full_opts = devise_opts_from_template(opts, action, record)
 
     return if full_opts.nil?
+
+    # Sign-in proofs must not be copied to the site's system recipients.
+    full_opts[:bcc] = nil if action.to_s == "email_login"
 
     super(record, action, full_opts, &block)
   end
@@ -34,6 +45,19 @@ class Folio::DeviseMailer < Devise::Mailer
                                                            locale:)
 
       super(record, token, opts)
+    end
+  end
+
+  def email_login(challenge, token, locale: nil)
+    @site = challenge.site
+    @challenge = challenge
+    with_user_locale(challenge.user, locale:) do |user_locale|
+      @email_login_url = scoped_url_method(challenge.user, :confirm_email_login_url,
+                                          anchor: token, host: @site.env_aware_domain, locale: user_locale)
+      @data = { LOCALE: user_locale, USER_EMAIL_LOGIN_URL: @email_login_url,
+                REQUESTED_AT_TIME: l(challenge.created_at, format: :long),
+                VALID_UNTIL_TIME: l(challenge.expires_at, format: :long) }
+      devise_mail(challenge.user, :email_login, site: @site)
     end
   end
 

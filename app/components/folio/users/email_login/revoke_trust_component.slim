@@ -1,0 +1,4 @@
+.f-users-email-login-revoke-trust.mt-4
+  h2 = t('folio.users.email_login.revoke_title')
+  p = t('folio.users.email_login.revoke_instruction')
+  = button_to t('folio.users.email_login.revoke'), controller.main_app.revoke_trusted_browsers_user_email_login_path, method: :delete, class: 'btn btn-outline-danger'

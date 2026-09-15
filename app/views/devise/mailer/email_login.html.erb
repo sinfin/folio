@@ -1,0 +1,4 @@
+<p><%= t("folio.users.email_login.mail_instruction", site: @site.title) %></p>
+<p><%= t("folio.users.email_login.requested_at", time: l(@challenge.created_at, format: :long)) %></p>
+<p><%= link_to t("folio.users.email_login.confirm"), @email_login_url %></p>
+<p><%= t("folio.users.email_login.valid_until", time: l(@challenge.expires_at, format: :long)) %></p>

@@ -26,6 +26,10 @@ class Folio::Users::PasswordsController < Devise::PasswordsController
         user.save(validation: false) # so password is changed even for invalid user
         user.errors.clear
       end
+
+      if user.errors.empty? && user.saved_change_to_encrypted_password? && user.reset_password_token.nil?
+        request.env["folio.email_login.verified_by_token_user_id"] = user.id
+      end
     end
   end
 

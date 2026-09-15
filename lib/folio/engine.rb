@@ -96,6 +96,8 @@ module Folio
     config.folio_users_use_phone = false
     config.folio_users_require_phone = false
     config.folio_users_sign_out_everywhere = true
+    config.folio_users_email_login_verification_enabled = false
+    config.folio_users_magic_link_enabled = false
     config.folio_users_include_nickname = true
     config.folio_users_confirmable = false
     config.folio_users_confirm_email_change = true

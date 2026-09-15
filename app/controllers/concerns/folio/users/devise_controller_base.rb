@@ -6,6 +6,9 @@ module Folio::Users::DeviseControllerBase
 
   included do
     before_action :add_auth_site_id_to_params
+    rescue_from "Folio::Devise::EmailLogin::Pending", with: :render_email_login_pending
+    rescue_from "Folio::Devise::EmailLogin::Throttled", with: :render_email_login_throttled
+    rescue_from "Folio::Devise::EmailLogin::InvalidChallenge", with: :render_email_login_invalid
   end
 
   def after_sign_in_path_for(_resource)
@@ -48,9 +51,19 @@ module Folio::Users::DeviseControllerBase
   end
 
   def sign_in(resource_or_scope, *args)
+    candidate = resource_or_scope.is_a?(Symbol) ? args.first : resource_or_scope
+    if Folio::Devise::EmailLogin.verification_enabled? && candidate.is_a?(Folio::User) && warden.user(:user) != candidate
+      purpose = { "omniauth_callbacks" => "oauth", "passwords" => "password_reset", "invitations" => "invitation" }.fetch(controller_name, "registration")
+      Folio::Devise::EmailLogin::Gate.check!(candidate, request:, purpose:, remember_me: candidate.remember_me)
+    end
+
     super
 
     set_resource(resource_or_scope, args&.first) if resource.nil?
+    if Folio::Devise::EmailLogin.enabled? && resource.is_a?(Folio::User)
+      Folio::Current.user = resource
+      Folio::Current.reset_ability!
+    end
     acquire_orphan_records!
     create_site_user_link
     after_sign_in
@@ -66,6 +79,36 @@ module Folio::Users::DeviseControllerBase
   end
 
   private
+    def render_email_login_pending
+      if request.format.json?
+        render json: { data: { url: main_app.user_email_login_path } }
+      else
+        redirect_to main_app.user_email_login_path
+      end
+    end
+
+    def render_email_login_throttled(error = nil)
+      retry_after = email_login_retry_after(error)
+      response.set_header("Retry-After", retry_after.to_s)
+      if request.format.json?
+        render json: { error: I18n.t("folio.users.email_login.throttled") }, status: :too_many_requests
+      else
+        render plain: I18n.t("folio.users.email_login.throttled"), status: :too_many_requests
+      end
+    end
+
+    def email_login_retry_after(error = nil)
+      error&.retry_after || request.env["folio.email_login.retry_after"] || Folio::Devise::EmailLogin::RESEND_INTERVAL.to_i
+    end
+
+    def render_email_login_invalid
+      if request.format.json?
+        render json: { error: I18n.t("folio.users.email_login.invalid") }, status: :unprocessable_entity
+      else
+        redirect_to main_app.new_user_session_path, alert: I18n.t("folio.users.email_login.invalid")
+      end
+    end
+
     def add_auth_site_id_to_params
       if request.params["user"]
         request.params["user"]["auth_site_id"] = (::Folio::Current.enabled_site_for_crossdomain_devise || Folio::Current.site).id.to_s

@@ -39,7 +39,11 @@ class Folio::Users::SessionsController < Devise::SessionsController
         format.html do
           exception_message = try_to_authenticate_resource
 
-          if resource
+          if request.env["folio.email_login.pending"]
+            render_email_login_pending
+          elsif request.env["folio.email_login.throttled"]
+            render_email_login_throttled
+          elsif resource
             set_flash_message!(:notice, :signed_in)
             sign_in(resource_name, resource)
 
@@ -55,7 +59,11 @@ class Folio::Users::SessionsController < Devise::SessionsController
           store_sign_in_location
           exception_message = try_to_authenticate_resource
 
-          if resource
+          if request.env["folio.email_login.pending"]
+            render_email_login_pending
+          elsif request.env["folio.email_login.throttled"]
+            render_email_login_throttled
+          elsif resource
             sign_in(resource_name, resource)
 
             @force_flash = true

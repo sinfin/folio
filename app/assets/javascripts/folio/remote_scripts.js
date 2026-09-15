@@ -63,6 +63,12 @@ window.Folio.RemoteScripts.load = (key) => {
     return window.Folio.RemoteScripts.runSuccessCallbacks(key)
   }
 
+  if (document.querySelector('meta[name="folio-skip-external-scripts"]') &&
+      [...data.urls, ...(data.cssUrls || [])].some((url) => new URL(url, window.location.href).origin !== window.location.origin)) {
+    data.error = true
+    return window.Folio.RemoteScripts.runErrorCallbacks(key)
+  }
+
   data.loading = true
 
   data.stylesheets = (data.cssUrls || []).map((url) => {

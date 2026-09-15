@@ -24,6 +24,10 @@ meta name="viewport" content=meta_viewport
 
 meta name="turbolinks-cache-control" content=turbolinks_cache_control
 
+- if request.env["folio.skip_external_scripts"]
+  meta[name="folio-skip-external-scripts" content="true"]
+  meta[name="turbolinks-visit-control" content="reload"]
+
 = csrf_meta_tags
 
 - if !Rails.env.test? || ENV['TEST_WITH_ASSETS'].present?
@@ -33,9 +37,10 @@ meta name="turbolinks-cache-control" content=turbolinks_cache_control
                         media: 'all', \
                         'data-turbolinks-track': 'reload')
 
-  == render partial: 'layouts/folio/analytics'
+  - unless request.env["folio.skip_external_scripts"]
+    == render partial: 'layouts/folio/analytics'
 
-  - unless skip_cookie_consent
+  - unless skip_cookie_consent || request.env["folio.skip_external_scripts"]
     - ckb = try(:cache_key_base)
     - cache_if ckb, ['head-cookie-consent', request.hostname] + (ckb || [])
       / keep under analytics
@@ -45,4 +50,5 @@ meta name="turbolinks-cache-control" content=turbolinks_cache_control
     = javascript_include_tag javascript, 'data-turbolinks-track' => 'reload', \
                                          defer: true
 
-    == render partial: 'layouts/folio/recaptcha'
+    - unless request.env["folio.skip_external_scripts"]
+      == render partial: 'layouts/folio/recaptcha'

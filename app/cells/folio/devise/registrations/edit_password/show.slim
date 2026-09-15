@@ -19,3 +19,5 @@
                         autocomplete: 'new-password')
 
       = submit_button(f, t('.change_password'))
+
+  = render_view_component(Folio::Users::EmailLogin::RevokeTrustComponent.new)

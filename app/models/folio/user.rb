@@ -39,6 +39,7 @@ class Folio::User < Folio::ApplicationRecord
   devise(*selected_device_modules, devise_options)
 
   include Folio::IsSiteLockable # must be after Devise
+  include Folio::Users::EmailLoginVerifiable
 
   has_many :authentications, class_name: "Folio::Omniauth::Authentication",
                              foreign_key: :folio_user_id,
@@ -499,61 +500,62 @@ end
 #
 # Table name: folio_users
 #
-#  id                        :bigint(8)        not null, primary key
-#  email                     :string
-#  encrypted_password        :string           default(""), not null
-#  reset_password_token      :string
-#  reset_password_sent_at    :datetime
-#  remember_created_at       :datetime
-#  sign_in_count             :integer          default(0), not null
-#  current_sign_in_at        :datetime
-#  last_sign_in_at           :datetime
-#  current_sign_in_ip        :inet
-#  last_sign_in_ip           :inet
-#  confirmation_token        :string
-#  confirmed_at              :datetime
-#  confirmation_sent_at      :datetime
-#  unconfirmed_email         :string
-#  first_name                :string
-#  last_name                 :string
-#  admin_note                :text
-#  created_at                :datetime         not null
-#  updated_at                :datetime         not null
-#  invitation_token          :string
-#  invitation_created_at     :datetime
-#  invitation_sent_at        :datetime
-#  invitation_accepted_at    :datetime
-#  invitation_limit          :integer
-#  invited_by_type           :string
-#  invited_by_id             :bigint(8)
-#  invitations_count         :integer          default(0)
-#  nickname                  :string
-#  use_secondary_address     :boolean          default(FALSE)
-#  primary_address_id        :bigint(8)
-#  secondary_address_id      :bigint(8)
-#  subscribed_to_newsletter  :boolean          default(FALSE)
-#  has_generated_password    :boolean          default(FALSE)
-#  phone                     :string
-#  crossdomain_devise_token  :string
-#  crossdomain_devise_set_at :datetime
-#  sign_out_salt_part        :string
-#  source_site_id            :bigint(8)
-#  superadmin                :boolean          default(FALSE), not null
-#  console_url               :string
-#  console_url_updated_at    :datetime
-#  degree_pre                :string(32)
-#  degree_post               :string(32)
-#  phone_secondary           :string
-#  born_at                   :date
-#  bank_account_number       :string
-#  company_name              :string
-#  time_zone                 :string           default("Prague")
-#  auth_site_id              :bigint(8)        not null
-#  preferred_locale          :string
-#  console_preferences       :jsonb
-#  failed_attempts           :integer          default(0), not null
-#  unlock_token              :string
-#  locked_at                 :datetime
+#  id                           :bigint(8)        not null, primary key
+#  email                        :string
+#  encrypted_password           :string           default(""), not null
+#  reset_password_token         :string
+#  reset_password_sent_at       :datetime
+#  remember_created_at          :datetime
+#  sign_in_count                :integer          default(0), not null
+#  current_sign_in_at           :datetime
+#  last_sign_in_at              :datetime
+#  current_sign_in_ip           :inet
+#  last_sign_in_ip              :inet
+#  confirmation_token           :string
+#  confirmed_at                 :datetime
+#  confirmation_sent_at         :datetime
+#  unconfirmed_email            :string
+#  first_name                   :string
+#  last_name                    :string
+#  admin_note                   :text
+#  created_at                   :datetime         not null
+#  updated_at                   :datetime         not null
+#  invitation_token             :string
+#  invitation_created_at        :datetime
+#  invitation_sent_at           :datetime
+#  invitation_accepted_at       :datetime
+#  invitation_limit             :integer
+#  invited_by_type              :string
+#  invited_by_id                :bigint(8)
+#  invitations_count            :integer          default(0)
+#  nickname                     :string
+#  use_secondary_address        :boolean          default(FALSE)
+#  primary_address_id           :bigint(8)
+#  secondary_address_id         :bigint(8)
+#  subscribed_to_newsletter     :boolean          default(FALSE)
+#  has_generated_password       :boolean          default(FALSE)
+#  phone                        :string
+#  crossdomain_devise_token     :string
+#  crossdomain_devise_set_at    :datetime
+#  sign_out_salt_part           :string
+#  source_site_id               :bigint(8)
+#  superadmin                   :boolean          default(FALSE), not null
+#  console_url                  :string
+#  console_url_updated_at       :datetime
+#  degree_pre                   :string(32)
+#  degree_post                  :string(32)
+#  phone_secondary              :string
+#  born_at                      :date
+#  bank_account_number          :string
+#  company_name                 :string
+#  time_zone                    :string           default("Prague")
+#  auth_site_id                 :bigint(8)        not null
+#  preferred_locale             :string
+#  console_preferences          :jsonb
+#  failed_attempts              :integer          default(0), not null
+#  unlock_token                 :string
+#  locked_at                    :datetime
+#  email_authentication_version :integer          default(0), not null
 #
 # Indexes
 #
