@@ -42,6 +42,7 @@ PATH
       invisible_captcha
       iso-639
       jquery-rails
+      json (< 3)
       jwt
       logger
       message_bus

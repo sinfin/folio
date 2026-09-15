@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### JSON 3 is not yet compatible with Rails 8.1
+
+Folio constrains `json` to versions below 3 because Rails 8.1 passes a
+positional options hash to `JSON.parse`, while JSON 3 requires keyword options.
+
+**Action required:** Remove any host-app pin to JSON 3 and resolve the bundle
+with JSON 2 until Rails supports JSON 3.
+
 ### Sidekiq 7 changes its Redis integration
 
 Folio allows Sidekiq 6.5 and 7 for a staged worker rollout; its development
