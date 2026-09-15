@@ -13,7 +13,9 @@ def safely_set_roles_for(user, roles, site)
   # to avoid check, if current user can actually assing such roles
   if Folio::Current.respond_to?(:stub)
     Folio::Current.stub(:user, nil) do
-      user.set_roles_for(site:, roles:)
+      user.set_roles_for(site:, roles:).tap do |result|
+        user.save! if result && user.persisted?
+      end
     end
   else # usage of factories outside TEST env
     Folio::Current.user = nil
