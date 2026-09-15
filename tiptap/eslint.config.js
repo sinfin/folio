@@ -16,7 +16,9 @@ export default tseslint.config(
       "react-hooks": reactHooks,
     },
     rules: {
-      ...reactHooks.configs.recommended.rules,
+      // Keep the pre-7 Hooks checks; opt into compiler diagnostics separately.
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn",
       "@typescript-eslint/no-unused-vars": [
         "error",
         {
