@@ -115,7 +115,9 @@ export function FolioEditor({
   // honor the per-user "mobile first" default there — otherwise a rich-text
   // field could start narrowed with no toolbar button to switch back.
   const [responsivePreviewEnabled, setResponsivePreviewEnabled] =
-    React.useState<boolean>(blockEditor ? (defaultResponsivePreview ?? false) : false);
+    React.useState<boolean>(
+      blockEditor ? (defaultResponsivePreview ?? false) : false,
+    );
   const [initializedContent, setInitializedContent] =
     React.useState<boolean>(false);
   const [editorCreated, setEditorCreated] = React.useState<boolean>(false);
