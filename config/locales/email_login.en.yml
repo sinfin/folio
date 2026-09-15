@@ -1,0 +1,44 @@
+en:
+  devise:
+    mailer:
+      email_login:
+        subject: Confirm your sign-in
+    failure:
+      email_verification_required: Confirm your sign-in using the link in your email.
+      email_login_throttled: Please wait before trying again.
+  folio:
+    users:
+      email_login:
+        preparing: Loading sign-in confirmation.
+        javascript_required: Enable JavaScript and reopen the link from your email to confirm your sign-in.
+        prepare_error: Could not load the confirmation. Please try again.
+        retry: Try again
+        revoke_title: Trusted browsers
+        revoke_instruction: Revoke trust for all browsers. Your next sign-in will require email confirmation again. Your current session will stay signed in.
+        revoke: Revoke trust for all browsers
+        revoked: Browser trust has been revoked.
+        invalid: This sign-in cannot be completed. Please start again.
+        throttled: Please wait before sending another email.
+        unavailable: Sign-in is temporarily unavailable. Please try again shortly.
+        confirm: Confirm sign-in
+        mail_instruction: "Confirm your sign-in to %{site}. This signs in the browser where you started. If you did not request this sign-in, do not confirm it."
+        valid_until: "The link expires at %{time}."
+        request_title: "Sign in with an email link"
+        request_instruction: "Enter your email address. Confirm the link on any device, then continue in this browser."
+        send: "Send sign-in link"
+        use_password: "Sign in with a password"
+        waiting_title: "Verify your sign-in"
+        sent_to: "We sent a confirmation link to %{email}."
+        cross_device_instruction: "You can confirm the email on any device. Keep this page open; this browser will sign in after you confirm."
+        waiting: "Waiting for email confirmation."
+        expired: "This sign-in has expired. Please start again."
+        connection_error: "Connection interrupted. We will try again; you can also check manually."
+        check: "Check confirmation"
+        trust_browser: "Trust this browser"
+        trust_explanation: "Skip email verification after entering your password until 30 days pass without a successful sign-in in this browser. Turn this off on shared devices."
+        resend: "Send another email"
+        cancel: "Cancel and return to sign-in"
+        invalid_title: "Sign-in link unavailable"
+        approved_title: "Sign-in confirmed"
+        approved_instruction: "Continue in the browser where you started signing in. This confirmation does not sign in this device."
+        requested_at: "Requested at %{time}."

@@ -1,0 +1,26 @@
+.f-users-email-login-confirmation.container-fluid data=data
+  - if @preparing
+    h1 = t('folio.users.email_login.confirm')
+    p[role="status" data=stimulus_target('status')]
+      = t('folio.users.email_login.preparing')
+    noscript
+      p = t('folio.users.email_login.javascript_required')
+    button[
+      type="button"
+      class="btn btn-primary"
+      hidden=true
+      data=retry_data
+    ]
+      = t('folio.users.email_login.retry')
+  - elsif @invalid
+    h1 = t('folio.users.email_login.invalid_title')
+    p = t('folio.users.email_login.invalid')
+    = link_to t('folio.users.email_login.use_password'), controller.main_app.new_user_session_path
+  - elsif @approved
+    h1 = t('folio.users.email_login.approved_title')
+    p = t('folio.users.email_login.approved_instruction')
+  - else
+    h1 = t('folio.users.email_login.confirm')
+    p = t('folio.users.email_login.mail_instruction', site: @challenge.site.title)
+    p = t('folio.users.email_login.requested_at', time: l(@challenge.created_at, format: :long))
+    = button_to t('folio.users.email_login.confirm'), controller.main_app.approve_user_email_login_path, method: :post, class: 'btn btn-primary', params: { challenge_id: @challenge.id }

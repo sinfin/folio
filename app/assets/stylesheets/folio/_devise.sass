@@ -21,6 +21,9 @@ $folio-devise-modal-registrations-max-width: $folio-devise-modal-max-width !defa
     padding-right: 2.5 * $spacer
 
   &__under-submit-links
+    display: flex
+    flex-wrap: wrap
+    gap: $spacer
     margin-top: $spacer
     font-size: $font-size-sm
 
@@ -54,3 +57,4 @@ $folio-devise-modal-registrations-max-width: $folio-devise-modal-max-width !defa
 
 @import '../../../cells/folio/addresses/**/*'
 @import '../../../cells/folio/devise/**/*'
+@import '../../../components/folio/users/email_login/*'

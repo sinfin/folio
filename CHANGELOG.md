@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Opt-in email login verification and magic links with explicit email approval on any device, sign-in only in the requesting browser, rolling 30-day browser trust, revocation, delivery limits, and cleanup. Email links require JavaScript and keep tokens in URL fragments until a CSRF-protected preparation POST.
+
 - **Help Documents**: New feature for displaying Markdown documentation within the console interface
   - Configurable via `doc/help/index.yml` with support for categories, ordering, and custom paths
   - Full Markdown support including code highlighting, tables, and Mermaid diagrams

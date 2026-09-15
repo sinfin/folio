@@ -37,6 +37,16 @@ class Folio::DeviseGenerator < Rails::Generators::Base
                          omniauth_providers: Rails.application.config.folio_users_omniauth_providers
 
       devise_scope :user do
+        resource :user_email_login, path: "/users/email_login", controller: "application_namespace_path/folio/users/email_logins", only: %i[new create show destroy] do
+          get :status
+          get :confirm
+          post :prepare
+          post :approve
+          post :complete
+          post :resend
+          delete :revoke_trusted_browsers
+        end
+
         get "/users/invitation", to: "application_namespace_path/folio/users/invitations#show", as: nil
         get "/users/registrations/edit_password", to: "application_namespace_path/folio/users/registrations#edit_password"
         patch "/users/registrations/update_password", to: "application_namespace_path/folio/users/registrations#update_password"

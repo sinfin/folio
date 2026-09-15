@@ -25,6 +25,8 @@
       == cell('folio/devise/omniauth', 'sessions')
 
     .f-devise__under-submit-links
+      - if Folio::Devise::EmailLogin.magic_link_enabled?
+        = link_to t('folio.users.email_login.request_title'), controller.main_app.new_user_email_login_path(modal_non_get_request: model[:modal_non_get_request]), data: { turbolinks: false }
       = forgotten_password_link(test_id: 'sign-in-form-forgotten-password-link')
 
     - if model[:modal_non_get_request]

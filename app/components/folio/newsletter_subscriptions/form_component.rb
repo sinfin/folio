@@ -22,6 +22,10 @@ class Folio::NewsletterSubscriptions::FormComponent < Folio::ApplicationComponen
     @invalid = @newsletter_subscription.errors.present?
   end
 
+  def render?
+    !controller.request.env["folio.skip_external_scripts"]
+  end
+
   def form(&block)
     opts = {
       url: controller.folio.folio_api_newsletter_subscriptions_path,

@@ -1,0 +1,13 @@
+.f-users-email-login-request.container-fluid
+  h1 = t('folio.users.email_login.request_title')
+  p = t('folio.users.email_login.request_instruction')
+
+  = helpers.simple_form_for @user, as: :user, url: controller.main_app.user_email_login_path, method: :post do |f|
+    .f-users-email-login-request__fields
+      = f.input :email, required: true, input_html: { type: 'email', autocomplete: 'email', autofocus: true }
+    = render Folio::RecaptchaFieldComponent.new(f:)
+    = render Folio::Captcha::TurnstileComponent.new(submit_button_class_name: 'f-users-email-login-request__submit')
+    = f.button :submit, t('folio.users.email_login.send'), class: 'btn btn-primary f-users-email-login-request__submit'
+
+  p.mt-3
+    = link_to t('folio.users.email_login.use_password'), controller.main_app.new_user_session_path

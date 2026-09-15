@@ -116,6 +116,14 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
     end
   end
 
+  def update
+    super do |user|
+      if user.errors.empty? && user.saved_change_to_invitation_accepted_at? && user.invitation_accepted? && !user.saved_change_to_email?
+        request.env["folio.email_login.verified_by_token_user_id"] = user.id
+      end
+    end
+  end
+
   def after_invite_path_for(_inviter, resource)
     session[:folio_user_invited_email] = resource.email
     user_invitation_path
@@ -126,7 +134,7 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
       h = params.require(:user)
                 .permit(*Folio::User.controller_strong_params_for_create)
                 .to_h
-      super.merge(h)
+      super.merge(h).except(:auth_site_id)
     end
 
     def disallow_public_invitations_if_needed

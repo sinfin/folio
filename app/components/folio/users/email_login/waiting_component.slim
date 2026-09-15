@@ -1,0 +1,25 @@
+.f-users-email-login-waiting.container-fluid data=data
+  h1 = t('folio.users.email_login.waiting_title')
+  p = t('folio.users.email_login.sent_to', email: @email)
+  p = t('folio.users.email_login.cross_device_instruction')
+  p[
+    role="status"
+    aria-live="polite"
+    data=status_data
+  ]
+    = message
+
+  = form_tag controller.main_app.complete_user_email_login_path, method: :post, data: completion_form_data, authenticity_token: helpers.form_authenticity_token do
+    .form-check.mb-3
+      = hidden_field_tag :trust_browser, '0'
+      = check_box_tag :trust_browser, '1', @trust_browser, class: 'form-check-input', id: 'email-login-trust-browser', data: trust_browser_data
+      = label_tag 'email-login-trust-browser', t('folio.users.email_login.trust_browser'), class: 'form-check-label'
+      small.d-block = t('folio.users.email_login.trust_explanation')
+    = submit_tag t('folio.users.email_login.check'), class: 'btn btn-primary', disabled: !waiting?, data: stimulus_target('check')
+
+    .f-users-email-login-waiting__resend
+      = submit_tag t('folio.users.email_login.resend'), formaction: controller.main_app.resend_user_email_login_path, class: 'btn btn-secondary', data: resend_data, disabled: resend_disabled?
+      small data=stimulus_target('countdown')
+
+  .mt-3
+    = button_to t('folio.users.email_login.cancel'), controller.main_app.user_email_login_path, method: :delete, class: 'btn btn-link f-users-email-login-waiting__cancel'

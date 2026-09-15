@@ -15,7 +15,7 @@ html[
       = preload_link_tag '/fonts/Figtree-Bold.woff2'
       = preload_link_tag '/fonts/SpaceGrotesk-Bold.woff2'
 
-  body
+  body data-turbolinks=(request.env["folio.skip_external_scripts"] ? "false" : nil)
     = render(Folio::StructuredData::BodyComponent.new(record: @record_for_meta_variables,
                                                       breadcrumbs: @breadcrumbs_on_rails))
 
@@ -40,7 +40,8 @@ html[
     = render(Dummy::Ui::FooterComponent.new)
 
     = yield :modals
-    == cell('folio/devise/modal')
+    - unless request.env["folio.skip_external_scripts"]
+      == cell('folio/devise/modal')
     == cell('folio/devise/omniauth/forms')
 
     = render(Dummy::Ui::RecordBarComponent.new(record: @record_for_meta_variables))

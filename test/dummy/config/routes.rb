@@ -23,6 +23,16 @@ Rails.application.routes.draw do
                      omniauth_providers: Rails.application.config.folio_users_omniauth_providers
 
   devise_scope :user do
+    resource :user_email_login, path: "/users/email_login", controller: "dummy/folio/users/email_logins", only: %i[new create show destroy] do
+      get :status
+      get :confirm
+      post :prepare
+      post :approve
+      post :complete
+      post :resend
+      delete :revoke_trusted_browsers
+    end
+
     get "/users/registrations/edit_password", to: "dummy/folio/users/registrations#edit_password"
     patch "/users/registrations/update_password", to: "dummy/folio/users/registrations#update_password"
     get "/users/invitation", to: "dummy/folio/users/invitations#show", as: nil

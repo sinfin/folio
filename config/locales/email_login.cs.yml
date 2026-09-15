@@ -1,0 +1,44 @@
+cs:
+  devise:
+    mailer:
+      email_login:
+        subject: Potvrzení přihlášení
+    failure:
+      email_verification_required: Potvrďte přihlášení odkazem v e-mailu.
+      email_login_throttled: Před dalším pokusem chvíli počkejte.
+  folio:
+    users:
+      email_login:
+        preparing: Načítání potvrzení přihlášení.
+        javascript_required: Pro otevření přihlašovacího odkazu zapněte JavaScript a otevřete odkaz z e-mailu znovu.
+        prepare_error: Potvrzení se nepodařilo načíst. Zkuste to znovu.
+        retry: Zkusit znovu
+        revoke_title: Důvěryhodné prohlížeče
+        revoke_instruction: Odvolejte důvěru všech prohlížečů. Při dalším přihlášení bude znovu potřeba potvrzení e-mailem. Vaše současné přihlášení zůstane zachované.
+        revoke: Odvolat důvěru všech prohlížečů
+        revoked: Důvěra prohlížečů byla odvolána.
+        invalid: Přihlášení nelze dokončit. Zahajte prosím nový pokus.
+        throttled: Před dalším odesláním chvíli počkejte.
+        unavailable: Přihlášení nyní nelze dokončit. Zkuste to prosím za chvíli.
+        confirm: Potvrdit přihlášení
+        mail_instruction: "Potvrďte přihlášení na %{site}. Přihlásí se prohlížeč, ve kterém jste přihlášení zahájili. Pokud jste o přihlášení nežádali, odkaz nepotvrzujte."
+        valid_until: "Odkaz platí do %{time}."
+        request_title: "Přihlášení odkazem z e-mailu"
+        request_instruction: "Zadejte e-mail. Odkaz můžete potvrdit na jakémkoli zařízení a pak pokračovat v tomto prohlížeči."
+        send: "Poslat přihlašovací odkaz"
+        use_password: "Přihlásit se heslem"
+        waiting_title: "Ověření přihlášení"
+        sent_to: "Na adresu %{email} jsme poslali potvrzovací odkaz."
+        cross_device_instruction: "E-mail můžete potvrdit na jakémkoli zařízení. Tuto stránku ponechte otevřenou. Po potvrzení se přihlásíte v tomto prohlížeči."
+        waiting: "Čekáme na potvrzení e-mailu."
+        expired: "Platnost tohoto přihlášení vypršela. Zahajte prosím nový pokus."
+        connection_error: "Spojení bylo přerušeno. Kontrolu zopakujeme, případně ji můžete spustit tlačítkem."
+        check: "Zkontrolovat potvrzení"
+        trust_browser: "Důvěřovat tomuto prohlížeči"
+        trust_explanation: "Po zadání hesla nebude potřeba potvrzení e-mailem, dokud neuplyne 30 dní bez úspěšného přihlášení v tomto prohlížeči. Na sdíleném zařízení tuto volbu vypněte."
+        resend: "Poslat e-mail znovu"
+        cancel: "Zrušit a vrátit se k přihlášení"
+        invalid_title: "Přihlašovací odkaz není dostupný"
+        approved_title: "Přihlášení potvrzeno"
+        approved_instruction: "Pokračujte v prohlížeči, ve kterém jste přihlášení zahájili. Toto potvrzení nepřihlásí zařízení, na kterém čtete e-mail."
+        requested_at: "Žádost byla vytvořena %{time}."

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_07_16_062032) do
+ActiveRecord::Schema[7.1].define(version: 2026_09_14_080656) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -583,6 +583,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_16_062032) do
     t.integer "failed_attempts", default: 0, null: false
     t.string "unlock_token"
     t.datetime "locked_at"
+    t.integer "email_authentication_version", default: 0, null: false
     t.index ["auth_site_id"], name: "index_folio_users_on_auth_site_id"
     t.index ["confirmation_token"], name: "index_folio_users_on_confirmation_token", unique: true
     t.index ["crossdomain_devise_token"], name: "index_folio_users_on_crossdomain_devise_token"
@@ -594,6 +595,45 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_16_062032) do
     t.index ["reset_password_token"], name: "index_folio_users_on_reset_password_token", unique: true
     t.index ["secondary_address_id"], name: "index_folio_users_on_secondary_address_id"
     t.index ["source_site_id"], name: "index_folio_users_on_source_site_id"
+  end
+
+  create_table "folio_users_email_login_challenges", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "site_id", null: false
+    t.string "purpose", null: false
+    t.string "token_digest", null: false
+    t.string "browser_nonce_digest", null: false
+    t.datetime "expires_at", null: false
+    t.datetime "approved_at"
+    t.datetime "consumed_at"
+    t.datetime "revoked_at"
+    t.integer "authentication_version", null: false
+    t.string "return_path"
+    t.boolean "remember_me", default: false, null: false
+    t.boolean "trust_browser", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["expires_at"], name: "index_folio_users_email_login_challenges_on_expires_at"
+    t.index ["site_id"], name: "index_folio_users_email_login_challenges_on_site_id"
+    t.index ["token_digest"], name: "index_folio_users_email_login_challenges_on_token_digest", unique: true
+    t.index ["user_id", "site_id", "created_at"], name: "index_folio_email_login_deliveries"
+    t.index ["user_id"], name: "index_folio_users_email_login_challenges_on_user_id"
+  end
+
+  create_table "folio_users_trusted_browsers", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "site_id", null: false
+    t.string "token_digest", null: false
+    t.datetime "verified_at", null: false
+    t.datetime "last_authenticated_at", null: false
+    t.datetime "revoked_at"
+    t.integer "authentication_version", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["last_authenticated_at"], name: "index_folio_users_trusted_browsers_on_last_authenticated_at"
+    t.index ["site_id"], name: "index_folio_users_trusted_browsers_on_site_id"
+    t.index ["token_digest"], name: "index_folio_users_trusted_browsers_on_token_digest", unique: true
+    t.index ["user_id"], name: "index_folio_users_trusted_browsers_on_user_id"
   end
 
   create_table "folio_video_subtitles", force: :cascade do |t|
@@ -668,5 +708,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_16_062032) do
   add_foreign_key "folio_site_user_links", "folio_sites", column: "site_id"
   add_foreign_key "folio_site_user_links", "folio_users", column: "user_id"
   add_foreign_key "folio_users", "folio_sites", column: "auth_site_id"
+  add_foreign_key "folio_users_email_login_challenges", "folio_sites", column: "site_id"
+  add_foreign_key "folio_users_email_login_challenges", "folio_users", column: "user_id"
+  add_foreign_key "folio_users_trusted_browsers", "folio_sites", column: "site_id"
+  add_foreign_key "folio_users_trusted_browsers", "folio_users", column: "user_id"
   add_foreign_key "folio_video_subtitles", "folio_files", column: "video_id"
 end
