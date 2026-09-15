@@ -20,7 +20,7 @@ module Rack
       end
 
       def render_maintenance_html
-        [503, { "Content-Type" => "text/html" }, [self.class.maintenance_html]]
+        [503, { "content-type" => "text/html" }, [self.class.maintenance_html]]
       end
 
       def self.maintenance_html

@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+### Rack 3 requires lowercase response headers
+
+Folio's development bundle now resolves Rack 3. Folio's embed and maintenance
+middleware return lowercase response header names, as required by Rack 3.
+
+**Action required:** Audit host-app Rack middleware and response builders for
+uppercase header names and other Rack 3 interface changes. If the host app
+pins Rack 2 or `rack-protection` 3, update those constraints before resolving
+with Rack 3. See the [Rack 3 upgrade guide](https://github.com/rack/rack/blob/main/UPGRADE-GUIDE.md).
+
 ### reCAPTCHA 5 renames its view helper module
 
 reCAPTCHA 5 replaces `Recaptcha::ClientHelper` with
