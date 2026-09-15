@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+### SitemapGenerator 7 no longer pings search engines by default
+
+SitemapGenerator 7 leaves `search_engines` empty, so `sitemap:refresh` no
+longer sends HTTP pings unless an app configures engine URLs. Folio's sitemap
+configuration uses the supported `create` block form.
+
+**Action required:** If the host app relies on sitemap pings, configure its
+`SitemapGenerator::Sitemap.search_engines` explicitly. If it creates a sitemap
+without a block, call `finalize!` after adding links. Review any direct calls
+to the now-internal `FileAdapter#plain` or `#gzip` helpers.
+
 ### Rack 3 requires lowercase response headers
 
 Folio's development bundle now resolves Rack 3. Folio's embed and maintenance
