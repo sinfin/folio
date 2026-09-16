@@ -23,6 +23,7 @@ export interface FolioTiptapCommandsListProps {
 
 export interface FolioTiptapCommandsListState {
   selectedIndex: number;
+  itemsCount: number;
 }
 
 export class FolioTiptapCommandsList extends React.Component<
@@ -34,7 +35,25 @@ export class FolioTiptapCommandsList extends React.Component<
 
     this.state = {
       selectedIndex: 0,
+      itemsCount: props.items.reduce(
+        (count, group) => count + group.commandsForSuggestion.length,
+        0,
+      ),
     };
+  }
+
+  static getDerivedStateFromProps(
+    props: FolioTiptapCommandsListProps,
+    state: FolioTiptapCommandsListState,
+  ): Partial<FolioTiptapCommandsListState> | null {
+    const itemsCount = props.items.reduce(
+      (count, group) => count + group.commandsForSuggestion.length,
+      0,
+    );
+
+    if (itemsCount === state.itemsCount) return null;
+
+    return { itemsCount, selectedIndex: 0 };
   }
 
   onEscape() {
@@ -131,22 +150,6 @@ export class FolioTiptapCommandsList extends React.Component<
   selectItem(item: FolioEditorCommandForSuggestion) {
     if (item) {
       this.props.command(item);
-    }
-  }
-
-  componentDidUpdate(prevProps: FolioTiptapCommandsListProps) {
-    let previousItemsCount = 0;
-    prevProps.items.forEach((group) => {
-      previousItemsCount += group.commandsForSuggestion.length;
-    });
-
-    let itemsCount = 0;
-    this.props.items.forEach((group) => {
-      itemsCount += group.commandsForSuggestion.length;
-    });
-
-    if (itemsCount !== previousItemsCount) {
-      this.setState({ selectedIndex: 0 });
     }
   }
 
