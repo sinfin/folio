@@ -2,7 +2,7 @@
   .<%= classname_prefix %>-ui-pagy.fs-display-2xs class=@class_name
     nav.<%= classname_prefix %>-ui-pagy__nav role="navigation" aria-label="pager"
       ul.<%= classname_prefix %>-ui-pagy__pages
-        - if @pagy.prev
+        - if @pagy.previous
           li.<%= classname_prefix %>-ui-pagy__page[
             class="<%= classname_prefix %>-ui-pagy__page--with-ico"
             class="<%= classname_prefix %>-ui-pagy__page--first"
@@ -14,7 +14,7 @@
             class="<%= classname_prefix %>-ui-pagy__page--with-ico"
             class="<%= classname_prefix %>-ui-pagy__page--prev"
           ]
-            == build_link(@pagy.prev,
+            == build_link(@pagy.previous,
                           <%= application_namespace_path %>_ui_icon(:arrow_left),
                           aria: :previous)
         - else

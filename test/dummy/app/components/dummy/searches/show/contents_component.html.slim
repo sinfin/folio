@@ -17,7 +17,7 @@
           - if @search[:active_results][:pagy]
             - if @search[:active_results][:pagy].pages > 1
               .small.mb-3
-                == pagy_info @search[:active_results][:pagy]
+                == @search[:active_results][:pagy].info_tag
 
           = render(@search[:active_results][:results_component].new(data: @search[:active_results]))
 

@@ -6,7 +6,7 @@
 ]
   .f-c-ui-pagy__flex
     .f-c-ui-pagy__info
-      == pagy_info(@pagy)
+      == @pagy.info_tag
 
     - if middle_component?
       .f-c-ui-pagy__middle
@@ -14,12 +14,12 @@
 
     - if @pagy.pages > 1
       .f-c-ui-pagy__nav
-        - if @pagy.prev
+        - if @pagy.previous
           span.f-c-ui-pagy__page[
             class="f-c-ui-pagy__page--with-ico"
             class="f-c-ui-pagy__page--prev"
           ]
-            == link.call(@pagy.prev, icon(:chevron_left))
+            == link.call(@pagy.previous, icon(:chevron_left))
 
         - else
           span.f-c-ui-pagy__page[
@@ -30,7 +30,7 @@
 
         .f-c-ui-pagy__pages
           / series example: [1, :gap, 7, 8, "9", 10, 11, :gap, 36]
-          - @pagy.series.each_with_index do |item, index|
+          - series.each do |item|
             - if item.is_a?(Integer)          # page link
               span.f-c-ui-pagy__page.f-c-ui-pagy__page--page[
                 class=page_class(item)

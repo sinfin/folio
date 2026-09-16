@@ -2,6 +2,32 @@
 
 ## Unreleased
 
+### Pagy 43 replaces the legacy pagination API
+
+Pagy 43 is a redesign of the pagination API. Folio now uses
+`Pagy::Method`, calls the offset paginator explicitly, and renders navigation
+through methods on each Pagy instance. Pagy's former `overflow: :last_page`
+behavior is no longer available; an out-of-range page now returns an empty
+record set.
+
+**Action required:** Update host-app pagination code and copied Folio
+generators as follows:
+
+- Replace `Pagy::Backend` with `Pagy::Method` and remove `Pagy::Frontend`.
+- Replace `pagy(scope, items: limit)` with
+  `pagy(:offset, scope, limit: limit)`.
+- Replace `Pagy::DEFAULT`, `items`, `size`, and `prev` with
+  `Pagy::OPTIONS`, `limit`, `slots`, and `previous`, respectively. A former
+  `size: [1, 2, 2, 1]` navigation maps to `slots: 9`.
+- Replace `pagy_info(pagy)` with `pagy.info_tag`, `pagy_anchor(pagy)` with
+  `pagy.send(:a_lambda)`, and direct `pagy.series` calls with
+  `pagy.send(:series)`.
+- Remove `pagy/extras/*` requires. If custom Pagy text is stored in Rails
+  locale files, call `Pagy.translate_with_the_slower_i18n_gem!` and migrate
+  `pagy.info` keys to `pagy.info_tag`.
+- Decide how the app should handle out-of-range page requests now that
+  `overflow: :last_page` has been removed.
+
 ### TipTap source builds use TypeScript 7 and Oxlint
 
 Folio's TipTap package now type-checks with TypeScript 7 and lints with

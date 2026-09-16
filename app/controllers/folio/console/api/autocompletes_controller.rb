@@ -57,7 +57,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
         end
       end
 
-      pagination, records = pagy(scope, page: p_page, items: AUTOCOMPLETE_PAGY_ITEMS)
+      pagination, records = pagy(:offset, scope, page: p_page, limit: AUTOCOMPLETE_PAGY_ITEMS)
       records = sort_exact_match_first(records, q) if q.present?
       scope = records.filter_map(&:to_autocomplete_label).uniq
 
@@ -242,7 +242,8 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
         scope = scope.includes(*klass.folio_console_select2_includes)
       end
 
-      pagination, records = pagy(scope, page: p_page, items: q.blank? ? 10 : AUTOCOMPLETE_PAGY_ITEMS)
+      limit = q.blank? ? 10 : AUTOCOMPLETE_PAGY_ITEMS
+      pagination, records = pagy(:offset, scope, page: p_page, limit:)
       records = sort_exact_match_first(records, q) if q.present?
 
       render_select2_options(records,
@@ -317,7 +318,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
 
           scope = filter_by_atom_setting_params(scope)
 
-          pagination, records = pagy(scope, page: p_page, items: AUTOCOMPLETE_PAGY_ITEMS)
+          pagination, records = pagy(:offset, scope, page: p_page, limit: AUTOCOMPLETE_PAGY_ITEMS)
           records = sort_exact_match_first(records, q) if q.present?
 
           response = records.map do |record|

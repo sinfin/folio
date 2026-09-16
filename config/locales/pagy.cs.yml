@@ -4,7 +4,18 @@ cs:
       prev: předchozí
       next: další
       gap: "&hellip;"
-    info:
+    aria_label:
+      nav:
+        one: Stránka
+        few: Stránky
+        other: Stránky
+      previous: Předchozí
+      next: Další
+    previous: "&lt;"
+    next: "&gt;"
+    gap: "&hellip;"
+    info_tag:
+      no_count: "Stránka %{page} z %{pages}"
       single_page:
         zero: "Žádný záznam nenalezen"
         one: "Zobrazuji <b>1</b> záznam"
@@ -12,9 +23,6 @@ cs:
         other: "Zobrazuji <b>všech %{count}</b> záznamů"
       multiple_pages: "Zobrazuji záznamy <b>%{from}-%{to}</b> z <b>%{count}</b> celkem"
       no_items: Žádný záznam nenalezen
-    compact:
-      page: Stránka
-      of: z
     item_name:
       zero: záznam
       one: záznam

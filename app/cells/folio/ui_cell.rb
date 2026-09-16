@@ -3,7 +3,7 @@
 class Folio::UiCell < Folio::ApplicationCell
   include SimpleForm::ActionViewExtensions::FormHelper
   include ActionView::Helpers::FormOptionsHelper
-  include Pagy::Backend
+  include Pagy::Method
 
   def show
     if model.present?
@@ -65,7 +65,7 @@ class Folio::UiCell < Folio::ApplicationCell
   end
 
   def pagy_model
-    pagy, _pages = pagy(Folio::Page.all, items: 1)
+    pagy, _pages = pagy(:offset, Folio::Page.all, limit: 1)
     pagy
   end
 
