@@ -77,7 +77,7 @@ Gem::Specification.new do |s|
   s.add_dependency "show_for"
   s.add_dependency "httpparty"
   s.add_dependency "sidekiq-cron", "~> 2.4"
-  s.add_dependency "sidekiq", ">= 6.5", "< 8"
+  s.add_dependency "sidekiq", ">= 6.5", "< 9"
   s.add_dependency "activejob-unique", "~> 0.5.0"
   s.add_dependency "simple_form"
   s.add_dependency "sitemap_generator"
