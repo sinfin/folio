@@ -11,14 +11,16 @@ class Folio::Console::Api::AasmController < Folio::Console::Api::BaseController
         event = record.allowed_events_for(Folio::Current.user).find { |e| e.name == event_name }
 
         if event && !event.options[:private]
+          if params[:event_email_enabled] == "1" && event_email_params_missing?
+            return render_failure("invalid_email")
+          end
+
           record = handle_record_before_event(record)
           record.send("#{event_name}!")
 
           if params[:event_email_enabled] == "1"
-            if %i[event_email_subject event_email_text email].all? { |key| params[key].present? }
-              Folio::AasmMailer.event(params[:email], params[:event_email_subject], params[:event_email_text])
-                               .deliver_later
-            end
+            Folio::AasmMailer.event(params[:email], params[:event_email_subject], params[:event_email_text])
+                             .deliver_later
           end
 
           if params[:cell_options]
@@ -102,5 +104,9 @@ class Folio::Console::Api::AasmController < Folio::Console::Api::BaseController
 
     def handle_record_before_event(record)
       record
+    end
+
+    def event_email_params_missing?
+      %i[event_email_subject event_email_text email].any? { |key| params[key].blank? }
     end
 end

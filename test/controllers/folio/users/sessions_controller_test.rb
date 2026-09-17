@@ -27,6 +27,26 @@ class Folio::Users::SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to controller.after_sign_in_path_for(@user)
   end
 
+  test "create matches email case-insensitively" do
+    assert_difference("@user.reload.sign_in_count", 1) do
+      post main_app.user_session_path, params: {
+        user: { email: "Email@Email.Email", password: TEST_PASSWORD },
+      }
+    end
+
+    assert_redirected_to controller.after_sign_in_path_for(@user)
+  end
+
+  test "create strips surrounding whitespace from email" do
+    assert_difference("@user.reload.sign_in_count", 1) do
+      post main_app.user_session_path, params: {
+        user: { email: " #{@params[:email]} ", password: TEST_PASSWORD },
+      }
+    end
+
+    assert_redirected_to controller.after_sign_in_path_for(@user)
+  end
+
   test "ajax create" do
     post main_app.user_session_path(format: :json), params: { user: @params }
     assert_response(:ok)
@@ -36,9 +56,23 @@ class Folio::Users::SessionsControllerTest < ActionDispatch::IntegrationTest
     skip unless Rails.application.config.folio_users_publicly_invitable
     user = Folio::User.invite!(email: "invite@email.email", auth_site_id: ::Folio::Current.site.id)
     old_timestamp = user.invitation_created_at
-    post main_app.user_session_path, params: { user: { email: "invite@email.email" } }
+    post main_app.user_session_path, params: { user: { email: "Invite@Email.Email" } }
     assert_redirected_to user_invitation_path
     assert_not_equal old_timestamp, user.reload.invitation_created_at
+  end
+
+  test "create pending invitation is scoped to the current auth site" do
+    skip unless Rails.application.config.folio_users_publicly_invitable
+    begin
+      other_site = create_site(key: try(:other_site_key), force: true)
+    rescue ActiveRecord::RecordInvalid => e
+      puts "Cannot create other_site! Try setting other_site_key in Folio::Users::SessionsControllerTest.class_eval to handle singletons in folio_site_default_test_factory."
+      raise e
+    end
+    Folio::User.invite!(email: "invite@email.email", auth_site_id: other_site.id)
+
+    post main_app.user_session_path, params: { user: { email: "Invite@Email.Email" } }
+    assert_redirected_to main_app.new_user_session_path
   end
 
   test "ajax create pending invitation" do

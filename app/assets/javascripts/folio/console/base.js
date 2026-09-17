@@ -73,6 +73,8 @@
 //= require folio/console/modules/html_auto_format
 //= require folio/console/tagsinput/tagsinput
 
+//= require folio/console/aasm/email_modal_component
+
 //= require folio/console/ui/ajax_input_component
 //= require folio/console/ui/alert_component
 //= require folio/console/ui/boolean_toggle_component

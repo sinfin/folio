@@ -27,9 +27,22 @@ Instead, exercise the behavior through one of:
 - integration or system tests
 - an actual JavaScript behavior test that runs the code path
 
+Prefer testing the behavior below a rake task through the model, service,
+component, or integration code that the task calls. Add a focused rake task
+test when the task orchestration or command-line contract is itself the
+behavior under test.
+
 ## Test Shape
 
 - Prefer behavior-facing assertions over implementation detail checks.
+- Do not add a test merely because a task changes code. Add it when it helps
+  develop, verify, or guard meaningful behavior; remove test scaffolding that
+  served only the implementation work once that work is complete.
+- For component and HTML controller tests, begin with one assertion for the
+  state-specific behavior. Add another only when it proves a separate user
+  decision, such as an eligible control appearing while the ineligible variant
+  omits it. Do not enumerate neighboring markup, fixed classes, static labels,
+  data attributes, or asset tags.
 - Add or update focused tests near the changed component, model, controller, or
   pack.
 - Use the smallest test type that proves the behavior; broaden to integration

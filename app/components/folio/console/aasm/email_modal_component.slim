@@ -1,0 +1,55 @@
+= render(Folio::Console::Ui::ModalComponent.new(class_name: CLASS_NAME,
+                                                size: :lg,
+                                                data:)) do
+  = form do |f|
+    p
+      strong[
+        class="#{CLASS_NAME}__title"
+        data=stimulus_target("title")
+      ]
+
+    = f.input :event_email_enabled,
+              label: "",
+              as: :boolean,
+              input_html: checkbox_input_html,
+              label_html: checkbox_label_html
+
+    = f.input :event_email_subject,
+              as: :string,
+              label: false,
+              input_html: subject_input_html
+
+    = f.input :event_email_text,
+              as: :text,
+              label: false,
+              input_html: text_input_html
+
+    = key_hidden_field(f, :klass)
+    = key_hidden_field(f, :aasm_event)
+    = key_hidden_field(f, :id)
+    = key_hidden_field(f, :email)
+
+    .d-flex
+      .me-2
+        button[
+          class="btn"
+          class="btn-outline"
+          type="button"
+          data=stimulus_modal_close
+        ]
+          = t("folio.console.actions.cancel")
+
+      button[
+        class="btn"
+        class="btn-primary"
+        class="#{CLASS_NAME}__submit"
+        type="submit"
+        disabled=true
+        data=stimulus_target("submit")
+      ]
+        = t("folio.console.actions.confirm")
+
+  span[
+    class="folio-loader"
+    class="#{CLASS_NAME}__loader"
+  ]
