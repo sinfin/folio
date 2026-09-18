@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Console::Files::Show::FilePlacementsComponent < Folio::Console::ApplicationComponent
-  include Pagy::Backend
-  include Pagy::Frontend
+  include Pagy::Method
 
   def initialize(file:)
     @file = file
@@ -10,7 +9,8 @@ class Folio::Console::Files::Show::FilePlacementsComponent < Folio::Console::App
 
   private
     def before_render
-      @pagy, @file_placements = pagy(@file.file_placements.includes(:placement).order(created_at: :desc), items: 20)
+      scope = @file.file_placements.includes(:placement).order(created_at: :desc)
+      @pagy, @file_placements = pagy(:offset, scope, limit: 20)
     end
 
     def placement_label(placement)

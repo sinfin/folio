@@ -2,7 +2,7 @@
   .d-ui-pagy.fs-display-2xs class=@class_name
     nav.d-ui-pagy__nav role="navigation" aria-label="pager"
       ul.d-ui-pagy__pages
-        - if @pagy.prev
+        - if @pagy.previous
           li.d-ui-pagy__page[
             class="d-ui-pagy__page--with-ico"
             class="d-ui-pagy__page--first"
@@ -14,7 +14,7 @@
             class="d-ui-pagy__page--with-ico"
             class="d-ui-pagy__page--prev"
           ]
-            == build_link(@pagy.prev,
+            == build_link(@pagy.previous,
                           dummy_ui_icon(:arrow_left),
                           aria: :previous)
         - else

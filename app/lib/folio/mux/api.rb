@@ -28,13 +28,13 @@ class Folio::Mux::Api
     rq.mp4_support = "standard" # to be able get .m4a and .mp4
 
     if preview
-      rq.input = [{ url: "mux://assets/#{media_file.remote_key}",
-                    start_time: media_file.preview_starts_at_second,
-                    end_time: media_file.preview_ends_at_second }]
-      rq.playback_policy = [MuxRuby::PlaybackPolicy::PUBLIC]
+      rq.inputs = [{ url: "mux://assets/#{media_file.remote_key}",
+                     start_time: media_file.preview_starts_at_second,
+                     end_time: media_file.preview_ends_at_second }]
+      rq.playback_policies = [MuxRuby::PlaybackPolicy::PUBLIC]
     else
-      rq.input = [{ url: media_file_content_url }]
-      rq.playback_policy = [MuxRuby::PlaybackPolicy::SIGNED, MuxRuby::PlaybackPolicy::PUBLIC] # public to be abel to see content in Mux.com admin
+      rq.inputs = [{ url: media_file_content_url }]
+      rq.playback_policies = [MuxRuby::PlaybackPolicy::SIGNED, MuxRuby::PlaybackPolicy::PUBLIC] # public to be abel to see content in Mux.com admin
     end
 
     rq.test = Rails.env.test? # max 10secs, erased after 24h, not count limited

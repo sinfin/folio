@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Folio::Console::Ui::PagyComponent < Folio::Console::ApplicationComponent
-  include Pagy::Frontend
-
   bem_class_name :no_margin, :index_header
 
   def initialize(pagy:,
@@ -20,28 +18,19 @@ class Folio::Console::Ui::PagyComponent < Folio::Console::ApplicationComponent
   end
 
   def link
-    @link ||= pagy_anchor(@pagy)
+    @link ||= @pagy.send(:a_lambda)
   end
 
-  # Override pagy_url_for to use custom request_path when provided
-  def pagy_url_for(page, opts = {})
-    url = super(page, opts)
-    if @options && @options[:request_path]
-      # Replace the path portion with custom path, preserving the public query string
-      uri = URI.parse(url)
-      uri.path = @options[:request_path]
-      uri.query = query_without_request_path(uri.query)
-      uri.to_s
-    else
-      url
-    end
+  def series
+    @pagy.send(:series)
   end
 
-  def query_without_request_path(query)
-    return if query.blank?
+  def middle_component?
+    @options[:middle_component].present?
+  end
 
-    pairs = URI.decode_www_form(query).reject { |key, _| key == "request_path" }
-    pairs.present? ? URI.encode_www_form(pairs) : nil
+  def middle_component
+    @options[:middle_component].call
   end
 
   def icon(code)

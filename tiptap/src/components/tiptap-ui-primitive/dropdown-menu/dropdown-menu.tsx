@@ -177,9 +177,9 @@ export const DropdownMenuTrigger = React.forwardRef<
   const context = useDropdownMenuContext();
   const childrenRef = React.isValidElement(children)
     ? parseInt(React.version, 10) >= 19
-      ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ? // oxlint-disable-next-line typescript/no-explicit-any
         (children as { props: { ref?: React.Ref<any> } }).props.ref
-      : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      : // oxlint-disable-next-line typescript/no-explicit-any
         (children as any).ref
     : undefined;
   const ref = useMergeRefs([context.refs.setReference, propRef, childrenRef]);

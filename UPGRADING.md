@@ -2,6 +2,147 @@
 
 ## Unreleased
 
+### Pagy 43 replaces the legacy pagination API
+
+Pagy 43 is a redesign of the pagination API. Folio now uses
+`Pagy::Method`, calls the offset paginator explicitly, and renders navigation
+through methods on each Pagy instance. Pagy's former `overflow: :last_page`
+behavior is no longer available; an out-of-range page now returns an empty
+record set.
+
+**Action required:** Update host-app pagination code and copied Folio
+generators as follows:
+
+- Replace `Pagy::Backend` with `Pagy::Method` and remove `Pagy::Frontend`.
+- Replace `pagy(scope, items: limit)` with
+  `pagy(:offset, scope, limit: limit)`.
+- Replace `Pagy::DEFAULT`, `items`, `size`, and `prev` with
+  `Pagy::OPTIONS`, `limit`, `slots`, and `previous`, respectively. A former
+  `size: [1, 2, 2, 1]` navigation maps to `slots: 9`.
+- Replace `pagy_info(pagy)` with `pagy.info_tag`, `pagy_anchor(pagy)` with
+  `pagy.send(:a_lambda)`, and direct `pagy.series` calls with
+  `pagy.send(:series)`.
+- Remove `pagy/extras/*` requires. If custom Pagy text is stored in Rails
+  locale files, call `Pagy.translate_with_the_slower_i18n_gem!` and migrate
+  `pagy.info` keys to `pagy.info_tag`.
+- Decide how the app should handle out-of-range page requests now that
+  `overflow: :last_page` has been removed.
+
+### TipTap source builds use TypeScript 7 and Oxlint
+
+Folio's TipTap package now type-checks with TypeScript 7 and lints with
+Oxlint rather than ESLint and `typescript-eslint`. The shipped editor assets
+and host-app integration are unchanged.
+
+**Action required for custom TipTap builds:** Update any copied TipTap tooling
+to TypeScript 7 and replace `typescript-eslint` with a TypeScript 7-compatible
+linter before running `npm ci` and `npm run build`. Apps that only consume
+Folio's built editor assets need no change.
+
+### Mux Ruby 5 renames asset request fields
+
+Mux Ruby 5 replaces `CreateAssetRequest#input` with `#inputs` and
+`#playback_policy` with `#playback_policies`. Folio uses the new fields when
+creating assets. The SDK still accepts the old fields but deprecates them.
+
+**Action required:** Update direct Mux SDK asset creation in the host app to
+the plural fields. Mux 4 also deprecated `mp4_support` and its update API in
+favor of static renditions; Folio retains the old MP4 behavior for this
+release because existing rendition URLs differ from the new API. Review any
+direct host-app calls to those APIs before changing rendition formats.
+
+### SitemapGenerator 7 no longer pings search engines by default
+
+SitemapGenerator 7 leaves `search_engines` empty, so `sitemap:refresh` no
+longer sends HTTP pings unless an app configures engine URLs. Folio's sitemap
+configuration uses the supported `create` block form.
+
+**Action required:** If the host app relies on sitemap pings, configure its
+`SitemapGenerator::Sitemap.search_engines` explicitly. If it creates a sitemap
+without a block, call `finalize!` after adding links. Review any direct calls
+to the now-internal `FileAdapter#plain` or `#gzip` helpers.
+
+### Rack 3 requires lowercase response headers
+
+Folio's development bundle now resolves Rack 3. Folio's embed and maintenance
+middleware return lowercase response header names, as required by Rack 3.
+
+**Action required:** Audit host-app Rack middleware and response builders for
+uppercase header names and other Rack 3 interface changes. If the host app
+pins Rack 2 or `rack-protection` 3, update those constraints before resolving
+with Rack 3. See the [Rack 3 upgrade guide](https://github.com/rack/rack/blob/main/UPGRADE-GUIDE.md).
+
+### reCAPTCHA 5 renames its view helper module
+
+reCAPTCHA 5 replaces `Recaptcha::ClientHelper` with
+`Recaptcha::Adapters::ViewMethods`. Folio's field component uses the new
+module.
+
+**Action required:** Update host-app components that include
+`Recaptcha::ClientHelper` to include `Recaptcha::Adapters::ViewMethods`.
+
+### JSON 3 is not yet compatible with Rails 8.1
+
+Folio constrains `json` to versions below 3 because Rails 8.1 passes a
+positional options hash to `JSON.parse`, while JSON 3 requires keyword options.
+
+**Action required:** Remove any host-app pin to JSON 3 and resolve the bundle
+with JSON 2 until Rails supports JSON 3.
+
+### Sidekiq 7 and 8 change Redis integration
+
+Folio allows Sidekiq 6.5 through 8 for a staged worker rollout; its development
+bundle resolves Sidekiq 8.1.7. Sidekiq 7 and 8 use `redis-client` internally
+and do not support Redis namespaces. Folio's direct `redis` dependency remains
+on 4.x for its batch-service API. Folio's video
+monitor reads live jobs through `Sidekiq::WorkSet`, handling both Sidekiq 6
+work hashes and Sidekiq 7/8 `Work#payload` objects.
+
+**Action required when moving to Sidekiq 7 or 8:** Confirm the host app's Redis
+server and Sidekiq Pro versions support the selected Sidekiq major. Replace
+namespace-based Sidekiq configuration and review code that calls
+`Sidekiq.redis` or reads live jobs through `Sidekiq::Workers`. Coordinate the
+worker rollout with the host app.
+
+### Check dirty tracking in post-save callbacks
+
+Callbacks such as `after_save` must inspect the change that was just persisted
+with `saved_change_to_attribute?` and `attribute_before_last_save`. The older
+`attribute_changed?` and `attribute_was` methods inspect pending changes, which
+have already been cleared by then.
+
+Folio's `Folio::FilePlacement::Base#run_after_save_job!` previously used the
+pending-change methods, so reassigning a placement's file skipped refresh jobs
+for both the old and new files. A focused regression in
+`test/models/folio/file_placement_test.rb` now covers both refreshes and an
+unrelated placement update. This was observed under Rails 8.1; it is not
+evidence that Rails 8 introduced the bug.
+
+**Action required:** Audit host-app post-save callbacks and file-placement
+overrides for the same pattern.
+
+### AASM 6 changes failed persistence behavior
+
+AASM 6 defaults `whiny_persistence` to `true` (it was `false` in AASM 5).
+Folio explicitly sets `whiny_persistence: false` on its state machines so a
+bang event that cannot persist an invalid record returns `false` instead of
+raising `ActiveRecord::RecordInvalid`.
+
+**Action required:** Supply `whiny_persistence` explicitly in every host-app
+`aasm` declaration. Use `aasm whiny_persistence: false do` to keep the previous
+behavior, or `true` if the app intends to raise on failed persistence. Check
+any error handling around bang events when choosing the value.
+
+### ViewComponent templates require an explicit format
+
+ViewComponent now warns when a component template does not declare its format.
+Folio component templates use the `.html.slim` convention.
+
+**Action required:** Rename ViewComponent templates in your app and packs from
+`*_component.slim` to `*_component.html.slim`. Update custom generators that
+create component templates. Ordinary Rails views and legacy Cell templates do
+not need this rename.
+
 ### Console AASM email modal is a ViewComponent
 
 `cell("folio/console/aasm/email_modal")` is replaced by
@@ -15,6 +156,15 @@ removed.
 console layout with `cell("folio/console/aasm/email_modal")`), switch to the
 component. I18n keys moved from `folio.console.aasm.email_modal` to
 `folio.console.aasm.email_modal_component`.
+
+### activejob-uniqueness is now activejob-unique
+
+Folio now depends on `activejob-unique`, the Rails 8.1-compatible maintained
+fork of `activejob-uniqueness`.
+
+**Action required:** If your app explicitly depends on
+`activejob-uniqueness`, replace it with `activejob-unique`. The
+`ActiveJob::Uniqueness` API is unchanged.
 
 ## 7.2.* to 7.3.0
 

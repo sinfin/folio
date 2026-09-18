@@ -165,5 +165,5 @@ Where `tag` is a component method returning e.g. `{ tag: :a, href: @url, class: 
 
 ## Reference
 
-- Examples: `app/components/folio/console/ui/*_component.slim`
+- Examples: `app/components/folio/console/ui/*_component.html.slim`
 - ViewComponent conventions: [`.skills/folio-view-component/SKILL.md`](../folio-view-component/SKILL.md)

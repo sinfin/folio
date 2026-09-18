@@ -20,7 +20,7 @@ class Folio::MoleculeGenerator < Folio::AtomGenerator
   def component
     unless options[:cell]
       template "component.rb.tt", "app/components/#{application_namespace_path}/molecule/#{name}_component.rb"
-      template "component.slim.tt", "app/components/#{application_namespace_path}/molecule/#{name}_component.slim"
+      template "component.html.slim.tt", "app/components/#{application_namespace_path}/molecule/#{name}_component.html.slim"
       template "component_test.rb.tt", "test/components/#{application_namespace_path}/molecule/#{name}_component_test.rb"
     end
   end

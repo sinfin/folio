@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::RecaptchaFieldComponent < ApplicationComponent
-  include ::Recaptcha::ClientHelper
+  include ::Recaptcha::Adapters::ViewMethods
 
   def initialize(f:)
     @f = f

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Dummy::Blog::Articles::IndexComponent < ApplicationComponent
-  include Pagy::Backend
+  include Pagy::Method
 
   def initialize(articles_scope: nil, title: nil, perex: nil, author: nil, topic: nil)
     @articles_scope = articles_scope || Dummy::Blog::Article
@@ -47,9 +47,13 @@ class Dummy::Blog::Articles::IndexComponent < ApplicationComponent
                        .ordered
 
     if params[:page].blank? || !params[:page].match?(/\A\d+\z/) || params[:page].to_i <= 1
-      @pagy, @articles = pagy(articles, items: Dummy::Blog::ARTICLE_PAGY_ITEMS + 1)
+      @pagy, @articles = pagy(:offset,
+                              articles,
+                              limit: Dummy::Blog::ARTICLE_PAGY_ITEMS + 1)
     else
-      @pagy, @articles = pagy(articles.offset(1), items: Dummy::Blog::ARTICLE_PAGY_ITEMS, outset: 1)
+      @pagy, @articles = pagy(:offset,
+                              articles.offset(1),
+                              limit: Dummy::Blog::ARTICLE_PAGY_ITEMS)
     end
   end
 end

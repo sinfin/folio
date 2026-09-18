@@ -111,6 +111,8 @@ class Folio::UiGenerator < Rails::Generators::NamedBase
   end
 
   def update_i18n_ymls
+    return if options[:pretend]
+
     I18n.available_locales.each do |locale|
       app_path = folio_generators_root.join("config/locales/ui.#{locale}.yml")
       template_path = Folio::Engine.root.join("lib/generators/folio/ui/templates/ui.#{locale}.yml")

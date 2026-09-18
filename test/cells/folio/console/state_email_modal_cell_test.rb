@@ -9,7 +9,7 @@ class Folio::Console::StateEmailModalCellTest < Folio::Console::CellTest
   class TestRecordWithEmailModal < Dummy::TestRecord
     include Folio::HasAasmStates
 
-    aasm do
+    aasm whiny_persistence: false do
       state :submitted, initial: true, color: "red"
       state :handled, color: "green"
 

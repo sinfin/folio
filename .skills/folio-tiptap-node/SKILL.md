@@ -33,7 +33,7 @@ This creates (under the host app's namespace, e.g. `MyApp`):
 |------|---------|
 | `app/models/my_app/tiptap/node/contents/text.rb` | Node model (`< Folio::Tiptap::Node`) |
 | `app/components/my_app/tiptap/node/contents/text_component.rb` | View component |
-| `app/components/my_app/tiptap/node/contents/text_component.slim` | Slim template |
+| `app/components/my_app/tiptap/node/contents/text_component.html.slim` | Slim template |
 | `test/components/my_app/tiptap/node/contents/text_component_test.rb` | Component test |
 | `app/components/my_app/tiptap/node/base_component.rb` | Base component (created once, shared `initialize(node:, tiptap_content_information:)`) |
 | `config/locales/tiptap/nodes.*.yml` | i18n entries |

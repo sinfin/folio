@@ -26,4 +26,15 @@ class Folio::EmbedMiddlewareTest < ActionDispatch::IntegrationTest
 
     assert_equal etag1, etag2, "ETag should be the same for identical content"
   end
+
+  test "middleware returns lowercase response header names" do
+    middleware = Rack::Folio::EmbedMiddleware.new(nil)
+    _, headers, = middleware.render_embed_html(nil)
+
+    assert_equal headers.keys.map(&:downcase), headers.keys
+
+    _, not_modified_headers, = middleware.render_embed_html(headers.fetch("etag"))
+
+    assert_equal not_modified_headers.keys.map(&:downcase), not_modified_headers.keys
+  end
 end

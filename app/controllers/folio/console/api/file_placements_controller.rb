@@ -5,7 +5,7 @@ class Folio::Console::Api::FilePlacementsController < Folio::Console::Api::BaseC
     file = Folio::File.find(params[:file_id])
     authorize!(:show, file)
 
-    pagination, records = pagy(file.file_placements, items: 20)
+    pagination, records = pagy(:offset, file.file_placements, limit: 20)
 
     if file.file_placements_count != pagination.count
       file.update_column(:file_placements_count, pagination.count)

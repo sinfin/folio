@@ -1,15 +1,13 @@
 # frozen_string_literal: true
 
 class Dummy::Ui::PagyComponent < ApplicationComponent
-  include Pagy::Frontend
-
   def initialize(pagy:, class_name: nil)
     @pagy = pagy
     @class_name = class_name
   end
 
   def link
-    @link ||= pagy_anchor(@pagy)
+    @link ||= @pagy.send(:a_lambda)
   end
 
   def build_link(item, label, aria: nil)
@@ -20,7 +18,7 @@ class Dummy::Ui::PagyComponent < ApplicationComponent
   end
 
   def series_as_hashes
-    @pagy.series.map do |item|
+    @pagy.send(:series).map do |item|
       h = { item: }
 
       case item

@@ -24,7 +24,7 @@ rails generate folio:component MyComponentNamespace::MyComponent
 
 This command will:
 - Create a new component class in `app/components/my_application_namespace/my_component_namespace/my_component.rb`
-- Generate a corresponding Slim template
+- Generate a corresponding `.html.slim` template
 - Set up the correct directory structure and naming conventions
 
 For more details and advanced options, see the [Extending & Customization](extending.md) chapter.
@@ -41,7 +41,7 @@ app/components/
     ...
     my_component_namespace/
       my_component.rb    # Component class
-      my_component.slim  # Slim template
+      my_component.html.slim  # Slim template
       my_component.sass  # Component styles (BEM)
       my_component.js    # Optional JS (Stimulus/React)
 ```

@@ -94,7 +94,7 @@ class Dummy::UiController < ApplicationController
   end
 
   def pagination
-    @pagy, _records = pagy(Dummy::Blog::Article, items: 1)
+    @pagy, _records = pagy(:offset, Dummy::Blog::Article, limit: 1)
   end
 
   def images

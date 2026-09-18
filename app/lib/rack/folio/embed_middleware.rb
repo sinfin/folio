@@ -23,14 +23,14 @@ module Rack
         # Check if client has current version via If-None-Match header
         if if_none_match == etag
           [304, {
-            "ETag" => etag,
-            "Cache-Control" => "max-age=15, public, must-revalidate, stale-while-revalidate=15, stale-if-error=300"
+            "etag" => etag,
+            "cache-control" => "max-age=15, public, must-revalidate, stale-while-revalidate=15, stale-if-error=300"
           }, []]
         else
           [200, {
-            "Content-Type" => "text/html",
-            "ETag" => etag,
-            "Cache-Control" => "max-age=15, public, must-revalidate, stale-while-revalidate=15, stale-if-error=300"
+            "content-type" => "text/html",
+            "etag" => etag,
+            "cache-control" => "max-age=15, public, must-revalidate, stale-while-revalidate=15, stale-if-error=300"
           }, [content]]
         end
       end

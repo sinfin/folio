@@ -48,8 +48,6 @@ export const makeFolioTiptapStyledParagraphCommands = (
       default:
         return Star;
     }
-
-    return Star;
   };
 
   const commands = styledParagraphVariants.map((styledParagraphVariant) => {

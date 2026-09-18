@@ -30,9 +30,9 @@ description: >-
 |------|-----------|
 | `Folio::Console::Ui::FlagCell` | `Folio::Console::Ui::FlagComponent` |
 | `app/cells/folio/console/ui/flag_cell.rb` | `app/components/folio/console/ui/flag_component.rb` |
-| `app/cells/folio/console/ui/flag/show.slim` | `app/components/folio/console/ui/flag_component.slim` |
+| `app/cells/folio/console/ui/flag/show.slim` | `app/components/folio/console/ui/flag_component.html.slim` |
 
-Default ViewComponent template is the underscored component name (**`flag_component.slim`**), not **`show.slim`**, unless you override **`template_name`** (avoid unless necessary).
+Default ViewComponent template is the underscored component name (**`flag_component.html.slim`**), not **`show.slim`**, unless you override **`template_name`** (avoid unless necessary).
 
 **Base class:** map **`Folio::ApplicationCell`** / **`Folio::ConsoleCell`** to the same layer as in folio-view-component (`Folio::ApplicationComponent` vs `Folio::Console::ApplicationComponent` vs host **`ApplicationComponent`**).
 

@@ -15,9 +15,13 @@ class Dummy::Blog::BaseController < ApplicationController
 
     def set_pagy_and_articles_from_scope(scope)
       if params[:page].blank? || !params[:page].match?(/\A\d+\z/) || params[:page].to_i <= 1
-        @pagy, @articles = pagy(scope, items: Dummy::Blog::ARTICLE_PAGY_ITEMS + 1)
+        @pagy, @articles = pagy(:offset,
+                                scope,
+                                limit: Dummy::Blog::ARTICLE_PAGY_ITEMS + 1)
       else
-        @pagy, @articles = pagy(scope.offset(1), items: Dummy::Blog::ARTICLE_PAGY_ITEMS, offset: 1)
+        @pagy, @articles = pagy(:offset,
+                                scope.offset(1),
+                                limit: Dummy::Blog::ARTICLE_PAGY_ITEMS)
       end
     end
 end

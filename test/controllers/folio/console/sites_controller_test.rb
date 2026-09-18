@@ -17,6 +17,6 @@ class Folio::Console::SitesControllerTest < Folio::Console::BaseControllerTest
       }
     }
 
-    assert_equal "foo", Folio::Current.main_site.title
+    assert_equal "foo", Folio::Current.main_site.reload.title
   end
 end

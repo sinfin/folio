@@ -292,7 +292,7 @@ Videos imported from old Wowza/CDN77 system have `legacy_data["skip_cra_encoding
 | `app/components/host_app/cra_media_cloud/player_component.rb` | OTT player rendering with manifest-based gate, subtitles, Gemius analytics |
 | `app/components/host_app/cra_media_cloud/player_component.js` | Stimulus controller: player lifecycle, viewport awareness, multi-instance coordination |
 | `app/components/folio/console/host_app/files/additional_html_component.rb` | Console video detail: iframe player (manifest gate) + manifest URL links |
-| `app/components/folio/console/host_app/files/additional_html_component.slim` | Template with manifest gate — shows player iframe or "not ready" |
+| `app/components/folio/console/host_app/files/additional_html_component.html.slim` | Template with manifest gate — shows player iframe or "not ready" |
 | `app/jobs/host_app/import_video_from_url_job.rb` | Legacy video import from article URLs |
 | `app/lib/host_app/article_storage/video_creator.rb` | Creates video records from Article Storage API |
 | `lib/tasks/cra_audit.rake` | CRA audit rake task (330 lines) |

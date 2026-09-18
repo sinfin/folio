@@ -115,7 +115,9 @@ export function FolioEditor({
   // honor the per-user "mobile first" default there — otherwise a rich-text
   // field could start narrowed with no toolbar button to switch back.
   const [responsivePreviewEnabled, setResponsivePreviewEnabled] =
-    React.useState<boolean>(blockEditor ? (defaultResponsivePreview ?? false) : false);
+    React.useState<boolean>(
+      blockEditor ? (defaultResponsivePreview ?? false) : false,
+    );
   const [initializedContent, setInitializedContent] =
     React.useState<boolean>(false);
   const [editorCreated, setEditorCreated] = React.useState<boolean>(false);
@@ -315,29 +317,35 @@ export function FolioEditor({
               table: false, // disable default table to use our custom one
             }),
             FolioTiptapCommandsExtension.configure({
-              suggestion: blockEditor
-                ? {
-                    ...folioTiptapCommandsSuggestionWithoutItems,
-                    items: makeFolioTiptapCommandsSuggestionItems([
+              suggestion: {
+                ...FolioTiptapCommandsExtension.options.suggestion,
+                ...(blockEditor
+                  ? {
+                      ...folioTiptapCommandsSuggestionWithoutItems,
+                      items: makeFolioTiptapCommandsSuggestionItems([
+                        textStylesCommandGroup,
+                        ListsCommandGroup,
+                        layoutsCommandGroup,
+                        ...(folioTiptapConfig.nodes &&
+                        folioTiptapConfig.nodes.length
+                          ? (() => {
+                              const nodeGroups =
+                                makeFolioTiptapNodesCommandGroup(
+                                  folioTiptapConfig.nodes,
+                                  folioTiptapConfig.node_groups,
+                                );
+                              // Handle both single group and array of groups
+                              return Array.isArray(nodeGroups)
+                                ? nodeGroups
+                                : [nodeGroups];
+                            })()
+                          : []),
+                      ]),
+                    }
+                  : makeFolioTiptapCommandsSuggestion({
                       textStylesCommandGroup,
-                      ListsCommandGroup,
-                      layoutsCommandGroup,
-                      ...(folioTiptapConfig.nodes &&
-                      folioTiptapConfig.nodes.length
-                        ? (() => {
-                            const nodeGroups = makeFolioTiptapNodesCommandGroup(
-                              folioTiptapConfig.nodes,
-                              folioTiptapConfig.node_groups,
-                            );
-                            // Handle both single group and array of groups
-                            return Array.isArray(nodeGroups)
-                              ? nodeGroups
-                              : [nodeGroups];
-                          })()
-                        : []),
-                    ]),
-                  }
-                : makeFolioTiptapCommandsSuggestion({ textStylesCommandGroup }),
+                    })),
+              },
             }),
           ]
         : []),
