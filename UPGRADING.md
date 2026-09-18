@@ -89,20 +89,37 @@ positional options hash to `JSON.parse`, while JSON 3 requires keyword options.
 **Action required:** Remove any host-app pin to JSON 3 and resolve the bundle
 with JSON 2 until Rails supports JSON 3.
 
-### Sidekiq 7 changes its Redis integration
+### Sidekiq 7 and 8 change Redis integration
 
-Folio allows Sidekiq 6.5 and 7 for a staged worker rollout; its development
-bundle resolves Sidekiq 7. Sidekiq 7 uses `redis-client` internally, requires
-a Redis 6.2+ server, and no longer supports Redis namespaces. Folio's direct
-`redis` dependency remains on 4.x for its batch-service API. Folio's video
+Folio allows Sidekiq 6.5 through 8 for a staged worker rollout; its development
+bundle resolves Sidekiq 8.1.7. Sidekiq 7 and 8 use `redis-client` internally
+and do not support Redis namespaces. Folio's direct `redis` dependency remains
+on 4.x for its batch-service API. Folio's video
 monitor reads live jobs through `Sidekiq::WorkSet`, handling both Sidekiq 6
-work hashes and Sidekiq 7 `Work#payload` objects.
+work hashes and Sidekiq 7/8 `Work#payload` objects.
 
-**Action required when moving to Sidekiq 7:** Confirm the host app's Redis
-server and Sidekiq Pro versions support Sidekiq 7. Replace namespace-based
-Sidekiq configuration and review code that calls `Sidekiq.redis` or reads
-live jobs through `Sidekiq::Workers`. Sidekiq 8 and Pro 8 require a separate
-rollout; this Folio version does not permit Sidekiq 8.
+**Action required when moving to Sidekiq 7 or 8:** Confirm the host app's Redis
+server and Sidekiq Pro versions support the selected Sidekiq major. Replace
+namespace-based Sidekiq configuration and review code that calls
+`Sidekiq.redis` or reads live jobs through `Sidekiq::Workers`. Coordinate the
+worker rollout with the host app.
+
+### Check dirty tracking in post-save callbacks
+
+Callbacks such as `after_save` must inspect the change that was just persisted
+with `saved_change_to_attribute?` and `attribute_before_last_save`. The older
+`attribute_changed?` and `attribute_was` methods inspect pending changes, which
+have already been cleared by then.
+
+Folio's `Folio::FilePlacement::Base#run_after_save_job!` previously used the
+pending-change methods, so reassigning a placement's file skipped refresh jobs
+for both the old and new files. A focused regression in
+`test/models/folio/file_placement_test.rb` now covers both refreshes and an
+unrelated placement update. This was observed under Rails 8.1; it is not
+evidence that Rails 8 introduced the bug.
+
+**Action required:** Audit host-app post-save callbacks and file-placement
+overrides for the same pattern.
 
 ### AASM 6 changes failed persistence behavior
 

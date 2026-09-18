@@ -156,4 +156,27 @@ class Folio::FilePlacementTest < ActiveSupport::TestCase
                  "Placement should be updated to nil when file is updated to nil"
     end
   end
+
+  test "replacing a placement file refreshes both the old and new files" do
+    original = create(:folio_file_image)
+    replacement = create(:folio_file_image)
+    page = create(:folio_page)
+    page.cover = original
+    page.save!
+
+    placement = page.cover_placement.reload
+    clear_enqueued_jobs
+
+    assert_enqueued_jobs 2, only: Folio::Files::AfterSaveJob do
+      placement.update!(file: replacement)
+    end
+    assert_enqueued_with(job: Folio::Files::AfterSaveJob,
+                         args: ->(args) { args.first == original })
+    assert_enqueued_with(job: Folio::Files::AfterSaveJob,
+                         args: ->(args) { args.first == replacement })
+
+    assert_enqueued_jobs 0, only: Folio::Files::AfterSaveJob do
+      placement.update!(title: "Updated placement title")
+    end
+  end
 end
