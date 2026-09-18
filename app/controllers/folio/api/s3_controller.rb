@@ -16,6 +16,7 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
     complete_multipart_upload
     abort_multipart_upload
   ]
+  before_action :get_part_number, only: %i[sign_part]
 
   def before # return settings for S3 file upload
     presigned_url = test_aware_presign_url(s3_path: @s3_path, method_name: :put_object)
@@ -38,9 +39,9 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
 
     response = s3_client.create_multipart_upload(**options)
 
+    # Uppy reads uploadId/key, Folio listeners read s3_path/file_name/jwt.
     render json: {
       uploadId: response.upload_id,
-      upload_id: response.upload_id,
       key: @s3_path,
       s3_path: @s3_path,
       file_name: @file_name,
@@ -53,8 +54,8 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
       :upload_part,
       bucket: s3_bucket,
       key: test_aware_s3_path(@s3_path),
-      upload_id: upload_id_param,
-      part_number: part_number_param,
+      upload_id: params.require(:uploadId),
+      part_number: @part_number,
     )
 
     render json: { url: presigned_url }
@@ -64,22 +65,18 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
     response = s3_client.complete_multipart_upload(
       bucket: s3_bucket,
       key: test_aware_s3_path(@s3_path),
-      upload_id: upload_id_param,
+      upload_id: params.require(:uploadId),
       multipart_upload: { parts: multipart_upload_parts },
     )
 
-    render json: {
-      location: response.try(:location),
-      key: @s3_path,
-      s3_path: @s3_path,
-    }
+    render json: { location: response.location }
   end
 
   def abort_multipart_upload
     s3_client.abort_multipart_upload(
       bucket: s3_bucket,
       key: test_aware_s3_path(@s3_path),
-      upload_id: upload_id_param,
+      upload_id: params.require(:uploadId),
     )
 
     render json: {}
@@ -155,36 +152,30 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
     def get_file_name_and_s3_path
       @file_name = params.require(:file_name).split(".").map(&:parameterize).join(".")
 
-      session[:init] = true unless session.id
-
       @s3_path = [
-        "tmp_folio_file_uploads",
-        "session",
-        session.id.public_id,
+        s3_upload_session_prefix,
         SecureRandom.urlsafe_base64(16),
         @file_name,
       ].join("/")
     end
 
+    # Multipart part/complete/abort work on a key created by
+    # create_multipart_upload, so it must belong to the current session.
     def get_existing_s3_path
       @s3_path = params[:key].presence || params[:s3_path].presence
 
-      unless @s3_path&.start_with?(s3_upload_path_prefix)
+      unless @s3_path&.start_with?("#{s3_upload_session_prefix}/")
         render json: {}, status: :unprocessable_content
       end
-    end
-
-    def s3_upload_path_prefix
-      "tmp_folio_file_uploads/session/"
     end
 
     def s3_upload_session_prefix
       session[:init] = true unless session.id
 
       [
-        s3_upload_path_prefix.delete_suffix("/"),
+        "tmp_folio_file_uploads",
+        "session",
         session.id.public_id,
-        "",
       ].join("/")
     end
 
@@ -192,26 +183,19 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
       render json: {}, status: :not_found unless Rails.application.config.folio_direct_s3_multipart_upload_enabled
     end
 
-    def upload_id_param
-      params[:uploadId].presence || params[:upload_id].presence || params.require(:upload_id)
-    end
+    # S3 allows part numbers 1..10000.
+    def get_part_number
+      @part_number = params.require(:partNumber).to_i
 
-    def part_number_param
-      part_number = (params[:partNumber].presence || params[:part_number].presence || params.require(:part_number)).to_i
-
-      if part_number < 1 || part_number > 10_000
-        raise ActionController::BadRequest, "Invalid S3 multipart part number"
+      unless @part_number.between?(1, 10_000)
+        render json: {}, status: :bad_request
       end
-
-      part_number
     end
 
+    # Uppy sends parts as [{ PartNumber:, ETag: }].
     def multipart_upload_parts
       params.require(:parts).map do |part|
-        {
-          part_number: (part[:PartNumber].presence || part[:part_number].presence || part[:partNumber]).to_i,
-          etag: part[:ETag].presence || part[:etag],
-        }
+        { part_number: part.require(:PartNumber).to_i, etag: part.require(:ETag) }
       end
     end
 

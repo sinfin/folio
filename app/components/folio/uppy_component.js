@@ -145,27 +145,7 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
         getUploadParameters: (file) => {
           return window.Folio.Api.apiPost('/folio/api/s3/before', { ...args, file_name: file.name })
             .then((response) => {
-              const metadata = {
-                s3_path: response.s3_path,
-                jwt: response.jwt,
-                sanitized_name: response.file_name
-              }
-
-              this.uppy.setFileMeta(file.id, metadata)
-
-              const updatedFile = this.uppy.getFile(file.id) || file
-
-              this.dispatch('upload-start', {
-                detail: {
-                  file: this.uppyFilePayload({
-                    ...updatedFile,
-                    meta: {
-                      ...updatedFile.meta,
-                      ...metadata
-                    }
-                  })
-                }
-              })
+              this.uppyUploadStart(file, response)
 
               return {
                 method: 'PUT',
@@ -187,15 +167,11 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
               file_name: file.name,
               content_type: file.type
             }).then((response) => {
-              this.uppy.setFileMeta(file.id, {
-                s3_path: response.s3_path,
-                jwt: response.jwt,
-                sanitized_name: response.file_name
-              })
+              this.uppyUploadStart(file, response)
 
               return {
-                uploadId: response.uploadId || response.upload_id,
-                key: response.key || response.s3_path
+                uploadId: response.uploadId,
+                key: response.key
               }
             }).catch((error) => {
               console.error('[Uppy] Failed to create S3 multipart upload:', error)
@@ -208,25 +184,18 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
               uploadId: partData.uploadId,
               partNumber: partData.partNumber
             }).then((response) => {
-              return {
-                url: response.url,
-                headers: response.headers || {}
-              }
+              return { url: response.url }
             }).catch((error) => {
               console.error('[Uppy] Failed to sign S3 multipart upload part:', error)
               throw new Error(window.Folio.i18n(this.constructor.ERROR_MESSAGES, 'failedToPrepareUpload'))
             })
           },
-          completeMultipartUpload: (file, uploadData) => {
+          completeMultipartUpload: (_file, uploadData) => {
             return window.Folio.Api.apiPost('/folio/api/s3/complete_multipart_upload', {
               key: uploadData.key,
               uploadId: uploadData.uploadId,
               parts: uploadData.parts
             }).then((response) => {
-              if (response.s3_path) {
-                this.uppy.setFileMeta(file.id, { s3_path: response.s3_path })
-              }
-
               return { location: response.location }
             }).catch((error) => {
               console.error('[Uppy] Failed to complete S3 multipart upload:', error)
@@ -345,6 +314,33 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
     }
 
     this.dispatch('complete', { detail: { result } })
+  }
+
+  // Shared by the single-part and multipart paths: listeners (e.g. private
+  // attachments) create their pending row from this event and only call
+  // /folio/api/s3/after for files they saw start.
+  uppyUploadStart (file, response) {
+    const metadata = {
+      s3_path: response.s3_path,
+      jwt: response.jwt,
+      sanitized_name: response.file_name
+    }
+
+    this.uppy.setFileMeta(file.id, metadata)
+
+    const updatedFile = this.uppy.getFile(file.id) || file
+
+    this.dispatch('upload-start', {
+      detail: {
+        file: this.uppyFilePayload({
+          ...updatedFile,
+          meta: {
+            ...updatedFile.meta,
+            ...metadata
+          }
+        })
+      }
+    })
   }
 
   uppyUploadSuccess (file) {

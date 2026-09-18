@@ -33,8 +33,8 @@ class Folio::Api::S3ControllerTest < Folio::BaseControllerTest
       @calls = []
     end
 
-    def presigned_url(method_name, **kwargs)
-      @calls << [method_name, kwargs]
+    def presigned_url(method_name, params = {})
+      @calls << [method_name, params]
       "https://example.com/presigned-part"
     end
   end
@@ -143,18 +143,43 @@ class Folio::Api::S3ControllerTest < Folio::BaseControllerTest
     end
   end
 
-  test "multipart endpoints are disabled by default" do
-    original = Rails.application.config.folio_direct_s3_multipart_upload_enabled
-    Rails.application.config.folio_direct_s3_multipart_upload_enabled = false
+  test "multipart endpoints respond not_found when disabled" do
+    Rails.application.config.stub(:folio_direct_s3_multipart_upload_enabled, false) do
+      with_stubbed_s3 do |fake_client, fake_presigner|
+        post create_multipart_upload_folio_api_s3_path, params: {
+          file_name: "Large video.mp4",
+          type: "Folio::File::Video",
+        }
 
-    post create_multipart_upload_folio_api_s3_path, params: {
-      file_name: "Large video.mp4",
-      type: "Folio::File::Video",
-    }
+        assert_response :not_found
 
-    assert_response :not_found
-  ensure
-    Rails.application.config.folio_direct_s3_multipart_upload_enabled = original
+        multipart_part_requests("tmp_folio_file_uploads/session/foo/bar/large-video.mp4").each do |path, params|
+          post(path, params:)
+          assert_response :not_found, path
+        end
+
+        assert_empty fake_client.calls
+        assert_empty fake_presigner.calls
+      end
+    end
+  end
+
+  test "multipart endpoints are unauthorized for no admin" do
+    sign_out @superadmin
+
+    Rails.application.config.stub(:folio_direct_s3_multipart_upload_enabled, true) do
+      post create_multipart_upload_folio_api_s3_path, params: {
+        file_name: "Large video.mp4",
+        type: "Folio::File::Video",
+      }
+
+      assert_response :unauthorized
+
+      multipart_part_requests("tmp_folio_file_uploads/session/foo/bar/large-video.mp4").each do |path, params|
+        post(path, params:)
+        assert_response :unauthorized, path
+      end
+    end
   end
 
   test "create_multipart_upload starts S3 multipart upload when enabled" do
@@ -168,8 +193,8 @@ class Folio::Api::S3ControllerTest < Folio::BaseControllerTest
 
       json = response.parsed_body
       assert_equal "upload-123", json["uploadId"]
-      assert_equal "upload-123", json["upload_id"]
       assert_equal "large-video.mp4", json["file_name"]
+      assert json["key"].start_with?("tmp_folio_file_uploads/session/")
       assert json["key"].end_with?("/large-video.mp4")
       assert_equal json["key"], json["s3_path"]
 
@@ -199,6 +224,24 @@ class Folio::Api::S3ControllerTest < Folio::BaseControllerTest
       assert_equal "test_files/#{key}", kwargs[:key]
       assert_equal "upload-123", kwargs[:upload_id]
       assert_equal 2, kwargs[:part_number]
+    end
+  end
+
+  test "sign_part rejects part numbers outside the S3 range" do
+    with_enabled_multipart_upload do |_fake_client, fake_presigner|
+      key = create_multipart_upload_key
+
+      [0, 10_001].each do |part_number|
+        post sign_part_folio_api_s3_path, params: {
+          key:,
+          uploadId: "upload-123",
+          partNumber: part_number,
+        }
+
+        assert_response :bad_request, "partNumber #{part_number}"
+      end
+
+      assert_empty fake_presigner.calls
     end
   end
 
@@ -251,6 +294,35 @@ class Folio::Api::S3ControllerTest < Folio::BaseControllerTest
     end
   end
 
+  test "multipart part endpoints reject keys outside the upload prefix" do
+    with_enabled_multipart_upload do |fake_client, fake_presigner|
+      multipart_part_requests("foo/large-video.mp4").each do |path, params|
+        post(path, params:)
+        assert_response :unprocessable_content, path
+      end
+
+      assert_empty fake_client.calls
+      assert_empty fake_presigner.calls
+    end
+  end
+
+  test "multipart part endpoints reject keys of other sessions" do
+    with_enabled_multipart_upload do |fake_client, fake_presigner|
+      key = create_multipart_upload_key
+      foreign_key = key.sub(%r{\Atmp_folio_file_uploads/session/[^/]+/}, "tmp_folio_file_uploads/session/other-session/")
+      assert_not_equal key, foreign_key
+      fake_client.calls.clear
+
+      multipart_part_requests(foreign_key).each do |path, params|
+        post(path, params:)
+        assert_response :unprocessable_content, path
+      end
+
+      assert_empty fake_client.calls
+      assert_empty fake_presigner.calls
+    end
+  end
+
   private
     def create_multipart_upload_key
       post create_multipart_upload_folio_api_s3_path, params: {
@@ -263,30 +335,43 @@ class Folio::Api::S3ControllerTest < Folio::BaseControllerTest
       response.parsed_body["key"]
     end
 
-    def with_enabled_multipart_upload
-      original_enabled = Rails.application.config.folio_direct_s3_multipart_upload_enabled
-      Rails.application.config.folio_direct_s3_multipart_upload_enabled = true
-      original_env = ENV.to_h.slice("S3_BUCKET_NAME", "S3_REGION", "AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY")
-      ENV["S3_BUCKET_NAME"] = "dummy_bucket"
-      ENV["S3_REGION"] = "eu-central-1"
-      ENV["AWS_ACCESS_KEY_ID"] = "access-key-id"
-      ENV["AWS_SECRET_ACCESS_KEY"] = "secret-access-key"
+    def multipart_part_requests(key)
+      {
+        sign_part_folio_api_s3_path => { key:, uploadId: "upload-123", partNumber: 1 },
+        complete_multipart_upload_folio_api_s3_path => { key:, uploadId: "upload-123", parts: [{ "PartNumber" => 1, "ETag" => "\"etag-1\"" }] },
+        abort_multipart_upload_folio_api_s3_path => { key:, uploadId: "upload-123" },
+      }
+    end
 
+    def with_enabled_multipart_upload(&block)
+      Rails.application.config.stub(:folio_direct_s3_multipart_upload_enabled, true) do
+        with_stubbed_s3(&block)
+      end
+    end
+
+    def with_stubbed_s3
       fake_client = FakeS3Client.new
       fake_presigner = FakeS3Presigner.new
 
       Dragonfly.app.stub(:datastore, Dragonfly::S3DataStore.new) do
-        Aws::S3::Client.stub(:new, fake_client) do
-          Aws::S3::Presigner.stub(:new, fake_presigner) do
-            yield fake_client, fake_presigner
+        Folio::S3::Client.stub(:bucket_name, "dummy_bucket") do
+          Folio::S3::Client.stub(:build_client, fake_client) do
+            Aws::S3::Presigner.stub(:new, fake_presigner) do
+              settle_session
+              fake_client.calls.clear
+              fake_presigner.calls.clear
+
+              yield fake_client, fake_presigner
+            end
           end
         end
       end
-    ensure
-      Rails.application.config.folio_direct_s3_multipart_upload_enabled = original_enabled
-      original_env.each { |key, value| ENV[key] = value }
-      (["S3_BUCKET_NAME", "S3_REGION", "AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"] - original_env.keys).each do |key|
-        ENV.delete(key)
-      end
+    end
+
+    # Warden renews the session id on the first request after sign_in. Settle it
+    # so multipart keys created afterwards stay bound to one session.
+    def settle_session
+      post before_folio_api_s3_path, params: { file_name: "settle.jpg" }
+      assert_response :success
     end
 end
