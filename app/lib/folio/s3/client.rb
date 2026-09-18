@@ -4,15 +4,25 @@ module Folio::S3::Client
   LOCAL_TEST_PATH = "/tmp/folio_tmp_user_photo_uploads"
   S3_TEST_PATH = "test_files"
 
-  def s3_client
-    @s3_client ||= Aws::S3::Client.new(
-    region: ENV.fetch("S3_REGION"),
-    credentials: Aws::Credentials.new(
-      ENV.fetch("AWS_ACCESS_KEY_ID"),
-      ENV.fetch("AWS_SECRET_ACCESS_KEY"),
-      ENV.fetch("AWS_SESSION_TOKEN", nil)
+  # ENV-backed accessors live on the module so tests can stub them
+  # instead of mutating ENV.
+  def self.build_client
+    Aws::S3::Client.new(
+      region: ENV.fetch("S3_REGION"),
+      credentials: Aws::Credentials.new(
+        ENV.fetch("AWS_ACCESS_KEY_ID"),
+        ENV.fetch("AWS_SECRET_ACCESS_KEY"),
+        ENV.fetch("AWS_SESSION_TOKEN", nil)
+      )
     )
-  )
+  end
+
+  def self.bucket_name
+    ENV.fetch("S3_BUCKET_NAME")
+  end
+
+  def s3_client
+    @s3_client ||= Folio::S3::Client.build_client
   end
 
   def s3_presigner
@@ -20,7 +30,7 @@ module Folio::S3::Client
   end
 
   def s3_bucket
-    @s3_bucket ||= ENV.fetch("S3_BUCKET_NAME")
+    @s3_bucket ||= Folio::S3::Client.bucket_name
   end
 
   def s3_ls(prefix:, max_keys: 1000)
