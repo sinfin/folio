@@ -2,6 +2,36 @@
 
 ## Unreleased
 
+### Password sign-ins are remembered
+
+`POST /users/sign_in` now sets a remember cookie even though the form sends no
+`remember_me` param. Before, Devise's database strategy assigned
+`remember_me = false` for the missing param, so `Folio::User#remember_me`
+defaulting to `"1"` only applied to OmniAuth, registration and confirmation
+sign-ins. Password sign-ins were session-only and ended when the browser
+closed.
+
+Effects with the Folio defaults:
+
+- users signed in with a password stay signed in for `config.remember_for`
+  (12 hours) across browser restarts,
+- the 30-minute `config.timeout_in` idle timeout only applies once the
+  remember cookie has expired (Devise skips the timeout while a valid remember
+  cookie exists),
+- signing out forgets the remember cookie, and with
+  `folio_users_sign_out_everywhere` also invalidates it on other devices.
+
+**Action required:** none if this is the intended behaviour. To keep
+session-only password sign-ins, override `Folio::User#remember_me` to return
+`false` (optionally per role), or render a `remember_me` checkbox in a host
+sign-in form — an explicit `remember_me=0` still opts out.
+
+The shared test helper `sign_out(user)` now performs the `GET /users/sign_out`
+request before Devise's test `sign_out`, so the remember cookie is forgotten
+like in a browser. Host tests that signed in with a password and then asserted
+the user could not sign in again on the same host may have relied on the
+missing cookie.
+
 ### Console AASM email modal is a ViewComponent
 
 `cell("folio/console/aasm/email_modal")` is replaced by
