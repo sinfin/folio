@@ -21,12 +21,11 @@ module Folio
         gem "rack-mini-profiler"
         gem "show_for"
         gem "sprockets", "~> 4.0"
-        gem "omniauth"
+        gem "omniauth", "~> 2.0"
         gem "omniauth-facebook"
         gem "omniauth-google-oauth2"
         gem "omniauth-twitter2"
         gem "omniauth-apple"
-        gem "omniauth-rails_csrf_protection"
 
         gem "faker", require: false
 

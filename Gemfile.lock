@@ -50,11 +50,10 @@ PATH
       mux_ruby (~> 5.1)
       net-sftp
       nokogiri
-      omniauth
+      omniauth (~> 2.0)
       omniauth-apple
       omniauth-facebook
       omniauth-google-oauth2
-      omniauth-rails_csrf_protection
       omniauth-twitter2
       ostruct
       pagy (~> 43.0)
@@ -521,9 +520,6 @@ GEM
     omniauth-oauth2 (1.9.0)
       oauth2 (>= 2.0.2, < 3)
       omniauth (~> 2.0)
-    omniauth-rails_csrf_protection (2.0.1)
-      actionpack (>= 4.2)
-      omniauth (~> 2.0)
     omniauth-twitter2 (1.2.0)
       omniauth
       omniauth-oauth2 (~> 1.0)
@@ -843,7 +839,6 @@ DEPENDENCIES
   omniauth-apple
   omniauth-facebook
   omniauth-google-oauth2
-  omniauth-rails_csrf_protection
   omniauth-twitter2
   packwerk
   premailer-rails
@@ -1023,7 +1018,6 @@ CHECKSUMS
   omniauth-facebook (11.0.0) sha256=f7b026a926b1b2e329b1e433bd940dfa2ed34bef17f87a86ecd19c6b356c0fa7
   omniauth-google-oauth2 (1.2.3) sha256=bdbab67e64e50b7902eee2dcfc2225575cefba15ab89a3b6e92c8947987c1da9
   omniauth-oauth2 (1.9.0) sha256=ed15f6d9d20991807ce114cc5b9c1453bce3645b64e51c68c90cff5ff153fee8
-  omniauth-rails_csrf_protection (2.0.1) sha256=c6e3204d7e3925bb537cb52d50fdfc9f05293f1a9d87c5d4ab4ca3a39ba8c32d
   omniauth-twitter2 (1.2.0) sha256=f71a396b89b38d021bd94b59445da5b77aba0e39c0a16ae552fc26cd11d18e9a
   orm_adapter (0.5.0) sha256=aa5d0be5d540cbb46d3a93e88061f4ece6a25f6e97d6a47122beb84fe595e9b9
   ostruct (0.6.3) sha256=95a2ed4a4bd1d190784e666b47b2d3f078e4a9efda2fccf18f84ddc6538ed912
