@@ -7,12 +7,12 @@ class Folio::UppyComponent < Folio::ApplicationComponent
                  inline: false,
                  max_number_of_files: nil,
                  existing_id: nil,
-                 max_file_size: 5 * 1024 * 1024 * 1024)
+                 max_file_size: nil)
     @file_type = file_type
     @inline = inline
     @max_number_of_files = max_number_of_files
     @existing_id = existing_id
-    @max_file_size = max_file_size
+    @max_file_size = max_file_size || Rails.application.config.folio_direct_s3_upload_max_file_size
   end
 
   def data
@@ -23,7 +23,9 @@ class Folio::UppyComponent < Folio::ApplicationComponent
                           max_number_of_files: @max_number_of_files || 0,
                           existing_id: @existing_id,
                           allowed_formats: allowed_formats&.join(","),
-                          max_file_size: @max_file_size
+                          max_file_size: @max_file_size,
+                          multipart_upload_enabled: Rails.application.config.folio_direct_s3_multipart_upload_enabled,
+                          multipart_upload_min_file_size: Rails.application.config.folio_direct_s3_multipart_upload_min_file_size,
                         })
   end
 

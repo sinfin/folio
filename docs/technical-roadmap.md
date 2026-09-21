@@ -12,8 +12,10 @@ Do the work in this order:
    coordinated change, followed by one QA regression.
 2. Rebuild the cache work from the old branches as a small, observable cache
    pack; do not rebase or merge the old branches wholesale.
-3. Build one Folio select for normal selects, multiselects, ordering, tags,
-   remote data, and filters. Use it while migrating menu administration, remove
+3. Build `Folio::SelectComponent` for normal selects, ordinary multiselects,
+   tags, remote data, and filters. Build
+   `Folio::Select::OrderedMultiselectComponent` using that select. Replace
+   Redactor rich-text inputs with Tiptap, migrate menu administration, remove
    the legacy React application, and update retained dependencies in the same
    change before one QA regression pass.
 4. Continue the Cells-to-components and jQuery-to-Stimulus cleanup, then move
@@ -34,7 +36,7 @@ Do the work in this order:
 | jQuery-bearing JS | 40 files, 249 matches | 13 files, 33 matches | About half of Folio's affected files are Cell sidecars and should migrate with their Cells. |
 | Components | 218 classes including packs/dummy components | 506 classes | main_app is already component-heavy; its work is mainly Folio call sites and interop. |
 | Direct outdated gems | Dozens; several constrained majors | Dozens; major gaps include job processing, error reporting, and support libraries | Handle runtime blockers in R0, then update the rest together in R2. |
-| Frontend dependency hotspots | Legacy React 16 administration application (~13k source lines), several select implementations, Bower-era vendor tree, current Tiptap application | Small root npm surface | Consolidate selects under one Folio API, migrate menu administration, then remove the legacy React application. |
+| Frontend dependency hotspots | Legacy React 16 administration application (~13k source lines), several select implementations, Redactor inputs, Bower-era vendor tree, current Tiptap application | Small root npm surface | Consolidate selects under one Folio API, replace Redactor inputs with Tiptap, migrate menu administration, then remove the legacy React application. |
 | Packwerk | Root enforcement and one AI pack are active | Loader/config exists, but only a non-enforced root package | Folio can add packs directly; main_app needs a first boundary plus CI enforcement. |
 
 As of the baseline date, Ruby 4.0.6 is the current Ruby 4 release, while Ruby
@@ -111,30 +113,39 @@ Exit criteria:
 - Published changes appear on the frontend without manual cache clearing.
 - The global cache-key query and its compatibility code are gone.
 
-### R2 — Dependency modernization and legacy React removal
+### R2 — Frontend modernization, dependency updates, and legacy React removal
 
-**Goal:** update the retained dependencies and remove the legacy React
-application in one coordinated change, followed by one full QA regression.
+**Goal:** consolidate enhanced selects, replace Redactor rich-text inputs with
+Tiptap, update retained dependencies, and remove the legacy React application
+in one coordinated change, followed by one full QA regression.
 
 Delivery sequence:
 
 1. During R0, update only the libraries needed for Ruby 4 and Rails 8.1.
-2. Add one Folio-owned select input and Stimulus controller. Its modes cover
-   single select, multiselect, ordered multiselect, tags, local or remote search,
-   and console filters.
-3. Migrate the existing Folio and main_app select variants to the shared input.
-   The underlying JavaScript library remains an implementation detail behind
-   the Folio API.
-4. Migrate menu administration to ViewComponents and Stimulus. Menu target
+2. Add `Folio::SelectComponent`, backed by Tom Select, for single select,
+   ordinary multiselect, tags, local or remote search, and filters. Follow the
+   shared-select asset and migration plan in
+   [`docs/plans/select_components_plan.md`](plans/select_components_plan.md).
+3. Migrate the existing Folio and main_app ordinary select variants to the
+   shared component. Tom Select remains an implementation detail behind the
+   Folio API.
+4. Build `Folio::Select::OrderedMultiselectComponent` separately. It uses
+   `Folio::SelectComponent` to add records and owns selected-item ordering,
+   association state, and form serialization.
+5. Replace Redactor rich-text inputs with Tiptap. Preserve existing content,
+   form, upload, link, and rendering behavior while migrating callers; remove
+   Redactor assets, integrations, and dependencies only after the migration is
+   complete.
+6. Migrate menu administration to ViewComponents and Stimulus. Menu target
    selection uses the new Folio select; the rest of menu editing remains its own
    component behavior.
-5. Delete the legacy React administration application, its build pipeline,
-   React 16 dependencies, and integration code. Ordered multiselect is now a
-   mode of the Folio select, not a separate application.
-6. Update the remaining Ruby and JavaScript libraries together, including major
+7. Delete the legacy React administration application, its build pipeline,
+   React 16 dependencies, and integration code after its select and ordered
+   multiselect callers have migrated.
+8. Update the remaining Ruby and JavaScript libraries together, including major
    updates. Keep the separate Tiptap/React 19 application current, and remove
    obsolete select integrations and unused Bower assets.
-7. Run the automated test suite, then give QA the complete change for one
+9. Run the automated test suite, then give QA the complete change for one
    regression pass. Do not split this into dependency-family releases.
 
 Dependencies owned by later removals—Cells in R3, jQuery plugins in R4, and
@@ -143,8 +154,11 @@ upgraded only to be deleted.
 
 Exit criteria:
 
-- Normal, multiple, ordered, tag, remote, and filter selects use the same
-  Folio-owned input API.
+- Normal, ordinary multiple, tag, remote, and filter selects use
+  `Folio::SelectComponent`; ordered selection uses its separate component and
+  the same picker API.
+- Rich-text inputs use Tiptap, and no Redactor input, asset, or integration
+  remains.
 - Menu administration works without the legacy React application and uses the
   Folio select for target selection.
 - The legacy React application, build pipeline, and React 16 dependencies are
@@ -306,7 +320,7 @@ broader file-storage programme.
 |---|---|---|---|
 | M1 | R0 runtime | None | Upgrade Folio and main_app to Rails 8.1, Ruby 4, and Bundler 4 together, then run one QA regression. |
 | M2 | R1 cache | M1 | Local before/after test, Folio cache pack, full main_app migration, then QA. |
-| M3 | R2 dependencies and legacy React removal | M1 | Build and adopt the shared Folio select, migrate menu administration, remove the legacy application, update retained dependencies, then run one QA regression. |
+| M3 | R2 frontend modernization, dependencies, and legacy React removal | M1 | Build and adopt the shared Folio select and separate ordered multiselect, replace Redactor inputs with Tiptap, migrate menu administration, remove the legacy application, update retained dependencies, then run one QA regression. |
 | M4 | R3-R4 Cells and JavaScript | M1 | Small vertical PRs, normally 4-8 Cells or one plugin family at a time. |
 | M5 | R5 packs | Cache pack lands in M2; other packs follow stable boundaries | One pack per delivery, with CI enforcement before starting the next. |
 | M6 | R6 images | Earlier priorities complete | Choose and prove the technology, then migrate if the result is viable. |

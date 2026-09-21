@@ -24,6 +24,13 @@ All notable changes to this project will be documented in this file.
 - **Special characters popup**: Support inserting characters into Redactor,
   advanced Redactor, and email Redactor inputs while synchronizing editor
   changes back to their source textareas.
+- **Direct S3 multipart uploads**: Opt-in browser multipart uploads through
+  Uppy for files above `folio_direct_s3_multipart_upload_min_file_size`
+  (default 100 MB) when `folio_direct_s3_multipart_upload_enabled` is `true`
+  (default `false`). Single `PUT` uploads stop at the S3 5 GB object limit.
+  `Folio::UppyComponent` reads its default `max_file_size` from
+  `folio_direct_s3_upload_max_file_size` (default 5 GB). The part, complete
+  and abort endpoints accept only keys created by the current session.
 
 ### Changed
 
