@@ -46,8 +46,6 @@ module Folio
           gem "letter_opener"
           gem "pry-rails"
           gem "slack-notifier"
-          gem "better_errors"
-          gem "binding_of_caller"
         end
 
         gem_group :development, :test do

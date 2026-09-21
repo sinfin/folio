@@ -97,8 +97,6 @@ Gem::Specification.new do |s|
   s.add_dependency "logger"
 
   s.add_development_dependency "packwerk"
-  s.add_development_dependency "better_errors"
-  s.add_development_dependency "binding_of_caller" # used by BetterErrors
   s.add_development_dependency "capybara"
   s.add_development_dependency "factory_bot"
   s.add_development_dependency "guard-rubocop"
