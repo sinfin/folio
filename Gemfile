@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-source "https://rubygems.org"
+source "https://rubygems.org", cooldown: 7
 
 # Declare your gem's dependencies in folio.gemspec.
 # Bundler will treat runtime dependencies like base dependencies, and
@@ -20,7 +20,6 @@ gem "dragonfly_libvips", github: "sinfin/dragonfly_libvips", branch: "more_geome
 # gem "dragonfly_libvips", path: "../dragonfly_libvips"
 
 gem "cells-rails", "~> 0.1.5"
-gem "cells-slim", "~> 0.0.6" # version 0.1.0 drops Rails support and I was not able to make it work
 
 gem "premailer-rails"
 
@@ -32,7 +31,7 @@ gem "omniauth-rails_csrf_protection"
 gem "omniauth"
 
 group :development do
-  gem "puma", "< 6"
+  gem "puma"
   gem "i18n-tasks"
 end
 

@@ -17,7 +17,7 @@ class Folio::Tiptap::NodeGenerator < Rails::Generators::NamedBase
     end
 
     template "component.rb.tt", "#{pack_path_prefix}app/components/#{component_name}.rb"
-    template "component.slim.tt", "#{pack_path_prefix}app/components/#{component_name}.slim"
+    template "component.html.slim.tt", "#{pack_path_prefix}app/components/#{component_name}.html.slim"
     template "component_test.rb.tt", "#{pack_path_prefix}test/components/#{component_name}_test.rb"
   end
 
@@ -59,6 +59,8 @@ class Folio::Tiptap::NodeGenerator < Rails::Generators::NamedBase
     end
 
     def add_tiptap_node_to_i18n_ymls
+      return if options[:pretend]
+
       I18n.available_locales.each do |locale|
         locale_s = locale.to_s
         file_path = Rails.root.join("config/locales/tiptap/nodes.#{locale_s}.yml")

@@ -20,7 +20,7 @@ class Folio::Console::SearchesController < Folio::Console::BaseController
       if js
         @results = results.limit(10)
       else
-        @pagy, @results = pagy(results)
+        @pagy, @results = pagy(:offset, results)
       end
 
       cell("folio/console/searches/results", @results, pagy: @pagy)

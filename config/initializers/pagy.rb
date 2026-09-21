@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
-require "pagy/extras/bootstrap"
-require "pagy/extras/i18n"
-require "pagy/extras/overflow"
-require "pagy/extras/trim"
+Pagy::OPTIONS[:limit] = 50
+Pagy::OPTIONS[:slots] = 9
 
-Pagy::DEFAULT[:overflow] = :last_page
-Pagy::DEFAULT[:items] = 50
-Pagy::DEFAULT[:size] = [1, 2, 2, 1]
+pagy_locale_paths = Dir[Pagy::ROOT.join("locales/*.yml")]
+Pagy.translate_with_the_slower_i18n_gem!
+
+# Let Folio and host-app translations override Pagy's bundled dictionaries.
+I18n.load_path.reject! { |path| pagy_locale_paths.include?(path.to_s) }
+I18n.load_path.unshift(*pagy_locale_paths)

@@ -24,7 +24,7 @@ class Folio::AtomGenerator < Rails::Generators::NamedBase
   def component
     unless options[:cell]
       template "component.rb.tt", "#{pack_path_prefix}app/components/#{application_namespace_path}/atom/#{name}_component.rb"
-      template "component.slim.tt", "#{pack_path_prefix}app/components/#{application_namespace_path}/atom/#{name}_component.slim"
+      template "component.html.slim.tt", "#{pack_path_prefix}app/components/#{application_namespace_path}/atom/#{name}_component.html.slim"
       template "component_test.rb.tt", "#{pack_path_prefix}test/components/#{application_namespace_path}/atom/#{name}_component_test.rb"
     end
   end

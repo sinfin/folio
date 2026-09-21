@@ -77,19 +77,22 @@ module Folio::Console::Api::FileControllerBase
   end
 
   def pagination
-    @pagy, _records = pagy(folio_console_records, items: Folio::Console::FileControllerBase::PAGY_ITEMS)
-
     request_path = pagination_request_path
+    @pagy, _records = pagy(:offset,
+                           folio_console_records,
+                           limit: Folio::Console::FileControllerBase::PAGY_ITEMS,
+                           path: request_path,
+                           querify: ->(query) { query.delete("request_path") })
+
     pagination_params = filter_params.to_h.merge("page" => params[:page],
                                                  "request_path" => request_path)
 
     @pagy_options = {
-      reload_url: url_for([:pagination, :console, :api, @klass, pagination_params]),
-      request_path:
+      reload_url: url_for([:pagination, :console, :api, @klass, pagination_params])
     }
 
     if %w[image video].include?(@klass.human_type)
-      @pagy_options[:middle_component] = Folio::Console::Files::DisplayToggleComponent.new
+      @pagy_options[:middle_component] = -> { Folio::Console::Files::DisplayToggleComponent.new }
     end
 
     render_component_json(Folio::Console::Ui::PagyComponent.new(pagy: @pagy,
@@ -436,7 +439,7 @@ module Folio::Console::Api::FileControllerBase
     end
 
     def index_json
-      pagination, records = pagy(index_json_records, items: 60)
+      pagination, records = pagy(:offset, index_json_records, limit: 60)
       meta = meta_from_pagy(pagination).merge(human_type: @klass.human_type)
 
       json_from_records(records, Folio::Console::FileSerializer, meta:)

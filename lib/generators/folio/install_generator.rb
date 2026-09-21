@@ -32,6 +32,7 @@ module Folio
 
         gem "view_component"
         gem "cells-rails", "~> 0.1.5"
+        gem "activejob-unique", github: "nordinvestments/activejob-uniqueness", ref: "80f2feaff44f7711e2da6c9b527b21d24649b1d4"
 
         gem_group :development do
           gem "rubocop"
@@ -45,8 +46,6 @@ module Folio
           gem "letter_opener"
           gem "pry-rails"
           gem "slack-notifier"
-          gem "better_errors"
-          gem "binding_of_caller"
         end
 
         gem_group :development, :test do

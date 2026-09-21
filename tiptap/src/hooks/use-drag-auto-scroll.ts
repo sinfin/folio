@@ -58,9 +58,6 @@ export function useDragAutoScroll({
       }
 
       const mouseY = lastMouseY;
-      let scrollDelta = 0;
-      let distanceFromEdge = 0;
-
       // Cache getBoundingClientRect() - expensive operation
       // Invalidate cache if window size changed
       const currentWidth = window.innerWidth;
@@ -101,15 +98,13 @@ export function useDragAutoScroll({
         return;
       }
 
-      if (relativeY < scrollSensitivity) {
-        distanceFromEdge = relativeY;
-        scrollDelta = -calculateScrollSpeed(distanceFromEdge);
-        edgeTime += 1;
-      } else {
-        distanceFromEdge = containerHeight - relativeY;
-        scrollDelta = calculateScrollSpeed(distanceFromEdge);
-        edgeTime += 1;
-      }
+      const scrollUp = relativeY < scrollSensitivity;
+      const distanceFromEdge = scrollUp
+        ? relativeY
+        : containerHeight - relativeY;
+      const scrollDelta =
+        calculateScrollSpeed(distanceFromEdge) * (scrollUp ? -1 : 1);
+      edgeTime += 1;
 
       if (scrollDelta !== 0) {
         const currentScroll = scrollContainer.scrollTop;

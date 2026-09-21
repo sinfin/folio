@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Console::Links::Modal::ListComponent < Folio::Console::ApplicationComponent
-  include Pagy::Backend
+  include Pagy::Method
 
   PAGY_ITEMS_MULTI = 5
   PAGY_ITEMS_SINGLE = 25
@@ -113,7 +113,7 @@ class Folio::Console::Links::Modal::ListComponent < Folio::Console::ApplicationC
 
           scope = scope.order(id: :desc)
 
-          pagy_ref, records = pagy(scope, items:)
+          pagy_ref, records = pagy(:offset, scope, limit: items)
 
           if records.present?
             {
@@ -127,8 +127,8 @@ class Folio::Console::Links::Modal::ListComponent < Folio::Console::ApplicationC
         end
       end
 
-      if ary.size == 1 && ary[0][:pagy].items === PAGY_ITEMS_MULTI
-        pagy_ref, records = pagy(ary[0][:scope], items: PAGY_ITEMS_SINGLE)
+      if ary.size == 1 && ary[0][:pagy].limit == PAGY_ITEMS_MULTI
+        pagy_ref, records = pagy(:offset, ary[0][:scope], limit: PAGY_ITEMS_SINGLE)
         ary[0][:pagy] = pagy_ref
         ary[0][:records] = records
       end

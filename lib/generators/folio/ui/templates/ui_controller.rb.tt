@@ -90,7 +90,7 @@ class <%= application_namespace %>::UiController < ApplicationController
   end
 
   def pagination
-    @pagy, _records = pagy(<%= application_namespace %>::Blog::Article, items: 1)
+    @pagy, _records = pagy(:offset, <%= application_namespace %>::Blog::Article, limit: 1)
   end
 
   def images

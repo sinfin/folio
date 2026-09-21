@@ -39,10 +39,13 @@ This is a Vite-based React application. To get started:
 - `npm run dev` - Start development server with style copying
 - `npm run build` - Build for production (outputs to `dist/assets/`)
 - `npm run build:check` - Validate TypeScript without generating files
-- `npm run lint` - Run ESLint
-- `npm run lint:fix` - Run ESLint with auto-fix
+- `npm run lint` - Run Oxlint
+- `npm run lint:fix` - Run Oxlint with auto-fix
 - `npm run format` - Format all files with Prettier
 - `npm run format:file [files]` - Format specific files with Prettier
+
+The Oxlint configuration keeps the existing Hooks checks active; React
+Compiler-specific diagnostics remain disabled until adopted separately.
 
 ## Build Output
 

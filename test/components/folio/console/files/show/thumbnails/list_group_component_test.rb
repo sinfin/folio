@@ -56,9 +56,11 @@ class Folio::Console::Files::Show::Thumbnails::ListGroupComponentTest < Folio::C
     file = create(:folio_file_image)
     file.update!(thumbnail_sizes: { "250x250" => { url: "https://example.com/250x250.jpg" } })
 
-    render_group(file:, ratio: "regular", ratio_label: "regular", keys: %w[250x250])
+    I18n.with_locale(:cs) do
+      render_group(file:, ratio: "regular", ratio_label: "regular", keys: %w[250x250])
 
-    assert_selector(".f-c-files-show-thumbnails-list-group__ratio-label", text: "Verze bez ořezu")
+      assert_selector(".f-c-files-show-thumbnails-list-group__ratio-label", text: "Verze bez ořezu")
+    end
     assert_no_selector(".f-c-files-show-thumbnails-crop-edit__regenerate")
     assert_no_selector(".f-c-files-show-thumbnails-list-group__preview")
     assert_no_selector(".f-c-files-show-thumbnails-list-group__representative-img")

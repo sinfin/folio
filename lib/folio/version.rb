@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
 module Folio
-  VERSION = "7.7.2"
+  VERSION = "8.0.0.rc1"
 end

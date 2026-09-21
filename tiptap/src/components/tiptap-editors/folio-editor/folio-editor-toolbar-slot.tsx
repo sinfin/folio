@@ -20,7 +20,7 @@ export function FolioEditorToolbarSlot({
   return (
     <>
       {nodes.map((node) => (
-        <ToolbarGroup>
+        <ToolbarGroup key={node.type}>
           <FolioEditorToolbarSlotButton editor={editor} node={node} />
         </ToolbarGroup>
       ))}

@@ -11,7 +11,7 @@ module Folio::ApplicationControllerBase
   include Folio::ComponentSessionRequirements
 
   included do
-    include Pagy::Backend
+    include Pagy::Method
 
     protect_from_forgery with: :exception
 

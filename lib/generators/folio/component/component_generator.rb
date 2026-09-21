@@ -9,7 +9,7 @@ class Folio::ComponentGenerator < Rails::Generators::NamedBase
 
   def component
     template "component.rb.tt", "#{pack_path_prefix}app/components/#{component_name}_component.rb"
-    template "component.slim.tt", "#{pack_path_prefix}app/components/#{component_name}_component.slim"
+    template "component.html.slim.tt", "#{pack_path_prefix}app/components/#{component_name}_component.html.slim"
     template "component_test.rb.tt", "#{pack_path_prefix}test/components/#{component_name}_component_test.rb"
   end
 

@@ -14,7 +14,7 @@ export const debounce = <T extends (...args: unknown[]) => unknown>(
   }
 
   return function (this: unknown, ...args: Parameters<T>) {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    // oxlint-disable-next-line typescript/no-this-alias
     const context = this;
 
     const later = () => {

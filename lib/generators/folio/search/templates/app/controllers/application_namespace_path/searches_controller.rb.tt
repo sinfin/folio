@@ -66,7 +66,8 @@ class <%= application_namespace %>::SearchesController < ApplicationController
           scope = scope.none
         end
 
-        klass_pagy, klass_records = pagy(scope, items: meta[:overview_limit] || DEFAULT_OVERVIEW_LIMIT)
+        limit = meta[:overview_limit] || DEFAULT_OVERVIEW_LIMIT
+        klass_pagy, klass_records = pagy(:offset, scope, limit:)
         count = klass_pagy.count
         label = I18n.t("<%= application_namespace_path %>.searches.show.contents_component.tabs/#{meta[:klass]}", default: meta[:klass].model_name.human(count: 2))
 
@@ -95,7 +96,8 @@ class <%= application_namespace %>::SearchesController < ApplicationController
           }
 
           if active
-            results_pagy, results_records = pagy(scope, items: meta[:limit] || DEFAULT_LIMIT)
+            limit = meta[:limit] || DEFAULT_LIMIT
+            results_pagy, results_records = pagy(:offset, scope, limit:)
 
             @search[:active_results] = {
               pagy: results_pagy,

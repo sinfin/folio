@@ -2,7 +2,9 @@ import { Node } from "@tiptap/core";
 import { ReactNodeViewRenderer } from "@tiptap/react";
 import FolioTiptapStyledWrapView from "./folio-tiptap-styled-wrap-view";
 
-export const FolioTiptapStyledWrap = Node.create({
+export const FolioTiptapStyledWrap = Node.create<{
+  variantCommands: FolioEditorCommand[];
+}>({
   name: "folioTiptapStyledWrap",
   defining: false,
   isolating: true,

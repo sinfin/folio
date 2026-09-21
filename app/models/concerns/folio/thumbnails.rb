@@ -258,7 +258,7 @@ module Folio::Thumbnails
 
   private
     def should_validate_image_dimensions?
-      thumbnailable? && file_uid.present?
+      (file_mime_type_image? || self.class.human_type == "video") && file_uid.present?
     end
 
     def reset_thumbnails

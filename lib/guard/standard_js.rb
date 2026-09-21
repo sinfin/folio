@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "guard/compat/plugin"
-require "colorize"
 require "json"
 
 module Guard
@@ -43,9 +42,9 @@ module Guard
         result = system "npx standard --fix #{paths.join(' ')}"
 
         if result
-          UI.info "No Standard JS offences detected".green
+          UI.info "No Standard JS offences detected"
         else
-          UI.info "Standard JS offences has been detected".red
+          UI.info "Standard JS offences has been detected"
         end
 
         check_and_notify(result)

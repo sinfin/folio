@@ -1,35 +1,35 @@
-.<%= classname_prefix %>-searches-show-contents
-  .<%= classname_prefix %>-searches-show-contents__tabs.mb-f
+.d-searches-show-contents
+  .d-searches-show-contents__tabs.mb-f
     - if @search[:tabs].present? && @search[:count] > 0
-      = render(<%= application_namespace %>::Ui::TabsComponent.new(tabs: @search[:tabs]))
+      = render(Dummy::Ui::TabsComponent.new(tabs: @search[:tabs]))
 
-  .<%= classname_prefix %>-searches-show-contents__results-wrap
+  .d-searches-show-contents__results-wrap
     - if @search[:count] == 0
-      .<%= classname_prefix %>-searches-show-contents__no-results.mt-f
+      .d-searches-show-contents__no-results.mt-f
         p
           - if params[:q].present?
             = cstypo t('.no_results')
           - else
             = cstypo t('.no_query')
     - else
-      .<%= classname_prefix %>-searches-show-contents__results
+      .d-searches-show-contents__results
         - if @search[:active_results]
           - if @search[:active_results][:pagy]
             - if @search[:active_results][:pagy].pages > 1
               .small.mb-3
-                == pagy_info @search[:active_results][:pagy]
+                == @search[:active_results][:pagy].info_tag
 
           = render(@search[:active_results][:results_component].new(data: @search[:active_results]))
 
           .mt-c.mt-lg-f
-            = render(<%= application_namespace %>::Ui::PagyComponent.new(pagy: @search[:active_results][:pagy]))
+            = render(Dummy::Ui::PagyComponent.new(pagy: @search[:active_results][:pagy]))
 
         - else
           - @search[:klasses].each do |klass, data|
             - next if data[:count] == 0
 
-            h2.<%= classname_prefix %>-searches-show-contents__results-title.mb-4
-              a.<%= classname_prefix %>-unlink href=data[:href]
+            h2.d-searches-show-contents__results-title.mb-4
+              a.d-unlink href=data[:href]
                 = data[:label]
 
             = render(data[:results_component].new(data:))
