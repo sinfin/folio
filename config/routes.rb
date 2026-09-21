@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 Folio::Engine.routes.draw do
+  if Rails.env.development?
+    get "/.well-known/appspecific/com.chrome.devtools.json",
+        to: ->(_) { [404, {}, []] },
+        format: false
+  end
+
   get "/400", to: "errors#page400", via: :all
   get "/403", to: "errors#page403", via: :all
   get "/404", to: "errors#page404", via: :all
