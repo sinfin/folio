@@ -5,7 +5,7 @@ window.Folio.Stimulus.register('f-leads-form', class extends window.Stimulus.Con
 
   static values = {
     loading: Boolean,
-    failureMessage: String,
+    failureMessage: String
   }
 
   submit () {
@@ -18,6 +18,7 @@ window.Folio.Stimulus.register('f-leads-form', class extends window.Stimulus.Con
 
     window.Folio.Api.apiPost(url, data).then((res) => {
       if (res && res.data) {
+        if (res.meta?.success === true) this.dispatch('success')
         this.element.outerHTML = res.data
         this.loadingValue = false
       } else {
