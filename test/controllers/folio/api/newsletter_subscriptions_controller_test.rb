@@ -13,6 +13,8 @@ class Folio::Api::NewsletterSubscriptionsControllerTest < Folio::BaseControllerT
       assert_response(:success)
     end
 
+    assert_equal false, response.parsed_body.dig("meta", "success")
+
     data = response.parsed_body["data"]
 
     assert data.exclude?("f-newsletter-subscriptions-form f-newsletter-subscriptions-form--persisted")
@@ -28,6 +30,8 @@ class Folio::Api::NewsletterSubscriptionsControllerTest < Folio::BaseControllerT
       }
       assert_response(:success)
     end
+
+    assert_equal true, response.parsed_body.dig("meta", "success")
 
     data = response.parsed_body["data"]
 

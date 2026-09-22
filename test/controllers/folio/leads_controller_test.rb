@@ -36,6 +36,7 @@ class Folio::LeadsControllerTest < Folio::BaseControllerTest
     }
     assert_response(:success)
     assert response.parsed_body["data"]
+    assert_equal false, response.parsed_body.dig("meta", "success")
   end
 
   test "valid json" do
@@ -47,5 +48,6 @@ class Folio::LeadsControllerTest < Folio::BaseControllerTest
     }
     assert_response(:success)
     assert response.parsed_body["data"]
+    assert_equal true, response.parsed_body.dig("meta", "success")
   end
 end

@@ -22,7 +22,7 @@ class Folio::LeadsController < Folio::ApplicationController
 
       format.json do
         component = Rails.application.config.folio_leads_from_component_class_name.constantize
-        render_component_json(component.new(lead: @lead))
+        render_component_json(component.new(lead: @lead), meta: { success: })
       end
     end
   end
