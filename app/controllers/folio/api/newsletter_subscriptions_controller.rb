@@ -5,9 +5,9 @@ class Folio::Api::NewsletterSubscriptionsController < Folio::Api::BaseController
 
   def create
     newsletter_subscription = Folio::NewsletterSubscription.new(newsletter_subscription_params.merge(site: Folio::Current.site))
-    newsletter_subscription.save
+    success = newsletter_subscription.save
 
-    render_component_json(Folio::NewsletterSubscriptions::FormComponent.new(newsletter_subscription:, view_options: view_options_params))
+    render_component_json(Folio::NewsletterSubscriptions::FormComponent.new(newsletter_subscription:, view_options: view_options_params), meta: { success: })
   end
 
   private

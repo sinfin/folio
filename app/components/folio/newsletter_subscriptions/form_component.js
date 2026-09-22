@@ -1,5 +1,5 @@
 window.Folio.Stimulus.register('f-newsletter-subscriptions-form', class extends window.Stimulus.Controller {
-  static classes = ["submitting", "persisted", "invalid"]
+  static classes = ['submitting', 'persisted', 'invalid']
 
   connect () {
     if (this.element.classList.contains(this.persistedClass)) {
@@ -19,6 +19,7 @@ window.Folio.Stimulus.register('f-newsletter-subscriptions-form', class extends 
 
     window.Folio.Api.apiPost(e.target.action, data).then((res) => {
       const responseData = res.data
+      if (res.meta?.success === true) this.dispatch('success')
       this.element.outerHTML = responseData
 
       if (responseData.includes('f-newsletter-subscriptions-form__message')) {
