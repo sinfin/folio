@@ -21,7 +21,9 @@ en:
         throttled: Please wait before sending another email.
         unavailable: Sign-in is temporarily unavailable. Please try again shortly.
         confirm: Confirm sign-in
-        mail_instruction: "Confirm your sign-in to %{site}. This signs in the browser where you started. If you did not request this sign-in, do not confirm it."
+        mail_instruction: "Confirm the login to %{site} — you'll be signed in on the browser where you started logging in."
+        mail_not_requested: "If you did not request this, please ignore this email."
+        mail_regards: "With kind regards,"
         valid_until: "The link expires at %{time}."
         request_title: "Sign in with an email link"
         request_instruction: "Enter your email address. Confirm the link on any device, then continue in this browser."

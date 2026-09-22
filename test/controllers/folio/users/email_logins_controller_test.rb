@@ -4,6 +4,7 @@ require "test_helper"
 
 class Folio::Users::EmailLoginsControllerTest < ActionDispatch::IntegrationTest
   include ActiveJob::TestHelper
+  include ActionMailer::TestHelper
 
   def setup
     travel_to Time.current
@@ -73,6 +74,43 @@ class Folio::Users::EmailLoginsControllerTest < ActionDispatch::IntegrationTest
 
       post main_app.complete_user_email_login_path
       assert_response :redirect
+      assert_equal 1, @user.reload.sign_in_count
+    end
+  end
+
+  test "one click approval signs in the original browser without rendering the confirmation form" do
+    with_email_login do
+      start_password_login
+
+      post main_app.prepare_user_email_login_path,
+           params: { email_login_token: delivery_token, approve: "1" }, as: :json
+
+      assert_response :ok
+      assert_equal controller.after_sign_in_path_for(@user), response.parsed_body.dig("data", "url")
+      assert_equal @user, controller.warden.user(:user)
+      assert_not_nil @user.email_login_challenges.sole.consumed_at
+      assert_equal 1, @user.reload.sign_in_count
+    end
+  end
+
+  test "one click approval on another device approves only the original browser" do
+    with_email_login do
+      start_password_login
+      challenge = @user.email_login_challenges.sole
+      phone = open_session
+      phone.host! @site.env_aware_domain
+
+      phone.post main_app.prepare_user_email_login_path,
+                 params: { email_login_token: delivery_token, approve: "1" }, as: :json
+
+      phone.assert_response :ok
+      assert_includes phone.response.parsed_body.fetch("data"), "f-users-email-login-confirmation"
+      assert_not_nil challenge.reload.approved_at
+      assert_nil phone.controller.warden.user(:user)
+      assert_equal 0, @user.reload.sign_in_count
+
+      post main_app.complete_user_email_login_path
+      assert_equal @user, controller.warden.user(:user)
       assert_equal 1, @user.reload.sign_in_count
     end
   end
@@ -162,6 +200,26 @@ class Folio::Users::EmailLoginsControllerTest < ActionDispatch::IntegrationTest
       get main_app.status_user_email_login_path(format: :json)
       assert_equal "waiting", response.parsed_body.dig("data", "state")
       assert_no_enqueued_jobs only: Folio::Users::EmailLoginDeliveryJob
+    end
+  end
+
+  test "magic link request for a pending invitation resends the invitation" do
+    @user.invite!
+    previous_created_at = @user.invitation_created_at
+    clear_enqueued_jobs
+    travel 1.minute
+
+    with_email_login do
+      assert_no_difference("Folio::Users::EmailLoginChallenge.count") do
+        post main_app.user_email_login_path, params: { user: { email: @user.email } }
+      end
+
+      assert_redirected_to main_app.user_email_login_path
+      assert_operator @user.reload.invitation_created_at, :>, previous_created_at
+      assert_enqueued_emails 1
+      assert_nil controller.warden.user(:user)
+      get main_app.status_user_email_login_path(format: :json)
+      assert_equal "waiting", response.parsed_body.dig("data", "state")
     end
   end
 

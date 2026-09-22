@@ -21,7 +21,9 @@ cs:
         throttled: Před dalším odesláním chvíli počkejte.
         unavailable: Přihlášení nyní nelze dokončit. Zkuste to prosím za chvíli.
         confirm: Potvrdit přihlášení
-        mail_instruction: "Potvrďte přihlášení na %{site}. Přihlásí se prohlížeč, ve kterém jste přihlášení zahájili. Pokud jste o přihlášení nežádali, odkaz nepotvrzujte."
+        mail_instruction: "Potvrďte přihlášení na %{site} — přihlásíte se tím v prohlížeči, ve kterém jste přihlášení zahájili."
+        mail_not_requested: "Pokud jste si toto nevyžádali, ignorujte tento e-mail."
+        mail_regards: "S přátelským pozdravem"
         valid_until: "Odkaz platí do %{time}."
         request_title: "Přihlášení odkazem z e-mailu"
         request_instruction: "Zadejte e-mail. Odkaz můžete potvrdit na jakémkoli zařízení a pak pokračovat v tomto prohlížeči."

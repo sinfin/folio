@@ -37,7 +37,11 @@ class Folio::Users::EmailLoginDeliveryJobTest < ActiveJob::TestCase
     assert_not_includes link.query.to_s, @token
     assert_not_includes link.query.to_s, "email_login_token"
     assert_not_includes body, @nonce
-    assert_includes body, I18n.l(@challenge.expires_at, format: :long, locale: :en)
+    assert_includes body,
+                    "Confirm the login to #{@site.title} — you'll be signed in on the browser where you started logging in."
+    assert_includes body, "If you did not request this, please ignore this email."
+    assert_includes body, "With kind regards,"
+    assert_equal 2, Nokogiri::HTML(body).css("a[href]").count { |anchor| URI.parse(anchor["href"]).fragment == @token }
     assert_equal 0, @user.reload.sign_in_count
   end
 
@@ -94,6 +98,15 @@ class Folio::Users::EmailLoginDeliveryJobTest < ActiveJob::TestCase
     assert_includes mail.html_part.decoded, @token
     assert_includes mail.text_part.decoded, @token
     assert_includes mail.text_part.decoded, @site.title
+    assert_includes mail.text_part.decoded,
+                    "Potvrďte přihlášení na #{@site.title} — přihlásíte se tím v prohlížeči, ve kterém jste přihlášení zahájili."
+    assert_includes mail.text_part.decoded, "Pokud jste si toto nevyžádali, ignorujte tento e-mail."
+    assert_includes mail.text_part.decoded, "S přátelským pozdravem"
+
+    links = Nokogiri::HTML(mail.html_part.decoded).css("a[href]").select do |anchor|
+      URI.parse(anchor["href"]).fragment == @token
+    end
+    assert_equal 2, links.size
   end
 
   test "queue arguments contain neither the email proof nor the browser secret" do

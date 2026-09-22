@@ -29,9 +29,11 @@ class Folio::Users::EmailLoginsController < DeviseController
 
     email = email.strip.downcase
     user = Folio::User.find_for_authentication(email:, auth_site_id: pending.site.id)
+    invited_user = user if Rails.application.config.folio_users_publicly_invitable && user&.invited_to_sign_up?
     user = nil if user && (!user.active_for_authentication? || (user.respond_to?(:invited_to_sign_up?) && user.invited_to_sign_up?))
     pending.begin!(user:, purpose: "magic_link", email:,
                    remember_me: Devise::TRUE_VALUES.include?(email_login_params[:remember_me]))
+    invited_user&.invite!
     render_email_login_pending
   end
 
@@ -80,7 +82,17 @@ class Folio::Users::EmailLoginsController < DeviseController
       challenge = approval_challenge
     end
 
-    render_component_json Folio::Users::EmailLogin::ConfirmationComponent.new(challenge:)
+    if Devise::TRUE_VALUES.include?(request.request_parameters["approve"])
+      challenge.approve!(token: session[Folio::Devise::EmailLogin::APPROVAL_SESSION_KEY]["email_login_token"], site: pending.site)
+      if pending.challenge&.id == challenge.id
+        path = Folio::Devise::EmailLogin::CompleteLogin.call(self, trust_browser: pending.trust_browser)
+        render json: { data: { url: path } }
+      else
+        render_component_json Folio::Users::EmailLogin::ConfirmationComponent.new(approved: true)
+      end
+    else
+      render_component_json Folio::Users::EmailLogin::ConfirmationComponent.new(challenge:)
+    end
   end
 
   def approve

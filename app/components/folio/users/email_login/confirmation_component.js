@@ -19,10 +19,14 @@ window.Folio.Stimulus.register('f-users-email-login-confirmation', class extends
     this.retryTarget.hidden = true
     this.abortController = new window.AbortController()
     try {
-      const body = this.token === null ? {} : { email_login_token: this.token }
+      const body = this.token === null ? { approve: '1' } : { email_login_token: this.token, approve: '1' }
       const response = await window.Folio.Api.apiPost(this.urlValue, body, this.abortController.signal)
       this.token = null
-      this.element.outerHTML = response.data
+      if (response.data.url) {
+        window.location.assign(response.data.url)
+      } else {
+        this.element.outerHTML = response.data
+      }
     } catch (error) {
       if (error.name !== 'AbortError') {
         this.statusTarget.textContent = this.connectionErrorValue
