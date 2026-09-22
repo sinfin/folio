@@ -5,6 +5,10 @@ class Folio::Users::SessionsController < Devise::SessionsController
   include Folio::Captcha::HasTurnstileValidation
   include Folio::Captcha::HasRecaptchaValidation
 
+  # Must run before `require_no_authentication`, which already authenticates
+  # from params through `set_up_current_from_request`.
+  prepend_before_action :default_remember_me_param, only: :create
+
   before_action :validate_recaptcha, only: :create
 
   protect_from_forgery prepend: true
@@ -166,4 +170,16 @@ class Folio::Users::SessionsController < Devise::SessionsController
   def recaptcha_failure_redirect_path
     new_user_session_path
   end
+
+  private
+    # Devise's database strategy assigns `remember_me = false` whenever the
+    # form sends no `remember_me` param, so `Folio::User#remember_me`
+    # defaulting to "1" never applies to a password sign-in. Remember unless
+    # the form opted out explicitly.
+    def default_remember_me_param
+      user_params = request.params["user"]
+      return unless user_params.is_a?(Hash)
+
+      user_params["remember_me"] = "1" unless user_params.key?("remember_me")
+    end
 end
