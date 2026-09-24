@@ -23,6 +23,7 @@ If no existing skill fits, suggest updating this `AGENTS.md` or creating a new
 |-------|---------------------|
 | **folio-view-component** | Build or change ViewComponents (generator, BEM, Slim/Sass, Stimulus data attrs, tests); frontend in `app/components` |
 | **code-review** | Review current local branch changes or explicit diffs; findings-first feedback for code review prompts |
+| **pr-title-description** | Draft or improve PR title/body text from local diffs, commits, changelog entries, issue links, and test evidence |
 | **folio-pack** | Optional pack boundaries and namespaces; files under `packs/<name>`; route mappings to pack-owned controllers/components |
 | **folio-rails-code-structure** | Ruby/Rails code structure: thin model/controller/concern entrypoints, focused classes under `lib/`, avoid helper-method clusters; excludes jobs |
 | **folio-rails-models** | Rails/ActiveModel models: validations, virtual attributes, attachment/file placement validation targets, console required markers |
