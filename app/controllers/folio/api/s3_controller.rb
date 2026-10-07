@@ -136,6 +136,10 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
 
   private
     def allowed_klass?(file_klass)
+      if file_klass <= Folio::File::PublicAsset && !Rails.application.config.folio_public_assets_enabled
+        return false
+      end
+
       Rails.application.config.folio_direct_s3_upload_class_names.any? do |class_name|
         file_klass <= class_name.constantize
       end

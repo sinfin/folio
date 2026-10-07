@@ -39,7 +39,20 @@ class Folio::Api::S3ControllerTest < Folio::BaseControllerTest
     end
   end
 
-  [Folio::File::Document, Folio::File::Image, Folio::PrivateAttachment].each do |klass|
+  test "disabled public assets cannot be uploaded through the shared S3 API" do
+    path = "disabled-public-asset.json"
+    FileUtils.mkdir_p(Folio::S3::Client::LOCAL_TEST_PATH)
+    File.write(File.join(Folio::S3::Client::LOCAL_TEST_PATH, path), "{}")
+
+    with_config(folio_public_assets_enabled: false) do
+      assert_enqueued_jobs(0) do
+        post after_folio_api_s3_path, params: { s3_path: path, type: "Folio::File::PublicAsset", message_bus_client_id: "test" }
+        assert_response :unprocessable_entity
+      end
+    end
+  end
+
+  [Folio::File::Document, Folio::File::Image, Folio::File::PublicAsset, Folio::PrivateAttachment].each do |klass|
     test "#{klass} - before" do
       # #before returns settings for S3 file upload
       post before_folio_api_s3_path, params: { file_name: "Intricate fílě name.jpg" }

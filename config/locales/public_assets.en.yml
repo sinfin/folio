@@ -1,0 +1,11 @@
+en:
+  activerecord:
+    models:
+      folio/file/public_asset:
+        one: Public asset
+        other: Public assets
+  folio:
+    console:
+      files:
+        show_component:
+          copy_public_url: Copy public URL

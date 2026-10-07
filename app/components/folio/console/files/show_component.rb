@@ -25,7 +25,9 @@ class Folio::Console::Files::ShowComponent < Folio::Console::ApplicationComponen
   end
 
   def download_button_model
-    href = if @file.try(:private?)
+    href = if @file.respond_to?(:public_url)
+      @file.public_url
+    elsif @file.try(:private?)
       Folio::S3.url_rewrite(@file.file.remote_url(expires: 1.hour.from_now))
     else
       Folio::S3.cdn_url_rewrite(@file.file.remote_url)

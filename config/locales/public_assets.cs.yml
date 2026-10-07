@@ -1,0 +1,12 @@
+cs:
+  activerecord:
+    models:
+      folio/file/public_asset:
+        one: Veřejný soubor
+        few: Veřejné soubory
+        other: Veřejné soubory
+  folio:
+    console:
+      files:
+        show_component:
+          copy_public_url: Zkopírovat veřejnou URL

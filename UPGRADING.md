@@ -2,6 +2,23 @@
 
 ## Unreleased
 
+### Optional public assets
+
+Set `config.folio_public_assets_enabled = true` and run `bin/rails db:migrate`.
+Folio appends its engine migration paths to the host application.
+The feature is disabled by default. Enabled apps get `Folio::File::PublicAsset`,
+a subtype stored in `folio_files`, the public `/public-assets/:token` endpoint,
+and the existing Console file library (upload, detail, replacement and deletion).
+Assets use the normal file permissions, tags, placements and file-sharing rules.
+The migration adds a nullable UUID column with a unique index to `folio_files`.
+Existing assets retain their site on replacement so file sharing cannot change
+published URL hosts.
+
+`Folio::File::PublicAsset#public_url` returns a stable original-file URL. Replacing
+the file keeps that URL and changes its ETag. The endpoint serves original
+bytes, requires HTTP cache revalidation and permits cross-origin embedding.
+HTML uses a sandbox that allows scripts without access to the site's origin.
+
 ### Console AASM email modal is a ViewComponent
 
 `cell("folio/console/aasm/email_modal")` is replaced by

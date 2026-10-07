@@ -22,6 +22,11 @@
           - @file.console_show_additional_buttons_props(controller:).each do |props|
             = render(Folio::Console::Ui::ButtonComponent.new(**props))
 
+          - if @file.respond_to?(:public_url)
+            = render Folio::Console::Ui::ClipboardComponent.new(text: @file.public_url,
+                                                                as_button: true,
+                                                                button_label: t(".copy_public_url"))
+
           = render(Folio::Console::Ui::ButtonComponent.new(**download_button_model))
 
           - if can_now?(:update, @file)

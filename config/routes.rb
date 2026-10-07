@@ -302,6 +302,10 @@ Folio::Engine.routes.draw do
     get :rich_text_editor, path: "rich-text-editor"
   end
 
+  if Rails.application.config.folio_public_assets_enabled
+    get "/public-assets/:token", to: "public_assets#show", as: :public_asset
+  end
+
   resource :csrf, only: %i[show], controller: :csrf
 
   if ::Rails.application.config.folio_leads_from_component_class_name

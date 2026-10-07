@@ -15,6 +15,7 @@ module Folio
 
     config.folio_crossdomain_devise = false
     config.folio_shared_files_between_sites = true
+    config.folio_public_assets_enabled = false
     config.folio_dragonfly_keep_png = true
     config.folio_dragonfly_cwebp_quality = 90
     config.folio_public_page_title_reversed = false
@@ -314,6 +315,12 @@ module Folio
     initializer :env_flags_warning do |app|
       load Folio::Engine.root.join("lib/folio/env_flags.rb")
       Folio::EnvFlags.warn_if_present
+    end
+
+    initializer :folio_public_asset_file_type, after: :load_config_initializers do |app|
+      if app.config.folio_public_assets_enabled
+        app.config.folio_file_types_for_routes << "Folio::File::PublicAsset"
+      end
     end
 
     config.to_prepare do

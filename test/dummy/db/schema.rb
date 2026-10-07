@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_08_28_090000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_08_131446) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -368,6 +368,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_28_090000) do
     t.integer "published_usage_count", default: 0, null: false
     t.jsonb "thumbnail_configuration"
     t.bigint "created_by_folio_user_id"
+    t.uuid "public_asset_token"
     t.index "(((to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text))) || to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((headline)::text, ''::text)))) || to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(description, ''::text)))))", name: "index_folio_files_on_by_label_query", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))", name: "index_folio_files_on_by_author", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))", name: "index_folio_files_on_by_file_name", using: :gin
@@ -376,6 +377,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_28_090000) do
     t.index ["created_by_folio_user_id"], name: "index_folio_files_on_created_by_folio_user_id"
     t.index ["file_name"], name: "index_folio_files_on_file_name"
     t.index ["media_source_id"], name: "index_folio_files_on_media_source_id"
+    t.index ["public_asset_token"], name: "index_folio_files_on_public_asset_token", unique: true
     t.index ["published_usage_count"], name: "index_folio_files_on_published_usage_count"
     t.index ["site_id"], name: "index_folio_files_on_site_id"
     t.index ["slug"], name: "index_folio_files_on_slug_unique", unique: true
