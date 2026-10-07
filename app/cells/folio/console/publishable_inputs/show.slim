@@ -1,6 +1,7 @@
 .f-c-publishable-inputs class=options[:class_name]
-  - fields.each do |field|
+  - fields.each do |field_config|
+    - field_name = field_config.is_a?(Hash) ? field_config[:field] : field_config
+    - field_disabled = field_config.is_a?(Hash) ? field_config[:disabled] : nil
     == cell('folio/console/publishable_inputs/item',
-            f:,
-            field:,
+            { f:, field: field_name, disabled: field_disabled },
             atom_setting: options[:atom_setting])

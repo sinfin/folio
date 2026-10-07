@@ -30,6 +30,10 @@ class Folio::Console::PublishableInputs::ItemCell < Folio::ConsoleCell
     @read_only
   end
 
+  def disabled?
+    model[:disabled] || read_only?
+  end
+
   def date_at?
     return @date_at unless @date_at.nil?
     @date_at = f.object.respond_to?("#{field}_at")

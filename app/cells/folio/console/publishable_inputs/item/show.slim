@@ -3,7 +3,7 @@ div class=class_name data=data
     = f.input field,
               hint: false,
               as: :boolean,
-              disabled: read_only?,
+              disabled: disabled?,
               input_html: input_html('checkbox', checkbox: true),
               wrapper_html: { class: 'f-c-publishable-inputs-item__group' },
               atom_setting: model[:atom_setting] == false ? nil : field
@@ -13,7 +13,7 @@ div class=class_name data=data
         = f.input "#{field}_at",
                   label: false,
                   hint: false,
-                  disabled: read_only?,
+                  disabled: disabled?,
                   wrapper_html:,
                   input_html: input_html('input', placeholder: t('.at')),
                   atom_setting: model[:atom_setting] == false ? nil : "#{field}_at"
@@ -23,7 +23,7 @@ div class=class_name data=data
         = f.input "#{field}_from",
                   label: false,
                   hint: false,
-                  disabled: read_only?,
+                  disabled: disabled?,
                   wrapper_html:,
                   input_html: input_html('input', placeholder: t('.from')),
                   atom_setting: model[:atom_setting] == false ? nil : "#{field}_from"
@@ -31,7 +31,7 @@ div class=class_name data=data
         = f.input "#{field}_until",
                   label: false,
                   hint: false,
-                  disabled: read_only?,
+                  disabled: disabled?,
                   wrapper_html:,
                   input_html: input_html('input', placeholder: t('.to')),
                   atom_setting: model[:atom_setting] == false ? nil : "#{field}_until"
