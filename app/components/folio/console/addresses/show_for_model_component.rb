@@ -1,7 +1,14 @@
 # frozen_string_literal: true
 
-class Folio::Console::Addresses::ShowForModelCell < Folio::ConsoleCell
+class Folio::Console::Addresses::ShowForModelComponent < Folio::Console::ApplicationComponent
   include ShowFor::Helper
+
+  attr_reader :model, :options
+
+  def initialize(model:, **options)
+    @model = model
+    @options = options
+  end
 
   def cols
     [
