@@ -104,8 +104,51 @@ window.Folio.Input.DateTime.makeOnShow = (input) => {
   }
 }
 
+// Widget actions that only adjust the time of an already shown date. A change
+// made by one of them keeps the picker open, so the time can be set in several
+// clicks even when the input was empty before the first click.
+window.Folio.Input.DateTime.TIME_ACTIONS = [
+  'incrementHours',
+  'incrementMinutes',
+  'incrementSeconds',
+  'decrementHours',
+  'decrementMinutes',
+  'decrementSeconds',
+  'selectHour',
+  'selectMinute',
+  'selectSecond',
+  'toggleMeridiem'
+]
+
+// Tempus Dominus change events do not say which control made the change.
+// Remember the last clicked widget action on the widget element itself; the
+// capture listener runs before the Tempus Dominus click handler and the
+// element goes away together with the widget.
+window.Folio.Input.DateTime.trackWidgetActions = (input) => {
+  const widget = input.folioInputTempusDominus.display.widget
+  if (!widget || widget.folioInputDateTimeTracksActions) return
+
+  widget.folioInputDateTimeTracksActions = true
+  widget.addEventListener('click', (e) => {
+    const actionElement = e.target && e.target.closest ? e.target.closest('[data-action]') : null
+    widget.folioInputDateTimeLastAction = actionElement ? actionElement.dataset.action : null
+  }, true)
+}
+
+window.Folio.Input.DateTime.shouldHideOnChange = (input, e) => {
+  const widget = input.folioInputTempusDominus.display.widget
+  const lastAction = widget ? widget.folioInputDateTimeLastAction : null
+  if (widget) widget.folioInputDateTimeLastAction = null
+
+  if (window.Folio.Input.DateTime.TIME_ACTIONS.includes(lastAction)) return false
+  if (input.value === '') return true
+  if (e.date && !e.oldDate) return true
+
+  return !!(e.date && e.oldDate && Math.abs(e.date - e.oldDate) > 60 * 60 * 1000 + 1)
+}
+
 window.Folio.Input.DateTime.makeOnChange = (input) => (e) => {
-  if (input.value === '' || (e.date && !e.oldDate) || (e.date && e.oldDate && Math.abs(e.date - e.oldDate) > 60 * 60 * 1000 + 1)) {
+  if (window.Folio.Input.DateTime.shouldHideOnChange(input, e)) {
     input.folioInputTempusDominus.hide()
   }
 
@@ -132,9 +175,10 @@ window.Folio.Input.DateTime.bind = (input, opts = {}) => {
 
   const onShow = window.Folio.Input.DateTime.makeOnShow(input)
 
-  if (onShow) {
-    input.folioInputTempusDominusShowSubscription = input.folioInputTempusDominus.subscribe(window.tempusDominus.Namespace.events.show, onShow)
-  }
+  input.folioInputTempusDominusShowSubscription = input.folioInputTempusDominus.subscribe(window.tempusDominus.Namespace.events.show, (e) => {
+    window.Folio.Input.DateTime.trackWidgetActions(input)
+    if (onShow) onShow(e)
+  })
 }
 
 window.Folio.Input.DateTime.unbind = (input) => {
