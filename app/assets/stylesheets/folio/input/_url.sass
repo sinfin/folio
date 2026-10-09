@@ -14,3 +14,9 @@
   &[data-f-c-input-form-group-url-loaded-value="false"] &__control-bar-wrap,
   &[data-f-c-input-form-group-url-loaded-value="true"] &__loader-wrap
     display: none
+
+  &.form-group-invalid &__inner
+    min-height: 0
+
+    .btn-success
+      --bs-btn-bg: var(--bs-danger)

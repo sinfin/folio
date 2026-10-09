@@ -39,6 +39,7 @@ cs:
         default_gravity: Výchozí ořez
         file_mime_type: Typ souboru
         file_size: Velikost souboru
+        file_track_duration: Délka
         media_source: Zdroj
         preview_duration: Kolik vteřin je zdarma?
         slug: Slug
@@ -326,6 +327,7 @@ cs:
         one: Atribut
         other: Atributů
 
+      folio/file_placement/artwork_cover: Obrázek přehrávače
       folio/file_placement/audio_cover: Audio stopa
       folio/file_placement/cover: Obrázek
       folio/file_placement/document: Soubor
@@ -347,6 +349,7 @@ cs:
     aasm_state: Stav
     address_secondary: Druhá adresa
     article: Článek
+    artwork_cover_placement: Obrázek přehrávače
     atoms: Kapitoly
     audio_cover_placement: Audio stopa
     button_label: Text tlačítka

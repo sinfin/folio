@@ -1,39 +1,34 @@
 window.Folio.Stimulus.register('f-c-current-users-console-url-bar', class extends window.Stimulus.Controller {
   static values = {
-    apiUrl: String,
     takeoverApiUrl: String,
     deleteRevisionUrl: String,
     fromUserId: Number,
     recordId: Number,
-    recordType: String
+    recordType: String,
+    variant: String
   }
 
   connect () {
-    this.startUrlPinging()
+    this.boundOnPresencePing = (e) => this.onPresencePing(e)
+    window.addEventListener('folio:console:presence-ping', this.boundOnPresencePing)
   }
 
   disconnect () {
-    this.stopUrlPinging()
+    window.removeEventListener('folio:console:presence-ping', this.boundOnPresencePing)
   }
 
-  startUrlPinging () {
-    this.urlPingInterval = setInterval(() => {
-      this.pingUrl()
-    }, 10000)
-  }
+  // the heartbeat lives in f-c-current-users-presence-ping (rendered separately
+  // so it runs even for a lone editor); here we only react to its broadcast
+  onPresencePing (e) {
+    // hide the warning once the other user is no longer editing the url -
+    // only for the plain presence variant, revision-based variants
+    // (takeover, outdated) depend on more than the other user's presence
+    if (this.variantValue !== 'other_user') return
 
-  stopUrlPinging () {
-    if (this.urlPingInterval) {
-      clearInterval(this.urlPingInterval)
-      this.urlPingInterval = null
-    }
-  }
+    const data = e.detail
+    if (!data || data.other_user_at_url !== false) return
 
-  pingUrl () {
-    const currentUrl = window.location.href.split('?')[0]
-    if (this.apiUrlValue !== 'dont_ping') {
-      window.Folio.Api.apiPost(this.apiUrlValue, { url: currentUrl })
-    }
+    this.element.remove()
   }
 
   onTakeoverButtonClick () {

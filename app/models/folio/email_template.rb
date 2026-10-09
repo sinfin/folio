@@ -198,31 +198,3 @@ class Folio::EmailTemplate < Folio::ApplicationRecord
       result
     end
 end
-
-# == Schema Information
-#
-# Table name: folio_email_templates
-#
-#  id                :bigint(8)        not null, primary key
-#  title             :string
-#  slug              :string
-#  mailer            :string
-#  action            :string
-#  subject_en        :string
-#  body_html_en      :text
-#  body_text_en      :text
-#  required_keywords :jsonb
-#  optional_keywords :jsonb
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
-#  subject_cs        :string
-#  body_html_cs      :text
-#  body_text_cs      :text
-#  site_id           :bigint(8)
-#  active            :boolean          default(TRUE)
-#
-# Indexes
-#
-#  index_folio_email_templates_on_site_id  (site_id)
-#  index_folio_email_templates_on_slug     (slug)
-#

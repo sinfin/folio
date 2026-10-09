@@ -1,132 +1,60 @@
 # frozen_string_literal: true
 
 require "test_helper"
+require Folio::Engine.root.join("packs/ai/lib/folio/ai")
 
 class Folio::Ai::Providers::OpenAiTest < ActiveSupport::TestCase
-  test "builds responses API request" do
-    provider = Folio::Ai::Providers::OpenAi.new(api_key: "secret", model: "gpt-5.5")
-    field = Folio::Ai::Field.new(key: :title)
+  test "posts prompt to the Responses API" do
+    captured_body = nil
 
-    request = provider.build_request(prompt: "Write a title.",
-                                     field:,
-                                     suggestion_count: 3)
+    stub_request(:post, Folio::Ai::Providers::OpenAi::ENDPOINT)
+      .with(headers: { "Authorization" => "Bearer secret" }) do |request|
+        captured_body = JSON.parse(request.body)
+      end
+      .to_return(body: { output_text: "Generated title" }.to_json)
 
-    assert_equal "https://api.openai.com/v1/responses", request.uri.to_s
-    assert_equal "Bearer secret", request.headers["Authorization"]
-    assert_equal "gpt-5.5", request.body[:model]
-    assert_equal false, request.body[:store]
-    assert_equal "title", request.body.dig(:metadata, :folio_ai_field_key)
-    assert_includes request.body[:input].first[:content], "suggestions"
+    provider = Folio::Ai::Providers::OpenAi.new(api_key: "secret", model: "gpt-test")
+
+    assert_equal "Generated title", provider.complete(prompt: "Write a title.", suggestion_count: 3)
+    assert_equal "gpt-test", captured_body["model"]
+    assert_equal false, captured_body["store"]
+    assert_equal "system", captured_body.dig("input", 0, "role")
+    assert_equal "user", captured_body.dig("input", 1, "role")
+    assert_equal "Write a title.", captured_body.dig("input", 1, "content")
   end
 
-  test "allows explicit opt in to provider request storage" do
-    provider = Folio::Ai::Providers::OpenAi.new(api_key: "secret", model: "gpt-5.5")
-    field = Folio::Ai::Field.new(key: :title)
-
-    request = with_ai_config(provider_request_storage: true) do
-      provider.build_request(prompt: "Write a title.",
-                             field:,
-                             suggestion_count: 3)
-    end
-
-    assert_equal true, request.body[:store]
-  end
-
-  test "lists relevant text models" do
-    stub_request(:get, "https://api.openai.com/v1/models")
-      .with(headers: { "Authorization" => "Bearer secret" })
+  test "extracts message output text" do
+    stub_request(:post, Folio::Ai::Providers::OpenAi::ENDPOINT)
       .to_return(body: {
-        data: [
-          { id: "gpt-5.5", created: 1, owned_by: "openai" },
-          { id: "gpt-image-1", created: 2, owned_by: "openai" },
-          { id: "text-embedding-3-large", created: 3, owned_by: "openai" },
+        output: [
+          {
+            type: "message",
+            content: [
+              { type: "output_text", text: "Generated perex" },
+            ],
+          },
         ],
       }.to_json)
 
-    models = Folio::Ai::Providers::OpenAi.list_models(api_key: "secret")
+    provider = Folio::Ai::Providers::OpenAi.new(api_key: "secret", model: "gpt-test")
 
-    assert_equal ["gpt-5.5"], models.map(&:id)
-    assert_equal "gpt-5.5", models.first.label
+    assert_equal "Generated perex", provider.complete(prompt: "Write a perex.", suggestion_count: 3)
   end
 
-  test "normalizes responses API output text" do
-    provider = Folio::Ai::Providers::OpenAi.new(api_key: "secret", model: "gpt-5.5")
-    field = Folio::Ai::Field.new(key: :title)
-    response_body = {
-      output_text: {
-        suggestions: [
-          { text: "Generated title" },
-        ],
-      }.to_json,
-    }.to_json
-
-    suggestions = provider.normalize_response(response_body:,
-                                              field:,
-                                              suggestion_count: 3)
-
-    assert_equal ["Generated title"], suggestions.map(&:text)
-  end
-
-  test "normalizes responses API message output after reasoning items" do
-    provider = Folio::Ai::Providers::OpenAi.new(api_key: "secret", model: "gpt-5.5")
-    field = Folio::Ai::Field.new(key: :title)
-    response_body = {
-      output: [
-        {
-          type: "reasoning",
-          summary: [],
-        },
-        {
-          type: "message",
-          content: [
-            {
-              type: "output_text",
-              text: {
-                suggestions: [
-                  { text: "Generated title" },
-                ],
-              }.to_json,
-            },
-          ],
-        },
-      ],
-    }.to_json
-
-    suggestions = provider.normalize_response(response_body:,
-                                              field:,
-                                              suggestion_count: 3)
-
-    assert_equal ["Generated title"], suggestions.map(&:text)
-  end
-
-  test "generates suggestions through responses API with VCR" do
-    cassette = "folio/ai/providers/open_ai/generate_suggestions"
-    skip_without_openai_key_or_cassette(cassette)
-
-    provider = Folio::Ai::Providers::OpenAi.new(api_key: ENV.fetch("FOLIO_AI_OPENAI_API_KEY",
-                                                                    "recorded-openai-key"),
-                                                model: ENV.fetch("FOLIO_AI_OPENAI_MODEL",
-                                                                 Folio::Ai::PREMIUM_OPENAI_MODEL),
-                                                timeout: 60)
-    field = Folio::Ai::Field.new(key: :title, character_limit: 80)
-    prompt = <<~TEXT.squish
-      Create one concise Czech news headline for an article about safe AI prompt
-      management in a CMS. Return the text in Czech.
-    TEXT
-
-    VCR.use_cassette(cassette) do
-      suggestions = provider.generate_suggestions(prompt:, field:, suggestion_count: 1)
-
-      assert_equal 1, suggestions.size
-      assert_predicate suggestions.first.text, :present?
+  test "requires an API key" do
+    assert_raises(Folio::Ai::ProviderError) do
+      Folio::Ai::Providers::OpenAi.new(api_key: nil)
     end
   end
 
-  private
-    def skip_without_openai_key_or_cassette(cassette)
-      return if ENV["FOLIO_AI_OPENAI_API_KEY"].present?
-      return if File.exist?(File.join("test/fixtures/vcr_cassettes", "#{cassette}.yml"))
+  test "raises provider error for failed requests" do
+    stub_request(:post, Folio::Ai::Providers::OpenAi::ENDPOINT)
+      .to_return(status: 401, body: { error: { message: "Unauthorized" } }.to_json)
 
-      skip "Set FOLIO_AI_OPENAI_API_KEY to record this VCR cassette."
+    provider = Folio::Ai::Providers::OpenAi.new(api_key: "secret", model: "gpt-test")
+
+    assert_raises(Folio::Ai::ProviderError) do
+      provider.complete(prompt: "Write a title.")
     end
+  end
 end

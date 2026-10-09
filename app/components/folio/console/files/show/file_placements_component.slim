@@ -8,6 +8,8 @@
           th.f-c-files-show-file-placements__td = t('.th/type')
           th.f-c-files-show-file-placements__td = t('.th/placement_type')
           th.f-c-files-show-file-placements__td = t('.th/placement_label')
+          - if show_site_column?
+            th.f-c-files-show-file-placements__td = t('.th/site')
           th.f-c-files-show-file-placements__td = t('.th/published')
           th.f-c-files-show-file-placements__td = t('.th/created_at')
           th.f-c-files-show-file-placements__td
@@ -25,6 +27,10 @@
 
             td.f-c-files-show-file-placements__td
               = orphaned_label(file_placement)
+
+            - if show_site_column?
+              td.f-c-files-show-file-placements__td
+                span.text-muted —
 
             td.f-c-files-show-file-placements__td
               span.text-muted —
@@ -58,6 +64,10 @@
                   = placement_label(owner)
               - else
                 = placement_label(owner)
+
+            - if show_site_column?
+              td.f-c-files-show-file-placements__td
+                = placement_site_label(owner)
 
             td.f-c-files-show-file-placements__td
               - if row[:published] == true

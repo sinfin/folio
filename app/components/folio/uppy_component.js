@@ -9,7 +9,9 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
     maxNumberOfFiles: Number,
     existingId: String,
     allowedFormats: String,
-    maxFileSize: Number
+    maxFileSize: Number,
+    multipartUploadEnabled: Boolean,
+    multipartUploadMinFileSize: Number
   }
 
   static targets = ['trigger', 'loader']
@@ -34,6 +36,7 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
   connect () {
     window.folioUppyCounter = (window.folioUppyCounter || 0) + 1
     this.folioUppyCounter = window.folioUppyCounter
+    this.registerInstance()
 
     this.element.classList.add(`f-uppy--${window.folioUppyCounter}`)
     this.triggerTarget.classList.add(`f-uppy__trigger--${window.folioUppyCounter}`)
@@ -52,10 +55,14 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
   }
 
   disconnect () {
-    if (!this.uppy) return
+    if (this.uppy) {
+      this.uppy.destroy()
+      delete this.uppy
+    }
 
-    this.uppy.destroy()
-    delete this.uppy
+    delete this.windowDropTargetRegistered
+    this.unregisterInstance()
+    this.constructor.assignWindowDropTarget()
   }
 
   init () {
@@ -76,6 +83,12 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
         // Add .mov extension if video/quicktime is allowed
         if (allowedTypes.includes('video/quicktime') && !allowedTypes.includes('.mov')) {
           allowedTypes.push('.mov')
+        }
+
+        // Add .aac extension if audio/aac is allowed - Chromium reports
+        // application/octet-stream for dragged .aac files
+        if (allowedTypes.includes('audio/aac') && !allowedTypes.includes('.aac')) {
+          allowedTypes.push('.aac')
         }
 
         restrictions.allowedFileTypes = allowedTypes
@@ -119,23 +132,20 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
 
       this.uppy.use(window.Uppy.Dashboard, dashboardOpts)
 
-      this.uppy.use(window.Uppy.DropTarget, {
-        target: document.body
-      })
+      this.registerWindowDropTargetIfFirst()
 
       const args = { type: this.fileTypeValue }
       if (this.existingIdValue) args.existing_id = this.existingIdValue
 
-      this.uppy.use(window.Uppy.AwsS3, {
-        shouldUseMultipart: false,
+      const awsS3Options = {
+        shouldUseMultipart: (file) => {
+          return this.multipartUploadEnabledValue &&
+            file.size >= this.multipartUploadMinFileSizeValue
+        },
         getUploadParameters: (file) => {
           return window.Folio.Api.apiPost('/folio/api/s3/before', { ...args, file_name: file.name })
             .then((response) => {
-              this.uppy.setFileMeta(file.id, {
-                s3_path: response.s3_path,
-                jwt: response.jwt,
-                sanitized_name: response.file_name
-              })
+              this.uppyUploadStart(file, response)
 
               return {
                 method: 'PUT',
@@ -147,19 +157,68 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
               throw new Error(window.Folio.i18n(this.constructor.ERROR_MESSAGES, 'failedToPrepareUpload'))
             })
         }
-      })
+      }
+
+      if (this.multipartUploadEnabledValue) {
+        Object.assign(awsS3Options, {
+          createMultipartUpload: (file) => {
+            return window.Folio.Api.apiPost('/folio/api/s3/create_multipart_upload', {
+              ...args,
+              file_name: file.name,
+              content_type: file.type
+            }).then((response) => {
+              this.uppyUploadStart(file, response)
+
+              return {
+                uploadId: response.uploadId,
+                key: response.key
+              }
+            }).catch((error) => {
+              console.error('[Uppy] Failed to create S3 multipart upload:', error)
+              throw new Error(window.Folio.i18n(this.constructor.ERROR_MESSAGES, 'failedToPrepareUpload'))
+            })
+          },
+          signPart: (_file, partData) => {
+            return window.Folio.Api.apiPost('/folio/api/s3/sign_part', {
+              key: partData.key,
+              uploadId: partData.uploadId,
+              partNumber: partData.partNumber
+            }).then((response) => {
+              return { url: response.url }
+            }).catch((error) => {
+              console.error('[Uppy] Failed to sign S3 multipart upload part:', error)
+              throw new Error(window.Folio.i18n(this.constructor.ERROR_MESSAGES, 'failedToPrepareUpload'))
+            })
+          },
+          completeMultipartUpload: (_file, uploadData) => {
+            return window.Folio.Api.apiPost('/folio/api/s3/complete_multipart_upload', {
+              key: uploadData.key,
+              uploadId: uploadData.uploadId,
+              parts: uploadData.parts
+            }).then((response) => {
+              return { location: response.location }
+            }).catch((error) => {
+              console.error('[Uppy] Failed to complete S3 multipart upload:', error)
+              throw new Error(window.Folio.i18n(this.constructor.ERROR_MESSAGES, 'failedToPrepareUpload'))
+            })
+          },
+          abortMultipartUpload: (_file, uploadData) => {
+            return window.Folio.Api.apiPost('/folio/api/s3/abort_multipart_upload', {
+              key: uploadData.key,
+              uploadId: uploadData.uploadId
+            })
+          }
+        })
+      }
+
+      this.uppy.use(window.Uppy.AwsS3, awsS3Options)
 
       this.uppy.on('upload', (data) => {
         this.dispatch('upload', data)
       })
 
       this.uppy.on('upload-success', (file) => {
-        this.uppyUploadSuccess({
-          name: file.meta.sanitized_name || file.name,
-          s3_path: file.meta.s3_path,
-          jwt: file.meta.jwt,
-          preview: file.preview
-        })
+        this.uppyUploadSuccess(this.uppyFilePayload(file))
       })
 
       this.uppy.on('complete', (result) => {
@@ -173,6 +232,16 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
       this.uppy.on('error', (error) => {
         console.error('[Uppy] System error:', error)
         this.showError(window.Folio.i18n(this.constructor.ERROR_MESSAGES, 'systemError'))
+      })
+
+      this.uppy.on('upload-error', (file, error, response) => {
+        this.dispatch('upload-error', {
+          detail: {
+            file: this.uppyFilePayload(file),
+            error,
+            response
+          }
+        })
       })
 
       if (!this.inlineValue) {
@@ -190,6 +259,50 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
     }
   }
 
+  static instances () {
+    window.Folio.uppyInstances = window.Folio.uppyInstances || []
+    return window.Folio.uppyInstances
+  }
+
+  static assignWindowDropTarget () {
+    const instance = this.instances().find((uppyInstance) => uppyInstance.uppy)
+    if (!instance) return
+
+    instance.registerWindowDropTargetIfFirst()
+  }
+
+  registerInstance () {
+    const instances = this.constructor.instances()
+    if (instances.includes(this)) return
+
+    instances.push(this)
+  }
+
+  unregisterInstance () {
+    const instances = this.constructor.instances()
+    const index = instances.indexOf(this)
+
+    if (index === -1) return
+
+    instances.splice(index, 1)
+  }
+
+  isFirstInstance () {
+    return this.constructor.instances()[0] === this
+  }
+
+  registerWindowDropTargetIfFirst () {
+    if (!this.uppy) return
+    if (this.windowDropTargetRegistered) return
+    if (!this.isFirstInstance()) return
+
+    // Only one instance can own document body drops, otherwise each instance uploads the same dragged file.
+    this.uppy.use(window.Uppy.DropTarget, {
+      target: document.body
+    })
+    this.windowDropTargetRegistered = true
+  }
+
   uppyComplete (result) {
     // Remove only successfully uploaded files
     result.successful.forEach((file) => {
@@ -203,8 +316,51 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
     this.dispatch('complete', { detail: { result } })
   }
 
+  // Shared by the single-part and multipart paths: listeners (e.g. private
+  // attachments) create their pending row from this event and only call
+  // /folio/api/s3/after for files they saw start.
+  uppyUploadStart (file, response) {
+    const metadata = {
+      s3_path: response.s3_path,
+      jwt: response.jwt,
+      sanitized_name: response.file_name
+    }
+
+    this.uppy.setFileMeta(file.id, metadata)
+
+    const updatedFile = this.uppy.getFile(file.id) || file
+
+    this.dispatch('upload-start', {
+      detail: {
+        file: this.uppyFilePayload({
+          ...updatedFile,
+          meta: {
+            ...updatedFile.meta,
+            ...metadata
+          }
+        })
+      }
+    })
+  }
+
   uppyUploadSuccess (file) {
     this.dispatch('upload-success', { detail: { file } })
+  }
+
+  uppyFilePayload (file) {
+    if (!file) return {}
+
+    const meta = file.meta || {}
+
+    return {
+      id: file.id,
+      name: meta.sanitized_name || file.name,
+      size: file.size,
+      s3_path: meta.s3_path,
+      jwt: meta.jwt,
+      preview: file.preview,
+      progress: file.progress
+    }
   }
 
   showError (message) {

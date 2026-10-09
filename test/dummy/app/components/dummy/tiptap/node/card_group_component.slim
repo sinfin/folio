@@ -1,0 +1,41 @@
+.d-tiptap-node.d-tiptap-node-card-group.p-4.rounded.border
+  .container-fluid
+    - if @node.title.present?
+      h2.m-0 = @node.title
+
+    - if @node.intro.present?
+      .mt-2
+        = simple_format @node.intro
+
+    - if @node.cards.present?
+      .row.g-3.mt-1
+        - @node.cards.each do |card|
+          .col-12.col-md-6
+            .d-tiptap-node-card-group__card[
+              class="p-3 rounded border"
+              style="background: #{card.background == 'blue' ? '#d7e9ff' : '#fff'}; overflow-wrap: break-word;"
+            ]
+              - if card.cover
+                .mb-3
+                  = render(Dummy::Ui::ImageComponent.new(placement: card.cover_placement,
+                                                         size: "300x180#"))
+
+              - if card.title.present?
+                h3.h5.m-0 = card.title
+
+              - if card.content.present?
+                .mt-2
+                  = render(Folio::Tiptap::ContentComponent.new(record: card,
+                                                               attribute: :content,
+                                                               class_name: "w-100"))
+
+              - if card.text.present?
+                .mt-2
+                  = simple_format card.text
+
+              - if card.button_url_json.present?
+                .mt-3
+                  a.btn.btn-sm.btn-primary href=card.button_url_json["href"]
+                    = card.button_url_json["label"].presence || "Button"
+    - else
+      p.text-muted.mt-3.mb-0 No nested cards yet.

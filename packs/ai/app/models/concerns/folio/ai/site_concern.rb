@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# Adds AI settings, provider/model lookup, prompt availability, and instruction
+# associations to Folio sites.
 module Folio::Ai::SiteConcern
   extend ActiveSupport::Concern
 
@@ -12,8 +14,8 @@ module Folio::Ai::SiteConcern
              inverse_of: :site,
              dependent: :destroy
 
-    validate :ai_settings_should_be_valid, if: -> { Folio::Ai.enabled? }
     before_validation :set_default_ai_settings
+    before_validation :normalize_ai_model
   end
 
   def ai_settings_data
@@ -24,103 +26,85 @@ module Folio::Ai::SiteConcern
     ActiveModel::Type::Boolean.new.cast(ai_settings_data["enabled"])
   end
 
-  def ai_field_settings(integration_key:, field_key:)
+  def ai_provider
+    ai_settings_data["provider"].presence || Folio::Ai.config.default_provider.to_s
+  end
+
+  def ai_model
+    provider_class = ai_provider_class(ai_provider)
+    model = ai_settings_data["model"].presence
+    return model if provider_class.nil? || explicit_provider_model_available?(provider_class, model)
+
+    provider_class.default_model
+  end
+
+  def ai_settings_for(record_key:, key:, grouped: false)
+    collection_key = grouped ? "groups" : "fields"
+
     ai_settings_data.dig("integrations",
-                         integration_key.to_s,
-                         "fields",
-                         field_key.to_s) || {}
+                         record_key.to_s,
+                         collection_key,
+                         key.to_s) || {}
   end
 
-  def ai_prompt_for(integration_key:, field_key:)
-    ai_field_settings(integration_key:, field_key:)["prompt"].to_s.strip.presence
+  def ai_prompt_for(record_key:, key:, grouped: false)
+    ai_settings_for(record_key:,
+                    key:,
+                    grouped:).dig("prompt").to_s.strip.presence
   end
 
-  def ai_field_enabled_for?(integration_key:, field_key:)
-    settings = ai_field_settings(integration_key:, field_key:)
-
+  def ai_enabled_for?(record_key:, key:, grouped: false)
+    settings = ai_settings_for(record_key:,
+                               key:,
+                               grouped:)
     return true unless settings.key?("enabled")
 
     ActiveModel::Type::Boolean.new.cast(settings["enabled"])
   end
 
-  def ai_prompt_enabled_for?(integration_key:, field_key:)
+  def ai_prompt_enabled_for?(record_key:, key:, grouped: false)
     ai_enabled? &&
-      ai_field_enabled_for?(integration_key:, field_key:) &&
-      ai_prompt_for(integration_key:, field_key:).present?
-  end
-
-  def set_ai_prompt(integration_key:, field_key:, prompt:)
-    data = ai_settings_data.deep_dup
-    data["integrations"] ||= {}
-    data["integrations"][integration_key.to_s] ||= {}
-    data["integrations"][integration_key.to_s]["fields"] ||= {}
-    data["integrations"][integration_key.to_s]["fields"][field_key.to_s] ||= {}
-    data["integrations"][integration_key.to_s]["fields"][field_key.to_s]["prompt"] = prompt.to_s
-    self.ai_settings = data
+      ai_enabled_for?(record_key:,
+                      key:,
+                      grouped:) &&
+      ai_prompt_for(record_key:,
+                    key:,
+                    grouped:).present?
   end
 
   private
-    def ai_settings_should_be_valid
-      return if self[:ai_settings].blank?
-
-      unless self[:ai_settings].is_a?(Hash)
-        errors.add(:ai_settings, :invalid_ai_settings_structure)
-        return
-      end
-
-      validate_ai_provider(ai_settings_data["default_provider"])
-      validate_ai_integrations(ai_settings_data["integrations"])
-    end
-
-    def validate_ai_integrations(integrations)
-      return if integrations.blank?
-      return add_invalid_ai_settings_structure unless integrations.is_a?(Hash)
-
-      integrations.each do |key, settings|
-        validate_ai_integration(key, settings || {})
-      end
-    end
-
-    def validate_ai_integration(key, settings)
-      integration = Folio::Ai.registry.integration(key)
-      return errors.add(:ai_settings, :unknown_ai_integration, key:) if integration.blank?
-      return if settings.blank?
-      return add_invalid_ai_settings_structure unless settings.is_a?(Hash)
-
-      validate_ai_provider(settings["default_provider"])
-      validate_ai_fields(integration, settings["fields"])
-    end
-
-    def validate_ai_fields(integration, fields)
-      return if fields.blank?
-      return add_invalid_ai_settings_structure unless fields.is_a?(Hash)
-
-      fields.each do |key, settings|
-        validate_ai_field(integration, key, settings || {})
-      end
-    end
-
-    def validate_ai_field(integration, key, settings)
-      field = Folio::Ai.registry.field(integration.key, key)
-      return errors.add(:ai_settings, :unknown_ai_field, key:, integration: integration.key) if field.blank?
-      return if settings.blank?
-      return add_invalid_ai_settings_structure unless settings.is_a?(Hash)
-
-      validate_ai_provider(settings["provider"])
-    end
-
-    def validate_ai_provider(provider)
-      return if provider.blank?
-      return if Folio::Ai.known_provider?(provider)
-
-      errors.add(:ai_settings, :unknown_ai_provider, provider:)
-    end
-
-    def add_invalid_ai_settings_structure
-      errors.add(:ai_settings, :invalid_ai_settings_structure)
-    end
-
     def set_default_ai_settings
-      self.ai_settings = {} if self[:ai_settings].nil?
+      self.ai_settings = {} if ai_settings.nil?
+    end
+
+    def normalize_ai_model
+      settings = ai_settings_data
+      provider = settings["provider"].presence
+      return if provider.blank?
+
+      provider_class = ai_provider_class(provider)
+      return if provider_class.nil?
+
+      model = settings["model"].presence
+      return if model.blank? || explicit_provider_model_available?(provider_class, model)
+
+      settings["model"] = ""
+      self.ai_settings = settings
+    end
+
+    def ai_provider_class(provider)
+      Folio::Ai.provider_class(provider)
+    rescue ArgumentError
+      nil
+    end
+
+    def explicit_provider_model_available?(provider_class, model)
+      model.present? && explicit_provider_models(provider_class).include?(model.to_s)
+    end
+
+    def explicit_provider_models(provider_class)
+      default_model = provider_class.default_model.to_s
+
+      provider_class.models.map(&:to_s).reject { |model| model == default_model }
     end
 end

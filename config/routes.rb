@@ -175,6 +175,12 @@ Folio::Engine.routes.draw do
           get :list
         end
 
+        if Folio.pack_enabled?(:ai)
+          post "ai/text_suggestions",
+               to: "/folio/ai/console/api/text_suggestions#create",
+               as: :ai_text_suggestions
+        end
+
         resources :site_user_links, only: %i[] do
           member do
             patch :set_locked
@@ -183,6 +189,7 @@ Folio::Engine.routes.draw do
 
         resource :current_user, only: [] do
           post :console_url_ping
+          post :console_url_clear
           post :update_console_preferences
         end
 
@@ -279,15 +286,6 @@ Folio::Engine.routes.draw do
         get :react_select
       end
 
-      if Folio.pack_enabled?(:ai)
-        resource :ai_text_suggestions,
-                 only: [],
-                 controller: "/folio/ai/console/api/text_suggestions" do
-          post :text_suggestions
-          post :instructions
-        end
-      end
-
       resources :file_placements, only: %i[index],
                                   path: "files/:file_id/file_placements"
     end
@@ -323,6 +321,10 @@ Folio::Engine.routes.draw do
 
       resource :s3, only: [], controller: "s3" do
         post :before
+        post :create_multipart_upload
+        post :sign_part
+        post :complete_multipart_upload
+        post :abort_multipart_upload
         post :after
         get :file_list_file
       end

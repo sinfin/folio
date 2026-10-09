@@ -76,6 +76,25 @@
     }
   }
 
+  // Without fillWidth the iframe keeps its attribute width and only shrinks to
+  // fit narrower containers; fillWidth also lets it grow to the container.
+  const makeEmbeddedIframesResponsive = (container, fillWidth) => {
+    container.querySelectorAll('iframe').forEach((iframe) => {
+      const width = parseInt(iframe.getAttribute('width'), 10)
+      const height = parseInt(iframe.getAttribute('height'), 10)
+
+      if (width > 0 && height > 0) {
+        iframe.style.aspectRatio = `${width} / ${height}`
+        iframe.style.height = 'auto'
+        iframe.style.maxWidth = '100%'
+
+        if (fillWidth) {
+          iframe.style.width = '100%'
+        }
+      }
+    })
+  }
+
   const createEmbedElement = (data) => {
     const container = document.createElement('div')
     container.className = 'f-embed__container'
@@ -86,8 +105,15 @@
       container.classList.add('f-embed__container--centered')
     }
 
+    const fullWidthIframes = urlParams.get('fullWidthIframes') === '1'
+
+    if (fullWidthIframes) {
+      container.classList.add('f-embed__container--full-width-iframes')
+    }
+
     if (data.html) {
       container.innerHTML = data.html
+      makeEmbeddedIframesResponsive(container, fullWidthIframes)
 
       // Extract and execute scripts manually
       const scripts = container.querySelectorAll('script')

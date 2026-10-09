@@ -15,7 +15,7 @@ class Folio::Console::Files::Show::FilePlacementsComponent < Folio::Console::App
 
     def rows
       @file_placements.map do |file_placement|
-        owner = unwrap_owner(file_placement.placement)
+        owner = placement_record(file_placement)
 
         {
           file_placement:,
@@ -25,10 +25,6 @@ class Folio::Console::Files::Show::FilePlacementsComponent < Folio::Console::App
           action: owner ? placement_action(owner) : { type: :none },
         }
       end
-    end
-
-    def unwrap_owner(owner)
-      owner.is_a?(Folio::Atom::Base) ? owner.placement : owner
     end
 
     # true / false / nil (nil = owner has no published concept or is orphaned)
@@ -49,6 +45,21 @@ class Folio::Console::Files::Show::FilePlacementsComponent < Folio::Console::App
 
     def placement_label(placement)
       placement.try(:to_label) || "##{placement.id}"
+    end
+
+    def placement_record(file_placement)
+      owner = file_placement.placement
+      owner.is_a?(Folio::Atom::Base) ? owner.placement : owner
+    end
+
+    def placement_site_label(placement)
+      return "-" unless placement.respond_to?(:site)
+
+      placement.site&.to_label || "-"
+    end
+
+    def show_site_column?
+      Rails.application.config.folio_shared_files_between_sites
     end
 
     def placement_action(placement)

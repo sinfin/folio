@@ -25,21 +25,3 @@ class Folio::Attribute < Folio::ApplicationRecord
     folio_attribute_type.data_type
   end
 end
-
-# == Schema Information
-#
-# Table name: folio_attributes
-#
-#  id                      :bigint(8)        not null, primary key
-#  folio_attribute_type_id :bigint(8)
-#  placement_type          :string
-#  placement_id            :bigint(8)
-#  value                   :string
-#  created_at              :datetime         not null
-#  updated_at              :datetime         not null
-#
-# Indexes
-#
-#  index_folio_attributes_on_folio_attribute_type_id  (folio_attribute_type_id)
-#  index_folio_attributes_on_placement                (placement_type,placement_id)
-#

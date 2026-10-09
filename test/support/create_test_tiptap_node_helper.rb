@@ -7,6 +7,8 @@ def create_test_tiptap_node(klass, *fill_attrs, **data_attrs)
     attrs[field] = case field
                    when :cover
                      create(:folio_file_image)
+                   when :audio_cover
+                     create(:folio_file_audio)
                    when :video_cover
                      create(:folio_file_video)
                    when :images

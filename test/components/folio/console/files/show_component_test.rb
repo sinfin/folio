@@ -15,6 +15,20 @@ class Folio::Console::Files::ShowComponentTest < Folio::Console::ComponentTest
     end
   end
 
+  def test_render_places_image_thumbnail_regions_around_the_metadata_row
+    with_controller_class(Folio::Console::File::ImagesController) do
+      with_request_url "/console/file/images" do
+        file = create(:folio_file_image)
+        file.update!(thumbnail_sizes: { "100x100#" => { url: "https://example.com/100x100.jpg" } })
+
+        render_inline(Folio::Console::Files::ShowComponent.new(file:))
+
+        assert_selector(".f-c-files-show__preview-col .f-c-files-show-thumbnails-main")
+        assert_selector(".f-c-files-show__row + .f-c-files-show-thumbnails-details[hidden]", visible: :all)
+      end
+    end
+  end
+
   def test_warning_for_returns_nil_when_file_has_no_placements
     image = create(:folio_file_image, file_placements_count: 0)
     component = Folio::Console::Files::ShowComponent.new(file: image)

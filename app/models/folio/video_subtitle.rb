@@ -224,31 +224,3 @@ class Folio::VideoSubtitle < Folio::ApplicationRecord
       end
     end
 end
-
-# == Schema Information
-#
-# Table name: folio_video_subtitles
-#
-#  id         :bigint(8)        not null, primary key
-#  video_id   :bigint(8)        not null
-#  language   :string           not null
-#  format     :string           default("vtt")
-#  text       :text
-#  enabled    :boolean          default(FALSE)
-#  metadata   :jsonb
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#
-# Indexes
-#
-#  index_folio_video_subtitles_on_enabled                (enabled)
-#  index_folio_video_subtitles_on_language               (language)
-#  index_folio_video_subtitles_on_metadata               (metadata) USING gin
-#  index_folio_video_subtitles_on_video_id               (video_id)
-#  index_folio_video_subtitles_on_video_id_and_language  (video_id,language) UNIQUE
-#
-# Foreign Keys
-#
-#  fk_rails_...  (video_id => folio_files.id)
-#
-#

@@ -1,91 +1,94 @@
 # frozen_string_literal: true
 
+# Renders site-level AI provider/model settings and registered field prompts.
 class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationComponent
-  BEM_CLASS_NAME = "f-ai-c-site-settings"
-
   def initialize(form:)
     @form = form
     @site = form.object
   end
 
   def render?
-    Folio::Ai.enabled? && integrations.present?
+    Folio::Ai.config.enabled?
   end
 
   private
-    def original_bem_class_name
-      BEM_CLASS_NAME
-    end
-
-    def integrations
-      Folio::Ai.registry.integrations_for_select
-    end
-
-    def providers
-      Folio::Ai.eligible_provider_models.keys.map(&:to_s)
-    end
-
     def provider_configuration_available?
-      providers.present?
+      provider_keys.present?
     end
 
-    def provider_options
-      provider_collection
+    def component_data
+      stimulus_controller("f-ai-c-site-settings",
+                          values: { providers: providers_json })
     end
 
-    def model_options(provider:, selected:, blank_label:)
-      options = [[blank_label, ""]]
-      return options unless Folio::Ai.eligible_provider?(provider)
-
-      options += model_catalog_result(provider, selected).models.map do |option|
-        [option.select_label, option.id]
-      end
-
-      options
+    def records
+      Folio::Ai.registry.records
     end
 
-    def boolean_input(*path, label:, checked:, disabled: false)
+    def record_label(record)
+      record[:label].presence || record_class(record)&.model_name&.human(count: 2)
+    end
+
+    def fields(record)
+      record.fetch(:fields).values
+    end
+
+    def field_label(record, field)
+      field[:label].presence ||
+        record_class(record)&.human_attribute_name(field.fetch(:key)) ||
+        field.fetch(:key).humanize
+    end
+
+    def groups(record)
+      record.fetch(:groups).values
+    end
+
+    def group_label(group)
+      group[:label].presence || group.fetch(:key).humanize
+    end
+
+    def boolean_input(*path, label:, checked:)
       @form.input(input_attribute(*path),
                   as: :boolean,
                   label:,
                   required: false,
-                  input_html: input_html(*path, checked:, disabled:))
+                  input_html: input_html(*path, checked:))
     end
 
-    def provider_input(*path, label:, selected:, include_blank: false)
-      select_input(*path,
-                   label:,
-                   collection: provider_options,
-                   selected:,
-                   include_blank:)
+    def provider_input(*path, label:, selected:)
+      @form.input(input_attribute(*path),
+                  as: :select,
+                  collection: provider_options,
+                  include_blank: false,
+                  selected: selected.to_s,
+                  label:,
+                  required: false,
+                  input_html: input_html(*path,
+                                         class: "form-select",
+                                         data: stimulus_data(target: "provider",
+                                                             action: { change: "changeProvider" })))
     end
 
-    def model_input(*path, label:, provider:, selected:, blank_label:)
-      select_input(*path,
-                   label:,
-                   collection: model_options(provider:, selected:, blank_label:),
-                   selected: selected.to_s,
-                   include_blank: false)
+    def model_input(*path, label:, provider:, selected:)
+      @form.input(input_attribute(*path),
+                  as: :select,
+                  collection: model_options(provider:),
+                  include_blank: false,
+                  selected: selected.to_s,
+                  label:,
+                  required: false,
+                  input_html: input_html(*path,
+                                         class: "form-select",
+                                         data: stimulus_target("model")))
     end
 
-    def text_area_input(*path, label:, value:, rows: 2)
+    def text_area_input(*path, label:, value:)
       @form.input(input_attribute(*path),
                   as: :text,
                   label:,
                   required: false,
                   autosize: true,
-                  input_html: input_html(*path, value:, rows:))
-    end
-
-    def select_input(*path, label:, collection:, selected:, include_blank:)
-      @form.input(input_attribute(*path),
-                  as: :select,
-                  collection:,
-                  include_blank:,
-                  selected: selected.to_s,
-                  label:,
-                  required: false,
-                  input_html: input_html(*path, class: "form-select"))
+                  input_html: input_html(*path, value:, rows: 2))
     end
 
     def input_attribute(*path)
@@ -99,183 +102,172 @@ class Folio::Ai::Console::SiteSettingsComponent < Folio::Console::ApplicationCom
       }.merge(options)
     end
 
-    def provider_collection
-      providers.map { |provider| [provider_label(provider), provider] }
-    end
-
-    def provider_label(provider)
-      t(".providers.#{provider}", default: provider.to_s.humanize)
-    end
-
     def field_name(*path)
       "#{@form.object_name}[ai_settings]#{path.map { |key| "[#{key}]" }.join}"
     end
 
     def field_id(*path)
-      "#{@form.object_name}_ai_settings_#{path.join("_")}".parameterize(separator: "_")
+      "#{@form.object_name}_ai_settings_#{path.join('_')}".parameterize(separator: "_")
+    end
+
+    def record_class(record)
+      record[:record_class_name].to_s.safe_constantize
+    end
+
+    def provider_options
+      provider_keys.map { |provider| [provider_option_label(provider), provider] }
+    end
+
+    def providers
+      provider_keys.each_with_object({}) do |provider, hash|
+        hash[provider.to_sym] = known_provider_class(provider)
+      end
+    end
+
+    def available_providers
+      Folio::Ai.available_providers
+    end
+
+    def site_enabled?
+      @site.respond_to?(:ai_enabled?) && @site.ai_enabled?
+    end
+
+    def selected_provider
+      return saved_provider if saved_provider_known?
+
+      provider = @site.ai_provider
+      return provider.to_s if provider_keys.include?(provider.to_s)
+
+      provider_keys.first.to_s
+    end
+
+    def unavailable_provider_warning
+      return unless unavailable_saved_provider?
+
+      t(".provider_unavailable_warning",
+        provider: provider_label(saved_provider))
+    end
+
+    def model_value
+      model = site_setting("model").presence
+      return model if explicit_provider_model_values(selected_provider).include?(model.to_s)
+
+      ""
+    end
+
+    def model_options(provider:)
+      [[model_placeholder(provider), ""]] + explicit_provider_models(provider).map { |model| [model, model] }
+    end
+
+    def model_placeholder(provider)
+      model = provider_default_model(provider)
+      return t(".model_placeholder_blank") if model.blank?
+
+      t(".model_placeholder", model:)
+    end
+
+    def field_prompt(record, field)
+      @site.ai_prompt_for(record_key: record.fetch(:key),
+                          key: field.fetch(:key))
+    end
+
+    def group_prompt(record, group)
+      @site.ai_prompt_for(record_key: record.fetch(:key),
+                          key: group.fetch(:key),
+                          grouped: true)
+    end
+
+    def field_enabled?(record, field)
+      @site.ai_enabled_for?(record_key: record.fetch(:key),
+                            key: field.fetch(:key))
+    end
+
+    def group_enabled?(record, group)
+      @site.ai_enabled_for?(record_key: record.fetch(:key),
+                            key: group.fetch(:key),
+                            grouped: true)
     end
 
     def site_setting(key)
       @site.ai_settings_data[key.to_s]
     end
 
-    def integration_setting(integration, key)
-      @site.ai_settings_data.dig("integrations", integration.key, key.to_s)
-    end
+    def field_hint(field)
+      return unless field[:character_limit].present?
 
-    def field_setting(integration, field, key)
-      @site.ai_settings_data.dig("integrations",
-                                 integration.key,
-                                 "fields",
-                                 field.key,
-                                 key.to_s)
-    end
-
-    def site_enabled?
-      @site.ai_enabled?
-    end
-
-    def field_enabled?(integration, field)
-      @site.ai_field_enabled_for?(integration_key: integration.key,
-                                  field_key: field.key)
-    end
-
-    def field_prompt(integration, field)
-      @site.ai_prompt_for(integration_key: integration.key,
-                          field_key: field.key)
-    end
-
-    def field_label(integration, field)
-      field.label(record_class: integration.record_class)
-    end
-
-    def default_provider
-      eligible_provider_or_nil(raw_default_provider) || providers.first.to_s
-    end
-
-    def default_model
-      return if default_provider != raw_default_provider
-
-      site_setting("default_model")
-    end
-
-    def default_effective_model
-      default_model.presence || provider_default_model(default_provider)
-    end
-
-    def integration_provider(integration)
-      eligible_provider_or_nil(raw_integration_provider(integration))
-    end
-
-    def integration_model(integration)
-      return if raw_integration_provider(integration).present? && integration_provider(integration).blank?
-
-      integration_setting(integration, "default_model")
-    end
-
-    def integration_effective_provider(integration)
-      integration_provider(integration).presence || default_provider
-    end
-
-    def integration_effective_model(integration)
-      return integration_model(integration) if integration_model(integration).present?
-      return provider_default_model(integration_provider(integration)) if integration_provider(integration).present?
-
-      default_effective_model
-    end
-
-    def integration_blank_model_label(integration)
-      if integration_provider(integration).present?
-        provider_default_model_label(integration_provider(integration))
-      else
-        inherited_model_label(default_effective_model)
-      end
-    end
-
-    def field_provider(integration, field)
-      eligible_provider_or_nil(raw_field_provider(integration, field))
-    end
-
-    def field_model(integration, field)
-      return if raw_field_provider(integration, field).present? && field_provider(integration, field).blank?
-
-      field_setting(integration, field, "model")
-    end
-
-    def field_effective_provider(integration, field)
-      field_provider(integration, field).presence || integration_effective_provider(integration)
-    end
-
-    def field_effective_model(integration, field)
-      return field_model(integration, field) if field_model(integration, field).present?
-      return provider_default_model(field_provider(integration, field)) if field_provider(integration, field).present?
-
-      integration_effective_model(integration)
-    end
-
-    def field_blank_model_label(integration, field)
-      if field_provider(integration, field).present?
-        provider_default_model_label(field_provider(integration, field))
-      else
-        inherited_model_label(integration_effective_model(integration))
-      end
+      t(".character_limit",
+        count: field[:character_limit])
     end
 
     def provider_default_model(provider)
-      return unless Folio::Ai.eligible_provider?(provider)
-
-      Folio::Ai.default_model(provider)
+      provider_class(provider)&.default_model
     end
 
-    def provider_default_model_label(provider)
-      default_model = provider_default_model(provider)
-
-      if default_model.present?
-        t(".provider_default_model", model: default_model)
-      else
-        t(".inherit_model")
-      end
+    def provider_models(provider)
+      provider_class(provider)&.models || []
     end
 
-    def inherited_model_label(model)
-      if model.present?
-        t(".inherited_model", model:)
-      else
-        t(".inherit_model")
-      end
+    def explicit_provider_models(provider)
+      default_model = provider_default_model(provider).to_s
+
+      provider_models(provider).reject { |model| model.to_s == default_model }
     end
 
-    def model_catalog(provider)
-      @model_catalogs ||= {}
-      @model_catalogs[provider.to_s] ||= Folio::Ai::ModelCatalog.new(provider:)
+    def explicit_provider_model_values(provider)
+      explicit_provider_models(provider).map(&:to_s)
     end
 
-    def model_catalog_result(provider, selected)
-      @model_catalog_results ||= {}
-      @model_catalog_results[[provider.to_s, selected.to_s]] ||= model_catalog(provider).result(selected:)
+    def provider_class(provider)
+      providers[provider.to_sym]
     end
 
-    def raw_default_provider
-      (site_setting("default_provider").presence ||
-        Folio::Ai.default_provider).to_s
+    def providers_json
+      providers.each_with_object({}) do |(provider, provider_class), hash|
+        hash[provider.to_s] = {
+          defaultModel: provider_class.default_model,
+          defaultLabel: model_placeholder(provider),
+          models: explicit_provider_models(provider),
+        }
+      end.to_json
     end
 
-    def raw_integration_provider(integration)
-      integration_setting(integration, "default_provider")
+    def provider_keys
+      keys = available_providers.keys.map(&:to_s)
+      return keys unless unavailable_saved_provider?
+
+      [saved_provider, *keys].uniq
     end
 
-    def raw_field_provider(integration, field)
-      field_setting(integration, field, "provider")
+    def saved_provider
+      site_setting("provider").presence&.to_s
     end
 
-    def eligible_provider_or_nil(provider)
-      provider = provider.to_s
-      provider if Folio::Ai.eligible_provider?(provider)
+    def saved_provider_known?
+      saved_provider.present? && known_provider_class(saved_provider).present?
     end
 
-    def field_hint(field)
-      return unless field.character_limit.present?
+    def unavailable_saved_provider?
+      saved_provider_known? && !available_provider?(saved_provider)
+    end
 
-      t(".character_limit", count: field.character_limit)
+    def available_provider?(provider)
+      available_providers.key?(provider.to_sym)
+    end
+
+    def known_provider_class(provider)
+      Folio::Ai.provider_class(provider)
+    rescue ArgumentError
+      nil
+    end
+
+    def provider_label(provider)
+      t(".providers.#{provider}")
+    end
+
+    def provider_option_label(provider)
+      label = provider_label(provider)
+      return label unless provider.to_s == saved_provider && unavailable_saved_provider?
+
+      t(".provider_unavailable_label", provider: label)
     end
 end

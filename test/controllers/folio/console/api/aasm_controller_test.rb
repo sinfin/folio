@@ -124,4 +124,43 @@ class Folio::Console::Api::AasmControllerTest < Folio::Console::BaseControllerTe
     assert json["errors"].first["title"].present?
     assert_nil json["meta"]
   end
+
+  test "event sends aasm mail when email fields are present" do
+    lead = create(:folio_lead)
+    assert_equal "submitted", lead.aasm_state
+
+    assert_enqueued_emails 1 do
+      post event_console_api_aasm_path, params: {
+        klass: "Folio::Lead",
+        id: lead.id,
+        aasm_event: "to_handled",
+        event_email_enabled: "1",
+        event_email_subject: "Handled",
+        event_email_text: "Your request was handled.",
+        email: "recipient@test.test",
+      }
+    end
+
+    assert_response(:success)
+    assert_equal "handled", lead.reload.aasm_state
+  end
+
+  test "event does not change state when email is enabled but subject is blank" do
+    lead = create(:folio_lead)
+
+    assert_no_enqueued_emails do
+      post event_console_api_aasm_path, params: {
+        klass: "Folio::Lead",
+        id: lead.id,
+        aasm_event: "to_handled",
+        event_email_enabled: "1",
+        event_email_subject: "",
+        event_email_text: "Your request was handled.",
+        email: "recipient@test.test",
+      }
+    end
+
+    assert_response 422
+    assert_equal "submitted", lead.reload.aasm_state
+  end
 end

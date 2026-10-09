@@ -15,6 +15,11 @@ cs:
   folio:
     nested_fields_component:
       add: Přidat
+      add_more: Přidat další
+      destroy: Odebrat
+      duplicate: Duplikovat
+      move_down: Posunout dolů
+      move_up: Posunout nahoru
 
     root_breadcrumb: Úvodní stránka
     file:

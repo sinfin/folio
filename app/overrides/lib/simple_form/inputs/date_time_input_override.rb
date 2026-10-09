@@ -19,11 +19,13 @@ SimpleForm::Inputs::DateTimeInput.class_eval do
       @builder.object.class.respond_to?(:type_for_attribute) ? @builder.object.class.type_for_attribute(attribute_name).type : :date
     end
 
+    min_max_format = type == :date ? :console_short_date : :console_short
+
     register_stimulus("f-input-date-time", values: {
       calendar_on_top: options[:calendar_on_top],
       type:,
-      min: options[:min] ? I18n.l(options[:min].to_datetime, format: :console_short) : nil,
-      max: options[:max] ? I18n.l(options[:max].to_datetime, format: :console_short) : nil,
+      min: options[:min] ? I18n.l(options[:min].to_datetime, format: min_max_format) : nil,
+      max: options[:max] ? I18n.l(options[:max].to_datetime, format: min_max_format) : nil,
       sprite_url: ActionController::Base.helpers.image_path("folio/input/date_time/svg-sprite.svg"),
     }.compact)
 

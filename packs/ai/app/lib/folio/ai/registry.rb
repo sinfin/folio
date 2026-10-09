@@ -1,100 +1,124 @@
 # frozen_string_literal: true
 
+# Stores record, field, and group metadata used by AI-enabled form inputs.
 class Folio::Ai::Registry
-  class Integration
-    attr_reader :key,
-                :record_class_name,
-                :fields,
-                :metadata
-
-    def initialize(key:, record_class_name:, label: nil, fields:, metadata:)
-      @key = key
-      @record_class_name = record_class_name
-      @label = label.presence
-      @fields = fields
-      @metadata = metadata
-    end
-
-    def label
-      @label.presence || record_class.model_name.human(count: 2)
-    end
-
-    def record_class
-      record_class_name.safe_constantize ||
-        raise(ArgumentError, "AI integration record_class_name #{record_class_name} is unavailable")
-    end
-  end
+  CONTENT_REQUIREMENTS = [
+    :tiptap_or_atoms,
+  ].freeze
 
   def initialize
-    @integrations = {}
+    @records = {}
   end
 
-  def register_integration(key: nil, record_class_name:, label: nil, fields: [], **metadata)
-    klass = normalize_record_class(record_class_name)
-    normalized_key = normalize_key(key.nil? ? klass.table_name : key)
+  def register_record(record_class_name:, fields:, groups: [], content_requirement: nil)
+    record_class = resolve_record_class(record_class_name)
+    key = record_class.table_name
+    raise ArgumentError, "AI record already registered: #{key}" if @records.key?(key)
 
-    raise ArgumentError, "AI integration key is blank" if normalized_key.blank?
-    raise ArgumentError, "AI integration #{normalized_key} is already registered" if integrations.key?(normalized_key)
+    normalized_fields = normalize_fields(fields, record_class:)
 
-    integrations[normalized_key] = Integration.new(key: normalized_key,
-                                                   record_class_name: klass.name,
-                                                   label:,
-                                                   fields: normalize_fields(fields),
-                                                   metadata:)
+    @records[key] = {
+      key:,
+      record_class_name: record_class.name,
+      content_requirement: normalize_content_requirement(content_requirement),
+      fields: normalized_fields,
+      groups: normalize_groups(groups, fields: normalized_fields),
+    }
   end
 
-  def integration(key)
-    integrations[normalize_key(key)]
+  def record(key)
+    @records[key.to_s]
   end
 
-  def field(integration_key, field_key)
-    integration(integration_key)&.fields&.[](normalize_key(field_key))
+  def records
+    @records.values
   end
 
-  def field_registered?(integration_key, field_key)
-    field(integration_key, field_key).present?
+  def field(record_key, field_key)
+    record(record_key)&.dig(:fields, field_key.to_s)
   end
 
-  def integrations_for_select
-    integrations.values
+  def group(record_key, group_key)
+    record(record_key)&.dig(:groups, group_key.to_s)
   end
 
   private
-    attr_reader :integrations
+    def resolve_record_class(record_class_name)
+      record_class = record_class_name.to_s.safe_constantize
+      return record_class if record_class && record_class < ActiveRecord::Base
 
-    def normalize_fields(fields)
+      raise ArgumentError, "AI record class must be an ActiveRecord model"
+    end
+
+    def normalize_fields(fields, record_class:)
       Array(fields).each_with_object({}) do |field_config, hash|
-        field = normalize_field(field_config)
+        field = normalize_field(field_config, record_class:)
+        raise ArgumentError, "AI field already registered: #{field[:key]}" if hash.key?(field[:key])
 
-        raise ArgumentError, "AI field key is blank" if field.key.blank?
-        raise ArgumentError, "AI field #{field.key} is registered twice" if hash.key?(field.key)
-
-        hash[field.key] = field
+        hash[field[:key]] = field
       end
     end
 
-    def normalize_field(field_config)
-      case field_config
-      when Folio::Ai::Field
-        field_config
-      when Hash
-        Folio::Ai::Field.new(**field_config.symbolize_keys)
-      else
-        Folio::Ai::Field.new(key: field_config)
+    def normalize_field(field_config, record_class:)
+      attributes = case field_config
+                   when Hash
+                     field_config.symbolize_keys
+                   else
+                     { key: field_config }
+      end
+
+      key = normalize_key(attributes[:key])
+
+      {
+        key:,
+        label: attributes[:label].presence,
+        character_limit: attributes[:character_limit],
+      }
+    end
+
+    def normalize_groups(groups, fields:)
+      Array(groups).each_with_object({}) do |group_config, hash|
+        group = normalize_group(group_config, fields:)
+        raise ArgumentError, "AI group already registered: #{group[:key]}" if hash.key?(group[:key])
+
+        hash[group[:key]] = group
       end
     end
 
-    def normalize_key(key)
-      key.to_s.strip
+    def normalize_group(group_config, fields:)
+      attributes = case group_config
+                   when Hash
+                     group_config.symbolize_keys
+                   else
+                     { key: group_config }
+      end
+
+      key = normalize_key(attributes[:key])
+      raise ArgumentError, "AI group key cannot match field key: #{key}" if fields.key?(key)
+
+      field_keys = Array(attributes[:fields]).map { |field_key| normalize_key(field_key) }
+      raise ArgumentError, "AI group fields cannot be blank" if field_keys.blank?
+
+      missing_field_keys = field_keys.reject { |field_key| fields.key?(field_key) }
+      raise ArgumentError, "AI group fields are not registered: #{missing_field_keys.join(', ')}" if missing_field_keys.present?
+
+      {
+        key:,
+        label: attributes[:label].presence,
+        fields: field_keys,
+      }
     end
 
-    def normalize_record_class(record_class_name)
-      normalized_name = normalize_key(record_class_name)
-      raise ArgumentError, "AI integration record_class_name is blank" if normalized_name.blank?
+    def normalize_content_requirement(value)
+      return if value.blank?
 
-      klass = normalized_name.safe_constantize
-      return klass if klass && klass < ActiveRecord::Base
+      requirement = value.to_sym
+      return requirement if CONTENT_REQUIREMENTS.include?(requirement)
 
-      raise ArgumentError, "AI integration record_class_name must be an ActiveRecord::Base subclass"
+      raise ArgumentError, "AI content requirement is not supported: #{value}"
+    end
+
+    def normalize_key(value)
+      value.to_s.strip.presence || raise(ArgumentError, "AI field key cannot be blank")
     end
 end

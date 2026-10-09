@@ -7,6 +7,25 @@ class Folio::Tiptap::TextExtractorTest < ActiveSupport::TestCase
     tiptap_node structure: { title: :string }
   end
 
+  class NestedCard < Folio::Tiptap::Node
+    tiptap_node nested: true,
+                structure: {
+                   title: :string,
+                   text: :text,
+                   content: :rich_text,
+                 }
+  end
+
+  class CardGroup < Folio::Tiptap::Node
+    tiptap_node structure: {
+      title: :string,
+      cards: {
+        type: :nested_nodes,
+        node_class: NestedCard,
+      },
+    }
+  end
+
   test "returns empty string for blank input" do
     assert_equal "", Folio::Tiptap.extract_text(nil)
     assert_equal "", Folio::Tiptap.extract_text({})
@@ -99,6 +118,33 @@ class Folio::Tiptap::TextExtractorTest < ActiveSupport::TestCase
     })
 
     assert_equal "Outer Inside rich text.", Folio::Tiptap.extract_text(doc)
+  end
+
+  test "extracts textual attributes from nested folio tiptap nodes" do
+    rich_text_json = {
+      "type" => "doc",
+      "content" => [
+        { "type" => "paragraph",
+          "content" => [{ "type" => "text", "text" => "Nested rich text." }] }
+      ]
+    }.to_json
+
+    doc = doc_with_node(CardGroup, {
+      "title" => "Group title",
+      "cards" => [
+        nested_attrs(NestedCard, {
+          "title" => "First card",
+          "text" => "First text",
+          "content" => rich_text_json,
+        }),
+        nested_attrs(NestedCard, {
+          "title" => "Second card",
+        }),
+      ],
+    })
+
+    assert_equal "Group title First card First text Nested rich text. Second card",
+                 Folio::Tiptap.extract_text(doc)
   end
 
   test "ignores non-textual attribute types (image, integer, relation, embed, url_json, collection)" do
@@ -197,6 +243,14 @@ class Folio::Tiptap::TextExtractorTest < ActiveSupport::TestCase
       {
         "type" => "folioTiptapNode",
         "attrs" => { "type" => klass.name, "version" => 1, "data" => data }
+      }
+    end
+
+    def nested_attrs(klass, data)
+      {
+        "type" => klass.name,
+        "version" => 1,
+        "data" => data,
       }
     end
 

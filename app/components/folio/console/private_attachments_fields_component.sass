@@ -6,26 +6,15 @@
     margin: 0 0 map-get($spacers, 3)
 
   &__attachment
-    margin: 0 0 map-get($spacers, 3)
-    border: 1px solid $border-color
+    background: $medium-gray
     border-radius: $border-radius
+    border: 1px solid $border-color
+    margin: 0 0 map-get($spacers, 3)
     overflow: hidden
     position: relative
 
-  &__attachment-progress
-    position: absolute
-    top: 0
-    left: 0
-    width: 0
-    height: 100%
-    background: #ccf0ea
-    z-index: 1
-    pointer-events: none
-    transition: $transition-base
-
     &--fresh
       background: #d3eaf6
-      opacity: 1
 
   &__attachment-inner
     position: relative
@@ -46,8 +35,12 @@
     +unbutton
     flex: 0 0 auto
 
-  &__input--title
+  &__input--title,
+  &__file-name
     flex: 1 1 auto
+
+  &__add-wrap
+    display: inline-block
 
   &__add-button > *
     pointer-events: none

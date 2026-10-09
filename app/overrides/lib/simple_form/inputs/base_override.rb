@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 SimpleForm::Inputs::Base.class_eval do
+  include Folio::StimulusHelper
+
   def register_stimulus(name, values: {}, outlets: [], action: nil, wrapper: false)
     h = if wrapper
       options[:wrapper_html] ||= {}
@@ -8,11 +10,7 @@ SimpleForm::Inputs::Base.class_eval do
       input_html_options
     end
 
-    if h["data-controller"]
-      h["data-controller"] += " #{name}"
-    else
-      h["data-controller"] = name
-    end
+    stimulus_data = { "controller" => name }
 
     if wrapper
       h[:class] ||= []
@@ -20,41 +18,27 @@ SimpleForm::Inputs::Base.class_eval do
       h[:class] << "f-input-form-group--#{name.to_s.delete_prefix("f-input-form-group-")}"
       h[:class] << name.to_s
 
-      input_html_options["data-#{name}-target"] = "input"
+      merge_stimulus_data!(input_html_options, { "#{name}-target" => "input" })
     else
       input_html_classes << "f-input" if input_html_classes.exclude?("f-input")
       input_html_classes << "f-input--#{name.to_s.delete_prefix("f-input-")}"
     end
 
     values.each do |key, value|
-      h["data-#{name}-#{key.to_s.tr('_', '-')}-value"] = value
+      stimulus_data["#{name}-#{key.to_s.tr('_', '-')}-value"] = value
     end
 
     if action
-      if action.is_a?(String)
-        if action.include?("#")
-          h["data-action"] = action
-        else
-          h["data-action"] = "#{name}##{action}"
-        end
-      else
-        action.each do |trigger, action_s|
-          str = "#{trigger}->#{name}##{action_s}"
-
-          if h["data-action"]
-            h["data-action"] += " #{str}"
-          else
-            h["data-action"] = str
-          end
-        end
-      end
+      stimulus_data["action"] = stimulus_action_string(name, action)
     end
 
     if outlets.present?
       outlets.each do |class_name_same_as_controller_name|
-        h["data-#{name}-#{class_name_same_as_controller_name}-outlet"] = ".#{class_name_same_as_controller_name}"
+        stimulus_data["#{name}-#{class_name_same_as_controller_name}-outlet"] = ".#{class_name_same_as_controller_name}"
       end
     end
+
+    merge_stimulus_data!(h, stimulus_data)
   end
 
   def register_atom_settings
@@ -73,6 +57,32 @@ SimpleForm::Inputs::Base.class_eval do
       input_html_options[:class] << "f-c-js-atoms-placement-setting"
       input_html_options["data-atom-setting"] = options[:atom_setting]
     end
+  end
+
+  def register_character_counter
+    values = {}
+
+    if options[:character_counter].is_a?(Numeric)
+      values[:max] = options[:character_counter]
+
+      if options[:character_counter_auto_current_count_limit] != false
+        values[:current_count_limit] = automatic_character_counter_current_count_limit(options[:character_counter])
+      end
+    end
+
+    register_stimulus("f-input-character-counter",
+                      values:,
+                      action: { input: "onInput",
+                                change: "onInput" })
+
+    options[:wrapper_html] ||= {}
+    options[:wrapper_html][:class] = Array(options[:wrapper_html][:class])
+    options[:wrapper_html][:class] << "form-group--with-character-counter"
+    options[:wrapper_html][:class].uniq!
+  end
+
+  def automatic_character_counter_current_count_limit(character_counter)
+    (10**character_counter.to_i.abs.to_s.length) - 1
   end
 
   def required_class
@@ -120,6 +130,7 @@ SimpleForm::Inputs::Base.class_eval do
                         json:,
                         disabled: !!(options && options[:disabled]),
                         absolute_urls: (options && options[:absolute_urls]) || false,
+                        disable_label: (options && options[:disable_label]) || false,
                         default_custom_url: (options && options[:default_custom_url]) || false,
                       },
                       action: {
@@ -162,4 +173,34 @@ SimpleForm::Inputs::Base.class_eval do
   def add_text_suggestions(input_type:)
     # Extension point for optional packs that decorate SimpleForm text inputs.
   end
+
+  private
+    def stimulus_action_string(name, action)
+      if action.is_a?(String)
+        action.include?("#") ? action : "#{name}##{action}"
+      else
+        action.map do |trigger, action_s|
+          "#{trigger}->#{name}##{action_s}"
+        end.join(" ")
+      end
+    end
+
+    def merge_stimulus_data!(html_options, data)
+      html_options[:data] = stimulus_merge_data(extract_stimulus_data!(html_options), data)
+    end
+
+    def extract_stimulus_data!(html_options)
+      data = {}
+
+      data.merge!(html_options.delete(:data).to_h) if html_options[:data].present?
+      data.merge!(html_options.delete("data").to_h) if html_options["data"].present?
+
+      html_options.keys.each do |key|
+        next unless key.to_s.start_with?("data-")
+
+        data[key.to_s.delete_prefix("data-")] = html_options.delete(key)
+      end
+
+      data.stringify_keys
+    end
 end

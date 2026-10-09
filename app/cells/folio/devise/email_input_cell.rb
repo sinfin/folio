@@ -3,14 +3,19 @@
 class Folio::Devise::EmailInputCell < Folio::Devise::ApplicationCell
   def input
     model.input :email,
+                as: :email,
                 wrapper: false,
                 label: false,
                 required: true,
                 disabled: options[:disabled],
                 placeholder: options[:placeholder],
                 input_html: {
+                  type: "email",
                   autofocus: options[:autofocus].nil? || options[:autofocus],
                   autocomplete: "email",
+                  autocapitalize: "none",
+                  autocorrect: "off",
+                  spellcheck: "false",
                   value: model.object.email.presence,
                   data: { test_id: options[:test_id].presence },
                   id: input_id, # need ID for generating "<label for",

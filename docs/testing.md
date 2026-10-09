@@ -60,11 +60,28 @@ rails test           # run all tests
 ```
 
 Parallel testing is enabled by default (`parallelize` in `test_helper_base.rb`).
+Suites with 100 or fewer loaded test methods run serially; larger suites use at
+most 8 workers, capped by the detected processor count.
+
+Change the automatic cap or threshold when needed:
+
+```sh
+TEST_MAX_WORKERS=6 bundle exec rails test
+TEST_MAX_WORKERS=0 bundle exec rails test
+TEST_PARALLELIZATION_THRESHOLD=200 bundle exec rails test
+TEST_PARALLELIZATION_THRESHOLD=0 bundle exec rails test
+```
+
+`TEST_MAX_WORKERS` only limits automatic parallelization; set it to `0` to
+remove the cap and use Rails' default processor-count handling.
+`TEST_PARALLELIZATION_THRESHOLD=0` uses Rails' default test-count threshold.
+`PARALLEL_WORKERS` remains Rails' exact explicit override: it can exceed the
+automatic cap and bypasses the test-count threshold.
 
 To run tests sequentially (useful for debugging):
 
 ```sh
-PARALLEL_WORKERS=1 rails test
+PARALLEL_WORKERS=1 bundle exec rails test
 ```
 
 ---

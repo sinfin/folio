@@ -5,14 +5,25 @@
   let indexPositionClickAncestry, refreshCatalogue
 
   refreshCatalogue = function ($catalogue) {
+    let catalogueIndex
+    catalogueIndex = window.jQuery('.f-c-catalogue--ancestry').index($catalogue)
     $catalogue.addClass('f-c-catalogue--loading')
     return window.jQuery.ajax({
       url: window.location.href,
       type: 'GET',
       success: function (res) {
-        let $res
+        let $catalogues, $replacement, $res
         $res = window.jQuery($.parseHTML(res))
-        $catalogue.replaceWith($res.find('.f-c-catalogue--ancestry').first())
+        $catalogues = $res.find('.f-c-catalogue--ancestry')
+        $replacement = $catalogues.eq(catalogueIndex < 0 ? 0 : catalogueIndex)
+        if (!$replacement.length) {
+          $replacement = $catalogues.first()
+        }
+        if ($replacement.length) {
+          $catalogue.replaceWith($replacement)
+        } else {
+          $catalogue.removeClass('f-c-catalogue--loading')
+        }
       },
       error: function () {
         return $catalogue.removeClass('f-c-catalogue--loading')

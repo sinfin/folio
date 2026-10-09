@@ -14,6 +14,31 @@ class Folio::Console::Api::TiptapControllerTest < Folio::Console::BaseController
               presence: true
   end
 
+  class NestedCard < Folio::Tiptap::Node
+    tiptap_node nested: true,
+                structure: {
+                   title: :string,
+                 }
+
+    validates :title,
+              presence: true
+
+    def self.human_attribute_name(attribute, options = {})
+      return "Nested card title" if attribute.to_s == "title"
+
+      super
+    end
+  end
+
+  class CardGroup < Folio::Tiptap::Node
+    tiptap_node structure: {
+      cards: {
+        type: :nested_nodes,
+        node_class: NestedCard,
+      },
+    }
+  end
+
   class PasteableNode < Folio::Tiptap::Node
     tiptap_node structure: {
       title: :string,
@@ -79,6 +104,18 @@ class Folio::Console::Api::TiptapControllerTest < Folio::Console::BaseController
     assert page.has_css?(".f-c-tiptap-overlay-form")
   end
 
+  test "edit_node prebuilds blank nested node row" do
+    post edit_node_console_api_tiptap_path(format: :json), params: {
+      tiptap_node_attrs: { type: "Folio::Console::Api::TiptapControllerTest::CardGroup" },
+    }
+    assert_response :ok
+
+    page = Capybara.string(response.parsed_body["data"])
+    assert page.has_css?('[name="tiptap_node_attrs[data][cards][item_0][type]"][value="Folio::Console::Api::TiptapControllerTest::NestedCard"]',
+                         visible: :all)
+    assert page.has_css?('[name="tiptap_node_attrs[data][cards][item_0][data][title]"]')
+  end
+
   test "save_node" do
     post save_node_console_api_tiptap_path(format: :json), params: {
       tiptap_node_attrs: {
@@ -116,6 +153,86 @@ class Folio::Console::Api::TiptapControllerTest < Folio::Console::BaseController
         "data" => { "title" => "foo" },
       },
     } }, hash["data"])
+  end
+
+  test "save_node requires at least one nested node" do
+    post save_node_console_api_tiptap_path(format: :json), params: {
+      tiptap_node_attrs: {
+        type: "Folio::Console::Api::TiptapControllerTest::CardGroup",
+      },
+    }
+    assert_response :ok
+
+    hash = response.parsed_body
+    assert_nil hash["meta"]
+
+    page = Capybara.string(hash["data"])
+    assert page.has_css?('.f-c-ui-validation-box__button[data-error-field="cards"]',
+                         visible: :all)
+    assert page.has_css?('[name="tiptap_node_attrs[data][cards][item_0][data][title]"]')
+  end
+
+  test "save_node with nested nodes" do
+    post save_node_console_api_tiptap_path(format: :json), params: {
+      tiptap_node_attrs: {
+        type: "Folio::Console::Api::TiptapControllerTest::CardGroup",
+        data: {
+          cards: {
+            ui_1: {
+              type: "Folio::Console::Api::TiptapControllerTest::NestedCard",
+              version: 1,
+              data: { title: "" },
+            },
+          },
+        },
+      },
+    }
+    assert_response :ok
+
+    hash = response.parsed_body
+    assert_nil hash["meta"]
+
+    page = Capybara.string(hash["data"])
+    assert page.has_css?(".f-c-ui-validation-box", text: "Nested card title")
+    assert page.has_no_css?(".f-c-ui-validation-box", text: "Cards[0] title")
+    assert page.has_css?('[name="tiptap_node_attrs[data][cards][item_0][data][title]"].is-invalid')
+
+    post save_node_console_api_tiptap_path(format: :json), params: {
+      tiptap_node_attrs: {
+        type: "Folio::Console::Api::TiptapControllerTest::CardGroup",
+        data: {
+          cards: {
+            ui_1: {
+              type: "Folio::Console::Api::TiptapControllerTest::NestedCard",
+              version: 1,
+              data: { title: "First" },
+            },
+            ui_2: {
+              type: "Folio::Console::Api::TiptapControllerTest::NestedCard",
+              version: 1,
+              data: { title: "Second" },
+            },
+          },
+        },
+      },
+    }
+    assert_response :ok
+
+    hash = response.parsed_body
+
+    assert_equal true, hash["meta"]["tiptap_node_valid"]
+    assert_equal [
+      {
+        "version" => 1,
+        "type" => "Folio::Console::Api::TiptapControllerTest::NestedCard",
+        "data" => { "title" => "First" },
+      },
+      {
+        "version" => 1,
+        "type" => "Folio::Console::Api::TiptapControllerTest::NestedCard",
+        "data" => { "title" => "Second" },
+      },
+    ], hash.dig("data", "tiptap_node", "attrs", "data", "cards")
   end
 
   test "render_nodes" do

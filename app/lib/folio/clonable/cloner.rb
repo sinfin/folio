@@ -1,6 +1,18 @@
 # frozen_string_literal: true
 
 class Folio::Clonable::Cloner
+  # Shared library records that a clone points at but never owns.
+  #
+  # Without this the recursion walks into a file's own associations and leaves the
+  # record being cloned entirely: folio_file_site_links leads to Folio::Site, and a
+  # site owns every page, article and user on it. That is unbounded — cloning one
+  # article exhausts the console pod's memory and surfaces as a 502.
+  TERMINAL_CLASSES = [
+    Folio::File,
+    Folio::Site,
+    Folio::User,
+  ].freeze
+
   def initialize(record)
     @record = record
     fail "Not a clonable record" unless @record.class.is_clonable?
@@ -43,7 +55,9 @@ class Folio::Clonable::Cloner
         if original.public_send(association.name).present?
           duplicated << association.name
 
-          if association.macro == :has_many
+          if terminal_association?(association)
+            associated_record = original.public_send(association.name)
+          elsif association.macro == :has_many
             associated_record = original.public_send(association.name).map { |a| clone_nested_records_recursively(a).first }
           else
             associated_record = @record.class.clonable_referenced_associations.include?(association.name) ? original.public_send(association.name) : original.public_send(association.name).deep_dup
@@ -52,6 +66,16 @@ class Folio::Clonable::Cloner
         end
       end
       [cloned, duplicated]
+    end
+
+    def terminal_association?(association)
+      return false if association.polymorphic?
+
+      klass = association.klass
+      TERMINAL_CLASSES.any? { |terminal| klass <= terminal }
+    rescue NameError, ActiveRecord::ActiveRecordError
+      # Misconfigured associations cannot be traversed anyway.
+      false
     end
 
     def validate_associations!(associations)

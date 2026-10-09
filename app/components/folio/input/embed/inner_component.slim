@@ -5,6 +5,7 @@ div class=bem_class_name data=data
                 as: :text,
                 autosize: true,
                 label: t('.label'),
+                error: @error,
                 hint:,
                 input_html: { rows: 1, value:, data: stimulus_target("input"), id: html_or_url_input_id }
 
@@ -14,4 +15,5 @@ div class=bem_class_name data=data
     = render(Folio::Embed::BoxComponent.new(folio_embed_data: @folio_embed_data,
                                             data: stimulus_target("box"),
                                             background_color: @background_color,
+                                            full_width_iframes: @full_width_iframes,
                                             centered: @centered))

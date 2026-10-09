@@ -44,9 +44,10 @@ en:
             th/type: Usage type
             th/placement_type: Record type
             th/placement_label: Record
-            th/published: State
+            th/site: Site
             th/created_at: Created at
             in_atom: content chapter
+            th/published: State
             orphaned: Deleted content
             published: Published
             unpublished: Unpublished
@@ -54,19 +55,24 @@ en:
             destroy_orphan_confirm: Really remove the orphaned usage record?
             no_thumbnails_yet: No versions generated yet
 
-          thumbnails_component:
-            title: Versions and sizes
-            type/regular: Versions without crop
-            type/crop: Versions with crop (#)
-            type/shrink: Versions with shrink only (>)
-            type/cover: Versions with fit (^)
-
           thumbnails:
-            ratio_component:
-              all_versions: "All generated versions:"
+            main_component:
+              crops_title: Crops to various aspect ratios
+              show_all_thumbnails: All generated thumbnails
+
+            details_component:
+              title: Versions and sizes
+              no_thumbnails_yet: No versions generated yet
 
             crop_edit_component:
               edit: Edit crop
+              regenerate: Regenerate thumbnails
+
+            list_group_component:
+              regular: Versions without crop
+              variants_count:
+                one: "%{count} size"
+                other: "%{count} sizes"
 
         batch:
           bar_component:

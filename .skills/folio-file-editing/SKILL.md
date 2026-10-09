@@ -68,11 +68,11 @@ Never mix tabs and spaces within a file.
 
 ## Ruby argument wrapping
 
-When a Ruby call's arguments span multiple lines inside parentheses, prefer
-aligning continuation arguments under the first argument after the opening
-parenthesis: the first character of each argument name must start in the same
-column, so the `f` in `foo:` and the `b` in `bar:` line up. Only switch to
-one-argument-per-line inside the parentheses when that alignment would push the
+When a Ruby call's keyword arguments span multiple lines, prefer aligning
+continuation arguments under the first keyword argument. This applies both with
+and without parentheses: the first character of each argument name must start in
+the same column, so the `f` in `foo:` and the `b` in `bar:` line up. Only switch
+to one-argument-per-line inside parentheses when that alignment would push the
 continuation far to the right.
 
 ```ruby
@@ -80,9 +80,15 @@ continuation far to the right.
 call(foo: "good",
      bar: "great")
 
+call foo: "good",
+     bar: "great"
+
 # Bad
 call(foo: "bad",
    bar: "worse")
+
+call foo: "bad",
+   bar: "worse"
 
 # Fallback for very long receivers
 Some::Very::LongReceiver.call(

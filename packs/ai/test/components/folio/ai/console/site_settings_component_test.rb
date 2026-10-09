@@ -1,213 +1,182 @@
 # frozen_string_literal: true
 
 require "test_helper"
+require Folio::Engine.root.join("packs/ai/lib/folio/ai")
 
 class Folio::Ai::Console::SiteSettingsComponentTest < Folio::Console::ComponentTest
   setup do
-    @original_rails_cache = Rails.cache
-    Rails.cache = ActiveSupport::Cache::MemoryStore.new
-
-    stub_request(:get, "https://api.openai.com/v1/models")
-      .to_return(body: {
-        data: [
-          { id: "gpt-5.5", created: 1 },
-        ],
-      }.to_json)
+    Folio::Site.include(Folio::Ai::SiteConcern) unless Folio::Site < Folio::Ai::SiteConcern
 
     Folio::Ai.reset_registry!
-    Folio::Ai.register_integration(key: :articles,
-                                   record_class_name: "Dummy::Blog::Article",
-                                   fields: [
-                                     Folio::Ai::Field.new(key: :title,
-                                                          character_limit: 120),
-                                   ])
+    Folio::Ai.register_record(record_class_name: "Folio::Page",
+                              fields: [
+                                { key: :title, character_limit: 80 },
+                                { key: :perex, character_limit: 400 },
+                              ],
+                              groups: [
+                                {
+                                  key: :meta,
+                                  label: "Meta fields",
+                                  fields: %i[title perex],
+                                },
+                              ])
   end
 
   teardown do
-    Rails.cache = @original_rails_cache
     Folio::Ai.reset_registry!
   end
 
-  def render_component(site,
-                       provider_api_key_env_values: { openai: "secret" },
-                       provider_models_env_values: {},
-                       **ai_config)
-    Folio::Ai.stub(:provider_api_key_env_values, provider_api_key_env_values) do
-      Folio::Ai.stub(:provider_models_env_values, provider_models_env_values) do
-        with_ai_config(**{ enabled: true }.merge(ai_config)) do
-          vc_test_controller.view_context.simple_form_for(site, url: "/") do |form|
-            render_inline(Folio::Ai::Console::SiteSettingsComponent.new(form:))
-          end
-        end
-      end
-    end
-  end
-
-  def test_render
-    site = build(:folio_site, ai_settings: {
-                   enabled: true,
-                   integrations: {
-                     articles: {
-                       fields: {
-                         title: {
-                           prompt: "Write a title.",
+  test "renders site provider and field prompt settings" do
+    site = build(:folio_site,
+                 ai_settings: {
+                   "enabled" => true,
+                   "provider" => "dummy",
+                   "model" => "dummy",
+                   "integrations" => {
+                     "folio_pages" => {
+                       "fields" => {
+                         "title" => {
+                           "enabled" => false,
+                           "prompt" => "Write a short title.",
                          },
                        },
-                     },
-                 },
-                 })
-
-    render_component(site)
-
-    assert_selector(".f-ai-c-site-settings")
-    assert_no_selector(".form-switch")
-    assert_text(Dummy::Blog::Article.model_name.human(count: 2))
-    assert_text(Dummy::Blog::Article.human_attribute_name(:title))
-    assert_selector("input[name$='[ai_settings][enabled]'][value='1']", visible: :all)
-    assert_selector("select[name$='[ai_settings][default_provider]'] option[value='openai']", text: "OpenAI")
-    assert_no_selector("select[name$='[ai_settings][default_provider]'] option", text: "Openai")
-    assert_selector("select[name$='[ai_settings][default_model]']")
-    assert_selector("textarea[name$='[fields][title][prompt]']", text: "Write a title.")
-    assert_text("Limit: 120")
-  end
-
-  def test_render_does_not_fetch_provider_models
-    site = build(:folio_site)
-
-    render_component(site)
-
-    assert_not_requested :get, "https://api.openai.com/v1/models"
-  end
-
-  def test_render_hides_provider_without_credentials
-    site = build(:folio_site)
-
-    render_component(site,
-                     provider_api_key_env_values: {},
-                     default_provider: :openai,
-                     provider_models: {
-                       openai: "gpt-5.5",
-                       demo: "demo",
-                     })
-
-    assert_no_selector("select[name$='[ai_settings][default_provider]'] option[value='openai']")
-    assert_selector("select[name$='[ai_settings][default_provider]'] option[value='demo']", text: "Demo")
-  end
-
-  def test_render_shows_anthropic_with_credentials
-    site = build(:folio_site)
-
-    render_component(site,
-                     provider_api_key_env_values: {
-                       openai: "secret",
-                       anthropic: "secret",
-                     })
-
-    assert_selector("select[name$='[ai_settings][default_provider]'] option[value='anthropic']",
-                    text: "Anthropic")
-  end
-
-  def test_render_disables_settings_without_eligible_providers
-    site = build(:folio_site, ai_settings: { enabled: true })
-
-    I18n.with_locale(:en) do
-      render_component(site, provider_api_key_env_values: {})
-    end
-
-    assert_selector(".f-ai-c-site-settings__intro.alert-danger",
-                    text: "Configure AI provider credentials before editing AI suggestions settings for this site.")
-    assert_no_selector(".f-ai-c-site-settings input", visible: :all)
-    assert_no_selector(".f-ai-c-site-settings select", visible: :all)
-    assert_no_selector(".f-ai-c-site-settings textarea", visible: :all)
-    assert_no_selector(".f-ai-c-site-settings__integration")
-  end
-
-  def test_render_ignores_saved_ineligible_provider_overrides
-    site = build(:folio_site, ai_settings: {
-                   default_provider: "openai",
-                   default_model: "gpt-5.5",
-                   integrations: {
-                     articles: {
-                       default_provider: "openai",
-                       default_model: "gpt-5.5",
-                       fields: {
-                         title: {
-                           provider: "openai",
-                           model: "gpt-5.5",
+                       "groups" => {
+                         "meta" => {
+                           "enabled" => true,
+                           "prompt" => "Write title and perex as a set.",
                          },
                        },
                      },
                    },
                  })
 
-    render_component(site,
-                     provider_api_key_env_values: {},
-                     default_provider: :openai,
-                     provider_models: {
-                       openai: "gpt-5.5",
-                       demo: "demo",
-                     })
+    render_component(site)
 
-    assert_no_selector("select option[value='openai']")
-    assert_selector("select[name$='[ai_settings][default_provider]'] option[value='demo'][selected]")
-    assert_selector("select[name$='[ai_settings][default_model]'] option[value=''][selected]")
-    assert_selector("select[name$='[ai_settings][integrations][articles][default_provider]'] option[value='']")
-    assert_selector("select[name$='[ai_settings][integrations][articles][fields][title][provider]'] option[value='']")
+    assert_selector(".f-ai-c-site-settings")
+    assert_selector("input[name$='[ai_settings][enabled]'][value='1']", visible: :all)
+    assert_selector("select[name$='[ai_settings][provider]'] option[value='dummy'][selected]")
+    assert_selector("select[name$='[ai_settings][model]'] option[value=''][selected]",
+                    text: /dummy/)
+    assert_selector("textarea[name$='[ai_settings][integrations][folio_pages][fields][title][prompt]']",
+                    text: "Write a short title.")
+    assert_selector("textarea[name$='[ai_settings][integrations][folio_pages][groups][meta][prompt]']",
+                    text: "Write title and perex as a set.")
+    title_enabled = page.find("input[type='checkbox'][name$='[ai_settings][integrations][folio_pages][fields][title][enabled]'][value='1']",
+                              visible: :all)
+    meta_enabled = page.find("input[type='checkbox'][name$='[ai_settings][integrations][folio_pages][groups][meta][enabled]'][value='1']",
+                             visible: :all)
+
+    assert_not title_enabled.checked?
+    assert meta_enabled.checked?
+    assert_text(Folio::Page.model_name.human(count: 2))
+    assert_text(Folio::Page.human_attribute_name(:title))
+    assert_text("Meta fields")
+    assert_text("Limit: 80")
   end
 
-  def test_render_uses_env_model_options
-    site = build(:folio_site)
+  test "renders provider model data for switching providers" do
+    site = build(:folio_site,
+                 ai_settings: {
+                   "provider" => "dummy",
+                   "model" => "dummy",
+                 })
 
-    render_component(site, provider_models_env_values: { openai: "gpt-5.5-pro" })
-
-    assert_selector("select[name$='[ai_settings][default_model]'] option[value='gpt-5.4-mini']")
-    assert_selector("select[name$='[ai_settings][default_model]'] option[value='gpt-5.5']")
-    assert_selector("select[name$='[ai_settings][default_model]'] option[value='gpt-5.5-pro']")
-  end
-
-  def test_provider_options_fall_back_to_humanized_label
-    site = build(:folio_site)
-
-    render_component(site, provider_models: {
-                       openai: "gpt-5.5",
-                       custom_provider: "custom-model",
-                     })
-
-    assert_selector("select[name$='[ai_settings][default_provider]'] option[value='custom_provider']",
-                    text: "Custom provider")
-  end
-
-  def test_english_default_labels_do_not_use_inherit_wording
-    site = build(:folio_site)
-
-    I18n.with_locale(:en) do
-      render_component(site)
+    Folio::Ai::Providers::OpenAi.stub(:models_env_value, "gpt-5.5,gpt-5.5-pro") do
+      render_component(site,
+                       providers: {
+                         dummy: Folio::Ai::Providers::Dummy,
+                         openai: Folio::Ai::Providers::OpenAi,
+                       })
     end
 
-    assert_selector("option[value='']", text: "Default")
-    assert_no_text("Inherit")
+    providers = JSON.parse(page.find(".f-ai-c-site-settings")["data-f-ai-c-site-settings-providers-value"])
+
+    assert_equal "dummy", providers.dig("dummy", "defaultModel")
+    assert_includes providers.dig("dummy", "defaultLabel"), "dummy"
+    assert_equal [], providers.dig("dummy", "models")
+    assert_equal "gpt-5.5", providers.dig("openai", "defaultModel")
+    assert_includes providers.dig("openai", "defaultLabel"), "gpt-5.5"
+    assert_equal %w[gpt-5.5-pro], providers.dig("openai", "models")
   end
 
-  def test_czech_default_labels_do_not_use_inherit_wording
-    site = build(:folio_site)
+  test "renders provider setup message when no providers are available" do
+    render_component(build(:folio_site), providers: {})
 
+    assert_selector(".f-ai-c-site-settings .f-c-ui-alert--danger")
+    assert_no_selector(".f-ai-c-site-settings select")
+    assert_no_selector(".f-ai-c-site-settings textarea")
+  end
+
+  test "keeps unavailable saved provider selected" do
+    site = build(:folio_site,
+                 ai_settings: {
+                   "provider" => "openai",
+                 })
+
+    render_component(site, providers: { dummy: Folio::Ai::Providers::Dummy })
+
+    assert_selector("select[name$='[ai_settings][provider]'] option[value='openai'][selected]",
+                    text: /OpenAI/)
+    assert_selector("select[name$='[ai_settings][provider]'] option[value='dummy']",
+                    text: "Dummy")
+    assert_selector("select[name$='[ai_settings][model]'] option[value=''][selected]",
+                    text: /#{Folio::Ai::Providers::OpenAi.default_model}/)
+    assert_selector(".f-ai-c-site-settings .f-c-ui-alert--warning", text: /OpenAI/)
+  end
+
+  test "resolves missing labels in the current locale" do
     I18n.with_locale(:cs) do
-      render_component(site)
+      render_component(build(:folio_site))
     end
 
-    assert_selector("option[value='']", text: "Výchozí")
-    assert_no_text("Dědit")
+    assert_text("Název stránky")
   end
 
-  def test_does_not_render_when_ai_is_disabled
-    site = build(:folio_site)
-
-    with_ai_config(enabled: false) do
-      vc_test_controller.view_context.simple_form_for(site, url: "/") do |form|
-        render_inline(Folio::Ai::Console::SiteSettingsComponent.new(form:))
-      end
+  test "does not render when AI config is disabled" do
+    Folio::Ai.config.stub(:enabled?, false) do
+      render_component(build(:folio_site))
     end
 
     assert_no_selector(".f-ai-c-site-settings")
   end
+
+  test "selects default option when saved model is not in provider list" do
+    site = build(:folio_site,
+                 ai_settings: {
+                   "provider" => "dummy",
+                   "model" => "custom-dummy",
+                 })
+
+    render_component(site)
+
+    assert_selector("select[name$='[ai_settings][model]'] option[value=''][selected]",
+                    text: /dummy/)
+    assert_no_selector("select[name$='[ai_settings][model]'] option[value='custom-dummy']")
+  end
+
+  test "renders non-default model options from the selected provider" do
+    site = build(:folio_site,
+                 ai_settings: {
+                   "provider" => "openai",
+                 })
+
+    Folio::Ai::Providers::OpenAi.stub(:models_env_value, "gpt-5.5,gpt-5.5-pro") do
+      render_component(site, providers: { openai: Folio::Ai::Providers::OpenAi })
+    end
+
+    assert_selector("select[name$='[ai_settings][model]'] option[value=''][selected]",
+                    text: /gpt-5.5/)
+    assert_no_selector("select[name$='[ai_settings][model]'] option[value='gpt-5.5']")
+    assert_selector("select[name$='[ai_settings][model]'] option[value='gpt-5.5-pro']",
+                    text: "gpt-5.5-pro")
+  end
+
+  private
+    def render_component(site, providers: { dummy: Folio::Ai::Providers::Dummy })
+      Folio::Ai.stub(:available_providers, providers) do
+        vc_test_controller.view_context.simple_form_for(site, url: "/") do |form|
+          render_inline(Folio::Ai::Console::SiteSettingsComponent.new(form:))
+        end
+      end
+    end
 end

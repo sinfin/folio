@@ -9,6 +9,7 @@ class Dummy::Tiptap::Node::Card < Folio::Tiptap::Node
     content: :rich_text,
     button_url_json: :url_json,
     background: BACKGROUNDS,
+    color: :color,
     cover: :image,
     reports: :documents,
     page: { class_name: "Folio::Page" },

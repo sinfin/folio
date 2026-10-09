@@ -18,10 +18,17 @@ window.Folio.Stimulus.register('f-c-state', class extends window.Stimulus.Contro
       return this.openModal(trigger)
     }
 
-    const emailModal = trigger.dataset.aasmEmailModal
-
-    if (emailModal) {
-      throw new Error('not implemented')
+    if (trigger.dataset.aasmEmailModal) {
+      return window.FolioConsole.AasmEmailModal.open({
+        trigger,
+        targetStateName: trigger.dataset.eventTargetHumanName,
+        email: trigger.dataset.email,
+        klass: trigger.dataset.klass,
+        id: trigger.dataset.id,
+        aasmEvent: trigger.dataset.eventName,
+        emailSubject: trigger.dataset.emailSubject,
+        emailText: trigger.dataset.emailText
+      })
     }
 
     this.element.classList.add('f-c-state--loading')

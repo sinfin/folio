@@ -1,5 +1,8 @@
 $enable-negative-margins: true
 
+// console UI is light only, do not follow the OS color scheme
+$enable-folio-dark-mode-based-on-prefers-color-scheme: false
+
 $grid-gutter-base: px-to-rem(8px)
 $grid-gutter-width: 3 * $grid-gutter-base
 $grid-gutter-half: $grid-gutter-width / 2
@@ -224,3 +227,6 @@ $f-c-layout-main-container__padding: $grid-gutter-width
 $f-c-layout-main-container__padding--mobile: $grid-gutter-width / 2
 
 $f-c-ui-index-header-gap: $grid-gutter-half
+
+$f-c-form-layout__container-breakpoint: 600px
+$f-c-tiptap-overlay-form__container-breakpoint: $f-c-form-layout__container-breakpoint

@@ -32,6 +32,8 @@ en:
           invalid_record_title: Invalid record
           invalid_record_detail: Record cannot be saved. Correct it before changing state.
           invalid_record_form_detail: Record state cannot be changed. Please fix errors in the form first.
+          invalid_email_title: E-mail cannot be sent
+          invalid_email_detail: Fill in the recipient, subject and message before sending the e-mail.
         site_user_links:
           set_locked:
             success/locked: User blocked.
@@ -77,6 +79,11 @@ en:
           success: Selected records were restored.
           error: Failed to restore some of the records.
       blank: "Not specified"
+      media_sources:
+        form:
+          add_site_rule: Add site rule
+          site_rules: Site rules
+          site_rules_hint: Blank field inherits from the main source. If no sites are selected, the source is usable everywhere.
       boolean:
         "yes": "Yes"
         "no": "No"
@@ -362,7 +369,7 @@ en:
       form_modal_component:
         title/state: State change
       aasm:
-        email_modal:
+        email_modal_component:
           title: Change the state to "{STATE_NAME}"?
           send_email_label: Send e-mail to {EMAIL}
           placeholders:
@@ -433,6 +440,9 @@ en:
           label: Automatic save
 
       files:
+        artwork_form_component:
+          hint: Seeded automatically from the artwork embedded in the audio file; you can replace it with a custom image.
+
         subtitle_form_component:
           enabled_label: Enable subtitles
           validation_errors_title: "Validation errors:"
@@ -498,6 +508,7 @@ en:
         usage_constraints_component:
           max_usage_count: "Max usage count:"
           allowed_sites_blank: Blank
+          media_source: "Media source:"
 
       eleven_labs:
         transcribe_subtitles_job:

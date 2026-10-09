@@ -63,19 +63,24 @@ window.Folio.Stimulus.register('f-c-files-show-modal', class extends window.Stim
   }
 
   bindKeyboardEvents () {
-    this.handleKeyup = this.handleKeyup.bind(this)
-    document.addEventListener('keyup', this.handleKeyup)
+    this.handleKeydown = this.handleKeydown.bind(this)
+    document.addEventListener('keydown', this.handleKeydown)
   }
 
   unbindKeyboardEvents () {
-    if (this.handleKeyup) {
-      document.removeEventListener('keyup', this.handleKeyup)
-      delete this.handleKeyup
+    if (this.handleKeydown) {
+      document.removeEventListener('keydown', this.handleKeydown)
+      delete this.handleKeydown
     }
   }
 
-  handleKeyup (e) {
+  handleKeydown (e) {
     if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable)) {
+      return
+    }
+
+    // another modal stacked on top (e.g. the file picker) owns the keyboard
+    if (!window.Folio.Modal.isTopmost(this.element)) {
       return
     }
 

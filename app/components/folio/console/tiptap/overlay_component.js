@@ -11,6 +11,7 @@ window.Folio.Stimulus.register('f-c-tiptap-overlay', class extends window.Stimul
   disconnect () {
     delete this.iframeWindowReference
     delete this.nodeUniqueId
+    delete this.editorContext
     this.abortAjax()
   }
 
@@ -47,12 +48,37 @@ window.Folio.Stimulus.register('f-c-tiptap-overlay', class extends window.Stimul
   onNodeClickMessage (e) {
     this.iframeWindowReference = e.source
     this.nodeUniqueId = e.data.uniqueId || null
+    this.editorContext = this.editorContextForSource(e.source)
     this.stateValue = 'loading'
 
     this.ajax({
       url: this.editUrlValue,
-      data: { tiptap_node_attrs: e.data.attrs }
+      data: this.withEditorContext({ tiptap_node_attrs: e.data.attrs })
     })
+  }
+
+  editorContextForSource (source) {
+    const input = Array.from(document.querySelectorAll('.f-input-tiptap')).find((element) => {
+      const iframe = element.querySelector('.f-input-tiptap__iframe')
+      return iframe && iframe.contentWindow === source
+    })
+
+    if (!input) throw new Error('No source Tiptap input found')
+
+    const context = {
+      placement_type: input.dataset.fInputTiptapPlacementTypeValue,
+      placement_id: input.dataset.fInputTiptapPlacementIdValue,
+      attribute_name: input.dataset.fInputTiptapAttributeNameValue
+    }
+
+    const opaqueContext = input.dataset.fInputTiptapEditorContextJsonValue
+    if (opaqueContext) context.context = JSON.parse(opaqueContext)
+
+    return context
+  }
+
+  withEditorContext (data) {
+    return Object.assign({}, data, { tiptap_editor_context: this.editorContext })
   }
 
   ajax ({ url, data, apiMethod = 'apiPost' }) {
@@ -84,7 +110,7 @@ window.Folio.Stimulus.register('f-c-tiptap-overlay', class extends window.Stimul
   onFormSubmit (e) {
     this.ajax({
       url: this.saveUrlValue,
-      data: e.detail.data
+      data: this.withEditorContext(e.detail.data)
     })
   }
 

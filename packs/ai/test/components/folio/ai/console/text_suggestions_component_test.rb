@@ -1,166 +1,110 @@
 # frozen_string_literal: true
 
 require "test_helper"
+require Folio::Engine.root.join("packs/ai/lib/folio/ai")
 
 class Folio::Ai::Console::TextSuggestionsComponentTest < Folio::Console::ComponentTest
-  teardown do
-    Folio::Ai.reset_registry!
+  test "renders suggestions" do
+    I18n.with_locale(:en) do
+      render_inline(component)
+    end
+
+    assert_selector(".f-ai-c-text-suggestions")
+    assert_selector(".f-ai-c-text-suggestions__panel")
+    assert_selector(".f-ai-c-text-suggestions__close")
+    assert_selector(".f-ai-c-text-suggestions__suggestion", count: 2)
+    assert_selector(".f-ai-c-text-suggestions__suggestions")
+    assert_selector(".f-ai-c-text-suggestions__suggestion-accept")
+    assert_text "First title"
+    assert_no_selector(".f-ai-c-text-suggestions__suggestion-meta")
+    assert_no_text "12 characters"
+    assert_no_text "> 10"
+    assert_selector("textarea", text: "Use short words.")
+    assert_selector("textarea[data-f-c-form-footer-autosave-disabled='true']")
+    assert_selector(".f-ai-c-text-suggestions__regenerate")
   end
 
-  test "renders suggestions with component controller actions" do
-    render_inline(Folio::Ai::Console::TextSuggestionsComponent.new(result: success_result,
-                                                                  component_id: "ai_title",
-                                                                  field_label: "Title",
-                                                                  show_meta: true,
-                                                                  integration_key: "articles",
-                                                                  field_key: "title"))
+  test "renders loading state" do
+    I18n.with_locale(:en) do
+      render_inline(component(suggestions: [], loading: true))
+    end
 
-    assert_selector("#ai_title.f-ai-c-text-suggestions__panel")
-    assert_selector("[data-controller='f-ai-c-text-suggestions']")
-    assert_selector("[data-action*='f-ai-input:suggestionStale->f-ai-c-text-suggestions#clearSuggestionSelection']")
-    assert_selector("[data-action*='f-ai-input:clientError->f-ai-c-text-suggestions#showClientError']")
-    assert_selector("[data-f-ai-c-text-suggestions-integration-key-value='articles']")
-    assert_selector("[data-f-ai-c-text-suggestions-field-key-value='title']")
-    assert_selector(".f-ai-c-text-suggestions__status[data-f-ai-c-text-suggestions-target='status'][hidden]",
-                    visible: :hidden)
-    assert_selector("[data-f-ai-c-text-suggestions-target='statusMessage']", visible: :hidden)
-    assert_selector("[data-action*='f-ai-c-text-suggestions#accept']", text: "Generated text")
-    assert_selector("[data-f-ai-c-text-suggestions-text-param='Generated text']")
-    assert_selector("[data-f-ai-c-text-suggestions-key-param='1']")
-    assert_selector(".f-ai-c-text-suggestions__suggestion-meta", text: "Neutral")
-    assert_selector("textarea[data-f-ai-c-text-suggestions-target='instructions']", text: "Shorten it.")
-    assert_selector("textarea[data-f-ai-input-target='instructions']", text: "Shorten it.")
-    assert_no_selector("template[data-f-ai-c-text-suggestions-target='loadingSuggestionsTemplate']",
-                       visible: :all)
-  end
-
-  test "renders error state" do
-    render_inline(Folio::Ai::Console::TextSuggestionsComponent.new(result: error_result,
-                                                                  component_id: "ai_title",
-                                                                  field_label: "Title"))
-
-    assert_selector(".f-ai-c-text-suggestions__status:not([hidden])")
-    assert_selector("[data-f-ai-c-text-suggestions-target='statusMessage']",
-                    text: I18n.t("folio.ai.console.errors.host_ineligible"))
-    assert_text I18n.t("folio.ai.console.errors.host_ineligible")
-    assert_no_selector(".f-ai-c-text-suggestions__suggestion")
-  end
-
-  test "renders generic missing context copy when custom integration key points to non-article table" do
-    Folio::Ai.register_integration(key: :articles,
-                                   record_class_name: "Folio::Page",
-                                   fields: [field])
-
-    render_inline(Folio::Ai::Console::TextSuggestionsComponent.new(result: error_result,
-                                                                  component_id: "ai_title",
-                                                                  field_label: "Title",
-                                                                  integration_key: "articles"))
-
-    assert_text I18n.t("folio.ai.console.errors.host_ineligible")
-    assert_no_text I18n.t("folio.ai.console.errors.host_ineligible_article")
-  end
-
-  test "renders article missing context copy when record table name contains articles" do
-    Folio::Ai.register_integration(record_class_name: "Dummy::Blog::Article",
-                                   fields: [field])
-
-    render_inline(Folio::Ai::Console::TextSuggestionsComponent.new(result: error_result,
-                                                                  component_id: "ai_title",
-                                                                  field_label: "Title",
-                                                                  integration_key: "dummy_blog_articles"))
-
-    assert_text I18n.t("folio.ai.console.errors.host_ineligible_article")
-  end
-
-  test "renders suggestions when successful result has warnings" do
-    render_inline(Folio::Ai::Console::TextSuggestionsComponent.new(result: warning_result,
-                                                                  component_id: "ai_title",
-                                                                  field_label: "Title"))
-
-    warning = I18n.t("folio.ai.console.warnings.model_fallback",
-                     requested_model: "retired-model",
-                     fallback_model: "gpt-5.5")
-
-    assert_selector(".f-ai-c-text-suggestions__status:not([hidden])")
-    assert_selector("[data-f-ai-c-text-suggestions-target='statusMessage']",
-                    text: warning)
-    assert_selector("[data-action*='f-ai-c-text-suggestions#accept']", text: "Generated text")
-    assert_selector("textarea[data-f-ai-c-text-suggestions-target='instructions']", text: "Shorten it.")
-    assert_selector("textarea[data-f-ai-input-target='instructions']", text: "Shorten it.")
-  end
-
-  test "renders loading state with pseudo suggestions" do
-    render_inline(Folio::Ai::Console::TextSuggestionsComponent.new(result: loading_result,
-                                                                  component_id: "ai_title",
-                                                                  field_label: "Title",
-                                                                  loading: true))
-
-    assert_no_selector(".f-ai-c-text-suggestions--loading")
     assert_selector(".f-ai-c-text-suggestions__suggestion--loading", count: 3)
-    assert_selector(".f-ai-c-text-suggestions__suggestion--loading .f-ai-c-text-suggestions__suggestion-text",
-                    text: I18n.t("folio.ai.console.text_suggestions_component.loading_text"),
-                    count: 3)
-    assert_selector(".f-ai-c-text-suggestions__suggestion-loader.folio-loader", count: 3)
-    assert_no_selector(".f-ai-c-text-suggestions__loader")
     assert_selector(".f-ai-c-text-suggestions__status[hidden]", visible: :hidden)
-    assert_selector(".f-ai-c-text-suggestions__status svg", visible: :hidden)
-    assert_no_selector("[data-f-ai-c-text-suggestions-target='suggestion']")
-    assert_selector("textarea[data-f-ai-c-text-suggestions-target='instructions']")
-    assert_selector("textarea[data-f-ai-input-target='instructions']")
-    assert_no_selector("template[data-f-ai-c-text-suggestions-target='loadingSuggestionsTemplate']",
-                       visible: :all)
+    assert_no_selector(".f-ai-c-text-suggestions__status", visible: true)
+    assert_text "Preparing ..."
+  end
+
+  test "renders grouped loading row" do
+    I18n.with_locale(:en) do
+      render_inline(component(suggestions: [],
+                              loading: true,
+                              show_close: false,
+                              show_instructions: false,
+                              grouped: true,
+                              loading_suggestion_count: 1))
+    end
+
+    assert_selector(".f-ai-c-text-suggestions--grouped")
+    assert_no_selector(".f-ai-c-text-suggestions__close")
+    assert_selector(".f-ai-c-text-suggestions__status[hidden]", visible: :hidden)
+    assert_no_selector(".f-ai-c-text-suggestions__status", visible: true)
+    assert_no_selector(".f-ai-c-text-suggestions__instructions")
+    assert_selector(".f-ai-c-text-suggestions__suggestion--loading", count: 1)
+    assert_text "Preparing ..."
+  end
+
+  test "renders error state without instructions" do
+    I18n.with_locale(:en) do
+      render_inline(component(suggestions: [], error_code: :provider_unavailable))
+    end
+
+    assert_text "Configure an AI provider before using AI suggestions."
+    assert_no_selector(".f-ai-c-text-suggestions__instructions")
+  end
+
+  test "renders missing context error" do
+    I18n.with_locale(:en) do
+      render_inline(component(suggestions: [], error_code: :missing_context))
+    end
+
+    assert_text "Add content first so the AI assistant can generate relevant suggestions."
+    assert_no_selector(".f-ai-c-text-suggestions__instructions")
+  end
+
+  test "renders czech labels" do
+    I18n.with_locale(:cs) do
+      render_inline(component)
+    end
+
+    assert_selector(".f-ai-c-text-suggestions__close[aria-label='Zavřít']")
+    assert_selector(".f-ai-c-text-suggestions__regenerate", text: "Uložit vlastní instrukce")
   end
 
   private
-    def success_result
-      Folio::Ai::SuggestionGenerator::Result.new(success: true,
-                                                 suggestions: [
-                                                   Folio::Ai::Suggestion.new(key: 1,
-                                                                             text: "Generated text",
-                                                                             meta: { tone_label: "Neutral" }),
-                                                 ],
-                                                 field: field,
-                                                 user_instruction: "Shorten it.",
-                                                 warnings: [])
-    end
-
-    def error_result
-      Folio::Ai::SuggestionGenerator::Result.new(success: false,
-                                                 suggestions: [],
-                                                 error_code: :host_ineligible,
-                                                 field: field,
-                                                 user_instruction: "",
-                                                 warnings: [])
-    end
-
-    def warning_result
-      Folio::Ai::SuggestionGenerator::Result.new(success: true,
-                                                 suggestions: [
-                                                   Folio::Ai::Suggestion.new(key: 1,
-                                                                             text: "Generated text"),
-                                                 ],
-                                                 field: field,
-                                                 user_instruction: "Shorten it.",
-                                                 warnings: [
-                                                   {
-                                                     code: :model_fallback,
-                                                     requested_model: "retired-model",
-                                                     fallback_model: "gpt-5.5",
-                                                   },
-                                                 ])
-    end
-
-    def loading_result
-      Folio::Ai::SuggestionGenerator::Result.new(success: true,
-                                                 suggestions: [],
-                                                 field: field,
-                                                 user_instruction: "",
-                                                 warnings: [])
-    end
-
-    def field
-      @field ||= Folio::Ai::Field.new(key: :title,
-                                      label: "Title",
-                                      character_limit: 120)
+    def component(**kwargs)
+      Folio::Ai::Console::TextSuggestionsComponent.new(
+        component_id: "ai_title",
+        field: {
+          key: "title",
+          label: "Title",
+        },
+        suggestions: [
+          {
+            key: 1,
+            text: "First title",
+            character_count: 12,
+            character_limit: 10,
+            over_character_limit: true,
+          },
+          {
+            key: 2,
+            text: "Second title",
+            character_count: 12,
+          },
+        ],
+        instructions: "Use short words.",
+        **kwargs
+      )
     end
 end

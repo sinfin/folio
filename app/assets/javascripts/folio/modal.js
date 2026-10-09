@@ -17,6 +17,24 @@ window.Folio.Modal.close = (modal) => {
   return true
 }
 
+window.Folio.Modal.topmost = () => {
+  const openModals = Array.from(document.querySelectorAll('.modal.show'))
+
+  return openModals.reduce((top, element) => {
+    if (!top) return element
+
+    const topZIndex = parseInt(window.getComputedStyle(top).zIndex, 10) || 0
+    const elementZIndex = parseInt(window.getComputedStyle(element).zIndex, 10) || 0
+
+    // >= on an equal z-index the browser paints the later DOM element on top
+    return elementZIndex >= topZIndex ? element : top
+  }, null)
+}
+
+window.Folio.Modal.isTopmost = (modal) => {
+  return !!modal && window.Folio.Modal.topmost() === modal
+}
+
 window.Folio.Stimulus.register('f-modal', class extends window.Stimulus.Controller {
   static values = {
     open: { type: Boolean, default: false }
@@ -24,6 +42,7 @@ window.Folio.Stimulus.register('f-modal', class extends window.Stimulus.Controll
 
   disconnect () {
     this.unbindOutsideClick()
+    this.unbindEscape()
     this.removeBackdrop()
     delete this.toggleElement
   }
@@ -69,6 +88,28 @@ window.Folio.Stimulus.register('f-modal', class extends window.Stimulus.Controll
     }
   }
 
+  onKeyup (e) {
+    if (e.key !== 'Escape') return
+    if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable)) return
+    if (!window.Folio.Modal.isTopmost(this.element)) return
+
+    this.openValue = false
+  }
+
+  bindEscape () {
+    this.unbindEscape()
+
+    this.boundOnKeyup = this.onKeyup.bind(this)
+    document.addEventListener('keyup', this.boundOnKeyup)
+  }
+
+  unbindEscape () {
+    if (this.boundOnKeyup) {
+      document.removeEventListener('keyup', this.boundOnKeyup)
+      delete this.boundOnKeyup
+    }
+  }
+
   addBackdrop () {
     const backdrop = document.createElement('div')
     backdrop.className = 'modal-backdrop show'
@@ -87,6 +128,22 @@ window.Folio.Stimulus.register('f-modal', class extends window.Stimulus.Controll
     }
   }
 
+  stackAboveOpenModals () {
+    const otherOpenModals = Array.from(document.querySelectorAll('.modal.show')).filter((element) => element !== this.element)
+    if (otherOpenModals.length === 0) return
+
+    const topZIndex = Math.max(...otherOpenModals.map((element) => {
+      const zIndex = parseInt(window.getComputedStyle(element).zIndex, 10)
+      return Number.isFinite(zIndex) ? zIndex : 0
+    }))
+
+    this.element.style.zIndex = `${topZIndex + 10}`
+
+    if (this.backdropElement) {
+      this.backdropElement.style.zIndex = `${topZIndex + 5}`
+    }
+  }
+
   openValueChanged (value, from) {
     if (!value && !from) return
 
@@ -100,6 +157,8 @@ window.Folio.Stimulus.register('f-modal', class extends window.Stimulus.Controll
       this.element.style.display = 'block'
 
       this.addBackdrop()
+      this.stackAboveOpenModals()
+      this.bindEscape()
 
       const autofocus = this.element.querySelector('[autofocus]')
       if (autofocus) {
@@ -114,12 +173,17 @@ window.Folio.Stimulus.register('f-modal', class extends window.Stimulus.Controll
       }
     } else {
       this.unbindOutsideClick()
-
-      document.documentElement.classList.remove('modal-open')
-      document.body.classList.remove('modal-open')
+      this.unbindEscape()
 
       this.element.classList.remove('show')
       this.element.style.display = 'none'
+      this.element.style.zIndex = ''
+
+      // keep the scroll lock while another modal stays open underneath
+      if (!document.querySelector('.modal.show')) {
+        document.documentElement.classList.remove('modal-open')
+        document.body.classList.remove('modal-open')
+      }
 
       this.removeBackdrop()
 

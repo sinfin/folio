@@ -57,6 +57,14 @@ class Folio::FileTest < ActiveSupport::TestCase
     assert_not image.destroy
   end
 
+  test "generated slug is never purely numeric (would collide with a file id via friendly.find)" do
+    # e.g. a file uploaded as "349444.jpg" must not get slug "349444", which
+    # FriendlyId would then resolve ahead of the file whose id is 349444.
+    file = create(:folio_file_image, headline: "349444")
+    assert_no_match(/\A\d+\z/, file.slug,
+                    "purely numeric slug collides with another file's primary key")
+  end
+
   test "by_query searches by slug" do
     other = create(:folio_file_image, slug: "some-other-file")
     target = create(:folio_file_image, slug: "unique-search-slug")

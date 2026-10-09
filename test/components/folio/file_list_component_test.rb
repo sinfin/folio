@@ -18,4 +18,16 @@ class Folio::FileListComponentTest < Folio::ComponentTest
     assert_selector(".f-file-list-file", count: 3)
     assert_selector(".f-file-list-file--thead", count: 1)
   end
+
+  def test_does_not_preload_site_usage_counts_without_shared_files
+    with_config(folio_shared_files_between_sites: false) do
+      files = create_list(:folio_file_image, 2)
+
+      Folio::File::PublishedUsageCounter.stub(:preload, -> (*) { flunk "unexpected preload" }) do
+        render_inline(Folio::FileListComponent.new(file_klass: Folio::File::Image, files:))
+      end
+
+      assert_selector(".f-file-list")
+    end
+  end
 end

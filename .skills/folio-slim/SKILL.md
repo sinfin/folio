@@ -22,6 +22,11 @@ div class=classes
 div class=wrapper_class_name
 ```
 
+When a plain view still needs several Ruby setup lines, prefer one `ruby:`
+block over repeated `-` lines. In ViewComponent templates, move that setup to
+private component methods whenever practical; in Rails views, a short `ruby:`
+block is acceptable and clearer than multi-line `-` control flow.
+
 ## Multi-line attributes
 
 When an element has **multiple attributes**, use bracket syntax **without a space** before `[`:
@@ -53,6 +58,10 @@ button data=stimulus_action({ click: "accept", keydown: "acceptFromKeyboard" },
 / Good
 button data=suggestion_data(suggestion)
 ```
+
+Do not split a single Slim attribute value expression across lines. If an
+attribute value is too long or complex, extract it to a component method instead
+of wrapping the Ruby call inside the attribute.
 
 ## Multiple `class` attributes
 

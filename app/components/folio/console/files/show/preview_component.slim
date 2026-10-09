@@ -14,7 +14,9 @@
         ]
 
       - if @file.file_width && @file.file_height
-        figcaption.mt-2.small
+        figcaption.mt-2.small[
+          class="f-c-files-show-preview__figcaption"
+        ]
           = @file.file_width
           | ×
           = @file.file_height

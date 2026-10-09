@@ -91,6 +91,7 @@ interface FolioEditorProps {
   type: "block" | "rich-text";
   folioTiptapConfig: FolioTiptapConfig;
   readonly: boolean;
+  defaultResponsivePreview?: boolean;
   initialScrollTop: number | null;
   autosaveIndicatorInfo?: FolioTiptapAutosaveIndicatorInfo;
 }
@@ -102,6 +103,7 @@ export function FolioEditor({
   type,
   folioTiptapConfig,
   readonly,
+  defaultResponsivePreview,
   initialScrollTop,
   autosaveIndicatorInfo,
 }: FolioEditorProps) {
@@ -109,8 +111,11 @@ export function FolioEditor({
   const createdMessageSentRef = React.useRef(false);
   const createdHeightRef = React.useRef<number>(0);
   const blockEditor = type === "block";
+  // Responsive (mobile) preview is only toggleable in the block editor, so only
+  // honor the per-user "mobile first" default there — otherwise a rich-text
+  // field could start narrowed with no toolbar button to switch back.
   const [responsivePreviewEnabled, setResponsivePreviewEnabled] =
-    React.useState<boolean>(false);
+    React.useState<boolean>(blockEditor ? (defaultResponsivePreview ?? false) : false);
   const [initializedContent, setInitializedContent] =
     React.useState<boolean>(false);
   const [editorCreated, setEditorCreated] = React.useState<boolean>(false);

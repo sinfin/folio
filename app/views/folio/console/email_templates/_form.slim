@@ -27,7 +27,8 @@
               th style="width: 33%;"
                 .d-flex.align-items-center
                   = "{#{keyword}}"
-                  = render(Folio::Console::Ui::ClipboardComponent.new(text: "{#{keyword}}"))
+                  = render(Folio::Console::Ui::ClipboardComponent.new(text: "{#{keyword}}",
+                                                                      class_name: "ps-1"))
               td = label
 
 = form_footer f

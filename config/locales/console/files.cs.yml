@@ -44,29 +44,36 @@ cs:
             th/type: Typ použití
             th/placement_type: Typ záznamu
             th/placement_label: Záznam
-            th/published: Stav
+            th/site: Web
             th/created_at: Vytvořeno
             in_atom: kapitola obsahu
+            th/published: Stav
             orphaned: Smazaný obsah
             published: Publikováno
             unpublished: Nepublikováno
             destroy_orphan: Odstranit záznam
             destroy_orphan_confirm: Opravdu odstranit osiřelý záznam použití?
-
-          thumbnails_component:
-            title: Verze a velikosti
-            type/regular: Verze bez ořezu
-            type/crop: Verze s ořezem (#)
-            type/shrink: Verze pouze se zmenšením (>)
-            type/cover: Verze s přizpůsobením (^)
             no_thumbnails_yet: Zatím nebyly vygenerovány žádné verze
 
           thumbnails:
-            ratio_component:
-              all_versions: "Všechny vygenerované verze:"
+            main_component:
+              crops_title: Ořezy do různých poměrů stran
+              show_all_thumbnails: Všechny vygenerované náhledy
+
+            details_component:
+              title: Verze a velikosti
+              no_thumbnails_yet: Zatím nebyly vygenerovány žádné verze
 
             crop_edit_component:
               edit: Upravit ořez
+              regenerate: Znovu vygenerovat náhledy
+
+            list_group_component:
+              regular: Verze bez ořezu
+              variants_count:
+                one: "%{count} velikost"
+                few: "%{count} velikosti"
+                other: "%{count} velikostí"
 
         batch:
           bar_component:

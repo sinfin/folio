@@ -137,9 +137,15 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
 
   isFromBlacklistedTarget (e) {
     if (e.detail && e.detail.redactor) return true
+    if (this.isFromAutosaveDisabledTarget(e)) return true
     const target = (e.detail && e.detail.target) || e.target
     if (target.closest('.f-c-ui-modal, .f-c-file-placements-multi-picker-fields')) return true
     return false
+  }
+
+  isFromAutosaveDisabledTarget (e) {
+    const target = (e.detail && e.detail.target) || e.target
+    return !!target.closest('[data-f-c-form-footer-autosave-disabled]')
   }
 
   onDocumentInput (e) {
@@ -154,6 +160,7 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
 
   onDocumentChange (e) {
     if (!this.isFromProperForm(e)) return
+    if (this.isFromBlacklistedTarget(e)) return
 
     this.statusValue = 'unsaved'
 
@@ -163,8 +170,6 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     }
 
     this.allowAutosave()
-
-    if (this.isFromBlacklistedTarget(e)) return
 
     if (this.shouldAbortBasedOnElement({ element: document.activeElement, target: e.target })) {
       return
@@ -249,6 +254,7 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
   onDocumentFocusin (e) {
     if (!this.autosaveEnabledValue || !window.FolioConsole.Autosave.enabled) return
     if (!this.isFromProperForm(e)) return
+    if (this.isFromBlacklistedTarget(e)) return
 
     if (this.shouldAbortBasedOnElement({ element: e.target })) {
       this.pauseAutosave()

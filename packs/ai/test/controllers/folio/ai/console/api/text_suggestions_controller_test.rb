@@ -1,16 +1,50 @@
 # frozen_string_literal: true
 
 require "test_helper"
+require Folio::Engine.root.join("packs/ai/lib/folio/ai")
 
 class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::BaseControllerTest
+  include Folio::Engine.routes.url_helpers
+
   def setup
+    Folio::Site.include(Folio::Ai::SiteConcern) unless Folio::Site < Folio::Ai::SiteConcern
+    Folio::User.include(Folio::Ai::UserConcern) unless Folio::User < Folio::Ai::UserConcern
+
     super
 
     Folio::Ai.reset_registry!
-    register_dummy_ai_integration
+    Folio::Ai.register_record(record_class_name: "Folio::Page",
+                              fields: [
+                                { key: :title, character_limit: 80 },
+                                { key: :perex, character_limit: 400 },
+                              ],
+                              groups: [
+                                {
+                                  key: :meta,
+                                  label: "Meta fields",
+                                  fields: %i[title perex],
+                                },
+                              ])
 
-    @site.update!(ai_settings: enabled_ai_settings)
-    @article = create(:dummy_blog_article, site: @site)
+    @site.update!(ai_settings: {
+                    "enabled" => true,
+                    "provider" => "dummy",
+                    "integrations" => {
+                      "folio_pages" => {
+                        "fields" => {
+                          "title" => {
+                            "prompt" => "Write a short title.",
+                          },
+                        },
+                        "groups" => {
+                          "meta" => {
+                            "prompt" => "Write title and perex as a set.",
+                          },
+                        },
+                      },
+                    },
+                  })
+    @page = create(:folio_page, site: @site)
   end
 
   def teardown
@@ -19,247 +53,152 @@ class Folio::Ai::Console::Api::TextSuggestionsControllerTest < Folio::Console::B
     super
   end
 
-  test "renders loading component json and enqueues text suggestions job" do
-    with_ai_config(enabled: true) do
+  test "creates loading component response and enqueues job" do
+    Folio::Ai::Providers::Dummy.stub(:available?, true) do
       assert_enqueued_jobs 1, only: Folio::Ai::TextSuggestionsJob do
-        post text_suggestions_console_api_ai_text_suggestions_path,
-             params: request_params(field_key: :title,
-                                    show_meta: "1"),
+        post console_api_ai_text_suggestions_path(format: :json),
+             params: request_params(instructions: "Keep it short."),
              as: :json
       end
     end
 
-    page = Capybara.string(response_component_html)
-
-    assert_response :success
-    assert page.has_css?(".f-ai-c-text-suggestions")
-    assert page.has_no_css?(".f-ai-c-text-suggestions--loading")
-    assert page.has_css?(".f-ai-c-text-suggestions__suggestion--loading", count: 3)
-    assert page.has_css?(".f-ai-c-text-suggestions__suggestion-loader.folio-loader", count: 3)
-    assert page.has_no_css?(".f-ai-c-text-suggestions__loader")
+    assert_response :ok
+    assert_includes response.parsed_body["data"], "f-ai-c-text-suggestions__suggestion--loading"
+    assert_equal "ai_title", response.parsed_body.dig("meta", "component_id")
+    assert_equal false, response.parsed_body.dig("meta", "grouped")
     assert response.parsed_body.dig("meta", "request_id").present?
-    assert page.has_css?("[data-action*='f-ai-input:suggestionStale->f-ai-c-text-suggestions#clearSuggestionSelection']")
-    assert page.has_no_css?("[data-f-ai-c-text-suggestions-target='suggestion']")
-
-    job_params = enqueued_text_suggestions_job_arguments[:params].with_indifferent_access
-    assert_not job_params.key?(:klass)
-    assert_not job_params.key?(:id)
-    assert_equal true, job_params[:host_eligible]
-    assert_equal "Dummy::Ai::DemoProviderAdapter", job_params[:provider_adapter_class_name]
-    assert_includes job_params[:context].keys.map(&:to_s), "title"
+    assert_equal "Keep it short.", stored_instruction.instruction
   end
 
-  test "persists editor instructions before enqueueing instructions job" do
-    with_ai_config(enabled: true) do
+  test "creates grouped loading fragments and enqueues job" do
+    Folio::Ai::Providers::Dummy.stub(:available?, true) do
       assert_enqueued_jobs 1, only: Folio::Ai::TextSuggestionsJob do
-        post instructions_console_api_ai_text_suggestions_path,
-             params: request_params(field_key: :perex,
-                                    instructions: "Use a calmer voice."),
+        post console_api_ai_text_suggestions_path(format: :json),
+             params: request_params(grouped: true,
+                                    key: "meta",
+                                    component_id: "ai_group",
+                                    fields: [
+                                      { key: "title", component_id: "ai_title" },
+                                      { key: "perex", component_id: "ai_perex" },
+                                    ]),
              as: :json
       end
     end
 
-    instruction = Folio::Ai::UserInstruction.find_or_initialize_for(user: @superadmin,
-                                                                    site: @site,
-                                                                    integration_key: :dummy_blog_articles,
-                                                                    field_key: :perex)
+    assert_response :ok
+    assert_equal true, response.parsed_body.dig("meta", "grouped")
+    assert_equal "ai_group", response.parsed_body.dig("meta", "component_id")
 
-    assert_response :success
-    assert_equal "Use a calmer voice.", instruction.instruction
-    assert_not_includes response_component_html, "Alternative demo summary"
+    title_fragment = response.parsed_body.dig("meta", "fragments", "ai_title")
+    assert_includes title_fragment, "f-ai-c-text-suggestions--grouped"
+    assert_equal 1, title_fragment.scan("f-ai-c-text-suggestions__suggestion--loading").size
+    assert_not_includes title_fragment, "f-ai-c-text-suggestions__close"
+    assert_not_includes title_fragment, "f-ai-c-text-suggestions__instructions"
+    assert_includes response.parsed_body.dig("meta", "fragments", "ai_perex"),
+                    "f-ai-c-text-suggestions__suggestion--loading"
   end
 
-  test "filters current form snapshot before enqueueing job" do
-    snapshot = {
-      "dummy_blog_article[title]" => "Unsaved title",
-      "dummy_blog_article[perex]" => "Unsaved perex",
-      "dummy_blog_article[slug]" => "private-slug",
-      "dummy_blog_article[atoms_attributes][0][data][content]" => "Atom body",
-      "dummy_blog_article[atoms_attributes][0][content]" => "Direct atom body",
-      "dummy_blog_article[atoms_attributes][0][type]" => "Dummy::Atom::Contents::Text",
-      "dummy_blog_article[atoms_attributes][0][cover_placement_attributes][file_id]" => "456",
-      "dummy_blog_article[atoms_attributes][1][_destroy]" => "1",
-      "dummy_blog_article[atoms_attributes][1][data][content]" => "Destroyed atom",
-      "dummy_blog_article[image_or_embed_placements_attributes][0][title]" => "Image title",
-      "dummy_blog_article[image_or_embed_placements_attributes][0][file_id]" => "123",
-      "dummy_blog_article[image_or_embed_placements_attributes][1][_destroy]" => "true",
-      "dummy_blog_article[image_or_embed_placements_attributes][1][description]" => "Destroyed image",
-      "dummy_blog_article[topic_article_links_attributes][0][dummy_blog_topic_id]" => "1",
-      "authenticity_token" => "secret",
-    }
+  test "initial grouped request does not overwrite saved instructions" do
+    Folio::Ai::UserInstruction.upsert_instruction!(user: @superadmin,
+                                                   site: @site,
+                                                   record_key: "folio_pages",
+                                                   key: "meta",
+                                                   instruction: "Keep variants aligned.")
 
-    with_ai_config(enabled: true) do
-      assert_enqueued_jobs 1, only: Folio::Ai::TextSuggestionsJob do
-        post text_suggestions_console_api_ai_text_suggestions_path,
-             params: request_params(field_key: :title,
-                                    current_form_snapshot_json: snapshot.to_json),
-             as: :json
-      end
+    Folio::Ai::Providers::Dummy.stub(:available?, true) do
+      post console_api_ai_text_suggestions_path(format: :json),
+           params: request_params(grouped: true,
+                                  key: "meta",
+                                  component_id: "ai_group",
+                                  fields: [
+                                    { key: "title", component_id: "ai_title" },
+                                    { key: "perex", component_id: "ai_perex" },
+                                  ]),
+           as: :json
     end
 
-    current_form_snapshot = enqueued_text_suggestions_job_arguments.dig(:params,
-                                                                        :context,
-                                                                        :current_form_snapshot)
-
-    assert_equal "Unsaved title", current_form_snapshot["dummy_blog_article[title]"]
-    assert_equal "Unsaved perex", current_form_snapshot["dummy_blog_article[perex]"]
-    assert_equal "Atom body", current_form_snapshot["dummy_blog_article[atoms_attributes][0][data][content]"]
-    assert_equal "Direct atom body", current_form_snapshot["dummy_blog_article[atoms_attributes][0][content]"]
-    assert_equal "Dummy::Atom::Contents::Text", current_form_snapshot["dummy_blog_article[atoms_attributes][0][type]"]
-    assert_equal "456", current_form_snapshot["dummy_blog_article[atoms_attributes][0][cover_placement_attributes][file_id]"]
-    assert_equal "Image title",
-                 current_form_snapshot["dummy_blog_article[image_or_embed_placements_attributes][0][title]"]
-    assert_not_includes current_form_snapshot, "dummy_blog_article[slug]"
-    assert_not_includes current_form_snapshot, "dummy_blog_article[atoms_attributes][1][data][content]"
-    assert_not_includes current_form_snapshot, "dummy_blog_article[image_or_embed_placements_attributes][0][file_id]"
-    assert_not_includes current_form_snapshot, "dummy_blog_article[image_or_embed_placements_attributes][1][description]"
-    assert_not_includes current_form_snapshot, "dummy_blog_article[topic_article_links_attributes][0][dummy_blog_topic_id]"
-    assert_not_includes current_form_snapshot, "authenticity_token"
+    assert_response :ok
+    assert_equal "Keep variants aligned.",
+                 Folio::Ai::UserInstruction.find_by!(user: @superadmin,
+                                                     site: @site,
+                                                     integration_key: "folio_pages",
+                                                     field_key: "meta").instruction
   end
 
-  test "ignores non hash current form snapshot json before enqueueing job" do
-    with_ai_config(enabled: true) do
-      assert_enqueued_jobs 1, only: Folio::Ai::TextSuggestionsJob do
-        post text_suggestions_console_api_ai_text_suggestions_path,
-             params: request_params(field_key: :title,
-                                    current_form_snapshot_json: ["bad"].to_json),
-             as: :json
-      end
-    end
-
-    assert_response :success
-    context = enqueued_text_suggestions_job_arguments.dig(:params, :context)
-
-    assert_equal({}, context.fetch(:current_form_snapshot, {}))
-  end
-
-  test "renders record not ready directly for client class mismatch" do
-    folio_page = create(:folio_page, site: @site)
-
-    with_ai_config(enabled: true) do
+  test "renders component error and does not enqueue job for invalid request" do
+    Folio::Ai::Providers::Dummy.stub(:available?, true) do
       assert_no_enqueued_jobs only: Folio::Ai::TextSuggestionsJob do
-        post text_suggestions_console_api_ai_text_suggestions_path,
-             params: request_params(record: folio_page,
-                                    field_key: :title),
-             as: :json
-      end
-    end
-
-    page = Capybara.string(response_component_html)
-
-    assert_response :success
-    assert_nil response.parsed_body.dig("meta", "request_id")
-    assert page.has_css?(".f-ai-c-text-suggestions__status:not([hidden])",
-                         text: I18n.t("folio.ai.console.errors.record_not_ready"))
-    assert page.has_no_css?(".f-ai-c-text-suggestions__suggestion--loading")
-    assert page.has_no_css?("[data-f-ai-c-text-suggestions-target='suggestion']")
-  end
-
-  test "renders host ineligible directly without enqueueing text suggestions job" do
-    @article.update_columns(title: "",
-                            perex: "")
-
-    with_ai_config(enabled: true) do
-      assert_no_enqueued_jobs only: Folio::Ai::TextSuggestionsJob do
-        post text_suggestions_console_api_ai_text_suggestions_path,
-             params: request_params(field_key: :title),
-             as: :json
-      end
-    end
-
-    page = Capybara.string(response_component_html)
-
-    assert_response :success
-    assert_nil response.parsed_body.dig("meta", "request_id")
-    assert page.has_css?(".f-ai-c-text-suggestions__status:not([hidden])",
-                         text: I18n.t("folio.ai.console.errors.host_ineligible_article"))
-    assert page.has_no_css?(".f-ai-c-text-suggestions__suggestion--loading")
-    assert page.has_no_css?("[data-f-ai-c-text-suggestions-target='suggestion']")
-  end
-
-  test "requires message bus client id" do
-    with_ai_config(enabled: true) do
-      assert_no_enqueued_jobs only: Folio::Ai::TextSuggestionsJob do
-        post text_suggestions_console_api_ai_text_suggestions_path,
-             params: request_params(field_key: :title).except(:message_bus_client_id),
+        post console_api_ai_text_suggestions_path(format: :json),
+             params: request_params.except(:message_bus_client_id),
              as: :json
       end
     end
 
     assert_response :unprocessable_entity
-    assert_equal "message_bus_client_id is required", response.parsed_body["errors"].first["title"]
+    assert_includes response.parsed_body["data"],
+                    I18n.t("folio.ai.console.text_suggestions_component.errors.missing_message_bus_client_id")
+  end
+
+  test "renders instruction validation error and does not enqueue job" do
+    assert_no_enqueued_jobs only: Folio::Ai::TextSuggestionsJob do
+      post console_api_ai_text_suggestions_path(format: :json),
+           params: request_params(instructions: "x" * (Folio::Ai::UserInstruction::MAX_INSTRUCTION_LENGTH + 1)),
+           as: :json
+    end
+
+    assert_response :unprocessable_entity
+    assert_includes response.parsed_body["data"],
+                    I18n.t("folio.ai.console.text_suggestions_component.errors.instructions_too_long")
+    assert_nil Folio::Ai::UserInstruction.find_by(user: @superadmin,
+                                                  site: @site,
+                                                  integration_key: "folio_pages",
+                                                  field_key: "title")
+  end
+
+  test "renders grouped validation errors as child fragments" do
+    assert_no_enqueued_jobs only: Folio::Ai::TextSuggestionsJob do
+      post console_api_ai_text_suggestions_path(format: :json),
+           params: request_params(grouped: true,
+                                  key: "meta",
+                                  component_id: "ai_group",
+                                  fields: [
+                                    { key: "title", component_id: "ai_title" },
+                                    { key: "perex", component_id: "ai_perex" },
+                                  ]).except(:message_bus_client_id),
+           as: :json
+    end
+
+    assert_response :unprocessable_entity
+    assert_equal true, response.parsed_body.dig("meta", "grouped")
+    assert_equal "ai_group", response.parsed_body.dig("meta", "component_id")
+
+    title_fragment = response.parsed_body.dig("meta", "fragments", "ai_title")
+    assert_includes title_fragment,
+                    I18n.t("folio.ai.console.text_suggestions_component.errors.missing_message_bus_client_id")
+    assert_not_includes title_fragment, "f-ai-c-text-suggestions--grouped"
+    assert_includes response.parsed_body.dig("meta", "fragments", "ai_perex"),
+                    "f-ai-c-text-suggestions__panel"
   end
 
   private
-    def response_component_html
-      response.parsed_body["data"]
-    end
-
-    def enqueued_text_suggestions_job_arguments
-      job = enqueued_jobs.reverse.find { |enqueued_job| enqueued_job[:job] == Folio::Ai::TextSuggestionsJob }
-      args = job[:args]
-      args = ActiveJob::Arguments.deserialize(args) if args.first.is_a?(Hash) && args.first.key?("_aj_symbol_keys")
-
-      args.first.with_indifferent_access
-    end
-
-    def register_dummy_ai_integration
-      Folio::Ai.register_integration(record_class_name: "Dummy::Blog::Article",
-                                     fields: ai_fields)
-    end
-
-    def ai_fields
-      [
-        ai_field(:title, character_limit: 120),
-        ai_field(:perex, character_limit: 400),
-        ai_field(:meta_title, character_limit: 120),
-        ai_field(:meta_description, character_limit: 400),
-      ]
-    end
-
-    def ai_field(key, **options)
-      Folio::Ai::Field.new(key:,
-                           **options)
-    end
-
-    def request_params(record: @article,
-                       integration_key: :dummy_blog_articles,
-                       field_key:,
-                       instructions: nil,
-                       show_meta: nil,
-                       current_form_snapshot_json: nil)
+    def request_params(**overrides)
       {
-        klass: record.class.name,
-        id: record.id,
-        integration_key: integration_key.to_s,
-        field_key: field_key.to_s,
-        component_id: "ai_#{field_key}",
-        instructions:,
-        show_meta:,
-        message_bus_client_id: "message-bus-client",
-        current_form_snapshot_json:,
-      }.compact
+        klass: "Folio::Page",
+        id: @page.id,
+        key: "title",
+        grouped: false,
+        message_bus_client_id: "client-1",
+        component_id: "ai_title",
+        current_form_snapshot_json: {
+          "folio_page[title]" => "Draft title",
+        }.to_json,
+      }.merge(overrides)
     end
 
-    def enabled_ai_settings(integration_key: :dummy_blog_articles,
-                            field_keys: %i[title perex meta_title meta_description],
-                            prompt: "Write a safe demo suggestion.")
-      {
-        enabled: true,
-        integrations: {
-          integration_key => {
-            fields: enabled_ai_fields(field_keys:, prompt:),
-          },
-        },
-      }
-    end
-
-    def enabled_ai_fields(field_keys:, prompt:)
-      field_keys.index_with do
-        {
-          enabled: true,
-          prompt:,
-        }
-      end
+    def stored_instruction
+      Folio::Ai::UserInstruction.find_by!(user: @superadmin,
+                                          site: @site,
+                                          integration_key: "folio_pages",
+                                          field_key: "title")
     end
 end

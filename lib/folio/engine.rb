@@ -42,6 +42,10 @@ module Folio
     config.folio_console_clonable_enabled = true
     config.folio_console_audited_revisions_limit = 50
     config.folio_console_preview_url_for_procs = nil
+    config.folio_console_files_thumbnail_groups_proc = -> (groups:, site:) { groups }
+    config.folio_console_files_thumbnail_groups_main_ratio_proc = lambda do |ratio:, **|
+      Folio::Console::Files::ThumbnailGroups::MainRatioGroups.default_ratio(ratio:)
+    end
 
     config.folio_rewriter_lambda_for_has_console_url = nil
 
@@ -81,6 +85,9 @@ module Folio
 
     config.folio_direct_s3_upload_allow_for_users = false
     config.folio_direct_s3_upload_allow_public = false
+    config.folio_direct_s3_upload_max_file_size = 5.gigabytes
+    config.folio_direct_s3_multipart_upload_enabled = false
+    config.folio_direct_s3_multipart_upload_min_file_size = 100.megabytes
     config.folio_direct_s3_upload_attributes_for_job_proc = -> (controller) {
       { site_id: controller.send(:site_for_new_files).id }
     }

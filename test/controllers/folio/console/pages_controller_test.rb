@@ -84,6 +84,61 @@ class Folio::Console::PagesControllerTest < Folio::Console::BaseControllerTest
     assert_select ".f-c-ui-alert--success"
   end
 
+  test "edit renders the presence ping heartbeat" do
+    page = create(:folio_page)
+
+    get url_for([:edit, :console, page])
+
+    assert_select ".f-c-current-users-presence-ping"
+  end
+
+  test "failed update still renders the presence ping heartbeat" do
+    page = create(:folio_page)
+
+    put url_for([:console, page]), params: { page: { title: "" } }
+
+    assert_select ".form-group.page_title.form-group-invalid"
+    assert_select ".f-c-current-users-presence-ping"
+  end
+
+  test "presence url is canonical across edit and failed update" do
+    page = create(:folio_page)
+
+    get url_for([:edit, :console, page])
+    edit_presence_url = superadmin.reload.console_url
+
+    put url_for([:console, page]), params: { page: { title: "" } }
+    failed_update_presence_url = superadmin.reload.console_url
+
+    assert_select ".form-group.page_title.form-group-invalid"
+    assert_equal edit_presence_url, failed_update_presence_url,
+                 "an editor must keep the same presence URL after a failed update, " \
+                 "otherwise another editor on the /edit URL stops seeing them"
+  end
+
+  test "edit still renders when the canonical presence URL cannot be generated" do
+    # A nested console route whose parent id is out of scope, or a resource
+    # without an edit route, makes url_for(action: :edit) unresolvable, so
+    # safe_url_for returns nil. Presence must degrade to the request URL instead
+    # of 500-ing the whole edit page.
+    page = create(:folio_page)
+
+    klass = Folio::Console::PagesController
+    klass.send(:alias_method, :folio_test_orig_safe_url_for, :safe_url_for)
+    klass.send(:define_method, :safe_url_for) { |_opts| nil }
+
+    begin
+      get url_for([:edit, :console, page])
+    ensure
+      klass.send(:alias_method, :safe_url_for, :folio_test_orig_safe_url_for)
+      klass.send(:remove_method, :folio_test_orig_safe_url_for)
+    end
+
+    assert_response :success
+    assert_select ".f-c-current-users-presence-ping"
+    assert_equal @request.url, superadmin.reload.console_url
+  end
+
   test "revision" do
     page = Audited.stub(:auditing_enabled, true) {  create(:folio_page) }
 

@@ -27,6 +27,22 @@ class Folio::Embed::BoxComponentTest < Folio::ComponentTest
     assert_selector(".f-embed-box")
   end
 
+  def test_render_full_width_iframes_defaults_to_false
+    folio_embed_data = { "active" => true, "url" => "https://www.youtube.com/watch?v=8DPcXHMGMBc", "type" => "youtube" }
+
+    render_inline(Folio::Embed::BoxComponent.new(folio_embed_data:))
+
+    assert_selector(".f-embed-box[data-f-embed-box-full-width-iframes-value='false']")
+  end
+
+  def test_render_full_width_iframes
+    folio_embed_data = { "active" => true, "url" => "https://www.youtube.com/watch?v=8DPcXHMGMBc", "type" => "youtube" }
+
+    render_inline(Folio::Embed::BoxComponent.new(folio_embed_data:, full_width_iframes: true))
+
+    assert_selector(".f-embed-box[data-f-embed-box-full-width-iframes-value='true']")
+  end
+
   def test_render_dual_theme_background_colors
     folio_embed_data = { "active" => false }
 
