@@ -5,6 +5,13 @@ require "test_helper"
 class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControllerTest
   attr_reader :site
 
+  FILE_PLACEMENT_KLASSES = {
+    "Folio::File::Document" => Folio::FilePlacement::Document,
+    "Folio::File::Image" => Folio::FilePlacement::Image,
+    "Folio::File::Video" => Folio::FilePlacement::VideoCover,
+    "Folio::File::Audio" => Folio::FilePlacement::AudioCover,
+  }
+
   [
     Folio::File::Document,
     Folio::File::Image,
@@ -59,7 +66,7 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
     test "#{klass} - destroy indestructible" do
       file = create(klass.model_name.singular)
       assert klass.exists?(file.id)
-      file.update_column(:file_placements_count, 1)
+      FILE_PLACEMENT_KLASSES.fetch(klass.to_s).create!(placement: nil, file:)
 
       delete url_for([:console, :api, file, format: :json])
 
@@ -69,6 +76,16 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       assert_equal 422, response.parsed_body["errors"].first["status"]
       assert_equal "ActiveRecord::RecordNotDestroyed", response.parsed_body["errors"].first["title"]
       assert_equal I18n.t("folio.file.cannot_destroy_file_with_placements"), response.parsed_body["errors"].first["detail"]
+    end
+
+    test "#{klass} - destroy with stale placements counter" do
+      file = create(klass.model_name.singular)
+      file.update_column(:file_placements_count, 1)
+
+      delete url_for([:console, :api, file, format: :json])
+
+      assert_response(:success)
+      assert_not klass.exists?(file.id)
     end
 
     test "#{klass} - show" do

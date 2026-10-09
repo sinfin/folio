@@ -40,6 +40,11 @@ class Folio::Console::Files::ShowComponent < Folio::Console::ApplicationComponen
     }
   end
 
+  def live_indestructible_reason
+    return @live_indestructible_reason if defined?(@live_indestructible_reason)
+    @live_indestructible_reason = @file.live_indestructible_reason
+  end
+
   def destroy_button_model
     h = {
       label: t(".destroy"),
@@ -47,7 +52,7 @@ class Folio::Console::Files::ShowComponent < Folio::Console::ApplicationComponen
       variant: :danger,
     }
 
-    if @file.indestructible_reason
+    if live_indestructible_reason
       h[:disabled] = true
     else
       h[:data] = stimulus_action({ click: "onDestroyClick" }, { url: url_for([:console, :api, @file]) })

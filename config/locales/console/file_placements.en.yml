@@ -3,6 +3,8 @@ en:
   folio:
     console:
       file_placements:
+        destroyed: Usage record removed.
+
         multi_picker_fields_component:
           add_embed: Add Embed (HTML code)
           select/image: Select image

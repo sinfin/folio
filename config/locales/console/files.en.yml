@@ -47,6 +47,12 @@ en:
             th/site: Site
             th/created_at: Created at
             in_atom: content chapter
+            th/published: State
+            orphaned: Deleted content
+            published: Published
+            unpublished: Unpublished
+            destroy_orphan: Remove record
+            destroy_orphan_confirm: Really remove the orphaned usage record?
             no_thumbnails_yet: No versions generated yet
 
           thumbnails:
