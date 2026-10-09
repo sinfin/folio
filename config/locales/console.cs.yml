@@ -32,6 +32,8 @@ cs:
           invalid_record_title: Neplatný záznam
           invalid_record_detail: Záznam nelze uložit. Před změnou stavu jej opravte.
           invalid_record_form_detail: Stav záznamu nelze opravit. Nejprve opravte chyby ve formuláři.
+          invalid_email_title: E-mail nelze odeslat
+          invalid_email_detail: Před odesláním e-mailu vyplňte příjemce, předmět a zprávu.
         site_user_links:
           set_locked:
             success/locked: Uživatel byl zablokován.
@@ -371,7 +373,7 @@ cs:
       form_modal_component:
         title/state: Změna stavu
       aasm:
-        email_modal:
+        email_modal_component:
           title: Opravdu si přejete změnit stav na „{STATE_NAME}“?
           send_email_label: Odeslat e-mail na {EMAIL}
           placeholders:

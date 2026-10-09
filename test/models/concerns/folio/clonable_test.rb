@@ -3,6 +3,60 @@
 require "test_helper"
 
 class Folio::ClonableTest < ActiveSupport::TestCase
+  # Records the cloner must never copy, because they are shared and owning them would
+  # mean owning everything they in turn own.
+  TERMINAL_CLASSES = [Folio::Site, Folio::User, Folio::File].freeze
+
+  test "cloning does not copy files or escape into the site" do
+    page = create(:folio_page)
+    image = create(:folio_file_image)
+
+    # The usage constraint is what closed the cycle back onto Folio::Site.
+    Folio::FileSiteLink.create!(file: image, site: image.site)
+    Folio::FilePlacement::Image.create!(placement: page, file: image)
+
+    page.reload
+
+    clone = Folio::Clonable::Cloner.new(page).create_clone
+
+    escaped = reachable_classes(clone).select do |klass|
+      TERMINAL_CLASSES.any? { |terminal| klass <= terminal }
+    end
+
+    assert_empty escaped.map(&:name),
+                 "The clone copied shared records instead of referencing them."
+
+    # The file itself is still attached, by reference.
+    assert_equal [image], clone.images
+  end
+
+  # Classes the clone holds *copies* of. Persisted records are references, which is
+  # exactly what a shared file or site is supposed to be, so only new records count.
+  def reachable_classes(root)
+    classes = Set.new
+    visited = Set.new
+    queue = [root]
+
+    while (node = queue.shift)
+      next unless node.is_a?(ActiveRecord::Base)
+      next unless visited.add?(node.object_id)
+
+      classes << node.class if node.new_record?
+
+      node.class.reflect_on_all_associations.each do |reflection|
+        association = begin
+          node.association(reflection.name)
+        rescue ActiveRecord::ActiveRecordError
+          next
+        end
+
+        queue.concat(Array(association.target)) if association.loaded?
+      end
+    end
+
+    classes
+  end
+
   test "create clone of page" do
     page = create(:folio_page)
 

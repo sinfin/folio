@@ -62,6 +62,11 @@ implementation across incidental private helpers there.
   removes real duplication, or provides a framework-required entrypoint such as
   `render?`.
 
+## Conditionals
+
+Use `if` rather than `unless` when a condition combines multiple predicates
+with `&&` or `||`. This keeps the condition straightforward to read.
+
 ## Association identity and loading
 
 - Do not compare Active Record association objects when a type and foreign-key

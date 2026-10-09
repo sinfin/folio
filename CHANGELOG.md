@@ -14,17 +14,35 @@ All notable changes to this project will be documented in this file.
 - **Input character counter**: Mask long displayed current counts automatically for numeric `character_counter` values, e.g. `150` derives a `999` display limit so `1000` and higher render as `*`. Pass `character_counter_auto_current_count_limit: false` to opt out.
 - **Console icons**: Add the `lock_open_variant` icon.
 - **Embed full-width iframes**: `Folio::Embed::BoxComponent` accepts `full_width_iframes: true` to let embedded iframes grow to the container width instead of stopping at their `width` attribute (560px for a URL-embedded YouTube video, 360px for Shorts). The default is `false`, so host apps opt in per site or per placement. The same option is accepted by `input as: :embed` and by `:embed` tiptap node attributes (where it may be a Proc resolved at render time) so console previews match the frontend.
-- **Console video preview for CRA-encoded vertical videos**: `CheckProgressJob` now persists the actual CRA `outputParams.aspect` as `remote_services_data["video_aspect"]` (and persists output metadata even when `messages` is empty). `Folio::PlayerComponent` accepts an explicit `vertical:` value, while server-rendered and dynamically-created console players receive it from `cra_media_cloud_vertical?`. The `.f-player--vertical` modifier caps the preview width (`$f-player-video-vertical-max-width`, default `224px`) so its aspect-ratio-driven height stays in line with landscape previews. Source dimensions remain available to preserve the media aspect ratio but no longer select the vertical layout; existing portrait videos without CRA aspect metadata therefore stay horizontal until they are re-encoded.
+- **Console video preview for CRA-encoded vertical videos**: `CheckProgressJob` now persists the actual CRA `outputParams.aspect` as `remote_services_data["video_aspect"]` (and persists output metadata even when `messages` is empty). `Folio::PlayerComponent` accepts an explicit `vertical:` value, while server-rendered and dynamically-created console players receive it from `cra_media_cloud_vertical?`. The `.f-player--vertical` modifier caps the preview width (`$f-player-video-vertical-max-width-global`, default `224px`) so its aspect-ratio-driven height stays in line with landscape previews. Source dimensions remain available to preserve the media aspect ratio but no longer select the vertical layout; existing portrait videos without CRA aspect metadata therefore stay horizontal until they are re-encoded.
+- **Console icons**: Add the `close_box` icon.
+- **Special characters popup**: Support inserting characters into Redactor,
+  advanced Redactor, and email Redactor inputs while synchronizing editor
+  changes back to their source textareas.
+- **Direct S3 multipart uploads**: Opt-in browser multipart uploads through
+  Uppy for files above `folio_direct_s3_multipart_upload_min_file_size`
+  (default 100 MB) when `folio_direct_s3_multipart_upload_enabled` is `true`
+  (default `false`). Single `PUT` uploads stop at the S3 5 GB object limit.
+  `Folio::UppyComponent` reads its default `max_file_size` from
+  `folio_direct_s3_upload_max_file_size` (default 5 GB). The part, complete
+  and abort endpoints accept only keys created by the current session.
 
 ### Changed
 
+- **Console AASM email modal**: State events with `email_modal: true` now open
+  `Folio::Console::Aasm::EmailModalComponent` from the default console layout
+  instead of raising unimplemented. `cell("folio/console/aasm/email_modal")` is
+  removed; host apps that still render the cell must switch to the component.
+  See `UPGRADING.md`.
 - **AI pack configuration**: Move runtime configuration readers and provider
   helpers onto `Folio::Ai.config`, keeping `Folio::Ai.configure` as the setup
   API.
 
 ### Fixed
+- **Password sign-ins are remembered**: `Folio::Users::SessionsController#create` now sets a remember cookie for every password sign-in, matching the `Folio::User#remember_me` default and OmniAuth/registration sign-ins. Devise's database strategy assigned `remember_me = false` for the missing param, so password sign-ins never got a remember cookie and only lasted until the browser closed. The default sign-in form has no `remember_me` input, so this is always-on: users stay signed in for `config.remember_for` (12 h) across browser restarts, and the 30-minute `timeout_in` idle timeout only applies once that cookie expires. To keep session-only sign-ins, override `Folio::User#remember_me` to return `false`, or render a `remember_me` checkbox in a host sign-in form (an explicit `remember_me=0` still opts out). The shared test helper `sign_out(user)` now performs the sign-out request first, so the remember cookie is forgotten like in a browser.
 - **Embed HTML rendering**: Iframes pasted as raw HTML (e.g. a copied YouTube `<iframe>` embed code) now scale down using the aspect ratio derived from their `width`/`height` attributes, instead of keeping a fixed pixel size that overflowed and got clipped in narrower containers. They still stop at their attribute width in wider containers unless `full_width_iframes: true` is passed.
 - **Multi picker fields "add embed"**: The add-embed button now resolves the multi picker and adds the row to its `f-nested-fields`, instead of taking the first `f-nested-fields` in the whole form. Previously the click silently added the embed row to an unrelated nested-fields collection whenever the form rendered another `folio_nested_fields` before the picker, so the button appeared to do nothing. The lookup falls back to the picker within the form because the source header holding the button is detached into `.f-c-tiptap-simple-form-wrap` and is then no longer a descendant of its own picker.
+- **Console form saving loader**: Use a transparent spinner and keep console loaders light-only, ignoring OS dark mode.
 
 ## [7.7.2] - 2026-07-23
 
@@ -49,6 +67,7 @@ All notable changes to this project will be documented in this file.
 - **Possible future media-source counter refactor (not included)**: A synthetic benchmark measured the set-based query on PostgreSQL 16.14 with 300,000 files and 600,000 placements. With site-specific source rules on 10% of files, all request medians across five runs stayed below 2 seconds, including a deep usable page at 1.85 seconds with 0.97 seconds of SQL. With rules on 100% of files, the usable source/site-filtered request and deep usable page reached 2.35 and 2.38 seconds, although concurrent ordinary queries remained unaffected. If production resembles the 100% case, add a `folio_file_site_published_usage_counts` table with `file_id`, `site_id`, `published_usage_count`, timestamps, foreign keys, and a unique `(file_id, site_id)` index. Backfill it from deduplicated direct and atom usage grouped by parent record and site, then keep it synchronized for placement create/destroy/move, atom parent changes, parent publish/unpublish, parent site changes, and parent destruction. A design review must decide between synchronous updates and queued updates because stale queued counts could allow over-limit publication. Filtering and file-card rendering should join/preload the persisted counter while retaining `folio_files.published_usage_count` as the global fallback; add a reconciliation task and rerun the same 300,000-file HTTP benchmark before removing the dynamic SQL path.
 - **Console private attachments**: Replace the Dropzone/S3Upload add flow with `Folio::UppyComponent`, preserving nested attachment ordering/destroy behavior and hiding move arrows in single-attachment mode.
 - **Test parallelization**: Automatic Rails test runs now use at most 8 workers and begin above 100 loaded test methods. Set `TEST_MAX_WORKERS` or `TEST_PARALLELIZATION_THRESHOLD` to change those automatic defaults; setting either to `0` delegates that setting to Rails' default, while `PARALLEL_WORKERS` remains Rails' exact override.
+- **Console image thumbnails**: Group crop thumbnails by aspect ratio with per-ratio crop editing.
 
 ### Fixed
 

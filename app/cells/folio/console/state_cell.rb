@@ -105,12 +105,10 @@ class Folio::Console::StateCell < Folio::ConsoleCell
   end
 
   def data_for_event(event)
-    raise "FIXME Not implemented yet" if event.options[:email_modal]
-
     {
       "confirmation" => confirm(event),
       "url" => remote_url_for(event),
-      "aasm-email-modal" => event.options[:email_modal],
+      "aasm-email-modal" => event.options[:email_modal] ? "true" : nil,
       "modal-url" => event.options[:modal] ? controller.send(event.options[:modal][:path_name], model, _ajax: "1") : nil,
       "modal-title" => event.options[:modal] ? t("folio.console.form_modal_component.title/state") : nil,
       "event-name" => event.name,

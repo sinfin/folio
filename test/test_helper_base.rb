@@ -175,10 +175,14 @@ class ActionDispatch::IntegrationTest
     super
   end
 
+  # Hit the sign-out endpoint before Devise's `sign_out`: that helper logs out
+  # on the next request before the user is loaded, so `destroy` would see a
+  # signed-out session and the rememberable `before_logout` hook would never
+  # forget the remember cookie.
   def sign_out(user = nil)
-    super if user
     Folio::Current.user = nil
     get destroy_user_session_path
+    super if user
   end
 
   require Folio::Engine.root.join("test/support/create_page_singleton_helper")

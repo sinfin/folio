@@ -93,6 +93,19 @@ class Folio::SimpleFormOverridesTest < ActionView::TestCase
     assert_nil input["data-f-input-character-counter-current-count-limit-value"]
   end
 
+  %i[redactor advanced_redactor email_redactor].each do |input_type|
+    test "#{input_type} input handles special character insertion events" do
+      html = simple_form_for "", method: :get, url: "/" do |f|
+        concat(f.input :content, as: input_type)
+      end
+
+      wrapper = Capybara.string(html).find(".form-group._content")
+
+      assert_includes wrapper["data-action"].split,
+                      "f-special-characters-popup:insertText->f-input-redactor#onSpecialCharactersInsertText"
+    end
+  end
+
   test "url json input renders custom html before hint" do
     html = simple_form_for "", method: :get, url: "/" do |f|
       concat(f.input :link_json, as: :url_json, hint: "Visible hint")

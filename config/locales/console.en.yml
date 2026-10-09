@@ -32,6 +32,8 @@ en:
           invalid_record_title: Invalid record
           invalid_record_detail: Record cannot be saved. Correct it before changing state.
           invalid_record_form_detail: Record state cannot be changed. Please fix errors in the form first.
+          invalid_email_title: E-mail cannot be sent
+          invalid_email_detail: Fill in the recipient, subject and message before sending the e-mail.
         site_user_links:
           set_locked:
             success/locked: User blocked.
@@ -367,7 +369,7 @@ en:
       form_modal_component:
         title/state: State change
       aasm:
-        email_modal:
+        email_modal_component:
           title: Change the state to "{STATE_NAME}"?
           send_email_label: Send e-mail to {EMAIL}
           placeholders:

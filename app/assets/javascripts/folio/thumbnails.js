@@ -108,6 +108,7 @@
                 id: thumbnail.id,
                 size: thumbnail.size,
                 url: thumbnail.url,
+                webp_url: thumbnail.webp_url,
                 ready: thumbnail.ready,
                 originalData: matchingData
               },
@@ -200,14 +201,18 @@
           const params = new URLSearchParams(url.search)
 
           const id = params.get('image')
-          const size = params.get('size')
+          const rawSize = params.get('size')
 
           // Only return data if we have required components: id and size
-          if (id && size) {
+          if (id && rawSize) {
+            // JPG and WEBP placeholders share one generation job; only their response URL differs.
+            const isWebp = rawSize.endsWith('.webp')
+
             return {
               url: string,
               id,
-              size
+              size: rawSize.replace(/\.webp$/, ''),
+              format: isWebp ? 'webp' : 'original'
             }
           }
         } catch (error) {
@@ -226,9 +231,19 @@
             image = this.element
           }
 
+          const imageData = image && this.dataFromString(image.src)
+
           // Update img src if it matches the thumbnail
-          if (image && this.urlMatches(image.src, thumbnailData)) {
-            image.src = thumbnailData.url
+          if (imageData && this.urlMatches(image.src, thumbnailData)) {
+            const url = imageData.format === 'webp' ? thumbnailData.webp_url : thumbnailData.url
+            if (!url) return
+
+            image.src = url
+
+            const link = image.closest('a[href]')
+            if (link && this.urlMatches(link.href, thumbnailData)) {
+              link.href = url
+            }
           }
         } catch (error) {
           console.warn('Error updating image sources:', error)
@@ -237,12 +252,9 @@
 
       urlMatches (url, thumbnailData) {
         try {
-          const parsedUrl = new URL(url)
-          const params = new URLSearchParams(parsedUrl.search)
-          const id = params.get('image')
-          const size = params.get('size')
+          const data = this.dataFromString(url)
 
-          return id === thumbnailData.id.toString() && size === thumbnailData.size
+          return data && data.id === thumbnailData.id.toString() && data.size === thumbnailData.size
         } catch (error) {
           return false
         }
@@ -274,6 +286,7 @@
             id: data.data.id,
             size: data.data.size,
             url: data.data.url,
+            webp_url: data.data.webp_url,
             ready: true,
             width: data.data.width,
             height: data.data.height
