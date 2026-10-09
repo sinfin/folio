@@ -7,7 +7,9 @@ class Folio::Console::FilePlacementsController < Folio::Console::BaseController
 
     # only orphaned usage records may be removed from here - live content is
     # unlinked by editing the owning record
-    raise ActiveRecord::RecordNotFound if placement.placement.present?
+    owner = placement.placement
+    owner = owner.placement if owner.is_a?(Folio::Atom::Base)
+    raise ActiveRecord::RecordNotFound if owner.present?
 
     placement.destroy!
 
