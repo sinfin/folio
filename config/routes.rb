@@ -114,6 +114,8 @@ Folio::Engine.routes.draw do
         end
       end
 
+      resources :file_placements, only: %i[destroy]
+
       if ::Rails.application.config.folio_leads_from_component_class_name
         resources :leads, only: %i[index show edit update destroy] do
           collection { post :mass_handle }
