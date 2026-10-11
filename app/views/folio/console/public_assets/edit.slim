@@ -1,0 +1,4 @@
+= simple_form_for(@public_asset,
+                  as: :public_asset,
+                  url: through_aware_console_url_for(@public_asset)) do |f|
+  = render "form", f: f

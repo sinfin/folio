@@ -1,0 +1,14 @@
+= index_header
+
+= catalogue(@public_assets, allow_sorting: false)
+  ruby:
+    edit_link :file_name
+    attribute :file_mime_type
+    attribute(:file_size) { controller.view_context.number_to_human_size(record.file_size) }
+    attribute :public_url do
+      controller.view_context.render(Folio::Console::Ui::ClipboardComponent.new(text: record.public_url,
+                                                                               as_button: true,
+                                                                               button_label: t("folio.console.public_assets.copy_url")))
+    end
+    attribute(:download) { link_to(t("folio.console.public_assets.download"), record.public_url, target: "_blank", rel: "noopener") }
+    actions

@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class Folio::File::PublicAssetsControllerTest < ActionDispatch::IntegrationTest
+class Folio::PublicAssetsControllerTest < ActionDispatch::IntegrationTest
   test "serves arbitrary supported file types without transforming original bytes" do
     site = create_and_host_site
     samples = [
@@ -18,7 +18,7 @@ class Folio::File::PublicAssetsControllerTest < ActionDispatch::IntegrationTest
       original.binmode
       original.write(content)
       original.rewind
-      asset = Folio::File::PublicAsset.create!(site:,
+      asset = Folio::PublicAsset.create!(site:,
                                             file: Rack::Test::UploadedFile.new(original.path, mime))
 
       get asset.public_url
@@ -31,7 +31,7 @@ class Folio::File::PublicAssetsControllerTest < ActionDispatch::IntegrationTest
 
   test "serves original bytes and revalidates replacement on a stable URL" do
     site = create_and_host_site
-    asset = Folio::File::PublicAsset.create!(site:, file: upload('{"first":true}'))
+    asset = Folio::PublicAsset.create!(site:, file: upload('{"first":true}'))
     stable_url = asset.public_url
 
     get stable_url
@@ -51,7 +51,7 @@ class Folio::File::PublicAssetsControllerTest < ActionDispatch::IntegrationTest
     assert_equal '{"second":true}', response.body
     assert_not_equal old_etag, response.headers["ETag"]
 
-    other = Folio::File::PublicAsset.create!(site:, file: upload("{}"))
+    other = Folio::PublicAsset.create!(site:, file: upload("{}"))
     assert_not_equal stable_url, other.public_url
   end
 
@@ -64,7 +64,7 @@ class Folio::File::PublicAssetsControllerTest < ActionDispatch::IntegrationTest
 
   test "disabled feature does not serve files" do
     site = create_and_host_site
-    asset = create(:folio_file_public_asset, site:)
+    asset = create(:folio_public_asset, site:)
     with_config(folio_public_assets_enabled: false) do
       get asset.public_url
       assert_response :not_found

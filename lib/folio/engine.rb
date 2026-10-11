@@ -317,12 +317,6 @@ module Folio
       Folio::EnvFlags.warn_if_present
     end
 
-    initializer :folio_public_asset_file_type, after: :load_config_initializers do |app|
-      if app.config.folio_public_assets_enabled
-        app.config.folio_file_types_for_routes << "Folio::File::PublicAsset"
-      end
-    end
-
     config.to_prepare do
     end
 

@@ -6,8 +6,6 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- **Public assets**: Opt-in `Folio::File::PublicAsset` subtype using the existing file library for arbitrary original files, with stable UUID URLs, replacement, MIME detection and HTTP cache revalidation. Enable `folio_public_assets_enabled` in the host application; disabled by default.
-
 - **Atom insertion constraints**: Allow atom classes to opt out of new console insertion while keeping existing atoms editable. Collection fields can assign the first value not used by sibling atoms, hide sibling-used options, and stop insertion with a configured message when all allowed values are exhausted.
 - **Atom form ordered multi-select**: Allow atom classes to configure virtual JSON-backed ordered multi-select fields, including conditional field visibility and remotely loaded options.
 - **Tiptap node overlay context**: Tiptap inputs can opt into passing their current unsaved document content with node edit and save requests. The option is disabled by default.
@@ -35,6 +33,8 @@ All notable changes to this project will be documented in this file.
   and abort endpoints accept only keys created by the current session.
 
 ### Changed
+
+- **Public assets**: Add standalone `Folio::PublicAsset` with its own S3 path under `<project>/<environment>/public_assets` and a simple Console with filename search, “My public assets” and a copy-link button on every row. Media fields, tags and usage are excluded.
 
 - **Console catalogue sorting**: Sort controls now cycle through ascending, descending, and back to the default order while preserving active filters.
 - **Console AASM email modal**: State events with `email_modal: true` now open

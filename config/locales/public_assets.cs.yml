@@ -1,12 +1,23 @@
 cs:
   activerecord:
+    attributes:
+      folio/public_asset:
+        created_by_current_user: Mé veřejné soubory
+        query: Název souboru
+        file_name: Název
+        file_size: Velikost
+        file_mime_type: MIME
+        public_url: Veřejná URL
+        download: Originál
     models:
-      folio/file/public_asset:
+      folio/public_asset:
         one: Veřejný soubor
         few: Veřejné soubory
         other: Veřejné soubory
   folio:
     console:
-      files:
-        show_component:
-          copy_public_url: Zkopírovat veřejnou URL
+      public_assets:
+        copy_url: Zkopírovat veřejnou URL
+        download: Stáhnout originál
+        upload: Nahrát soubor
+        replace: Nahrát náhradní soubor

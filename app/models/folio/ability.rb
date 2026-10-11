@@ -98,6 +98,7 @@ class Folio::Ability
     can :do_anything, Folio::File, { site: [Folio::File.correct_site(site), site].uniq }
     can :edit_usage_constraints, Folio::File, { site: [Folio::File.correct_site(site), site].uniq }
     can :do_anything, Folio::MediaSource, { site: [Folio::File.correct_site(site), site].uniq }
+    can :do_anything, Folio::PublicAsset, { site: } if Rails.application.config.folio_public_assets_enabled
     can :do_anything, Folio::Page, { site: }
     can :do_anything, Folio::Menu, { site: }
     can :do_anything, Folio::Lead, { site: }

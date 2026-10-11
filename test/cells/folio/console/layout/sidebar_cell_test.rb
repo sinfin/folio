@@ -27,6 +27,23 @@ class Folio::Console::Layout::SidebarCellTest < Folio::Console::CellTest
     end
   end
 
+  test "shared media keeps public asset links on the current site" do
+    create_and_host_site
+    Folio::Current.user = create(:folio_user, :superadmin)
+    other_site = create_site(force: true)
+
+    Rails.application.config.stub(:folio_public_assets_enabled, true) do
+      Rails.application.config.stub(:folio_shared_files_between_sites, true) do
+        Folio::File.stub(:correct_site, other_site) do
+          html = cell("folio/console/layout/sidebar", nil).(:show)
+          links = html.all("a[href*='/console/public_assets']")
+          assert_equal 1, links.size
+          assert_includes links.first[:href], Folio::Current.site.env_aware_domain
+        end
+      end
+    end
+  end
+
   private
     def controller
       @controller ||= super.tap do |controller|

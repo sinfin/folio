@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_08_131446) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_11_091449) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -368,7 +368,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_08_131446) do
     t.integer "published_usage_count", default: 0, null: false
     t.jsonb "thumbnail_configuration"
     t.bigint "created_by_folio_user_id"
-    t.uuid "public_asset_token"
     t.index "(((to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text))) || to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((headline)::text, ''::text)))) || to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(description, ''::text)))))", name: "index_folio_files_on_by_label_query", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))", name: "index_folio_files_on_by_author", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))", name: "index_folio_files_on_by_file_name", using: :gin
@@ -377,7 +376,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_08_131446) do
     t.index ["created_by_folio_user_id"], name: "index_folio_files_on_created_by_folio_user_id"
     t.index ["file_name"], name: "index_folio_files_on_file_name"
     t.index ["media_source_id"], name: "index_folio_files_on_media_source_id"
-    t.index ["public_asset_token"], name: "index_folio_files_on_public_asset_token", unique: true
     t.index ["published_usage_count"], name: "index_folio_files_on_published_usage_count"
     t.index ["site_id"], name: "index_folio_files_on_site_id"
     t.index ["slug"], name: "index_folio_files_on_slug_unique", unique: true
@@ -533,6 +531,21 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_08_131446) do
     t.string "file_mime_type"
     t.index ["attachmentable_type", "attachmentable_id"], name: "index_folio_private_attachments_on_attachmentable"
     t.index ["type"], name: "index_folio_private_attachments_on_type"
+  end
+
+  create_table "folio_public_assets", force: :cascade do |t|
+    t.bigint "site_id", null: false
+    t.bigint "created_by_folio_user_id"
+    t.uuid "token", null: false
+    t.string "file_name", null: false
+    t.string "file_mime_type", null: false
+    t.bigint "file_size", null: false
+    t.string "s3_key"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_by_folio_user_id"], name: "index_folio_public_assets_on_created_by_folio_user_id"
+    t.index ["site_id"], name: "index_folio_public_assets_on_site_id"
+    t.index ["token"], name: "index_folio_public_assets_on_token", unique: true
   end
 
   create_table "folio_session_attachments", force: :cascade do |t|
@@ -766,6 +779,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_08_131446) do
   add_foreign_key "folio_media_source_site_links", "folio_media_sources", column: "media_source_id"
   add_foreign_key "folio_media_source_site_links", "folio_sites", column: "site_id"
   add_foreign_key "folio_media_sources", "folio_sites", column: "site_id"
+  add_foreign_key "folio_public_assets", "folio_sites", column: "site_id"
+  add_foreign_key "folio_public_assets", "folio_users", column: "created_by_folio_user_id"
   add_foreign_key "folio_site_user_links", "folio_sites", column: "site_id"
   add_foreign_key "folio_site_user_links", "folio_users", column: "user_id"
   add_foreign_key "folio_tiptap_revisions", "folio_users", column: "superseded_by_user_id"
