@@ -6,7 +6,7 @@ en:
         query: File name
         file_name: Name
         file_size: Size
-        file_mime_type: MIME
+        file_mime_type: Type
         public_url: Public URL
         download: Original
     models:
@@ -15,6 +15,8 @@ en:
         other: Public assets
   folio:
     console:
+      actions:
+        download_original: Download original
       public_assets:
         copy_url: Copy public URL
         download: Download original

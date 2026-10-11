@@ -9,9 +9,7 @@ span.f-c-ui-clipboard data=data class=@class_name
           = folio_icon(:check, height: @icon_height || 16, class: "f-c-ui-clipboard__done")
 
   - else
-    span.f-c-ui-clipboard__span[
-      class="f-c-ui-clipboard__span--height-#{@icon_height || 16}"
-    ]
+    *icon_tag
       = folio_icon(@icon || :content_copy,
                    height: @icon_height || 16,
                    class: "f-c-ui-clipboard__ico")
@@ -20,6 +18,6 @@ span.f-c-ui-clipboard data=data class=@class_name
                    height: @icon_height || 16,
                    class: "f-c-ui-clipboard__done")
 
-    - if @label
+    - if @label && !@as_icon
       span.f-c-ui-clipboard__label
         = @label

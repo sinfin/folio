@@ -6,7 +6,7 @@ cs:
         query: Název souboru
         file_name: Název
         file_size: Velikost
-        file_mime_type: MIME
+        file_mime_type: Typ
         public_url: Veřejná URL
         download: Originál
     models:
@@ -16,6 +16,8 @@ cs:
         other: Veřejné soubory
   folio:
     console:
+      actions:
+        download_original: Stáhnout originál
       public_assets:
         copy_url: Zkopírovat veřejnou URL
         download: Stáhnout originál

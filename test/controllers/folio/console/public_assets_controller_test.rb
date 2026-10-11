@@ -12,8 +12,9 @@ class Folio::Console::PublicAssetsControllerTest < Folio::Console::BaseControlle
         assert_select "label", text: /Mé veřejné soubory/
         assert_select "[name=by_used], [name=by_tag_id], .f-file-list-file__part--warning, .f-c-files-batch-bar", count: 0
         assets.each do |asset|
-          assert_select ".f-c-ui-clipboard[data-clipboard-text=?] button", asset.public_url
-          assert_select "a[href=?]", asset.public_url
+          assert_select ".f-c-catalogue__cell--actions .f-c-ui-clipboard[data-clipboard-text=?] button", asset.public_url
+          assert_select "a[title=?][href=?]", I18n.t("folio.console.actions.preview"), asset.public_url
+          assert_select "a[title=?][href=?][download=?]", I18n.t("folio.console.actions.download_original"), asset.public_url, asset.file_name
         end
       end
     end

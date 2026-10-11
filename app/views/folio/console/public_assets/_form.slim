@@ -10,6 +10,6 @@
   p = f.object.file_name
   p.text-muted = "#{f.object.file_mime_type} · #{number_to_human_size(f.object.file_size)}"
 
-= f.input :file, as: :file, required: f.object.new_record?, label: t(f.object.new_record? ? "folio.console.public_assets.upload" : "folio.console.public_assets.replace")
+= f.input :file, as: :file, wrapper: :vertical_form, required: f.object.new_record?, label: t(f.object.new_record? ? "folio.console.public_assets.upload" : "folio.console.public_assets.replace")
 
 = form_footer f, preview_path: false

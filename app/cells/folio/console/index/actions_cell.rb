@@ -171,6 +171,7 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
         title: t("folio.console.actions.#{action[:name]}"),
         method: action[:method],
         target: action[:target],
+        download: action[:download],
         class: class_names.join(" "),
         data:
       }
