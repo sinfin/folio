@@ -62,7 +62,9 @@ VCR.configure do |config|
   # chromedriver processes behind.
   config.ignore_request do |request|
     uri = URI(request.uri)
-    %w[127.0.0.1 localhost ::1].include?(uri.host) && uri.path.match?(%r{\A/(session|status|shutdown|__identify__)\b})
+    %w[127.0.0.1 localhost ::1].include?(uri.hostname) && uri.path.match?(%r{\A/(session|status|shutdown|__identify__)\b})
+  rescue URI::InvalidURIError
+    false
   end
 end
 

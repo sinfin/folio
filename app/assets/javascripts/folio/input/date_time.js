@@ -226,7 +226,8 @@ window.Folio.Input.DateTime.shouldHideOnChange = (input, e) => {
   const state = input.folioInputDateTimeState
 
   if (state && state.action && !state.dispatching) {
-    state.changed = true
+    // with keepInvalid a rejected pick still emits a change, marked invalid
+    if (e.isValid !== false) state.changed = true
     return false
   }
 
