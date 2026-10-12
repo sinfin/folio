@@ -109,54 +109,67 @@ window.Folio.Input.DateTime.makeOnShow = (input) => {
 // be set in several clicks even when the input was empty before the first one.
 window.Folio.Input.DateTime.CLOSING_ACTIONS = ['selectDay', 'today', 'clear']
 
+window.Folio.Input.DateTime.HOUR_MS = 60 * 60 * 1000
+
+// Hides the picker unless the host asked Tempus Dominus to keep it on screen.
+window.Folio.Input.DateTime.hidePicker = (input) => {
+  const picker = input.folioInputTempusDominus
+  if (!picker) return
+
+  const display = picker.optionsStore.options.display
+  if (display.keepOpen || display.inline) return
+
+  picker.hide()
+}
+
 // Tempus Dominus change events do not say which control made the change.
 // A capture listener on the widget remembers the clicked action before the
-// Tempus Dominus handler on the control runs; its change events (a first pick
-// emits two) are synchronous and all read the same action. A bubble listener on
-// the widget forgets the action once the click is handled, so it never outlives
-// its click. A closing action that produced no change (the day that is already
-// selected) still closes the picker there.
+// Tempus Dominus handler on the control runs (its change or error event is
+// synchronous); a bubble listener on the widget decides at the end of the same
+// click and forgets the action, so it never outlives its click. A closing
+// action closes the picker even without a change (the day that is already
+// selected), but not when Tempus Dominus rejected the pick (min/max).
 window.Folio.Input.DateTime.trackWidgetActions = (input) => {
-  const widget = input.folioInputTempusDominus.display.widget
+  const picker = input.folioInputTempusDominus
+  const widget = picker && picker.display.widget
   if (!widget || widget.folioInputDateTimeTracksActions) return
 
   widget.folioInputDateTimeTracksActions = true
 
   widget.addEventListener('click', (e) => {
     const actionElement = e.target.closest('[data-action]')
-    const enabled = actionElement && !actionElement.classList.contains('disabled')
+    const enabled = actionElement && widget.contains(actionElement) && !actionElement.classList.contains('disabled')
     widget.folioInputDateTimeAction = enabled ? actionElement.dataset.action : null
-    widget.folioInputDateTimeActionChanged = false
+    input.folioInputDateTimeActionFailed = false
   }, true)
 
   widget.addEventListener('click', () => {
     const action = widget.folioInputDateTimeAction
-    const changed = widget.folioInputDateTimeActionChanged
     widget.folioInputDateTimeAction = null
-    widget.folioInputDateTimeActionChanged = false
 
-    if (!changed && window.Folio.Input.DateTime.CLOSING_ACTIONS.includes(action) && input.folioInputTempusDominus) {
-      input.folioInputTempusDominus.hide()
+    if (window.Folio.Input.DateTime.CLOSING_ACTIONS.includes(action) && !input.folioInputDateTimeActionFailed) {
+      window.Folio.Input.DateTime.hidePicker(input)
     }
   })
 }
 
-// A change from a widget control closes the picker only for closing actions.
+// A change made by a widget control is decided by the click listener above.
 // A change from outside the widget (typed value, default value, host code)
-// closes it as before.
-window.Folio.Input.DateTime.shouldHideOnChange = (input) => {
+// closes the picker when the input is cleared, gets its first date or jumps by
+// more than an hour, as before.
+window.Folio.Input.DateTime.shouldHideOnChange = (input, e) => {
   const widget = input.folioInputTempusDominus.display.widget
-  const action = widget ? widget.folioInputDateTimeAction : null
-  if (!action) return true
+  if (widget && widget.folioInputDateTimeAction) return false
 
-  widget.folioInputDateTimeActionChanged = true
+  if (input.value === '') return true
+  if (e.date && !e.oldDate) return true
 
-  return window.Folio.Input.DateTime.CLOSING_ACTIONS.includes(action)
+  return !!(e.date && e.oldDate && Math.abs(e.date - e.oldDate) > window.Folio.Input.DateTime.HOUR_MS + 1)
 }
 
 window.Folio.Input.DateTime.makeOnChange = (input) => (e) => {
-  if (window.Folio.Input.DateTime.shouldHideOnChange(input)) {
-    input.folioInputTempusDominus.hide()
+  if (window.Folio.Input.DateTime.shouldHideOnChange(input, e)) {
+    window.Folio.Input.DateTime.hidePicker(input)
   }
 
   if (e.date === e.oldDate) return
@@ -179,6 +192,9 @@ window.Folio.Input.DateTime.bind = (input, opts = {}) => {
 
   input.folioInputTempusDominus = new window.tempusDominus.TempusDominus(input, fullOpts)
   input.folioInputTempusDominusChangeSubscription = input.folioInputTempusDominus.subscribe(window.tempusDominus.Namespace.events.change, window.Folio.Input.DateTime.makeOnChange(input))
+  input.folioInputTempusDominusErrorSubscription = input.folioInputTempusDominus.subscribe(window.tempusDominus.Namespace.events.error, () => {
+    input.folioInputDateTimeActionFailed = true
+  })
 
   const onShow = window.Folio.Input.DateTime.makeOnShow(input)
 
@@ -186,6 +202,9 @@ window.Folio.Input.DateTime.bind = (input, opts = {}) => {
     window.Folio.Input.DateTime.trackWidgetActions(input)
     if (onShow) onShow(e)
   })
+
+  // an inline picker is shown by the constructor, before the subscription above
+  window.Folio.Input.DateTime.trackWidgetActions(input)
 }
 
 window.Folio.Input.DateTime.unbind = (input) => {
@@ -197,6 +216,11 @@ window.Folio.Input.DateTime.unbind = (input) => {
   if (input.folioInputTempusDominusShowSubscription) {
     input.folioInputTempusDominusShowSubscription.unsubscribe()
     input.folioInputTempusDominusShowSubscription = null
+  }
+
+  if (input.folioInputTempusDominusErrorSubscription) {
+    input.folioInputTempusDominusErrorSubscription.unsubscribe()
+    input.folioInputTempusDominusErrorSubscription = null
   }
 
   if (input.folioInputTempusDominus) {
