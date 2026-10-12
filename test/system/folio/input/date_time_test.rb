@@ -2,19 +2,6 @@
 
 require "test_helper"
 
-# Selenium talks to chromedriver over local HTTP (WebDriver protocol, on
-# whatever port the service got) and Capybara pings its own server. Let VCR
-# pass exactly those requests through; blocking them, including the shutdown
-# call, leaves chromedriver processes behind.
-WEBDRIVER_LOCAL_PATHS = %r{\A/(session|status|shutdown|__identify__)\b}
-
-VCR.configure do |config|
-  config.ignore_request do |request|
-    uri = URI(request.uri)
-    %w[127.0.0.1 localhost ::1].include?(uri.host) && uri.path.match?(WEBDRIVER_LOCAL_PATHS)
-  end
-end
-
 # Real-browser behaviour of the `f-input-date-time` picker on the console UI
 # page: which clicks keep the Tempus Dominus widget open and which close it.
 class Folio::Input::DateTimeTest < ActionDispatch::SystemTestCase
@@ -99,28 +86,41 @@ class Folio::Input::DateTimeTest < ActionDispatch::SystemTestCase
     assert_equal "8. 10. 2026, 16:30", field_value("Default")
   end
 
-  test "a day rejected by min keeps the picker open" do
-    tomorrow = 1.day.from_now.beginning_of_day + 30.minutes
-    set_value("Min", tomorrow)
-    open_picker("Min")
-
-    find("#{WIDGET} .day.today[data-action='selectDay']").click
+  test "a time arrow tapped right after a typed value keeps the picker open and applies" do
+    open_picker("Default")
+    field("Default").set("8. 10. 2026, 15:30")
+    tap(find("#{WIDGET} [data-action='incrementHours']"))
 
     assert_selector WIDGET
-    assert_equal I18n.l(tomorrow, format: "%-d. %-m. %Y, %-H:%M"), field_value("Min")
+    assert_equal "8. 10. 2026, 16:30", field_value("Default")
   end
 
+  # Fixed dates in the browser's own time zone: the 14th is selectable (same day
+  # as min), but the picked time 08:00 is before min 12:00, so TD rejects it.
+  test "a day rejected by min keeps the picker open" do
+    restrict_and_set("Default", min: "2030-06-14T12:00:00", value: "2030-06-15T08:00:00")
+    open_picker("Default")
+    value = field_value("Default")
+
+    find("#{WIDGET} .day[data-action='selectDay'][data-value='2030-06-14']").click
+
+    assert_selector WIDGET
+    assert_equal value, field_value("Default")
+  end
+
+  # max is the browser's "now": the empty input starts at now, so +1 h is out of range
   test "a disabled arrow leaves nothing behind for the next typed value" do
-    open_picker("Max")
+    restrict_max_to_browser_now("Default")
+    open_picker("Default")
     arrow = find("#{WIDGET} [data-action='incrementHours']")
     assert arrow[:class].include?("disabled")
     arrow.click
 
-    field("Max").set("1. 1. 2020, 10:00")
-    field("Max").send_keys(:tab)
+    field("Default").set("1. 1. 2020, 10:00")
+    field("Default").send_keys(:tab)
 
     assert_no_selector WIDGET
-    assert_equal "1. 1. 2020, 10:00", field_value("Max")
+    assert_equal "1. 1. 2020, 10:00", field_value("Default")
   end
 
   private
@@ -148,10 +148,27 @@ class Folio::Input::DateTimeTest < ActionDispatch::SystemTestCase
       find("#{WIDGET} [data-action='#{action}']").click
     end
 
-    def set_value(label, time)
-      execute_script(<<~JS, field(label).native, time.iso8601)
-        const [input, iso] = arguments
-        input.folioInputTempusDominus.dates.setValue(new window.tempusDominus.DateTime(iso))
+    # a touch pointer: Chrome sends pointer events first and the compatibility
+    # mouse events (with the blur of the focused input) after pointerup
+    def tap(element)
+      finger = Selenium::WebDriver::Interactions.pointer(:touch, name: "finger")
+      page.driver.browser.action(devices: [finger]).move_to(element.native).pointer_down(:left).pointer_up(:left).perform
+    end
+
+    def restrict_max_to_browser_now(label)
+      execute_script(<<~JS, field(label).native)
+        const [input] = arguments
+        input.folioInputTempusDominus.updateOptions({ restrictions: { maxDate: new window.tempusDominus.DateTime() } })
+      JS
+    end
+
+    # local ISO strings without an offset are read in the browser's time zone
+    def restrict_and_set(label, min:, value:)
+      execute_script(<<~JS, field(label).native, min, value)
+        const [input, min, value] = arguments
+        const picker = input.folioInputTempusDominus
+        picker.updateOptions({ restrictions: { minDate: new window.tempusDominus.DateTime(min) } })
+        picker.dates.setValue(new window.tempusDominus.DateTime(value))
       JS
     end
 end

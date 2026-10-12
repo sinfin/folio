@@ -186,29 +186,34 @@ window.Folio.Input.DateTime.wrapActions = (input) => {
 }
 
 // Mousedown on the widget blurs the input, so a typed value is parsed before
-// the click reaches the widget. Remember that the pointer went down inside the
-// widget, so that change does not close the picker under the cursor.
+// the click reaches the widget. Remember that the press started inside the
+// widget, so that change does not close the picker under the cursor. On touch
+// screens the compatibility mousedown (which does the blur) comes after
+// pointerup, so the flag is set on both and cleared once the click ends, or
+// shortly after pointerup when the press ended outside and no click follows.
+window.Folio.Input.DateTime.PRESS_EVENTS = ['pointerdown', 'mousedown']
+window.Folio.Input.DateTime.RELEASE_DELAYS = { click: 0, pointercancel: 0, pointerup: 500 }
+
 window.Folio.Input.DateTime.trackPointer = (input) => {
   const state = input.folioInputDateTimeState
+  const releaseDelays = window.Folio.Input.DateTime.RELEASE_DELAYS
 
-  const onPointerDown = (e) => {
+  const onPress = (e) => {
     const picker = input.folioInputTempusDominus
     const widget = picker && picker.display.widget
     state.pointerInWidget = !!widget && widget.contains(e.target)
   }
 
-  const onPointerUp = () => {
-    window.setTimeout(() => { state.pointerInWidget = false }, 0)
+  const onRelease = (e) => {
+    window.setTimeout(() => { state.pointerInWidget = false }, releaseDelays[e.type])
   }
 
-  document.addEventListener('pointerdown', onPointerDown, true)
-  document.addEventListener('pointerup', onPointerUp, true)
-  document.addEventListener('pointercancel', onPointerUp, true)
+  window.Folio.Input.DateTime.PRESS_EVENTS.forEach((type) => document.addEventListener(type, onPress, true))
+  Object.keys(releaseDelays).forEach((type) => document.addEventListener(type, onRelease, true))
 
   state.untrackPointer = () => {
-    document.removeEventListener('pointerdown', onPointerDown, true)
-    document.removeEventListener('pointerup', onPointerUp, true)
-    document.removeEventListener('pointercancel', onPointerUp, true)
+    window.Folio.Input.DateTime.PRESS_EVENTS.forEach((type) => document.removeEventListener(type, onPress, true))
+    Object.keys(releaseDelays).forEach((type) => document.removeEventListener(type, onRelease, true))
   }
 }
 
