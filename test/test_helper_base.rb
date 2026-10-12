@@ -55,6 +55,17 @@ VCR.configure do |config|
 
     interaction.ignore! if ai_provider_request && interaction.response.status.code.to_i >= 400
   end
+
+  # System tests: Selenium talks to chromedriver over loopback HTTP (WebDriver
+  # protocol, on whatever port the service got) and Capybara pings its own
+  # server. Blocking those requests, including the shutdown call, leaves
+  # chromedriver processes behind.
+  config.ignore_request do |request|
+    uri = URI(request.uri)
+    %w[127.0.0.1 localhost ::1].include?(uri.hostname) && uri.path.match?(%r{\A/(session|status|shutdown|__identify__)\b})
+  rescue URI::InvalidURIError
+    false
+  end
 end
 
 FactoryBot.definition_file_paths << Folio::Engine.root.join("test/factories")

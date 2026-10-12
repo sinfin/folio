@@ -104,15 +104,157 @@ window.Folio.Input.DateTime.makeOnShow = (input) => {
   }
 }
 
+// Widget actions that pick a date or remove it. They close the picker; time
+// controls (arrows, hour and minute grids, AM/PM) keep it open, so the time can
+// be set in several clicks even when the input was empty before the first one.
+window.Folio.Input.DateTime.CLOSING_ACTIONS = ['selectDay', 'today', 'clear']
+
+window.Folio.Input.DateTime.HOUR_MS = 60 * 60 * 1000
+
+// Hides the picker unless the host asked Tempus Dominus to keep it on screen.
+window.Folio.Input.DateTime.hidePicker = (input) => {
+  const picker = input.folioInputTempusDominus
+  if (!picker) return
+
+  const display = picker.optionsStore.options.display
+  if (display.keepOpen || display.inline) return
+
+  picker.hide()
+}
+
+window.Folio.Input.DateTime.dayValue = (dateTime) => {
+  return `${dateTime.year}-${dateTime.monthFormatted}-${dateTime.dateFormatted}`
+}
+
+// A closing action that did not change the value either confirms the date that
+// is already picked (close) or was rejected by Tempus Dominus, e.g. by min/max
+// (keep the picker open).
+window.Folio.Input.DateTime.confirmsPickedDate = (picker, action, target) => {
+  if (action === 'clear') return true
+
+  const lastPicked = picker.dates.lastPicked
+  if (!lastPicked) return false
+
+  if (action === 'today') {
+    return lastPicked.isSame(new window.tempusDominus.DateTime(), window.tempusDominus.Unit.date)
+  }
+
+  return !!target && target.dataset.value === window.Folio.Input.DateTime.dayValue(lastPicked)
+}
+
+window.Folio.Input.DateTime.shouldHideAfterAction = (picker, action, changed, target) => {
+  if (!window.Folio.Input.DateTime.CLOSING_ACTIONS.includes(action)) return false
+  if (action === 'selectDay' && picker.optionsStore.options.multipleDates) return false
+  if (changed) return true
+
+  return window.Folio.Input.DateTime.confirmsPickedDate(picker, action, target)
+}
+
+// Tempus Dominus runs every widget action through `picker.actions.do`. Wrapping
+// it gives the exact action and whether it changed the value: the change event
+// is synchronous inside the call. The state lives in one object per input.
+window.Folio.Input.DateTime.wrapActions = (input) => {
+  const picker = input.folioInputTempusDominus
+  const state = input.folioInputDateTimeState
+  const originalDo = picker.actions.do
+
+  picker.actions.do = function (e, action) {
+    if (state.action) return originalDo.call(this, e, action)
+
+    const target = e && e.currentTarget
+    const name = action || (target && target.dataset ? target.dataset.action : null)
+
+    state.action = name
+    state.changed = false
+
+    let result
+
+    try {
+      result = originalDo.call(this, e, action)
+    } finally {
+      state.action = null
+    }
+
+    if (result !== false && window.Folio.Input.DateTime.shouldHideAfterAction(picker, name, state.changed, target)) {
+      window.Folio.Input.DateTime.hidePicker(input)
+    }
+
+    return result
+  }
+
+  state.restoreActions = () => { picker.actions.do = originalDo }
+}
+
+// Mousedown on the widget blurs the input, so a typed value is parsed before
+// the click reaches the widget. Remember that the press started inside the
+// widget, so that change does not close the picker under the cursor. On touch
+// screens the compatibility mousedown (which does the blur) comes after
+// pointerup, so the flag is set on both and cleared once the click ends, or
+// shortly after pointerup when the press ended outside and no click follows.
+window.Folio.Input.DateTime.PRESS_EVENTS = ['pointerdown', 'mousedown']
+window.Folio.Input.DateTime.RELEASE_DELAYS = { click: 0, pointercancel: 0, pointerup: 500 }
+
+window.Folio.Input.DateTime.trackPointer = (input) => {
+  const state = input.folioInputDateTimeState
+  const releaseDelays = window.Folio.Input.DateTime.RELEASE_DELAYS
+
+  const onPress = (e) => {
+    const picker = input.folioInputTempusDominus
+    const widget = picker && picker.display.widget
+    state.pointerInWidget = !!widget && widget.contains(e.target)
+  }
+
+  const onRelease = (e) => {
+    window.setTimeout(() => { state.pointerInWidget = false }, releaseDelays[e.type])
+  }
+
+  window.Folio.Input.DateTime.PRESS_EVENTS.forEach((type) => document.addEventListener(type, onPress, true))
+  Object.keys(releaseDelays).forEach((type) => document.addEventListener(type, onRelease, true))
+
+  state.untrackPointer = () => {
+    window.Folio.Input.DateTime.PRESS_EVENTS.forEach((type) => document.removeEventListener(type, onPress, true))
+    Object.keys(releaseDelays).forEach((type) => document.removeEventListener(type, onRelease, true))
+  }
+}
+
+// A change made by a widget action is decided after the action (wrapActions).
+// A change from outside the widget (typed value, default value, host code,
+// also host code reacting to the events dispatched below) closes the picker
+// when the input is cleared, gets its first date or jumps by more than an hour,
+// as before; not while the pointer is pressed on the widget.
+window.Folio.Input.DateTime.shouldHideOnChange = (input, e) => {
+  const state = input.folioInputDateTimeState
+
+  if (state && state.action && !state.dispatching) {
+    // with keepInvalid a rejected pick still emits a change, marked invalid
+    if (e.isValid !== false) state.changed = true
+    return false
+  }
+
+  if (state && state.pointerInWidget) return false
+  if (input.value === '') return true
+  if (e.date && !e.oldDate) return true
+
+  return !!(e.date && e.oldDate && Math.abs(e.date - e.oldDate) > window.Folio.Input.DateTime.HOUR_MS + 1)
+}
+
 window.Folio.Input.DateTime.makeOnChange = (input) => (e) => {
-  if (input.value === '' || (e.date && !e.oldDate) || (e.date && e.oldDate && Math.abs(e.date - e.oldDate) > 60 * 60 * 1000 + 1)) {
-    input.folioInputTempusDominus.hide()
+  if (window.Folio.Input.DateTime.shouldHideOnChange(input, e)) {
+    window.Folio.Input.DateTime.hidePicker(input)
   }
 
   if (e.date === e.oldDate) return
 
-  input.dispatchEvent(new window.Event('input', { bubbles: true }))
-  input.dispatchEvent(new window.Event('change', { bubbles: true }))
+  const state = input.folioInputDateTimeState
+  const wasDispatching = state ? state.dispatching : false
+  if (state) state.dispatching = true
+
+  try {
+    input.dispatchEvent(new window.Event('input', { bubbles: true }))
+    input.dispatchEvent(new window.Event('change', { bubbles: true }))
+  } finally {
+    if (state) state.dispatching = wasDispatching
+  }
 }
 
 window.Folio.Input.DateTime.bind = (input, opts = {}) => {
@@ -128,6 +270,10 @@ window.Folio.Input.DateTime.bind = (input, opts = {}) => {
   }
 
   input.folioInputTempusDominus = new window.tempusDominus.TempusDominus(input, fullOpts)
+  input.folioInputDateTimeState = { action: null, changed: false, dispatching: false, pointerInWidget: false }
+  window.Folio.Input.DateTime.wrapActions(input)
+  window.Folio.Input.DateTime.trackPointer(input)
+
   input.folioInputTempusDominusChangeSubscription = input.folioInputTempusDominus.subscribe(window.tempusDominus.Namespace.events.change, window.Folio.Input.DateTime.makeOnChange(input))
 
   const onShow = window.Folio.Input.DateTime.makeOnShow(input)
@@ -146,6 +292,14 @@ window.Folio.Input.DateTime.unbind = (input) => {
   if (input.folioInputTempusDominusShowSubscription) {
     input.folioInputTempusDominusShowSubscription.unsubscribe()
     input.folioInputTempusDominusShowSubscription = null
+  }
+
+  const state = input.folioInputDateTimeState
+
+  if (state) {
+    if (state.untrackPointer) state.untrackPointer()
+    if (state.restoreActions) state.restoreActions()
+    input.folioInputDateTimeState = null
   }
 
   if (input.folioInputTempusDominus) {
