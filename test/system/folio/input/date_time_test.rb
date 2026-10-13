@@ -95,6 +95,24 @@ class Folio::Input::DateTimeTest < ActionDispatch::SystemTestCase
     assert_equal "8. 10. 2026, 16:30", field_value("Default")
   end
 
+  # The day is one that min rejects, so the picker stays open under the cursor.
+  test "fast clicks on the time arrows and on a day select no text in the picker" do
+    restrict_and_set("Default", min: "2030-06-14T12:00:00", value: "2030-06-15T08:00:00")
+    open_picker("Default")
+
+    double_click_action("incrementMinutes")
+    assert_selector WIDGET
+    assert_empty selected_text
+
+    double_click_action("decrementHours")
+    assert_selector WIDGET
+    assert_empty selected_text
+
+    find("#{WIDGET} .day[data-action='selectDay'][data-value='2030-06-14']").double_click
+    assert_selector WIDGET
+    assert_empty selected_text
+  end
+
   # Fixed dates in the browser's own time zone: the 14th is selectable (same day
   # as min), but the picked time 08:00 is before min 12:00, so TD rejects it.
   test "a day rejected by min keeps the picker open" do
@@ -148,11 +166,19 @@ class Folio::Input::DateTimeTest < ActionDispatch::SystemTestCase
       find("#{WIDGET} [data-action='#{action}']").click
     end
 
+    def double_click_action(action)
+      find("#{WIDGET} [data-action='#{action}']").double_click
+    end
+
     # a touch pointer: Chrome sends pointer events first and the compatibility
     # mouse events (with the blur of the focused input) after pointerup
     def tap(element)
       finger = Selenium::WebDriver::Interactions.pointer(:touch, name: "finger")
       page.driver.browser.action(devices: [finger]).move_to(element.native).pointer_down(:left).pointer_up(:left).perform
+    end
+
+    def selected_text
+      evaluate_script("window.getSelection().toString()")
     end
 
     def restrict_max_to_browser_now(label)

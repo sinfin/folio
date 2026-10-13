@@ -198,20 +198,24 @@ window.Folio.Input.DateTime.trackPointer = (input) => {
   const state = input.folioInputDateTimeState
   const releaseDelays = window.Folio.Input.DateTime.RELEASE_DELAYS
 
+  // a release timer of an earlier click must not clear the flag of a new press
   const onPress = (e) => {
     const picker = input.folioInputTempusDominus
     const widget = picker && picker.display.widget
+    window.clearTimeout(state.releaseTimer)
     state.pointerInWidget = !!widget && widget.contains(e.target)
   }
 
   const onRelease = (e) => {
-    window.setTimeout(() => { state.pointerInWidget = false }, releaseDelays[e.type])
+    window.clearTimeout(state.releaseTimer)
+    state.releaseTimer = window.setTimeout(() => { state.pointerInWidget = false }, releaseDelays[e.type])
   }
 
   window.Folio.Input.DateTime.PRESS_EVENTS.forEach((type) => document.addEventListener(type, onPress, true))
   Object.keys(releaseDelays).forEach((type) => document.addEventListener(type, onRelease, true))
 
   state.untrackPointer = () => {
+    window.clearTimeout(state.releaseTimer)
     window.Folio.Input.DateTime.PRESS_EVENTS.forEach((type) => document.removeEventListener(type, onPress, true))
     Object.keys(releaseDelays).forEach((type) => document.removeEventListener(type, onRelease, true))
   }
