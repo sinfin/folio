@@ -114,9 +114,9 @@ class Folio::File::PublishedUsageCounter
       table_name = connection.quote_table_name(klass.table_name)
 
       <<~SQL.squish
-        SELECT folio_file_published_usage_placements.file_id,
-               #{usage_record_type_id(klass)} AS usage_record_type,
-               #{table_name}.id AS usage_record_id
+        SELECT DISTINCT folio_file_published_usage_placements.file_id,
+                        #{usage_record_type_id(klass)} AS usage_record_type,
+                        #{table_name}.id AS usage_record_id
           FROM folio_file_placements folio_file_published_usage_placements
           JOIN #{table_name}
             ON #{table_name}.id = folio_file_published_usage_placements.placement_id
@@ -131,9 +131,9 @@ class Folio::File::PublishedUsageCounter
       table_name = connection.quote_table_name(klass.table_name)
 
       <<~SQL.squish
-        SELECT folio_file_published_usage_placements.file_id,
-               #{usage_record_type_id(klass)} AS usage_record_type,
-               #{table_name}.id AS usage_record_id
+        SELECT DISTINCT folio_file_published_usage_placements.file_id,
+                        #{usage_record_type_id(klass)} AS usage_record_type,
+                        #{table_name}.id AS usage_record_id
           FROM folio_file_placements folio_file_published_usage_placements
           JOIN folio_atoms folio_file_published_usage_atoms
             ON folio_file_published_usage_atoms.id = folio_file_published_usage_placements.placement_id
