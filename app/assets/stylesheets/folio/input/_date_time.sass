@@ -28,6 +28,8 @@ $td-days-of-week-color: rgba(0, 0, 0, 0.5) !default
   box-shadow: $folio-input-date-time-widget-box-shadow
   width: 250px !important
   padding: 0 !important
+  // days and time digits are divs: fast clicks on them must not select text
+  user-select: none
 
   .date-container-days
     grid-auto-rows: 30px

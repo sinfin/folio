@@ -95,6 +95,24 @@ class Folio::Input::DateTimeTest < ActionDispatch::SystemTestCase
     assert_equal "8. 10. 2026, 16:30", field_value("Default")
   end
 
+  # A day that closes the picker lets the second click land on the page, so the
+  # day case uses a pick rejected by min: the picker stays open under the cursor.
+  test "fast clicks on the time arrows and on a day select no text in the picker" do
+    restrict_and_set("Default", min: "2030-06-14T12:00:00", value: "2030-06-15T08:00:00")
+    open_picker("Default")
+
+    find("#{WIDGET} [data-action='incrementMinutes']").double_click
+    assert_selector WIDGET
+    assert_equal "", selected_text
+
+    find("#{WIDGET} [data-action='decrementHours']").double_click
+    assert_equal "", selected_text
+
+    find("#{WIDGET} .day[data-action='selectDay'][data-value='2030-06-14']").double_click
+    assert_selector WIDGET
+    assert_equal "", selected_text
+  end
+
   # Fixed dates in the browser's own time zone: the 14th is selectable (same day
   # as min), but the picked time 08:00 is before min 12:00, so TD rejects it.
   test "a day rejected by min keeps the picker open" do
@@ -153,6 +171,10 @@ class Folio::Input::DateTimeTest < ActionDispatch::SystemTestCase
     def tap(element)
       finger = Selenium::WebDriver::Interactions.pointer(:touch, name: "finger")
       page.driver.browser.action(devices: [finger]).move_to(element.native).pointer_down(:left).pointer_up(:left).perform
+    end
+
+    def selected_text
+      evaluate_script("window.getSelection().toString()")
     end
 
     def restrict_max_to_browser_now(label)
