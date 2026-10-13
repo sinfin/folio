@@ -3,6 +3,10 @@
 module Folio::Console::FileControllerIndexFilters
   extend ActiveSupport::Concern
 
+  included do
+    helper_method :file_usage_record
+  end
+
   private
     def index_filters
       filters = {
@@ -21,8 +25,41 @@ module Folio::Console::FileControllerIndexFilters
         if Rails.application.config.folio_shared_files_between_sites
           filters[:by_allowed_site_slug] = Folio::Site.ordered.map { |site| [site.to_label, site.slug] }
         end
+
+        if file_usage_record
+          filters[Folio::File::UsageRecord::PARAM] = { as: :hidden, persistent: true }
+        end
       end
 
       filters
+    end
+
+    def file_usage_record
+      return @file_usage_record if defined?(@file_usage_record)
+
+      @file_usage_record = Folio::File::UsageRecord.from_param(params[Folio::File::UsageRecord::PARAM])
+    end
+
+    def folio_console_collection_filter_params
+      return super unless filter_by_usage_constraints_for_usage_record?
+
+      super.except(:by_usage_constraints)
+    end
+
+    def filter_folio_console_collection
+      super
+      return unless filter_by_usage_constraints_for_usage_record?
+
+      name = folio_console_record_variable_name(plural: true)
+      records = instance_variable_get(name).by_usage_constraints_for_usage_record(params[:by_usage_constraints],
+                                                                                  file_usage_record)
+      instance_variable_set(name, records)
+    end
+
+    def filter_by_usage_constraints_for_usage_record?
+      collection_action? &&
+        file_usage_record.present? &&
+        params[:by_usage_constraints].present? &&
+        @klass.included_modules.include?(Folio::File::HasUsageConstraints)
     end
 end

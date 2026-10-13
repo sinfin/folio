@@ -1,3 +1,5 @@
+- picker = action_name == "index_for_modal" || action_name == "index_for_picker"
+
 = render(Folio::Console::Ui::TurboFrameWithLoaderComponent.new(id: @turbo_frame_id,
                                                                turbo_action: "advance"))
   - if action_name == "index_for_picker"
@@ -17,8 +19,9 @@
                                         batch_actions: action_name != "index_for_modal",
                                         primary_action: action_name,
                                         batch_actions_multi_picker: action_name == "index_for_picker",
-                                        serialize_files: action_name == "index_for_modal" || action_name == "index_for_picker",
-                                        reload_pagy: true))
+                                        serialize_files: picker,
+                                        reload_pagy: true,
+                                        usage_record: (file_usage_record if picker)))
 
   = render(Folio::Console::Ui::PagyComponent.new(pagy: @pagy,
                                                  options: @pagy_options || {}))

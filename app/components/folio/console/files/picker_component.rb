@@ -41,6 +41,7 @@ class Folio::Console::Files::PickerComponent < Folio::Console::ApplicationCompon
                           serialized_file_json: "",
                           as_file_placement: @as_file_placement,
                           state:,
+                          usage_record: Folio::File::UsageRecord.sgid_for(@as_file_placement ? @file_placement : @f.object),
                         },
                         action: {
                           "f-c-files-picker:fileDestroyed" => "onFileDestroyed",

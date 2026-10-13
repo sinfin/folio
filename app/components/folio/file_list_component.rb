@@ -14,7 +14,8 @@ class Folio::FileListComponent < Folio::ApplicationComponent
                  allow_thumbnail_view: true,
                  thead: true,
                  reload_pagy: false,
-                 serialize_files: false)
+                 serialize_files: false,
+                 usage_record: nil)
     @file_klass = file_klass
     @files = files
     @uploadable = uploadable
@@ -29,6 +30,7 @@ class Folio::FileListComponent < Folio::ApplicationComponent
     @thead = thead
     @reload_pagy = reload_pagy
     @serialize_files = serialize_files
+    @usage_record = usage_record
   end
 
   def data
@@ -60,6 +62,7 @@ class Folio::FileListComponent < Folio::ApplicationComponent
       batch_actions: @batch_actions || @removable_from_batch,
       primary_action: @primary_action,
       serialize: @serialize_files,
+      usage_record: @usage_record,
     }
 
     @file_args.merge(file:, template:, thead:)
