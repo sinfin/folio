@@ -26,6 +26,19 @@ class Folio::Console::File::ImagesUsageRecordTest < Folio::Console::BaseControll
     assert_selectable
   end
 
+  test "an atom picker can reuse the article cover with the context from its editor" do
+    get url_for([:edit, :console, @article])
+
+    assert_response :success
+    data = JSON.parse(Nokogiri::HTML(response.body).at_css(".f-c-atoms")["data-atoms"])
+
+    get url_for([:index_for_modal, :console, Folio::File::Image]),
+        params: { usage_record: data["usageRecord"], by_query: @image.file_name }
+
+    assert_response :success
+    assert_selectable
+  end
+
   test "picker allows a file the usage record uses in an atom" do
     @article.cover_placement.destroy!
     create_atom(Dummy::Atom::Contents::ImageAndText, placement: @article, cover: @image, content: "content")
