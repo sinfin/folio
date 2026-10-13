@@ -18,6 +18,7 @@ class TiptapInput < SimpleForm::Inputs::StringInput
                         new_record: safe_new_record?,
                         placement_type: safe_placement_type,
                         placement_id: safe_placement_id,
+                        usage_record: Folio::File::UsageRecord.sgid_for(@builder.object),
                         attribute_name: attribute_name.to_s,
                         latest_revision_at: latest_revision_at&.iso8601,
                         has_unsaved_changes: has_unsaved_changes?,

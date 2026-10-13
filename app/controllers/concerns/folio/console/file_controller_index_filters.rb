@@ -37,7 +37,16 @@ module Folio::Console::FileControllerIndexFilters
     def file_usage_record
       return @file_usage_record if defined?(@file_usage_record)
 
+      @file_usage_record = nil
+      return unless file_picker_request?
+
       @file_usage_record = Folio::File::UsageRecord.from_param(params[Folio::File::UsageRecord::PARAM])
+    end
+
+    def file_picker_request?
+      return true if action_name.in?(%w[index_for_picker index_for_modal])
+
+      action_name == "pagination" && pagination_request_path.end_with?("/index_for_picker", "/index_for_modal")
     end
 
     def folio_console_collection_filter_params

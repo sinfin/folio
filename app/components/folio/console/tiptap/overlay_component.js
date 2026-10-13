@@ -71,6 +71,10 @@ window.Folio.Stimulus.register('f-c-tiptap-overlay', class extends window.Stimul
       attribute_name: input.dataset.fInputTiptapAttributeNameValue
     }
 
+    if (input.dataset.fInputTiptapUsageRecordValue) {
+      context.usage_record = input.dataset.fInputTiptapUsageRecordValue
+    }
+
     const opaqueContext = input.dataset.fInputTiptapEditorContextJsonValue
     if (opaqueContext) context.context = JSON.parse(opaqueContext)
 

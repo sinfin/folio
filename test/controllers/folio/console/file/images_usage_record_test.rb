@@ -76,6 +76,22 @@ class Folio::Console::File::ImagesUsageRecordTest < Folio::Console::BaseControll
     assert_select "#{image_selector}.f-file-list-file--unmet-requirements"
   end
 
+  test "file index keeps exhausted files in the unusable filter despite a usage record" do
+    get url_for([:console, Folio::File::Image,
+                 usage_record: usage_record_sgid, by_usage_constraints: "unusable"])
+
+    assert_response :success
+    assert_select image_selector
+  end
+
+  test "file index usable filter still excludes exhausted files despite a usage record" do
+    get url_for([:console, Folio::File::Image,
+                 usage_record: usage_record_sgid, by_usage_constraints: "usable"])
+
+    assert_response :success
+    assert_select image_selector, count: 0
+  end
+
   test "usable filter includes a file the usage record already uses" do
     other_image = create(:folio_file_image, site: @site, attribution_max_usage_count: 1)
     create(:dummy_blog_article, site: @site, published: true).create_cover_placement!(file: other_image)
@@ -123,6 +139,17 @@ class Folio::Console::File::ImagesUsageRecordTest < Folio::Console::BaseControll
     html = Nokogiri::HTML.fragment(response.parsed_body.fetch("data"))
     reload_url = html.at_css("[data-f-c-ui-pagy-reload-url-value]")["data-f-c-ui-pagy-reload-url-value"]
     assert_equal usage_record_sgid, query_param(reload_url, "usage_record")
+    assert_equal 1, controller.instance_variable_get(:@pagy).count
+  end
+
+  test "API pagination of the file index retains the ordinary usage filter" do
+    get url_for([:pagination, :console, :api, Folio::File::Image,
+                 usage_record: usage_record_sgid,
+                 by_usage_constraints: "unusable",
+                 request_path: url_for([:console, Folio::File::Image, only_path: true])]),
+        as: :json
+
+    assert_response :success
     assert_equal 1, controller.instance_variable_get(:@pagy).count
   end
 

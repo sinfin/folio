@@ -25,6 +25,7 @@ class Folio::File::UsageRecord
 
     record = GlobalID::Locator.locate_signed(sgid, for: SGID_PURPOSE)
     return unless record
+    return if record.respond_to?(:site_id) && record.site_id != Folio::Current.site&.id
     return unless user.can_now_by_ability?(ability, :update, record)
 
     new(record, sgid:)

@@ -56,6 +56,17 @@ class Folio::File::UsageRecordTest < ActiveSupport::TestCase
     assert_nil Folio::File::UsageRecord.from_param(nil, user: @superadmin, ability: ability(@superadmin))
   end
 
+  test "ignores another site's record even with unrestricted update permissions" do
+    other_site = create_site(force: true)
+    other_article = create(:dummy_blog_article, site: other_site, published: true)
+    unrestricted_ability = ability(@superadmin)
+    unrestricted_ability.can :do_anything, :all
+
+    assert_nil Folio::File::UsageRecord.from_param(Folio::File::UsageRecord.sgid_for(other_article),
+                                                 user: @superadmin,
+                                                 ability: unrestricted_ability)
+  end
+
   test "by_usage_constraints_for_usage_record keeps site restrictions with shared files" do
     with_config(folio_shared_files_between_sites: true) do
       Folio::Current.site = @site
