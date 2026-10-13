@@ -19,6 +19,9 @@ en:
         revoked: Browser trust has been revoked.
         invalid: This sign-in cannot be completed. Please start again.
         throttled: Please wait before sending another email.
+        throttled_retry_after:
+          one: "Please wait %{count} more second before sending another email."
+          other: "Please wait %{count} more seconds before sending another email."
         unavailable: Sign-in is temporarily unavailable. Please try again shortly.
         confirm: Confirm sign-in
         mail_instruction: "Confirm the login to %{site} — you'll be signed in on the browser where you started logging in."

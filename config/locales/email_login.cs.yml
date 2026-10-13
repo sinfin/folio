@@ -19,6 +19,10 @@ cs:
         revoked: Důvěra prohlížečů byla odvolána.
         invalid: Přihlášení nelze dokončit. Zahajte prosím nový pokus.
         throttled: Před dalším odesláním chvíli počkejte.
+        throttled_retry_after:
+          one: "Před dalším odesláním počkejte ještě %{count} sekundu."
+          few: "Před dalším odesláním počkejte ještě %{count} sekundy."
+          other: "Před dalším odesláním počkejte ještě %{count} sekund."
         unavailable: Přihlášení nyní nelze dokončit. Zkuste to prosím za chvíli.
         confirm: Potvrdit přihlášení
         mail_instruction: "Potvrďte přihlášení na %{site} — přihlásíte se tím v prohlížeči, ve kterém jste přihlášení zahájili."

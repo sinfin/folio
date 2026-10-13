@@ -146,13 +146,19 @@ class Folio::Users::EmailLoginsController < DeviseController
     end
 
     def render_email_login_throttled(error = nil)
-      return super if request.format.json? || pending.data.empty?
+      return super if request.format.json?
 
       retry_after = email_login_retry_after(error)
-      pending.postpone_resend_until(retry_after.seconds.from_now)
       response.set_header("Retry-After", retry_after.to_s)
-      flash.now[:alert] = I18n.t("folio.users.email_login.throttled")
-      render_waiting(status: :too_many_requests)
+      if pending.data.present?
+        pending.postpone_resend_until(retry_after.seconds.from_now)
+        flash.now[:alert] = I18n.t("folio.users.email_login.throttled")
+        render_waiting(status: :too_many_requests)
+      else
+        flash.now[:alert] = I18n.t("folio.users.email_login.throttled_retry_after", count: retry_after)
+        render Folio::Users::EmailLogin::RequestComponent.new(user: Folio::User.new(email: email_login_params[:email])),
+               status: :too_many_requests
+      end
     end
 
     def authenticate_email_login_user

@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Render the magic-link request form with the site layout, entered email and remaining retry delay when delivery is throttled after the pending session is lost (sinfin/foliolized_auctify#644).
 - set `Folio::Current.cache_key_base` only after request locale resolution and use a locale-independent cache key for current site lookup
 
 ## [6.5.1] - 2025-06-18
