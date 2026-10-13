@@ -804,6 +804,7 @@ class Folio::Users::EmailLoginsControllerTest < ActionDispatch::IntegrationTest
 
   { before: 30.days - 1.second, at: 30.days, after: 30.days + 1.second }.each do |boundary, elapsed|
     test "password login #{boundary} the thirty day boundary uses browser trust correctly" do
+      travel_to Time.zone.local(2026, 10, 13, 12)
       with_email_login do
         start_password_login
         post main_app.prepare_user_email_login_path, params: { email_login_token: delivery_token }, as: :json
@@ -812,7 +813,7 @@ class Folio::Users::EmailLoginsControllerTest < ActionDispatch::IntegrationTest
         trust = @user.trusted_browsers.last
         verified_at = trust.verified_at
         get main_app.destroy_user_session_path
-        travel elapsed
+        travel_to verified_at + elapsed
 
         assert_difference("Folio::Users::EmailLoginChallenge.count", boundary == :before ? 0 : 1) { start_password_login }
         if boundary == :before
@@ -996,6 +997,34 @@ class Folio::Users::EmailLoginsControllerTest < ActionDispatch::IntegrationTest
         end
         assert_empty @user.email_login_challenges
         assert_no_enqueued_jobs only: Folio::Users::EmailLoginDeliveryJob
+      end
+    end
+  end
+
+  %i[cs en].product(%i[known unknown]).each do |locale, account|
+    test "throttled #{locale} magic link for #{account} address keeps the form after session loss" do
+      @site.update!(locales: %w[cs en])
+      with_email_login do
+        email = account == :known ? @user.email : "unknown-#{SecureRandom.hex(8)}@example.test"
+        post main_app.user_email_login_path(locale:), params: { user: { email: } }
+        assert_redirected_to main_app.user_email_login_path
+        cookies.delete(Rails.application.config.session_options[:key])
+        travel 15.seconds
+
+        assert_no_difference("Folio::Users::EmailLoginChallenge.count") do
+          assert_no_enqueued_jobs only: Folio::Users::EmailLoginDeliveryJob do
+            post main_app.user_email_login_path(locale:), params: { user: { email: } }
+          end
+        end
+
+        assert_response :too_many_requests
+        assert_equal "45", response.headers["Retry-After"]
+        assert_select ".f-users-email-login-request"
+        assert_select "input[name='user[email]'][value='#{email}']"
+        assert_select "form[action='#{main_app.user_email_login_path}'][method='post']"
+        assert_select "[role='alert']", text: I18n.t("folio.users.email_login.throttled_retry_after", locale:, count: 45)
+        assert_includes response.headers["Cache-Control"], "no-store"
+        assert_nil controller.warden.user(:user)
       end
     end
   end
