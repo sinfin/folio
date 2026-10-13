@@ -193,51 +193,17 @@ window.Folio.Input.DateTime.wrapActions = (input) => {
 // shortly after pointerup when the press ended outside and no click follows.
 window.Folio.Input.DateTime.PRESS_EVENTS = ['pointerdown', 'mousedown']
 window.Folio.Input.DateTime.RELEASE_DELAYS = { click: 0, pointercancel: 0, pointerup: 500 }
-window.Folio.Input.DateTime.FOLLOW_UP_EVENTS = ['mouseup', 'click', 'dblclick']
-
-// A click sequence (double click) that started inside the widget may continue
-// outside it, e.g. when the first click picked a day and closed the picker.
-// The browser numbers the clicks of one sequence in `e.detail`; the follow-up
-// presses and clicks of such a sequence must not reach the page underneath
-// (no word selection, no focus change, no link or button activation).
-window.Folio.Input.DateTime.continuesWidgetSequence = (state, e, inWidget) => {
-  return !inWidget && !!state.widgetDetail && e.detail === state.widgetDetail + 1
-}
 
 window.Folio.Input.DateTime.trackPointer = (input) => {
   const state = input.folioInputDateTimeState
   const releaseDelays = window.Folio.Input.DateTime.RELEASE_DELAYS
 
-  const inWidget = (target) => {
+  // a release timer of an earlier click must not clear the flag of a new press
+  const onPress = (e) => {
     const picker = input.folioInputTempusDominus
     const widget = picker && picker.display.widget
-    return !!widget && widget.contains(target)
-  }
-
-  const swallow = (e) => {
-    e.preventDefault()
-    e.stopImmediatePropagation()
-  }
-
-  const onPress = (e) => {
-    const pressedInWidget = inWidget(e.target)
     window.clearTimeout(state.releaseTimer)
-    state.pointerInWidget = pressedInWidget
-    if (e.type !== 'mousedown') return
-
-    if (window.Folio.Input.DateTime.continuesWidgetSequence(state, e, pressedInWidget)) {
-      state.widgetDetail = e.detail
-      state.swallowDetail = e.detail
-      swallow(e)
-      return
-    }
-
-    state.widgetDetail = pressedInWidget ? e.detail : null
-    state.swallowDetail = null
-  }
-
-  const onFollowUp = (e) => {
-    if (state.swallowDetail && e.detail === state.swallowDetail && !inWidget(e.target)) swallow(e)
+    state.pointerInWidget = !!widget && widget.contains(e.target)
   }
 
   const onRelease = (e) => {
@@ -246,13 +212,11 @@ window.Folio.Input.DateTime.trackPointer = (input) => {
   }
 
   window.Folio.Input.DateTime.PRESS_EVENTS.forEach((type) => document.addEventListener(type, onPress, true))
-  window.Folio.Input.DateTime.FOLLOW_UP_EVENTS.forEach((type) => document.addEventListener(type, onFollowUp, true))
   Object.keys(releaseDelays).forEach((type) => document.addEventListener(type, onRelease, true))
 
   state.untrackPointer = () => {
     window.clearTimeout(state.releaseTimer)
     window.Folio.Input.DateTime.PRESS_EVENTS.forEach((type) => document.removeEventListener(type, onPress, true))
-    window.Folio.Input.DateTime.FOLLOW_UP_EVENTS.forEach((type) => document.removeEventListener(type, onFollowUp, true))
     Object.keys(releaseDelays).forEach((type) => document.removeEventListener(type, onRelease, true))
   }
 }

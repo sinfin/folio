@@ -113,29 +113,6 @@ class Folio::Input::DateTimeTest < ActionDispatch::SystemTestCase
     assert_empty selected_text
   end
 
-  # The first click closes the picker, the second lands on the page underneath:
-  # it must neither select text there nor click or double-click it.
-  test "a double click on a day does not reach the page underneath" do
-    open_picker("Default")
-    count_page_clicks
-    find("#{WIDGET} .day[data-action='selectDay']:not(.old):not(.new):not(.disabled)", match: :first).double_click
-
-    assert_no_selector WIDGET
-    assert_not_empty field_value("Default")
-    assert_empty selected_text
-    assert_equal({ "click" => 0, "dblclick" => 0 }, evaluate_script("window.folioTestPageClicks"))
-  end
-
-  test "a double click elsewhere right after a day pick still selects text" do
-    open_picker("Default")
-    find("#{WIDGET} .day[data-action='selectDay']:not(.old):not(.new):not(.disabled)", match: :first).click
-    assert_no_selector WIDGET
-
-    find("h2", text: "Input date time").double_click
-
-    assert_not_empty selected_text
-  end
-
   # Fixed dates in the browser's own time zone: the 14th is selectable (same day
   # as min), but the picked time 08:00 is before min 12:00, so TD rejects it.
   test "a day rejected by min keeps the picker open" do
@@ -198,18 +175,6 @@ class Folio::Input::DateTimeTest < ActionDispatch::SystemTestCase
     def tap(element)
       finger = Selenium::WebDriver::Interactions.pointer(:touch, name: "finger")
       page.driver.browser.action(devices: [finger]).move_to(element.native).pointer_down(:left).pointer_up(:left).perform
-    end
-
-    # counts clicks that reach page elements outside the picker widget
-    def count_page_clicks
-      execute_script(<<~JS)
-        window.folioTestPageClicks = { click: 0, dblclick: 0 }
-        const count = (e) => {
-          if (!e.target.closest || !e.target.closest('.tempus-dominus-widget')) window.folioTestPageClicks[e.type] += 1
-        }
-        document.addEventListener('click', count)
-        document.addEventListener('dblclick', count)
-      JS
     end
 
     def selected_text
