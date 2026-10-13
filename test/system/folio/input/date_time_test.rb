@@ -95,22 +95,32 @@ class Folio::Input::DateTimeTest < ActionDispatch::SystemTestCase
     assert_equal "8. 10. 2026, 16:30", field_value("Default")
   end
 
-  # A day that closes the picker lets the second click land on the page, so the
-  # day case uses a pick rejected by min: the picker stays open under the cursor.
+  # The day is one that min rejects, so the picker stays open under the cursor.
   test "fast clicks on the time arrows and on a day select no text in the picker" do
     restrict_and_set("Default", min: "2030-06-14T12:00:00", value: "2030-06-15T08:00:00")
     open_picker("Default")
 
-    find("#{WIDGET} [data-action='incrementMinutes']").double_click
+    double_click_action("incrementMinutes")
     assert_selector WIDGET
-    assert_equal "", selected_text
+    assert_empty selected_text
 
-    find("#{WIDGET} [data-action='decrementHours']").double_click
-    assert_equal "", selected_text
+    double_click_action("decrementHours")
+    assert_selector WIDGET
+    assert_empty selected_text
 
     find("#{WIDGET} .day[data-action='selectDay'][data-value='2030-06-14']").double_click
     assert_selector WIDGET
-    assert_equal "", selected_text
+    assert_empty selected_text
+  end
+
+  # The first click closes the picker, the second lands on the page underneath.
+  test "a double click on a day selects no text on the page underneath" do
+    open_picker("Default")
+    find("#{WIDGET} .day[data-action='selectDay']:not(.old):not(.new):not(.disabled)", match: :first).double_click
+
+    assert_no_selector WIDGET
+    assert_not_empty field_value("Default")
+    assert_empty selected_text
   end
 
   # Fixed dates in the browser's own time zone: the 14th is selectable (same day
@@ -164,6 +174,10 @@ class Folio::Input::DateTimeTest < ActionDispatch::SystemTestCase
 
     def click_action(action)
       find("#{WIDGET} [data-action='#{action}']").click
+    end
+
+    def double_click_action(action)
+      find("#{WIDGET} [data-action='#{action}']").double_click
     end
 
     # a touch pointer: Chrome sends pointer events first and the compatibility

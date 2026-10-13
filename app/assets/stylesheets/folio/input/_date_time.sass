@@ -29,6 +29,8 @@ $td-days-of-week-color: rgba(0, 0, 0, 0.5) !default
   width: 250px !important
   padding: 0 !important
   // days and time digits are divs: fast clicks on them must not select text
+  // (Safari needs the prefix; the pipeline has no autoprefixer)
+  -webkit-user-select: none
   user-select: none
 
   .date-container-days

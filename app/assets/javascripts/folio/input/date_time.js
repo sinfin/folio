@@ -193,6 +193,7 @@ window.Folio.Input.DateTime.wrapActions = (input) => {
 // shortly after pointerup when the press ended outside and no click follows.
 window.Folio.Input.DateTime.PRESS_EVENTS = ['pointerdown', 'mousedown']
 window.Folio.Input.DateTime.RELEASE_DELAYS = { click: 0, pointercancel: 0, pointerup: 500 }
+window.Folio.Input.DateTime.DOUBLE_CLICK_MS = 1000
 
 window.Folio.Input.DateTime.trackPointer = (input) => {
   const state = input.folioInputDateTimeState
@@ -201,10 +202,19 @@ window.Folio.Input.DateTime.trackPointer = (input) => {
   const onPress = (e) => {
     const picker = input.folioInputTempusDominus
     const widget = picker && picker.display.widget
-    state.pointerInWidget = !!widget && widget.contains(e.target)
+    const inWidget = !!widget && widget.contains(e.target)
+
+    // The second click of a double click on a day that closed the picker lands
+    // on the page underneath; do not let it select a word there.
+    if (e.type === 'mousedown' && e.detail > 1 && !inWidget && state.widgetClickAt && e.timeStamp - state.widgetClickAt < window.Folio.Input.DateTime.DOUBLE_CLICK_MS) {
+      e.preventDefault()
+    }
+
+    state.pointerInWidget = inWidget
   }
 
   const onRelease = (e) => {
+    if (e.type === 'click' && state.pointerInWidget) state.widgetClickAt = e.timeStamp
     window.setTimeout(() => { state.pointerInWidget = false }, releaseDelays[e.type])
   }
 
