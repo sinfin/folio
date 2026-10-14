@@ -59,7 +59,8 @@ window.Folio.Stimulus.register('f-c-files-index-modal', class extends window.Sti
     const src = turboFrame.getAttribute('src')
     if (!src) return
 
-    const url = new URL(src, window.location.origin)
+    const current = new URL(src, window.location.origin)
+    const url = new URL(current.href)
 
     if (usageRecord) {
       url.searchParams.set('usage_record', usageRecord)
@@ -67,8 +68,8 @@ window.Folio.Stimulus.register('f-c-files-index-modal', class extends window.Sti
       url.searchParams.delete('usage_record')
     }
 
-    const newSrc = url.origin === window.location.origin ? `${url.pathname}${url.search}` : url.toString()
-    if (newSrc !== src) turboFrame.setAttribute('src', newSrc)
+    // The frame keeps an absolute src and reloads on every change, so compare normalized URLs.
+    if (url.href !== current.href) turboFrame.setAttribute('src', url.href)
   }
 
   onFileSelect (e) {
