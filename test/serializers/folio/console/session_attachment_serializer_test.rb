@@ -9,6 +9,8 @@ class Folio::Console::SessionAttachmentSerializerTest < ActiveSupport::TestCase
     data = Folio::Console::SessionAttachmentSerializer.new(attachment).serializable_hash[:data]
 
     assert_equal attachment.hash_id, data[:attributes][:id]
+    assert_equal attachment.hash_id, data[:id]
+    assert_equal :session_attachment, data[:type]
     assert_equal attachment.file_name, data[:attributes][:file_name]
     assert_equal attachment.file_size, data[:attributes][:file_size]
     assert_equal attachment.file_mime_type, data[:attributes][:file_mime_type]
