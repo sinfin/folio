@@ -50,6 +50,8 @@ class Folio::S3::BaseJob < Folio::ApplicationJob
     def serialize_file_for_broadcast(file)
       if file.is_a?(Folio::PrivateAttachment)
         Folio::Console::PrivateAttachmentSerializer.new(file).serializable_hash[:data]
+      elsif file.is_a?(Folio::SessionAttachment::Base)
+        Folio::Console::SessionAttachmentSerializer.new(file).serializable_hash[:data]
       else
         Folio::Console::FileSerializer.new(file).serializable_hash[:data]
       end
