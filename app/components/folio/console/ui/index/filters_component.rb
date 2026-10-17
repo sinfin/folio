@@ -65,7 +65,16 @@ class Folio::Console::Ui::Index::FiltersComponent < Folio::Console::ApplicationC
     end
 
     def cancel_url
-      request.path
+      persistent_params = index_filters_hash.filter_map do |key, config|
+        next unless config[:as] == :hidden && config[:persistent]
+        next if controller.params[key].blank?
+
+        [key, controller.params[key]]
+      end
+
+      return request.path if persistent_params.empty?
+
+      "#{request.path}?#{persistent_params.to_h.to_query}"
     end
 
     def input(f, key)

@@ -4,7 +4,7 @@ class Folio::Console::Api::TiptapController < Folio::Console::Api::BaseControlle
   before_action :initialize_node, only: %i[edit_node save_node]
 
   def edit_node
-    render_component_json(Folio::Console::Tiptap::Overlay::FormComponent.new(node: @node))
+    render_component_json(Folio::Console::Tiptap::Overlay::FormComponent.new(node: @node, usage_record: file_usage_record))
   end
 
   def save_node
@@ -14,7 +14,7 @@ class Folio::Console::Api::TiptapController < Folio::Console::Api::BaseControlle
         meta: { tiptap_node_valid: true }
       }
     else
-      render_component_json(Folio::Console::Tiptap::Overlay::FormComponent.new(node: @node))
+      render_component_json(Folio::Console::Tiptap::Overlay::FormComponent.new(node: @node, usage_record: file_usage_record))
     end
   end
 
@@ -101,6 +101,15 @@ class Folio::Console::Api::TiptapController < Folio::Console::Api::BaseControlle
   end
 
   private
+    def file_usage_record
+      return @file_usage_record if defined?(@file_usage_record)
+
+      editor_context = params[:tiptap_editor_context]
+      @file_usage_record = if editor_context.is_a?(ActionController::Parameters)
+        Folio::File::UsageRecord.from_param(editor_context[Folio::File::UsageRecord::PARAM])
+      end
+    end
+
     def initialize_node
       tiptap_node_attrs = params.require(:tiptap_node_attrs)
       node_klass = tiptap_node_attrs.require(:type).safe_constantize

@@ -168,7 +168,7 @@ class Atoms extends React.PureComponent {
   }
 
   render () {
-    const { atoms, destroyedIds, form, namespace, structures } = this.props.atoms
+    const { atoms, destroyedIds, form, namespace, structures, usageRecord } = this.props.atoms
 
     return (
       <React.Fragment>
@@ -184,6 +184,7 @@ class Atoms extends React.PureComponent {
         {form.rootKey && (
           <AtomForm
             form={form}
+            usageRecord={usageRecord}
             index={form.index}
             namespace={`${namespace}[${form.rootKey}_attributes]`}
             rootKey={form.rootKey}

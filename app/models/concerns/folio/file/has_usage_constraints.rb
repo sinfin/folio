@@ -35,6 +35,28 @@ module Folio::File::HasUsageConstraints
       end
     end
 
+    # Like by_usage_constraints, but files the usage record already uses count as
+    # usable despite an exhausted usage limit. Site restrictions still apply.
+    scope :by_usage_constraints_for_usage_record, -> (constraint_status, usage_record) do
+      reusable = unscoped.where(id: usage_record.reusable_file_ids)
+
+      if Rails.application.config.folio_shared_files_between_sites
+        reusable = reusable.with_usage_constraints_site_rule_joins(Folio::Current.site)
+                           .where(usage_constraints_allowed_site_sql(Folio::Current.site))
+      end
+
+      matching = where(id: unscoped.by_usage_constraints(constraint_status).select(:id))
+
+      case constraint_status
+      when "usable", "true"
+        matching.or(where(id: reusable.select(:id)))
+      when "unusable", "false"
+        matching.where.not(id: reusable.select(:id))
+      else
+        none
+      end
+    end
+
     scope :by_allowed_site, -> (site) do
       left_joins(:allowed_sites).where(
         "folio_sites.id IS NULL OR folio_sites.id = ?",
