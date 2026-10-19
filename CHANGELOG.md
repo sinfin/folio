@@ -34,7 +34,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-- **Public assets**: Add standalone `Folio::PublicAsset` with its own S3 path under `<project>/<environment>/public_assets` and a simple Console with filename search, “My public assets” and a copy-link button on every row. Media fields, tags and usage are excluded.
+- **Public assets**: Add standalone `Folio::PublicAsset` with its own S3 path under `<project>/<environment>/public_assets` and a simple Console with filename search, “My public assets” and a copy-link button on every row. Media fields, tags and usage are excluded. Console listings, management permissions and navigation respect `folio_shared_files_between_sites`: shared access includes existing uploads without changing their original site or public URL; disabling sharing restores site-scoped management.
 
 - **Console catalogue sorting**: Sort controls now cycle through ascending, descending, and back to the default order while preserving active filters.
 - **Console AASM email modal**: State events with `email_modal: true` now open

@@ -55,8 +55,60 @@ class Folio::Console::PublicAssetsControllerTest < Folio::Console::BaseControlle
     user.set_roles_for(site: @site, roles: [:manager])
     sign_in user
     other = create(:folio_public_asset, site: create_site(force: true))
-    assert_raises(ActiveRecord::RecordNotFound) do
-      get edit_console_public_asset_path(other)
+    with_config(folio_shared_files_between_sites: false) do
+      get console_public_assets_path
+      assert_response :success
+      assert_select ".f-c-ui-clipboard[data-clipboard-text=?]", other.public_url, count: 0
+      assert_raises(ActiveRecord::RecordNotFound) { get edit_console_public_asset_path(other) }
+      assert_raises(ActiveRecord::RecordNotFound) do
+        patch console_public_asset_path(other), params: { public_asset: { file: upload("test.gif") } }
+      end
+      assert_raises(ActiveRecord::RecordNotFound) { delete console_public_asset_path(other) }
+      assert Folio::PublicAsset.exists?(other.id)
+    end
+  end
+
+  test "shared public assets can be listed replaced and deleted from another site" do
+    user = create(:folio_user)
+    user.set_roles_for(site: @site, roles: [:manager])
+    sign_in user
+    other_site = create_site(force: true)
+    asset = create(:folio_public_asset, site: other_site)
+    stable_url = asset.public_url
+
+    with_config(folio_shared_files_between_sites: true) do
+      get console_public_assets_path
+      assert_response :success
+      assert_select ".f-c-ui-clipboard[data-clipboard-text=?] button", stable_url
+      get edit_console_public_asset_path(asset)
+      assert_response :success
+
+      patch console_public_asset_path(asset), params: { public_asset: { file: upload("test.gif") } }
+      assert_response :redirect
+      assert_equal stable_url, asset.reload.public_url
+      assert_equal other_site.id, asset.site_id
+      assert_equal "image/gif", asset.file_mime_type
+
+      get public_asset_path(token: asset.token)
+      assert_response :success
+      assert_equal File.binread(Folio::Engine.root.join("test/fixtures/folio/test.gif")), response.body
+
+      delete console_public_asset_path(asset)
+      assert_response :redirect
+      assert_not Folio::PublicAsset.exists?(asset.id)
+    end
+  end
+
+  test "my assets filter includes shared files from other sites" do
+    other_site = create_site(force: true)
+    mine = create(:folio_public_asset, site: other_site, created_by_folio_user: @superadmin)
+    other = create(:folio_public_asset, site: other_site)
+
+    with_config(folio_shared_files_between_sites: true) do
+      get console_public_assets_path(created_by_current_user: "1")
+      assert_response :success
+      assert_select ".f-c-ui-clipboard[data-clipboard-text=?]", mine.public_url
+      assert_select ".f-c-ui-clipboard[data-clipboard-text=?]", other.public_url, count: 0
     end
   end
 

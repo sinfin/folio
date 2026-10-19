@@ -27,7 +27,7 @@ class Folio::Console::Layout::SidebarCellTest < Folio::Console::CellTest
     end
   end
 
-  test "shared media keeps public asset links on the current site" do
+  test "shared public asset link uses the current host" do
     create_and_host_site
     Folio::Current.user = create(:folio_user, :superadmin)
     other_site = create_site(force: true)
@@ -38,7 +38,7 @@ class Folio::Console::Layout::SidebarCellTest < Folio::Console::CellTest
           html = cell("folio/console/layout/sidebar", nil).(:show)
           links = html.all("a[href*='/console/public_assets']")
           assert_equal 1, links.size
-          assert_includes links.first[:href], Folio::Current.site.env_aware_domain
+          assert_equal "/console/public_assets", links.first[:href]
         end
       end
     end

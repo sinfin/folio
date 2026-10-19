@@ -6,6 +6,10 @@ class Folio::Console::PublicAssetsController < Folio::Console::BaseController
   prepend_before_action :require_public_assets_enabled
 
   private
+    def allowed_record_sites
+      Rails.application.config.folio_shared_files_between_sites ? Folio::Site.all : super
+    end
+
     def public_asset_params
       params.require(:public_asset).permit(:file)
     end
