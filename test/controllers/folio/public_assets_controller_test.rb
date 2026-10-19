@@ -26,6 +26,28 @@ class Folio::PublicAssetsControllerTest < ActionDispatch::IntegrationTest
       assert_equal content, response.body
       assert_equal mime, response.media_type
       assert_equal "*", response.headers["Access-Control-Allow-Origin"]
+      assert_equal "sandbox allow-scripts", response.headers["Content-Security-Policy"]
+    end
+  end
+
+  test "keeps native audio and video previews on their original origin" do
+    site = create_and_host_site
+    samples = [
+      ["sample.wav", "audio/x-wav", Base64.decode64("UklGRiYAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQIAAACAgA==").b],
+      ["sample.mp4", "video/mp4", File.binread(Folio::Engine.root.join("test/fixtures/folio/blank.mp4"))],
+    ]
+    samples.each do |filename, mime, content|
+      asset = Folio::PublicAsset.create!(site:, file: upload(content, filename:, mime:))
+
+      get asset.public_url
+      assert_response :ok
+      assert_equal mime, response.media_type
+      assert_equal "*", response.headers["Access-Control-Allow-Origin"]
+      assert_nil response.headers["Content-Security-Policy"]
+
+      get asset.public_url, headers: { "If-None-Match" => response.headers["ETag"] }
+      assert_response :not_modified
+      assert_nil response.headers["Content-Security-Policy"]
     end
   end
 
@@ -72,11 +94,11 @@ class Folio::PublicAssetsControllerTest < ActionDispatch::IntegrationTest
   end
 
   private
-    def upload(content)
-      file = Tempfile.new(["public-asset", ".json"])
+    def upload(content, filename: "sample.json", mime: "application/json")
+      file = Tempfile.new(["public-asset", File.extname(filename)])
       file.binmode
       file.write(content)
       file.rewind
-      Rack::Test::UploadedFile.new(file.path, "application/json", original_filename: "sample.json")
+      Rack::Test::UploadedFile.new(file.path, mime, original_filename: filename)
     end
 end

@@ -11,7 +11,10 @@ class Folio::PublicAssetsController < ActionController::Base
     response.headers["Cache-Control"] = "public, max-age=0, must-revalidate"
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["Access-Control-Allow-Origin"] = "*"
-    response.headers["Content-Security-Policy"] = "sandbox allow-scripts"
+    # Sandboxing native media previews gives their follow-up requests an opaque origin.
+    unless asset.file_mime_type.to_s.start_with?("audio/", "video/")
+      response.headers["Content-Security-Policy"] = "sandbox allow-scripts"
+    end
     return unless stale?(etag: [asset.cache_key_with_version, asset.s3_key], last_modified: asset.updated_at, public: true)
 
     send_data asset.data,
