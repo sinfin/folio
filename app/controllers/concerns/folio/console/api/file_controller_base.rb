@@ -56,12 +56,7 @@ module Folio::Console::Api::FileControllerBase
   end
 
   def destroy
-    indestructible_reason = folio_console_record.indestructible_reason
-    indestructible_reason ||= if folio_console_record.file_placements.exists?
-      I18n.t("folio.file.cannot_destroy_file_with_placements")
-    end
-
-    if indestructible_reason
+    if (indestructible_reason = folio_console_record.live_indestructible_reason)
       render json: { errors: [
         status: 422,
         title: "ActiveRecord::RecordNotDestroyed",

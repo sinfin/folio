@@ -47,6 +47,12 @@ cs:
             th/site: Web
             th/created_at: Vytvořeno
             in_atom: kapitola obsahu
+            th/published: Stav
+            orphaned: Smazaný obsah
+            published: Publikováno
+            unpublished: Nepublikováno
+            destroy_orphan: Odstranit záznam
+            destroy_orphan_confirm: Opravdu odstranit osiřelý záznam použití?
             no_thumbnails_yet: Zatím nebyly vygenerovány žádné verze
 
           thumbnails:

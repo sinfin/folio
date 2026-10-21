@@ -107,6 +107,31 @@ class Folio::S3::CreateFileJobTest < ActiveJob::TestCase
     Folio::File::Video.remove_method(:set_video_file_dimensions)
   end
 
+  test "session attachment upload broadcasts success instead of raising" do
+    s3_path = "test_session_attachment.jpg"
+    source_path = "#{Folio::S3::Client::LOCAL_TEST_PATH}/#{s3_path}"
+    FileUtils.mkdir_p(File.dirname(source_path))
+    FileUtils.cp(Folio::Engine.root.join("test/fixtures/folio/test.jpg"), source_path)
+
+    job = Folio::S3::CreateFileJob.new
+    broadcasts = []
+    job.define_singleton_method(:broadcast) { |data| broadcasts << data }
+
+    job.perform(s3_path:,
+                type: "Dummy::SessionAttachment::Image",
+                message_bus_client_id: "client-1",
+                web_session_id: "session-1",
+                attributes: {})
+
+    attachment = Folio::SessionAttachment::Base.find_by!(web_session_id: "session-1")
+    success = broadcasts.find { |b| b[:type] == "success" }
+
+    assert success.present?, "expected a success broadcast"
+    assert_equal attachment.hash_id, success.dig(:file, :attributes, :id)
+  ensure
+    FileUtils.rm_f(source_path) if source_path
+  end
+
   test "save_file_with_slug_retry succeeds after validation slug conflict" do
     job = Folio::S3::CreateFileJob.new
     fake = FakeRecord.new([:validation_conflict, :ok])

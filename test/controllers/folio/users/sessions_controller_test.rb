@@ -27,6 +27,20 @@ class Folio::Users::SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to controller.after_sign_in_path_for(@user)
   end
 
+  test "create remembers the user without a remember_me param" do
+    post main_app.user_session_path, params: { user: @params }
+
+    assert cookies["remember_user_token"].present?
+    assert @user.reload.remember_created_at.present?
+  end
+
+  test "create does not remember the user when remember_me is 0" do
+    post main_app.user_session_path, params: { user: @params.merge(remember_me: "0") }
+
+    assert_nil cookies["remember_user_token"].presence
+    assert_nil @user.reload.remember_created_at
+  end
+
   test "create matches email case-insensitively" do
     assert_difference("@user.reload.sign_in_count", 1) do
       post main_app.user_session_path, params: {

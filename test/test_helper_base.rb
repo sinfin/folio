@@ -55,6 +55,17 @@ VCR.configure do |config|
 
     interaction.ignore! if ai_provider_request && interaction.response.status.code.to_i >= 400
   end
+
+  # System tests: Selenium talks to chromedriver over loopback HTTP (WebDriver
+  # protocol, on whatever port the service got) and Capybara pings its own
+  # server. Blocking those requests, including the shutdown call, leaves
+  # chromedriver processes behind.
+  config.ignore_request do |request|
+    uri = URI(request.uri)
+    %w[127.0.0.1 localhost ::1].include?(uri.hostname) && uri.path.match?(%r{\A/(session|status|shutdown|__identify__)\b})
+  rescue URI::InvalidURIError
+    false
+  end
 end
 
 FactoryBot.definition_file_paths << Folio::Engine.root.join("test/factories")
@@ -175,10 +186,14 @@ class ActionDispatch::IntegrationTest
     super
   end
 
+  # Hit the sign-out endpoint before Devise's `sign_out`: that helper logs out
+  # on the next request before the user is loaded, so `destroy` would see a
+  # signed-out session and the rememberable `before_logout` hook would never
+  # forget the remember cookie.
   def sign_out(user = nil)
-    super if user
     Folio::Current.user = nil
     get destroy_user_session_path
+    super if user
   end
 
   require Folio::Engine.root.join("test/support/create_page_singleton_helper")

@@ -364,10 +364,23 @@ class Folio::File < Folio::ApplicationRecord
     "#{hours.to_s.rjust(2, '0')}:#{minutes.to_s.rjust(2, '0')}:#{seconds.to_s.rjust(2, '0')}.#{centiseconds.to_s.rjust(2, '0')}"
   end
 
+  # Counter-cache based — cheap, called per row in file lists; may be stale.
+  # Overridable in host apps. Destroy paths use #live_indestructible_reason.
   def indestructible_reason
     return nil if file_placements_count == 0
     return nil if file_placements_count.nil?
     I18n.t("folio.file.cannot_destroy_file_with_placements")
+  end
+
+  # Accurate variant for destroy paths and the file detail — re-verifies the
+  # placements message with a live query so a stale counter cannot block
+  # deletion. Host-app reasons other than the placements message pass through.
+  def live_indestructible_reason
+    reason = indestructible_reason
+    placements_message = I18n.t("folio.file.cannot_destroy_file_with_placements")
+    return reason if reason.present? && reason != placements_message
+
+    placements_message if file_placements.exists?
   end
 
   def file_list_count
@@ -430,6 +443,27 @@ class Folio::File < Folio::ApplicationRecord
     # to be overriden in main_app should be needed
   end
 
+  # Live visibility check: true if the file is used in at least one published
+  # piece of content. Unwraps atoms to their parent record and uses the owner's
+  # #published? (incl. published_at semantics). Licensing usage counts use
+  # #calculate_published_usage_count below.
+  # Atom parents are loaded one query each — the includes(:placement) below
+  # does not cover the second hop.
+  # Single-record use only — for collections build an SQL scope instead.
+  def used_in_published_content?
+    file_placements.includes(:placement).find_each(batch_size: 100) do |file_placement|
+      owner = file_placement.placement
+      owner = owner.placement if owner.is_a?(Folio::Atom::Base)
+      next if owner.nil?
+      return true if !owner.respond_to?(:published?) || owner.published?
+    end
+
+    false
+  end
+
+  # Licensing counts deduplicate owning records and inspect their raw published
+  # column when present. Keep these semantics separate from the live visibility
+  # check above, which uses the owner's #published? (incl. published_at).
   def calculate_published_usage_count
     Folio::File::PublishedUsageCounter.count(self)
   end
@@ -484,8 +518,7 @@ class Folio::File < Folio::ApplicationRecord
     end
 
     def check_usage_before_destroy
-      throw(:abort) if indestructible_reason.present?
-      throw(:abort) if file_placements.exists?
+      throw(:abort) if live_indestructible_reason.present?
     end
 
     def set_file_track_duration
