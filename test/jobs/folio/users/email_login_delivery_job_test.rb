@@ -37,8 +37,7 @@ class Folio::Users::EmailLoginDeliveryJobTest < ActiveJob::TestCase
     assert_not_includes link.query.to_s, @token
     assert_not_includes link.query.to_s, "email_login_token"
     assert_not_includes body, @nonce
-    assert_includes body,
-                    "Confirm the login to #{@site.title} — you'll be signed in on the browser where you started logging in."
+    assert_includes body, "Confirm the sign-in to #{@site.title}. The link works only in the browser where you started signing in."
     assert_includes body, "If you did not request this, please ignore this email."
     assert_includes body, "With kind regards,"
     assert_equal 2, Nokogiri::HTML(body).css("a[href]").count { |anchor| URI.parse(anchor["href"]).fragment == @token }
@@ -99,7 +98,7 @@ class Folio::Users::EmailLoginDeliveryJobTest < ActiveJob::TestCase
     assert_includes mail.text_part.decoded, @token
     assert_includes mail.text_part.decoded, @site.title
     assert_includes mail.text_part.decoded,
-                    "Potvrďte přihlášení na #{@site.title} — přihlásíte se tím v prohlížeči, ve kterém jste přihlášení zahájili."
+                    "Potvrďte přihlášení na #{@site.title}. Odkaz funguje jen v prohlížeči, ve kterém jste přihlášení zahájili."
     assert_includes mail.text_part.decoded, "Pokud jste si toto nevyžádali, ignorujte tento e-mail."
     assert_includes mail.text_part.decoded, "S přátelským pozdravem"
 
@@ -107,6 +106,26 @@ class Folio::Users::EmailLoginDeliveryJobTest < ActiveJob::TestCase
       URI.parse(anchor["href"]).fragment == @token
     end
     assert_equal 2, links.size
+  end
+
+  test "password confirmations keep the original-browser instruction in views and email templates" do
+    challenge, token = Folio::Devise::EmailLogin::IssueChallenge.call(user: @user, site: @site, nonce: @nonce,
+                                                                     purpose: "password", previous: @challenge)
+    magic_link_text = "Odkaz funguje jen v prohlížeči"
+
+    assert_emails(1) { Folio::Users::EmailLoginDeliveryJob.deliver_later(challenge, token, locale: "en").perform_now }
+    body = ActionMailer::Base.deliveries.last.html_part&.decoded || ActionMailer::Base.deliveries.last.body.decoded
+    assert_includes body, "Confirm the login to #{@site.title} — you'll be signed in on the browser where you started logging in."
+    assert_not_includes body, "The link works only in the browser"
+
+    Folio::EmailTemplate.load_templates_from_yaml(Folio::Engine.root.join("data/email_templates_data.yml"))
+    challenge, token = Folio::Devise::EmailLogin::IssueChallenge.call(user: @user, site: @site, nonce: @nonce,
+                                                                     purpose: "password", previous: challenge)
+    assert_emails(1) { Folio::Users::EmailLoginDeliveryJob.deliver_later(challenge, token, locale: "cs").perform_now }
+    text = ActionMailer::Base.deliveries.last.text_part.decoded
+    assert_includes text, "Potvrďte přihlášení na #{@site.title} — přihlásíte se tím v prohlížeči, ve kterém jste přihlášení zahájili."
+    assert_not_includes text, magic_link_text
+    assert_not_includes text, "{EMAIL_LOGIN_INSTRUCTION}"
   end
 
   test "queue arguments contain neither the email proof nor the browser secret" do

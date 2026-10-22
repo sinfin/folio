@@ -21,6 +21,16 @@ class Folio::Users::EmailLogin::ConfirmationComponentTest < Folio::ComponentTest
     assert_no_selector "form, script"
   end
 
+  test "a magic link opened in another browser offers signing in here without approving" do
+    render_inline(Folio::Users::EmailLogin::ConfirmationComponent.new(other_browser: true))
+
+    assert_selector "h1", text: I18n.t("folio.users.email_login.other_browser_title")
+    assert_text I18n.t("folio.users.email_login.other_browser_instruction")
+    assert_selector "a.btn[href='/users/email_login/new']", text: I18n.t("folio.users.email_login.sign_in_here")
+    assert_no_text I18n.t("folio.users.email_login.approved_instruction")
+    assert_no_selector "form, script"
+  end
+
   test "invalid link offers starting again" do
     render_inline(Folio::Users::EmailLogin::ConfirmationComponent.new(invalid: true))
 

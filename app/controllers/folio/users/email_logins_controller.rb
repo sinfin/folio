@@ -76,10 +76,12 @@ class Folio::Users::EmailLoginsController < DeviseController
 
       challenge = Folio::Users::EmailLoginChallenge.find_by(token_digest: Folio::Devise::EmailLogin.digest(token), site: pending.site)
       raise Folio::Devise::EmailLogin::InvalidChallenge unless challenge&.usable_for?(pending.site)
+      return render_magic_link_in_other_browser if magic_link_in_other_browser?(challenge)
 
       session[Folio::Devise::EmailLogin::APPROVAL_SESSION_KEY] = { "id" => challenge.id, "email_login_token" => token }
     else
       challenge = approval_challenge
+      return render_magic_link_in_other_browser if magic_link_in_other_browser?(challenge)
     end
 
     if Devise::TRUE_VALUES.include?(request.request_parameters["approve"])
@@ -97,6 +99,8 @@ class Folio::Users::EmailLoginsController < DeviseController
 
   def approve
     challenge = approval_challenge
+    return render_magic_link_in_other_browser if magic_link_in_other_browser?(challenge)
+
     challenge.approve!(token: session[Folio::Devise::EmailLogin::APPROVAL_SESSION_KEY]["email_login_token"], site: pending.site)
     if pending.challenge&.id == challenge.id
       redirect_to main_app.user_email_login_path
@@ -142,7 +146,25 @@ class Folio::Users::EmailLoginsController < DeviseController
       render Folio::Users::EmailLogin::WaitingComponent.new(email: pending.data["email"], state: pending.state,
                                                           expires_at: pending.data["expires_at"],
                                                           resend_at: pending.resend_at.to_f,
-                                                          trust_browser: pending.trust_browser), status:
+                                                          trust_browser: pending.trust_browser,
+                                                          magic_link: magic_link_pending?), status:
+    end
+
+    # Unknown addresses keep an anonymous magic-link session that must look like a known one.
+    def magic_link_pending?
+      pending.data["anonymous"].present? || pending.challenge&.purpose == "magic_link"
+    end
+
+    # A magic link is the only factor, so only the browser that requested it may approve it.
+    # Opening it elsewhere leaves the challenge usable in the original browser.
+    def magic_link_in_other_browser?(challenge)
+      challenge.purpose == "magic_link" && pending.challenge&.id != challenge.id
+    end
+
+    def render_magic_link_in_other_browser
+      session.delete(Folio::Devise::EmailLogin::APPROVAL_SESSION_KEY)
+      component = Folio::Users::EmailLogin::ConfirmationComponent.new(other_browser: true)
+      action_name == "prepare" ? render_component_json(component) : render(component)
     end
 
     def render_email_login_throttled(error = nil)

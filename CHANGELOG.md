@@ -20,7 +20,8 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
-- Render the magic-link request form with the site layout, entered email and remaining retry delay when delivery is throttled after the pending session is lost (sinfin/foliolized_auctify#644).
+- Magic links sign in only the browser that requested them. Opening the link in another browser or device neither approves nor revokes the attempt and offers signing in there instead. Waiting pages, request form, the email and the `EMAIL_LOGIN_INSTRUCTION` email template keyword say so; password confirmations still work on any device.
+- Render the magic-link request form with the site layout, entered email and remaining retry delay when delivery is throttled after the pending session is lost.
 - set `Folio::Current.cache_key_base` only after request locale resolution and use a locale-independent cache key for current site lookup
 
 ## [6.5.1] - 2025-06-18

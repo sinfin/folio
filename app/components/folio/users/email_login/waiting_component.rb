@@ -1,15 +1,20 @@
 # frozen_string_literal: true
 
 class Folio::Users::EmailLogin::WaitingComponent < Folio::ApplicationComponent
-  def initialize(email:, state:, expires_at:, resend_at:, trust_browser: true)
+  def initialize(email:, state:, expires_at:, resend_at:, trust_browser: true, magic_link: false)
     @email = email
     @state = state
     @expires_at = expires_at
     @resend_at = resend_at
     @trust_browser = trust_browser
+    @magic_link = magic_link
   end
 
   private
+    def instruction
+      t("folio.users.email_login.#{@magic_link ? "magic_link_instruction" : "cross_device_instruction"}")
+    end
+
     def waiting?
       %w[waiting approved].include?(@state)
     end

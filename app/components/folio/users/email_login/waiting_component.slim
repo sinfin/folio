@@ -1,7 +1,7 @@
 .f-users-email-login-waiting.container-fluid data=data
   h1 = t('folio.users.email_login.waiting_title')
   p = t('folio.users.email_login.sent_to', email: @email)
-  p = t('folio.users.email_login.cross_device_instruction')
+  p = instruction
   p[
     role="status"
     aria-live="polite"
