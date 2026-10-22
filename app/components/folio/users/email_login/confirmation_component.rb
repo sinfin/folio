@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 class Folio::Users::EmailLogin::ConfirmationComponent < Folio::ApplicationComponent
-  def initialize(challenge: nil, approved: false, invalid: false, preparing: false)
+  def initialize(challenge: nil, approved: false, invalid: false, preparing: false, other_browser: false)
     @challenge = challenge
     @approved = approved
     @invalid = invalid
     @preparing = preparing
+    @other_browser = other_browser
   end
 
   private

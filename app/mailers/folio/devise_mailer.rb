@@ -54,7 +54,11 @@ class Folio::DeviseMailer < Devise::Mailer
     with_user_locale(challenge.user, locale:) do |user_locale|
       @email_login_url = scoped_url_method(challenge.user, :confirm_email_login_url,
                                           anchor: token, host: @site.env_aware_domain, locale: user_locale)
+      # Magic links work only in the requesting browser; password confirmations work on any device.
+      instruction_key = challenge.purpose == "magic_link" ? "mail_instruction_magic_link" : "mail_instruction"
+      @mail_instruction = t("folio.users.email_login.#{instruction_key}", site: @site.title)
       @data = { LOCALE: user_locale, USER_EMAIL_LOGIN_URL: @email_login_url,
+                EMAIL_LOGIN_INSTRUCTION: @mail_instruction,
                 REQUESTED_AT_TIME: l(challenge.created_at, format: :long),
                 VALID_UNTIL_TIME: l(challenge.expires_at, format: :long) }
       devise_mail(challenge.user, :email_login, site: @site)

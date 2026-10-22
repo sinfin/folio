@@ -17,6 +17,19 @@ class Folio::Users::EmailLogin::WaitingComponentTest < Folio::ComponentTest
     assert_includes rendered_content, "user@example.test"
   end
 
+  test "password confirmations may use any device while magic links stay in this browser" do
+    render_inline(Folio::Users::EmailLogin::WaitingComponent.new(email: "user@example.test", state: "waiting",
+                                                              expires_at: 10.minutes.from_now.to_f,
+                                                              resend_at: 60.seconds.from_now.to_f))
+    assert_text I18n.t("folio.users.email_login.cross_device_instruction")
+
+    render_inline(Folio::Users::EmailLogin::WaitingComponent.new(email: "user@example.test", state: "waiting",
+                                                              expires_at: 10.minutes.from_now.to_f,
+                                                              resend_at: 60.seconds.from_now.to_f, magic_link: true))
+    assert_text I18n.t("folio.users.email_login.magic_link_instruction")
+    assert_no_text I18n.t("folio.users.email_login.cross_device_instruction")
+  end
+
   test "expired attempts cannot be completed or resent" do
     render_inline(Folio::Users::EmailLogin::WaitingComponent.new(email: "user@example.test", state: "expired",
                                                               expires_at: 1.second.ago.to_f, resend_at: 1.minute.ago.to_f,

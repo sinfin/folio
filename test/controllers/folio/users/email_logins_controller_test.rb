@@ -191,6 +191,85 @@ class Folio::Users::EmailLoginsControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "a magic link opened in another browser cannot approve and stays usable in the original browser" do
+    with_email_login do
+      post main_app.user_email_login_path, params: { user: { email: @user.email } }
+      token = delivery_token
+      challenge = @user.email_login_challenges.sole
+      phone = open_session
+      phone.host! @site.env_aware_domain
+
+      phone.post main_app.prepare_user_email_login_path, params: { email_login_token: token, approve: "1" }, as: :json
+      phone.assert_response :ok
+      page = Nokogiri::HTML(phone.response.parsed_body.fetch("data"))
+      assert_equal I18n.t("folio.users.email_login.other_browser_title"), page.at_css("h1").text
+      assert_equal I18n.t("folio.users.email_login.sign_in_here"),
+                   page.at_css("a[href='#{main_app.new_user_email_login_path}']").text
+      assert_empty page.css("form")
+      assert_nil phone.controller.session[Folio::Devise::EmailLogin::APPROVAL_SESSION_KEY]
+
+      phone.post main_app.prepare_user_email_login_path, params: { approve: "1" }, as: :json
+      phone.assert_response :unprocessable_entity
+      phone.post main_app.approve_user_email_login_path, params: { challenge_id: challenge.id }
+      phone.assert_response :unprocessable_entity
+      assert_nil challenge.reload.approved_at
+      assert_nil challenge.revoked_at
+      assert_nil phone.controller.warden.user(:user)
+
+      get main_app.status_user_email_login_path(format: :json)
+      assert_equal "waiting", response.parsed_body.dig("data", "state")
+      post main_app.complete_user_email_login_path
+      assert_nil controller.warden.user(:user)
+
+      post main_app.prepare_user_email_login_path, params: { email_login_token: token, approve: "1" }, as: :json
+      assert_response :ok
+      assert_equal controller.after_sign_in_path_for(@user), response.parsed_body.dig("data", "url")
+      assert_equal @user, controller.warden.user(:user)
+      assert_equal 1, @user.reload.sign_in_count
+    end
+  end
+
+  test "a magic link cannot approve a different magic link pending in the opening browser" do
+    with_email_login do
+      post main_app.user_email_login_path, params: { user: { email: @user.email } }
+      token = delivery_token
+      challenge = @user.email_login_challenges.sole
+      laptop = open_session
+      laptop.host! @site.env_aware_domain
+      other = create(:folio_user, auth_site: @site)
+      laptop.post main_app.user_email_login_path, params: { user: { email: other.email } }
+
+      laptop.post main_app.prepare_user_email_login_path, params: { email_login_token: token, approve: "1" }, as: :json
+      laptop.assert_response :ok
+      assert_includes laptop.response.parsed_body.fetch("data"), I18n.t("folio.users.email_login.other_browser_title")
+      assert_nil challenge.reload.approved_at
+      assert_nil laptop.controller.warden.user(:user)
+    end
+  end
+
+  test "waiting pages tell magic links to stay in this browser and password logins to use any device" do
+    with_email_login do
+      post main_app.user_email_login_path, params: { user: { email: @user.email } }
+      get main_app.user_email_login_path
+      assert_select "p", text: I18n.t("folio.users.email_login.magic_link_instruction")
+      assert_select "p", text: I18n.t("folio.users.email_login.cross_device_instruction"), count: 0
+
+      unknown = open_session
+      unknown.host! @site.env_aware_domain
+      unknown.post main_app.user_email_login_path, params: { user: { email: "unknown@example.test" } }
+      unknown.get main_app.user_email_login_path
+      unknown.assert_select "p", text: I18n.t("folio.users.email_login.magic_link_instruction")
+
+      travel Folio::Devise::EmailLogin::RESEND_INTERVAL
+      password = open_session
+      password.host! @site.env_aware_domain
+      password.post main_app.user_session_path, params: { user: { email: @user.email, password: @password } }
+      password.get main_app.user_email_login_path
+      password.assert_select "p", text: I18n.t("folio.users.email_login.cross_device_instruction")
+      password.assert_select "p", text: I18n.t("folio.users.email_login.magic_link_instruction"), count: 0
+    end
+  end
+
   test "unknown email returns the same waiting response without creating an account" do
     with_email_login do
       assert_no_difference("Folio::User.count") do

@@ -2,6 +2,7 @@
   action: email_login
   optional_keywords:
     - USER_EMAIL
+    - EMAIL_LOGIN_INSTRUCTION
     - SITE_TITLE
     - REQUESTED_AT_TIME
     - VALID_UNTIL_TIME
@@ -12,7 +13,7 @@
   subject_cs: Potvrzení přihlášení
   subject_en: Confirm your sign-in
   body_html_cs: |
-    <p>Potvrďte přihlášení na {SITE_TITLE} — přihlásíte se tím v prohlížeči, ve kterém jste přihlášení zahájili.</p>
+    <p>{EMAIL_LOGIN_INSTRUCTION}</p>
 
     <p class="redactor-component folio-redactor-button"><a class="btn btn-redactor btn-redactor--fill" href="{USER_EMAIL_LOGIN_URL}">Potvrdit přihlášení</a></p>
 
@@ -24,7 +25,7 @@
 
     <p>{SITE_TITLE}</p>
   body_html_en: |
-    <p>Confirm the login to {SITE_TITLE} — you'll be signed in on the browser where you started logging in.</p>
+    <p>{EMAIL_LOGIN_INSTRUCTION}</p>
 
     <p class="redactor-component folio-redactor-button"><a class="btn btn-redactor btn-redactor--fill" href="{USER_EMAIL_LOGIN_URL}">Confirm sign-in</a></p>
 
@@ -36,7 +37,7 @@
 
     <p>{SITE_TITLE}</p>
   body_text_cs: |
-    Potvrďte přihlášení na {SITE_TITLE} — přihlásíte se tím v prohlížeči, ve kterém jste přihlášení zahájili.
+    {EMAIL_LOGIN_INSTRUCTION}
 
     {USER_EMAIL_LOGIN_URL}
 
@@ -45,7 +46,7 @@
     S přátelským pozdravem
     {SITE_TITLE}
   body_text_en: |
-    Confirm the login to {SITE_TITLE} — you'll be signed in on the browser where you started logging in.
+    {EMAIL_LOGIN_INSTRUCTION}
 
     {USER_EMAIL_LOGIN_URL}
 
