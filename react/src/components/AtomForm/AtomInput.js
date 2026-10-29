@@ -5,6 +5,7 @@ import TextareaAutosize from 'react-autosize-textarea'
 import RichTextEditor from 'components/RichTextEditor'
 import DateInput from 'components/DateInput'
 import UrlInput from 'components/UrlInput'
+import OrderedMultiselectInput from './OrderedMultiselectInput'
 
 import preventEnterSubmit from 'utils/preventEnterSubmit'
 
@@ -33,20 +34,32 @@ function inputProps (type, defaultValue) {
   }
 }
 
-export default function AtomInput ({ field, atom, index, onChange, onValueChange, characterCounter }) {
+export default function AtomInput ({ field, atom, index, onChange, onValueChange, characterCounter, rootAtoms = [] }) {
   const { structure } = atom.record.meta
   const key = field
   const type = structure[key].type
   const defaultValue = atom.record.data[key]
+  let collection = structure[key].collection
+
+  if (type === 'collection' && structure[key].unique_values_within_root) {
+    collection = collection.filter((ary) => {
+      const usedByOtherAtom = rootAtoms.some((rootAtom) => {
+        if (rootAtom.lodashId === atom.record.lodashId) return false
+        return rootAtom.data && rootAtom.data[key] === ary[1]
+      })
+
+      return !usedByOtherAtom || ary[1] === defaultValue
+    })
+  }
 
   React.useEffect(() => {
     if (type === 'collection') {
-      const { collection } = structure[key]
-      if (collection && collection.indexOf(null) === -1 && !defaultValue) {
+      const missingValue = defaultValue == null || defaultValue === ''
+      if (collection && collection.length && collection.indexOf(null) === -1 && missingValue) {
         onValueChange(index, collection[0][1], key)
       }
     }
-  }, [type, onValueChange, defaultValue, key, structure, index])
+  }, [type, onValueChange, defaultValue, key, collection, index])
 
   if (type === 'richtext') {
     return (
@@ -85,6 +98,17 @@ export default function AtomInput ({ field, atom, index, onChange, onValueChange
     )
   }
 
+  if (type === 'ordered_multiselect') {
+    return (
+      <OrderedMultiselectInput
+        atom={atom}
+        field={field}
+        index={index}
+        onValueChange={onValueChange}
+      />
+    )
+  }
+
   if (type === 'collection') {
     return (
       <Input
@@ -95,7 +119,7 @@ export default function AtomInput ({ field, atom, index, onChange, onValueChange
         onKeyPress={preventEnterSubmit}
         invalid={Boolean(atom.errors[key])}
       >
-        {structure[key].collection.map((ary) => (
+        {collection.map((ary) => (
           <option key={ary[1] || ''} value={ary[1] || ''}>{ary[0]}</option>
         ))}
       </Input>

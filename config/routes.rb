@@ -20,6 +20,7 @@ Folio::Engine.routes.draw do
   namespace :console do
     root to: "dashboard#index"
     resources :dashboard, only: :index
+    resources :public_assets if Rails.application.config.folio_public_assets_enabled
 
     scope constraints: Rails.application.config.folio_console_default_routes_contstraints do
       resource :ui, only: %i[show], controller: "ui" do
@@ -302,6 +303,10 @@ Folio::Engine.routes.draw do
   resource :tiptap, path: "folio-tiptap", controller: :tiptap, only: [] do
     get :block_editor, path: "block-editor"
     get :rich_text_editor, path: "rich-text-editor"
+  end
+
+  if Rails.application.config.folio_public_assets_enabled
+    get "/public-assets/:token", to: "public_assets#show", as: :public_asset
   end
 
   resource :csrf, only: %i[show], controller: :csrf

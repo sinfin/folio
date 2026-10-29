@@ -30,6 +30,23 @@ class Folio::AbilityTest < ActiveSupport::TestCase
     @site2 = Folio::Site.find_by(domain: "second.com") || create_site(attributes: { domain: "second.com" }, force: true)
   end
 
+  [true, false].each do |shared|
+    test "public asset permissions with file sharing #{shared}" do
+      user = create_user(roles: { site1 => [:manager] })
+      own = build(:folio_public_asset, site: site1)
+      other = build(:folio_public_asset, site: site2)
+
+      with_config(folio_public_assets_enabled: true, folio_shared_files_between_sites: shared) do
+        ability = Folio::Ability.new(user, site1)
+        %i[read update destroy].each do |action|
+          assert ability.can?(action, own)
+          assert_equal shared, ability.can?(action, other)
+          assert_not Folio::Ability.new(user, site2).can?(action, other)
+        end
+      end
+    end
+  end
+
   test "superadmin on site1" do
     user = create_user(superadmin: true)
     @tested_site = site1

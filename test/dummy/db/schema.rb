@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_08_28_090000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_11_091449) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -533,6 +533,21 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_28_090000) do
     t.index ["type"], name: "index_folio_private_attachments_on_type"
   end
 
+  create_table "folio_public_assets", force: :cascade do |t|
+    t.bigint "site_id", null: false
+    t.bigint "created_by_folio_user_id"
+    t.uuid "token", null: false
+    t.string "file_name", null: false
+    t.string "file_mime_type", null: false
+    t.bigint "file_size", null: false
+    t.string "s3_key"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_by_folio_user_id"], name: "index_folio_public_assets_on_created_by_folio_user_id"
+    t.index ["site_id"], name: "index_folio_public_assets_on_site_id"
+    t.index ["token"], name: "index_folio_public_assets_on_token", unique: true
+  end
+
   create_table "folio_session_attachments", force: :cascade do |t|
     t.string "hash_id"
     t.string "file_uid"
@@ -764,6 +779,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_28_090000) do
   add_foreign_key "folio_media_source_site_links", "folio_media_sources", column: "media_source_id"
   add_foreign_key "folio_media_source_site_links", "folio_sites", column: "site_id"
   add_foreign_key "folio_media_sources", "folio_sites", column: "site_id"
+  add_foreign_key "folio_public_assets", "folio_sites", column: "site_id"
+  add_foreign_key "folio_public_assets", "folio_users", column: "created_by_folio_user_id"
   add_foreign_key "folio_site_user_links", "folio_sites", column: "site_id"
   add_foreign_key "folio_site_user_links", "folio_users", column: "user_id"
   add_foreign_key "folio_tiptap_revisions", "folio_users", column: "superseded_by_user_id"

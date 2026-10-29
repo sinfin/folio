@@ -180,7 +180,7 @@ class AtomForm extends React.PureComponent {
 
     if (molecule) {
       Object.keys(this.props.structures).forEach((type) => {
-        if (this.props.structures[type].molecule === molecule) {
+        if (this.props.structures[type].molecule === molecule && this.props.structures[type].insertable !== false) {
           let shouldAdd = true
 
           if (this.props.structures[type].molecule_singleton) {
@@ -324,6 +324,7 @@ class AtomForm extends React.PureComponent {
                       onChange={this.onChange}
                       onValueChange={this.onValueChange}
                       index={index}
+                      rootAtoms={this.props.rootAtoms}
                       style={makeStyle()}
                       startSplittingAtom={this.startSplittingAtom}
                     />
@@ -350,6 +351,7 @@ class AtomForm extends React.PureComponent {
                       onValueChange={this.onValueChange}
                       style={makeStyle()}
                       index={index}
+                      rootAtoms={this.props.rootAtoms}
                       startSplittingAtom={this.startSplittingAtom}
                     />
                   )

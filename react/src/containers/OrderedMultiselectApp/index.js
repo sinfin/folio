@@ -58,17 +58,17 @@ class OrderedMultiselectApp extends React.Component {
       id: itemId,
       label: option.label
     }
-    this.props.dispatch(addItem(item))
+    this.props.addItem(item)
     this.dispatchChangeEvent()
   }
 
   update = (items) => {
-    this.props.dispatch(updateItems(items))
+    this.props.updateItems(items)
     this.dispatchChangeEvent()
   }
 
   removeItem = (item) => {
-    this.props.dispatch(removeItem(item))
+    this.props.removeItem(item)
     this.dispatchChangeEvent()
   }
 
@@ -149,7 +149,9 @@ class OrderedMultiselectApp extends React.Component {
 
         {canAddItem ? <Select {...selectProps} /> : null}
 
-        <Serialized orderedMultiselect={orderedMultiselect} />
+        {this.props.serialize === false ? null : (
+          <Serialized orderedMultiselect={orderedMultiselect} />
+        )}
       </div>
     )
   }
@@ -159,8 +161,11 @@ const mapStateToProps = (state, props) => ({
   orderedMultiselect: orderedMultiselectSelector(state)
 })
 
-function mapDispatchToProps (dispatch) {
-  return { dispatch }
-}
+const mapDispatchToProps = (dispatch) => ({
+  addItem: (item) => dispatch(addItem(item)),
+  updateItems: (items) => dispatch(updateItems(items)),
+  removeItem: (item) => dispatch(removeItem(item))
+})
 
+export { OrderedMultiselectApp }
 export default connect(mapStateToProps, mapDispatchToProps)(OrderedMultiselectApp)

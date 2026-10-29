@@ -1,0 +1,23 @@
+= index_header
+
+= catalogue(@public_assets, allow_sorting: false)
+  ruby:
+    edit_link :file_name
+    attribute :file_mime_type
+    attribute(:file_size) { controller.view_context.number_to_human_size(record.file_size) }
+    attribute(:actions, compact: true) do
+      content_tag(:div, class: "f-c-index-actions") do
+        safe_join([
+          render_view_component(Folio::Console::Ui::ClipboardComponent.new(text: record.public_url,
+                                                                          as_icon: true,
+                                                                          icon_height: 24,
+                                                                          label: t("folio.console.public_assets.copy_url"))),
+          cell("folio/console/index/actions", record, actions: [
+            { download_original: { name: :download_original, icon: :download, url: record.public_url, download: record.file_name, skip_can_now: true } },
+            { preview: record.public_url },
+            :edit,
+            :destroy,
+          ]).call,
+        ])
+      end
+    end

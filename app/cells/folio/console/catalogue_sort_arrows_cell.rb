@@ -23,13 +23,16 @@ class Folio::Console::CatalogueSortArrowsCell < Folio::ConsoleCell
     h = request.query_parameters.dup
     h.delete("page")
 
-    if asc?
+    if desc?
+      h.delete("sort")
+    elsif asc?
       h["sort"] = desc_key
     else
       h["sort"] = asc_key
     end
 
-    "#{request.path}?#{h.to_query}"
+    query = h.to_query
+    query.present? ? "#{request.path}?#{query}" : request.path
   end
 
   def active?
@@ -45,7 +48,9 @@ class Folio::Console::CatalogueSortArrowsCell < Folio::ConsoleCell
   end
 
   def title
-    if active?
+    if desc?
+      t(".cancel_sort")
+    elsif asc?
       t(".sort_desc")
     else
       t(".sort_asc")

@@ -19,6 +19,7 @@ class TiptapInput < SimpleForm::Inputs::StringInput
                         placement_type: safe_placement_type,
                         placement_id: safe_placement_id,
                         attribute_name: attribute_name.to_s,
+                        include_content_in_editor_context: options.fetch(:include_content_in_editor_context, false),
                         latest_revision_at: latest_revision_at&.iso8601,
                         has_unsaved_changes: has_unsaved_changes?,
                         readonly: readonly?,

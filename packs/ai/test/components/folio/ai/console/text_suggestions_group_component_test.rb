@@ -76,6 +76,30 @@ class Folio::Ai::Console::TextSuggestionsGroupComponentTest < Folio::Console::Co
     assert_selector(".f-ai-input[data-f-ai-input-component-id-value='folio_ai_text_suggestions_custom_title_input']")
   end
 
+  test "uses field_keys to limit grouped suggestions" do
+    render_component do |form|
+      render_inline(Folio::Ai::Console::TextSuggestionsGroupComponent.new(form:,
+                                                                         key: :meta,
+                                                                         field_keys: [:title],
+                                                                         fields: [
+                                                                           { key: :title, input_id: "custom_title_input" },
+                                                                         ])) do
+        vc_test_controller.view_context.safe_join([
+          form.input(:title,
+                     ai: true,
+                     input_html: { id: "custom_title_input" }),
+          form.input(:perex, ai: true),
+        ])
+      end
+    end
+
+    fields = JSON.parse(page.find(".f-ai-c-text-suggestions-group")["data-f-ai-c-text-suggestions-group-fields-value"])
+
+    assert_equal [
+      { "key" => "title", "component_id" => "folio_ai_text_suggestions_custom_title_input" },
+    ], fields
+  end
+
   test "does not render without registered fields" do
     render_component do |form|
       render_inline(Folio::Ai::Console::TextSuggestionsGroupComponent.new(form:,

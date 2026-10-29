@@ -24,6 +24,22 @@ class Folio::Ai::Console::TextSuggestionsComponentTest < Folio::Console::Compone
     assert_selector(".f-ai-c-text-suggestions__regenerate")
   end
 
+  test "renders sanitized rich text and passes it to the editor" do
+    rich_text = "<ul><li><strong>Ferrari</strong> grows</li></ul><script>alert('xss')</script>"
+
+    I18n.with_locale(:en) do
+      render_inline(component(suggestions: [{ key: 1, text: rich_text }]))
+    end
+
+    assert_selector(".f-ai-c-text-suggestions__suggestion-text ul li strong", text: "Ferrari")
+    assert_no_selector(".f-ai-c-text-suggestions__suggestion-text script")
+    assert_no_text "<ul>"
+    accepted_text = page.find(".f-ai-c-text-suggestions__suggestion")["data-f-ai-c-text-suggestions-text-param"]
+
+    assert_includes accepted_text, "<ul><li><strong>Ferrari</strong> grows</li></ul>"
+    assert_not_includes accepted_text, "<script>"
+  end
+
   test "renders loading state" do
     I18n.with_locale(:en) do
       render_inline(component(suggestions: [], loading: true))

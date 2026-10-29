@@ -62,6 +62,13 @@ class Folio::Ai::SiteConcernTest < ActiveSupport::TestCase
     assert site.ai_prompt_enabled_for?(record_key: "folio_pages", key: "fallback_meta", grouped: true)
   end
 
+  test "shows AI settings by default" do
+    site = build(:folio_site)
+
+    assert site.ai_setting_visible?(record_key: "folio_pages", key: "title")
+    assert site.ai_setting_visible?(record_key: "folio_pages", key: "meta", grouped: true)
+  end
+
   test "uses provider default model when configured model is not available" do
     site = build(:folio_site,
                  ai_settings: {

@@ -20,6 +20,7 @@ module Folio::Atom
 
     klasses_for(klass:, site:).each do |klass|
       structure = {}
+      console_form_fields = klass.console_form_fields(site:)
 
       klass::STRUCTURE.each do |key, value|
         structure[key] = {
@@ -40,6 +41,8 @@ module Folio::Atom
             ]
           end
         end
+
+        structure[key].merge!(console_form_fields.fetch(key, {}))
       end
 
       attachments = klass::ATTACHMENTS.map do |key|
@@ -95,6 +98,7 @@ module Folio::Atom
         hint: I18n.t("simple_form.hints.#{klass.name.underscore}.base", default: nil).try(:html_safe),
         structure:,
         editable: klass.editable_in_console?,
+        insertable: klass.insertable_in_console?(site:),
         form_layout: klass::FORM_LAYOUT,
         title: klass.model_name.human,
         molecule: klass.molecule_component_class || klass.molecule_cell_name,

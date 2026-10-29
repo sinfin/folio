@@ -344,12 +344,14 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
     def file_links(site)
       only_path = ::Rails.application.config.folio_shared_files_between_sites
+      public_assets_site = only_path ? Folio::Current.site : site
 
       [
         link_for_site_class(site, Folio::File::Image, only_path:),
         link_for_site_class(site, Folio::File::Video, only_path:),
         link_for_site_class(site, Folio::File::Audio, only_path:),
         link_for_site_class(site, Folio::File::Document, only_path:),
+        (link_for_site_class(public_assets_site, Folio::PublicAsset, only_path:) if ::Rails.application.config.folio_public_assets_enabled),
         link_for_site_class(site, Folio::MediaSource, only_path:)
       ]
     end

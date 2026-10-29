@@ -57,6 +57,29 @@ class Folio::Ai::TextSuggestionRequestTest < ActiveSupport::TestCase
     assert_equal "Use short words.", request.job_params[:instructions]
   end
 
+  test "uses field-specific record transformation before sanitizing the form snapshot" do
+    site = create(Rails.application.config.folio_site_default_test_factory,
+                  ai_settings: ai_settings)
+    page = create(:folio_page, site:)
+    page.define_singleton_method(:folio_ai_transform_form_snapshot) do |field_key:, snapshot:|
+      snapshot.merge("title" => "<strong>#{field_key}: #{snapshot.fetch('access_wall_position')}</strong>")
+    end
+    request = build_request(site:,
+                            page:,
+                            params: {
+                              key: "title",
+                              message_bus_client_id: "client-1",
+                              current_form_snapshot_json: {
+                                "folio_page[title]" => "Whole article",
+                                "folio_page[access_wall_position]" => "3",
+                              }.to_json,
+                            })
+
+    request.stub(:record, page) do
+      assert_equal({ "title" => "title: 3" }, request.form_snapshot)
+    end
+  end
+
   test "normalizes grouped fields for child fragments" do
     site = create(Rails.application.config.folio_site_default_test_factory,
                   ai_settings: ai_settings)

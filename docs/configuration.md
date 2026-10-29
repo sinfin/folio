@@ -17,7 +17,7 @@ This chapter lists the most important configuration options for the Folio Rails 
 | Option | Default | Purpose |
 |--------|---------|---------|
 | `config.folio_crossdomain_devise` | `false` | Enable shared Devise sessions across sub-domains |
-| `config.folio_shared_files_between_sites` | `true` | Share uploaded files among all sites |
+| `config.folio_shared_files_between_sites` | `true` | Share the media library and public assets among all sites |
 | `config.folio_pages_audited` | `false` | Keep an audit trail of page changes |
 | `config.folio_pages_autosave` | `false` | Enable autosave in page forms |
 | `config.folio_console_locale` | `:cs` | Default locale in admin console |
@@ -91,8 +91,8 @@ In tests the helper base classes reset `Folio::Current` for you. In service obje
 
 - [← Back to Overview](overview.md)
 - [← Back to Emails & Templates](emails.md)
-- [Next: Testing →](testing.md) 
+- [Next: Testing →](testing.md)
 
 ---
 
-*For more details, inspect `lib/folio/engine.rb` or run `rails runner 'puts Rails.application.config.inspect'`.* 
+*For more details, inspect `lib/folio/engine.rb` or run `rails runner 'puts Rails.application.config.inspect'`.*

@@ -3,6 +3,34 @@
 require "test_helper"
 
 class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
+  test "render with explicit prose mirror node" do
+    stored_document = {
+      "type" => "doc",
+      "content" => [
+        {
+          "type" => "paragraph",
+          "content" => [{ "type" => "text", "text" => "Stored content" }]
+        }
+      ]
+    }
+    explicit_document = {
+      "type" => "doc",
+      "content" => [
+        {
+          "type" => "paragraph",
+          "content" => [{ "type" => "text", "text" => "Explicit content" }]
+        }
+      ]
+    }
+    model = Folio::Page.new(tiptap_content: { "tiptap_content" => stored_document })
+
+    render_inline(Folio::Tiptap::ContentComponent.new(record: model,
+                                                       prose_mirror_node: explicit_document))
+
+    assert_text("Explicit content")
+    refute_text("Stored content")
+  end
+
   test "render with string content" do
     tiptap_content = {
       "type" => "doc",

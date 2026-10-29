@@ -1,0 +1,24 @@
+en:
+  activerecord:
+    attributes:
+      folio/public_asset:
+        created_by_current_user: My public assets
+        query: File name
+        file_name: Name
+        file_size: Size
+        file_mime_type: Type
+        public_url: Public URL
+        download: Original
+    models:
+      folio/public_asset:
+        one: Public asset
+        other: Public assets
+  folio:
+    console:
+      actions:
+        download_original: Download original
+      public_assets:
+        copy_url: Copy public URL
+        download: Download original
+        upload: Upload file
+        replace: Replace original file

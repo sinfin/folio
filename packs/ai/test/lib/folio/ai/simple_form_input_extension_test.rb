@@ -52,6 +52,27 @@ class Folio::Ai::SimpleFormInputExtensionTest < ActionView::TestCase
     assert page.has_css?(".f-ai-input__custom-html", count: 1)
   end
 
+  %i[redactor advanced_redactor email_redactor].each do |input_type|
+    test "renders ai controls for registered persisted #{input_type} inputs" do
+      html = with_dummy_provider do
+        simple_form_for @page, url: "/" do |f|
+          concat(f.input :title, as: input_type, ai: true)
+        end
+      end
+
+      page = Capybara.string(html)
+      wrapper = page.find(".form-group.f-ai-input")
+      input = wrapper.find("textarea")
+
+      assert_includes wrapper["data-controller"].split, "f-input-redactor"
+      assert_includes wrapper["data-action"].split,
+                      "f-special-characters-popup:insertText->f-input-redactor#onSpecialCharactersInsertText"
+      assert_equal "input", input["data-f-input-redactor-target"]
+      assert_includes input["data-action"].split, "input->f-ai-input#onInput"
+      assert page.has_css?(".f-ai-input__button", count: 1)
+    end
+  end
+
   test "renders localized ai control label" do
     html = I18n.with_locale(:cs) do
       with_dummy_provider do

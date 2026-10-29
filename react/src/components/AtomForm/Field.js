@@ -32,15 +32,19 @@ class Field extends React.PureComponent {
   }
 
   render () {
-    const { atom, field, index, onChange, onValueChange, startSplittingAtom } = this.props
+    const { atom, field, index, onChange, onValueChange, rootAtoms, startSplittingAtom } = this.props
     const { meta } = atom.record
     const isCheck = meta.structure[field] && meta.structure[field].type === 'boolean'
+    const visibleIf = meta.structure[field].visible_if
+    const hiddenByCondition = visibleIf && Object.keys(visibleIf).some((key) => {
+      return atom.record.data[key] !== visibleIf[key]
+    })
 
     return (
       <div
         className={`form-group ${formGroupClassName(field, atom.errors, meta.structure)} ${isCheck ? 'form-check' : ''}`}
         ref={this.formGroupRef}
-        hidden={meta.structure[field].type === 'deprecated'}
+        hidden={meta.structure[field].type === 'deprecated' || hiddenByCondition}
       >
         <Label
           className='form-label'
@@ -54,6 +58,7 @@ class Field extends React.PureComponent {
               index={index}
               onChange={onChange}
               onValueChange={onValueChange}
+              rootAtoms={rootAtoms}
             />
           )}
           {isCheck && ' '}
@@ -68,6 +73,7 @@ class Field extends React.PureComponent {
             index={index}
             onChange={onChange}
             onValueChange={onValueChange}
+            rootAtoms={rootAtoms}
             characterCounter={meta.structure[field].character_counter}
           />
         )}

@@ -1,0 +1,19 @@
+= form_header f
+
+- if f.object.persisted?
+  .d-flex.gap-3.align-items-center.mb-3
+    = render Folio::Console::Ui::ClipboardComponent.new(text: f.object.public_url,
+                                                        as_button: true,
+                                                        button_label: t("folio.console.public_assets.copy_url"))
+    = render Folio::Console::Ui::ButtonComponent.new(label: t("folio.console.public_assets.download"),
+                                                     icon: :download,
+                                                     href: f.object.public_url,
+                                                     target: "_blank",
+                                                     rel: "noopener",
+                                                     variant: :secondary)
+
+  p.text-muted = "#{f.object.file_mime_type} · #{number_to_human_size(f.object.file_size)}"
+
+= f.input :file, as: :file, wrapper: :vertical_form, required: f.object.new_record?, label: t(f.object.new_record? ? "folio.console.public_assets.upload" : "folio.console.public_assets.replace")
+
+= form_footer f, preview_path: false

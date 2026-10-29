@@ -1,9 +1,29 @@
 # Change Log
+
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
 ### Added
+
+- **Public assets**: Add opt-in `Folio::PublicAsset` records with dedicated
+  storage and Console upload, search, preview, replacement, deletion, and
+  copy-link controls. Original-file URLs remain stable across replacements and
+  require cache revalidation. Management and navigation respect
+  `folio_shared_files_between_sites`; audio/video previews preserve their origin
+  and other uploads remain sandboxed.
+- **AI suggestions in Redactor**: Support Redactor, advanced Redactor, and email
+  Redactor inputs, including synchronizing accepted HTML with the editor.
+- **AI settings and grouped fields**: Allow sites to control field/group
+  settings visibility through `ai_setting_visible?` and let group controls
+  restrict suggestions with `field_keys`.
+- **AI form snapshots**: Add the field-specific
+  `folio_ai_transform_form_snapshot(field_key:, snapshot:)` hook before context
+  sanitization.
+- **Atom insertion constraints**: Allow atom classes to opt out of new console insertion while keeping existing atoms editable. Collection fields can assign the first value not used by sibling atoms, hide sibling-used options, and stop insertion with a configured message when all allowed values are exhausted.
+- **Atom form ordered multi-select**: Allow atom classes to configure virtual JSON-backed ordered multi-select fields, including conditional field visibility and remotely loaded options.
+- **Tiptap node overlay context**: Tiptap inputs can opt into passing their current unsaved document content with node edit and save requests. The option is disabled by default.
+- **Tiptap content rendering**: `Folio::Tiptap::ContentComponent` accepts an explicit `prose_mirror_node:` while retaining the original record as rendering context.
 - **`Folio::File#used_in_published_content?`** — live check whether a file is used in at least one published piece of content (unwraps atoms to the parent record, respects owner `published?` incl. `published_at`). Intended for host apps that derive public visibility of standalone file pages from usage.
 - **Console file usage list** now shows orphaned placements (owner deleted) with the option to remove them, plus a published/unpublished badge for each usage. The usage section is expanded when deletion is blocked.
 - **`folio:files:recalculate_placement_counts`** and **`folio:files:report_videos_without_published_usage`** rake tasks.
@@ -12,8 +32,8 @@ All notable changes to this project will be documented in this file.
   signed playback sources with backward-compatible fallbacks.
 - **Console private attachments**: `Folio::Console::PrivateAttachmentsFieldsComponent` accepts `title_input: false` to show filenames without editable title fields.
 - **Console form layout component**: Add `Folio::Console::Form::LayoutComponent`
-    for console forms with a header area, file picker column, and main content,
-    replacing ad hoc `col-md-auto` picker layouts in page and dummy blog forms.
+  for console forms with a header area, file picker column, and main content,
+  replacing ad hoc `col-md-auto` picker layouts in page and dummy blog forms.
 - **Input character counter**: Mask long displayed current counts automatically for numeric `character_counter` values, e.g. `150` derives a `999` display limit so `1000` and higher render as `*`. Pass `character_counter_auto_current_count_limit: false` to opt out.
 - **Console icons**: Add the `lock_open_variant` icon.
 - **Embed full-width iframes**: `Folio::Embed::BoxComponent` accepts `full_width_iframes: true` to let embedded iframes grow to the container width instead of stopping at their `width` attribute (560px for a URL-embedded YouTube video, 360px for Shorts). The default is `false`, so host apps opt in per site or per placement. The same option is accepted by `input as: :embed` and by `:embed` tiptap node attributes (where it may be a Proc resolved at render time) so console previews match the frontend.
@@ -31,6 +51,9 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- **AI suggestion previews**: Render supported rich-text and list markup safely
+  and use the same sanitized HTML when accepting a suggestion.
+- **Console catalogue sorting**: Sort controls now cycle through ascending, descending, and back to the default order while preserving active filters.
 - **Console AASM email modal**: State events with `email_modal: true` now open
   `Folio::Console::Aasm::EmailModalComponent` from the default console layout
   instead of raising unimplemented. `cell("folio/console/aasm/email_modal")` is
@@ -41,6 +64,7 @@ All notable changes to this project will be documented in this file.
   API.
 
 ### Fixed
+
 - **Direct S3 uploads of session attachments**: `Folio::S3::CreateFileJob` no longer raises `undefined method 'author'` after saving a `Folio::SessionAttachment::Base` record. The success broadcast now serializes session attachments with the new `Folio::Console::SessionAttachmentSerializer` (`attributes.id` is the `hash_id`, which the dropzone uses to destroy the record) instead of `Folio::Console::FileSerializer`. Previously the upload was reported to the browser as failed although the record was saved.
 - **Date-time input picker selects no text**: Fast clicks on the time arrows or a double click on a day no longer select the digits or day numbers in the Tempus Dominus widget (`user-select: none` with the `-webkit-` prefix on the widget; Tempus Dominus sets it only for buttons).
 - **Date-time input keeps the picker open while the time is adjusted**: With an empty input, the first click on an hour or minute control used to count as the first picked date, so the picker closed at once and the input got the current time shifted by one step. The picker now closes by the widget action Tempus Dominus actually runs (`picker.actions.do`): picking a day, today or clear closes it (also when the picked day was already selected, but not when min/max rejected the pick, and never for a day click with `multipleDates`); the time controls (arrows, hour/minute/second grids, AM/PM) keep it open. A change made outside the widget (typed or set by code) closes it as before, when the input is cleared, gets its first date or jumps by more than an hour, except while a press on the widget is in progress (mouse or touch), so a typed value followed by an arrow click or tap keeps it open. `display.keepOpen` and `display.inline` are honoured, and `unbind` restores the wrapped action and removes the listeners.

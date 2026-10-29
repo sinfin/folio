@@ -55,8 +55,8 @@ export function updateFormAtomValue (index, key, value) {
   return { type: UPDATE_FORM_ATOM_VALUE, index, key, value }
 }
 
-export function newAtoms (rootKey, action, indices, atomType) {
-  return { type: NEW_ATOMS, rootKey, action, indices, atomType }
+export function newAtoms (rootKey, action, indices, atomType, defaultData) {
+  return { type: NEW_ATOMS, rootKey, action, indices, atomType, defaultData }
 }
 
 export function createContentlessAtom (rootKey, action, indices, atomType) {
@@ -202,16 +202,29 @@ export const atomSelector = (substate, rootKey, index) => {
 
 export const atomTypesSelector = (state) => {
   const unsorted = []
+  const formTypes = state.atoms.form.atoms.map((atom) => atom.record.type)
 
   Object.keys(state.atoms.structures).forEach((key) => {
     const str = state.atoms.structures[key]
-    if (!str.molecule_secondary) {
+    if (!str.molecule_secondary && (str.insertable !== false || formTypes.indexOf(key) !== -1)) {
       unsorted.push({ key, title: str.title })
     }
   })
 
   return sortBy(unsorted, ['title'])
 }
+
+export const atomsOutsideFormSelector = (substate) => {
+  const { form } = substate
+  return (substate.atoms[form.rootKey] || []).filter((_atom, index) => (
+    !form.edit || !form.indices.includes(index)
+  ))
+}
+
+export const atomsInFormRootSelector = (substate) => [
+  ...atomsOutsideFormSelector(substate),
+  ...substate.form.atoms.map(({ record }) => record)
+]
 
 const serializeAtom = (state, atom) => {
   const base = {
@@ -490,7 +503,16 @@ function atomsReducer (state = initialState, action) {
       }
     }
 
-    case NEW_ATOMS:
+    case NEW_ATOMS: {
+      const defaultData = action.defaultData === undefined
+        ? atomsDefaultDataFromStructure(
+          state.structures[action.atomType].structure,
+          state.atoms[action.rootKey]
+        )
+        : action.defaultData
+
+      if (defaultData === null) return state
+
       return {
         ...state,
         form: {
@@ -506,7 +528,7 @@ function atomsReducer (state = initialState, action) {
               record: {
                 id: null,
                 type: action.atomType,
-                data: atomsDefaultDataFromStructure(state.structures[action.atomType].structure),
+                data: defaultData,
                 lodashId: uniqueId('atom_'),
                 meta: state.structures[action.atomType],
                 associations: {}
@@ -515,6 +537,7 @@ function atomsReducer (state = initialState, action) {
           ]
         }
       }
+    }
 
     case EDIT_ATOMS:
       return {
@@ -627,6 +650,14 @@ function atomsReducer (state = initialState, action) {
       }
 
     case UPDATE_FORM_ATOM_TYPE: {
+      const data = atomsDefaultDataFromStructure(
+        state.structures[action.newType].structure,
+        atomsOutsideFormSelector(state),
+        action.values
+      )
+
+      if (data === null) return state
+
       const destroyedIds = []
 
       state.form.atoms.forEach((atom) => {
@@ -647,7 +678,7 @@ function atomsReducer (state = initialState, action) {
               record: {
                 id: null,
                 type: action.newType,
-                data: action.values,
+                data,
                 lodashId: uniqueId('atom_'),
                 meta: state.structures[action.newType],
                 associations: {}
@@ -807,7 +838,14 @@ function atomsReducer (state = initialState, action) {
       }
     }
 
-    case ADD_ATOM_TO_FORM:
+    case ADD_ATOM_TO_FORM: {
+      const defaultData = atomsDefaultDataFromStructure(
+        state.structures[action.atomType].structure,
+        atomsInFormRootSelector(state)
+      )
+
+      if (defaultData === null) return state
+
       return {
         ...state,
         form: {
@@ -820,7 +858,7 @@ function atomsReducer (state = initialState, action) {
               record: {
                 id: null,
                 type: action.atomType,
-                data: atomsDefaultDataFromStructure(state.structures[action.atomType].structure),
+                data: defaultData,
                 lodashId: uniqueId('atom_'),
                 meta: state.structures[action.atomType],
                 associations: {}
@@ -829,6 +867,7 @@ function atomsReducer (state = initialState, action) {
           ]
         }
       }
+    }
 
     case MOVE_FORM_ATOM:
       return {
