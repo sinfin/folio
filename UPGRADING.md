@@ -5,19 +5,27 @@
 ### Optional public assets
 
 Set `config.folio_public_assets_enabled = true` and run `bin/rails db:migrate`.
-Folio appends its engine migration paths to the host application.
-The feature is disabled by default. Enabled apps get `Folio::File::PublicAsset`,
-a subtype stored in `folio_files`, the public `/public-assets/:token` endpoint,
-and the existing Console file library (upload, detail, replacement and deletion).
-Assets use the normal file permissions, tags, placements and file-sharing rules.
-The migration adds a nullable UUID column with a unique index to `folio_files`.
-Existing assets retain their site on replacement so file sharing cannot change
-published URL hosts.
+Folio appends its engine migration paths to the host application. The feature
+is disabled by default. The migration creates the separate
+`folio_public_assets` table with a unique UUID token; public assets are
+`Folio::PublicAsset` records and are managed in their own Console section.
+They do not use the normal media library, tags, or file placements.
 
-`Folio::File::PublicAsset#public_url` returns a stable original-file URL. Replacing
-the file keeps that URL and changes its ETag. The endpoint serves original
-bytes, requires HTTP cache revalidation and permits cross-origin embedding.
-HTML uses a sandbox that allows scripts without access to the site's origin.
+`Folio::PublicAsset#public_url` returns the stable `/public-assets/:token` URL
+for the original file. Replacing a file keeps that URL and changes its ETag.
+Files use a dedicated S3 path under
+`<project>/<environment>/public_assets`.
+
+Console listings, permissions, and navigation respect
+`folio_shared_files_between_sites`. Shared access includes existing assets
+without changing their original site or public URL; disabling sharing restores
+site-scoped management.
+
+The public endpoint requires HTTP cache revalidation and permits cross-origin
+embedding. HTML and other non-media uploads use `sandbox allow-scripts` without
+access to the site's origin. Native audio/video previews preserve their origin
+so follow-up media requests continue to work.
+
 ### Password sign-ins are remembered
 
 `POST /users/sign_in` now sets a remember cookie even though the form sends no
