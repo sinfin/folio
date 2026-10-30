@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 class Folio::Console::Tiptap::Overlay::Form::InputComponent < Folio::Console::ApplicationComponent
-  def initialize(f:, key:, attr_config:)
+  def initialize(f:, key:, attr_config:, usage_record: nil)
     @f = f
     @key = key
     @attr_config = attr_config
+    @usage_record = usage_record
   end
 
   private
@@ -19,6 +20,7 @@ class Folio::Console::Tiptap::Overlay::Form::InputComponent < Folio::Console::Ap
           f: @f,
           key: @key,
           attr_config: @attr_config,
+          usage_record: @usage_record,
         ))
       when :folio_attachment
         if @attr_config[:has_many]
@@ -95,7 +97,8 @@ class Folio::Console::Tiptap::Overlay::Form::InputComponent < Folio::Console::Ap
       content_tag(:div, class: "f-c-tiptap-overlay-form__react-file-picker f-c-tiptap-overlay-form__react-file-picker--#{@key}") do
         helpers.file_picker(f: @f,
                             placement_key: @attr_config[:placement_key],
-                            file_klass: @attr_config[:file_type].constantize)
+                            file_klass: @attr_config[:file_type].constantize,
+                            usage_record: @usage_record)
       end
     end
 

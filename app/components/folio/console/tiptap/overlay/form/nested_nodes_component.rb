@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 class Folio::Console::Tiptap::Overlay::Form::NestedNodesComponent < Folio::Console::ApplicationComponent
-  def initialize(f:, key:, attr_config:)
+  def initialize(f:, key:, attr_config:, usage_record: nil)
     @f = f
     @key = key
     @attr_config = attr_config
+    @usage_record = usage_record
   end
 
   private
@@ -48,7 +49,8 @@ class Folio::Console::Tiptap::Overlay::Form::NestedNodesComponent < Folio::Conso
     def nested_node_item_fields(nested_f, nested_node)
       content_tag(:div, class: "f-c-tiptap-overlay-form-nested-nodes__item-fields") do
         render(Folio::Console::Tiptap::Overlay::Form::LayoutComponent.new(f: nested_f,
-                                                                          node: nested_node))
+                                                                          node: nested_node,
+                                                                          usage_record: @usage_record))
       end
     end
 

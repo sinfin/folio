@@ -32,7 +32,8 @@ window.Folio.Stimulus.register('f-c-files-picker', class extends window.Stimulus
     inReact: { type: Boolean, default: false },
     reactFile: { type: Object, default: {} },
     serializedFileJson: String,
-    asFilePlacement: { type: Boolean, default: false }
+    asFilePlacement: { type: Boolean, default: false },
+    usageRecord: { type: String, default: '' }
   }
 
   connect () {
@@ -132,7 +133,8 @@ window.Folio.Stimulus.register('f-c-files-picker', class extends window.Stimulus
     modal.dispatchEvent(new CustomEvent('f-c-files-index-modal:openWithType', {
       detail: {
         fileType: this.fileTypeValue,
-        trigger: this.element
+        trigger: this.element,
+        usageRecord: this.usageRecordValue
       }
     }))
   }

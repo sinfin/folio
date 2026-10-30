@@ -13,6 +13,7 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
     fileType: String,
     fileName: String,
     templateUrl: { type: String, default: '' },
+    usageRecord: { type: String, default: '' },
     editable: { type: Boolean, default: false },
     destroyable: { type: Boolean, default: false },
     selectable: { type: Boolean, default: false },
@@ -161,6 +162,7 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
     url.searchParams.set('add_to_batch', addToBatch)
     url.searchParams.set('editable', this.editableValue)
     url.searchParams.set('destroyable', this.destroyableValue)
+    if (this.usageRecordValue) url.searchParams.set('usage_record', this.usageRecordValue)
 
     window.Folio.Api.apiGet(url.toString()).catch((error) => {
       if (!handleErrors) return
