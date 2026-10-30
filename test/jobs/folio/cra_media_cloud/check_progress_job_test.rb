@@ -349,13 +349,17 @@ class Folio::CraMediaCloud::CheckProgressJobTest < ActiveJob::TestCase
     video = create_test_video_in_processing_state
     video.update!(remote_services_data: video.remote_services_data.merge(
       "processing_state" => "full_media_processing",
-      "reference_id" => "REF123"
+      "reference_id" => "REF123",
+      "video_aspect" => { "width" => 9, "height" => 16 }
     ))
 
     api_response = {
       "id" => "JOB123", "status" => "PROCESSING", "progress" => 0.5,
       "lastModified" => Time.current.iso8601,
-      "outputParams" => { "duration" => 600.0 },
+      "outputParams" => {
+        "duration" => 600.0,
+        "aspect" => { "width" => 16, "height" => 9 },
+      },
       "messages" => [
         { "createdDate" => "2026-02-25T10:00:00Z", "type" => "INFO", "message" => "validation started at host vodenc1" },
         { "createdDate" => "2026-02-25T10:00:05Z", "type" => "INFO", "message" => "processing started at host vodenc1" },
@@ -378,6 +382,8 @@ class Folio::CraMediaCloud::CheckProgressJobTest < ActiveJob::TestCase
 
     video.reload
     assert_equal 600.0, video.remote_services_data["video_duration"]
+    assert_equal({ "width" => 16, "height" => 9 },
+                 video.remote_services_data["video_aspect"])
     assert_includes video.remote_services_data["phases_completed"], "audio"
   end
 
@@ -401,7 +407,10 @@ class Folio::CraMediaCloud::CheckProgressJobTest < ActiveJob::TestCase
       "id" => "JOB123", "status" => "DONE", "progress" => 1.0,
       "lastModified" => Time.current.iso8601,
       "output" => output,
-      "outputParams" => { "duration" => 120.0 },
+      "outputParams" => {
+        "duration" => 120.0,
+        "aspect" => { "width" => 9, "height" => 16 },
+      },
       "messages" => []
     }
 
@@ -419,6 +428,9 @@ class Folio::CraMediaCloud::CheckProgressJobTest < ActiveJob::TestCase
     video.reload
     assert_equal "full_media_processed", video.remote_services_data["processing_state"]
     assert_equal 100.0, video.remote_services_data["progress_percentage"]
+    assert_equal 120.0, video.remote_services_data["video_duration"]
+    assert_equal({ "width" => 9, "height" => 16 },
+                 video.remote_services_data["video_aspect"])
     assert_equal "ready", video.aasm_state
   end
 

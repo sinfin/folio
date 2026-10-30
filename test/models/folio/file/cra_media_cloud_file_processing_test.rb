@@ -112,6 +112,55 @@ class Folio::File::CraMediaCloudFileProcessingTest < ActiveJob::TestCase
     end
   end
 
+  test "cra_media_cloud_vertical? uses persisted CRA output aspect" do
+    video = TestVideoFile.new(remote_services_data: {
+      "video_aspect" => { "width" => 9, "height" => 16 },
+    })
+
+    assert video.cra_media_cloud_vertical?
+  end
+
+  test "cra_media_cloud_vertical? ignores portrait source dimensions without CRA output aspect" do
+    video = TestVideoFile.new(file_width: 720,
+                              file_height: 1280,
+                              remote_services_data: {})
+    video_without_remote_data = TestVideoFile.new(remote_services_data: nil)
+    video_with_invalid_remote_data = TestVideoFile.new(remote_services_data: [])
+
+    assert_not video.cra_media_cloud_vertical?
+    assert_not video_without_remote_data.cra_media_cloud_vertical?
+    assert_not video_with_invalid_remote_data.cra_media_cloud_vertical?
+  end
+
+  test "cra_media_cloud_vertical? rejects non-vertical or invalid CRA output aspect" do
+    horizontal = TestVideoFile.new(remote_services_data: {
+      "video_aspect" => { "width" => 16, "height" => 9 },
+    })
+    square = TestVideoFile.new(remote_services_data: {
+      "video_aspect" => { "width" => 1, "height" => 1 },
+    })
+    invalid = TestVideoFile.new(remote_services_data: {
+      "video_aspect" => { "width" => 0, "height" => 16 },
+    })
+
+    assert_not horizontal.cra_media_cloud_vertical?
+    assert_not square.cra_media_cloud_vertical?
+    assert_not invalid.cra_media_cloud_vertical?
+  end
+
+  test "console serializer exposes CRA player orientation" do
+    video = build_saved_video
+    video.update!(remote_services_data: video.remote_services_data.merge(
+      "video_aspect" => { "width" => 9, "height" => 16 }
+    ))
+
+    attributes = Folio::Console::FileSerializer.new(video)
+                                               .serializable_hash
+                                               .dig(:data, :attributes)
+
+    assert attributes[:player_vertical]
+  end
+
   private
     def build_saved_video
       video = TestVideoFile.new(site: get_any_site)

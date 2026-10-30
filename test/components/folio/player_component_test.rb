@@ -20,4 +20,36 @@ class Folio::PlayerComponentTest < Folio::ComponentTest
     assert_selector(".f-player")
     assert_selector(".f-player--video")
   end
+
+  def test_explicit_vertical_video_gets_vertical_modifier_and_stimulus_value
+    file = create(:folio_file_video)
+    file.file_width = 1920
+    file.file_height = 1080
+
+    render_inline(Folio::PlayerComponent.new(file:, vertical: true))
+
+    assert_selector(".f-player--video.f-player--vertical")
+    assert_selector('[data-f-player-vertical-value="true"]')
+  end
+
+  def test_portrait_source_video_has_no_vertical_modifier_by_default
+    file = create(:folio_file_video)
+    file.file_width = 1080
+    file.file_height = 1920
+
+    render_inline(Folio::PlayerComponent.new(file:))
+
+    assert_selector(".f-player--video")
+    assert_no_selector(".f-player--vertical")
+  end
+
+  def test_explicit_horizontal_video_has_no_vertical_modifier
+    file = create(:folio_file_video)
+    file.file_width = 1080
+    file.file_height = 1920
+
+    render_inline(Folio::PlayerComponent.new(file:, vertical: false))
+
+    assert_no_selector(".f-player--vertical")
+  end
 end
