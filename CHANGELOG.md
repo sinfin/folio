@@ -76,16 +76,20 @@ All notable changes to this project will be documented in this file.
 - **Console form saving loader**: Use a transparent spinner and keep console loaders light-only, ignoring OS dark mode.
 - **Batch file download**: `Folio::File::BatchDownloadJob` requires `zip`
   itself instead of relying on the host app to load rubyzip. Without it the job
-  failed with "uninitialized constant Zip" (the dummy app's test failed too).
-- **Sidekiq web UI**: Routes load `sidekiq-cron` before `sidekiq/cron/web`,
-  which in sidekiq-cron 2 needs the gem's configuration.
+  failed with "uninitialized constant Zip" (the dummy app's test failed too). It
+  uses the `create:` keyword, which rubyzip 2.4 and 3.x both accept.
+- **Sidekiq web UI with sidekiq-cron 2**: Routes load `sidekiq/cron`, where the
+  configuration read by the sidekiq-cron 2 web extension lives. Without it the
+  cron page raised `NoMethodError` unless the host app's Gemfile loaded the gem.
 
 ### Security
 
-- **rubyzip 3.4 and sidekiq-cron 2.4**: Require `rubyzip ~> 3.4`, which fixes
-  path traversal in `Zip::Entry#extract` (CVE-2026-85396), and
-  `sidekiq-cron ~> 2.4`, which fixes reflected XSS on the cron page of the
-  Sidekiq web UI (CVE-2025-67202). Both are major upgrades; see `UPGRADING.md`.
+- **rubyzip 3.x and sidekiq-cron 2.x allowed**: Folio accepts `rubyzip`
+  `>= 2.4, < 4` and `sidekiq-cron` `>= 1.10.1, < 3`, so host apps can install
+  rubyzip 3.4+ (fixes path traversal in `Zip::Entry#extract`, CVE-2026-85396)
+  and sidekiq-cron 2.4+ (fixes reflected XSS on the cron page of the Sidekiq web
+  UI, CVE-2025-67202). Folio does not force them; both are major upgrades of
+  the host app, see `UPGRADING.md`.
 
 ## [7.7.2] - 2026-07-23
 

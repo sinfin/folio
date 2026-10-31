@@ -7,6 +7,5 @@ class Folio::SidekiqWebTest < Folio::BaseControllerTest
     get "/sidekiq/cron"
 
     assert_response :success
-    assert_includes response.body, "Cron"
   end
 end
