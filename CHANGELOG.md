@@ -74,6 +74,18 @@ All notable changes to this project will be documented in this file.
 - **Embed HTML rendering**: Iframes pasted as raw HTML (e.g. a copied YouTube `<iframe>` embed code) now scale down using the aspect ratio derived from their `width`/`height` attributes, instead of keeping a fixed pixel size that overflowed and got clipped in narrower containers. They still stop at their attribute width in wider containers unless `full_width_iframes: true` is passed.
 - **Multi picker fields "add embed"**: The add-embed button now resolves the multi picker and adds the row to its `f-nested-fields`, instead of taking the first `f-nested-fields` in the whole form. Previously the click silently added the embed row to an unrelated nested-fields collection whenever the form rendered another `folio_nested_fields` before the picker, so the button appeared to do nothing. The lookup falls back to the picker within the form because the source header holding the button is detached into `.f-c-tiptap-simple-form-wrap` and is then no longer a descendant of its own picker.
 - **Console form saving loader**: Use a transparent spinner and keep console loaders light-only, ignoring OS dark mode.
+- **Batch file download**: `Folio::File::BatchDownloadJob` requires `zip`
+  itself instead of relying on the host app to load rubyzip. Without it the job
+  failed with "uninitialized constant Zip" (the dummy app's test failed too).
+- **Sidekiq web UI**: Routes load `sidekiq-cron` before `sidekiq/cron/web`,
+  which in sidekiq-cron 2 needs the gem's configuration.
+
+### Security
+
+- **rubyzip 3.4 and sidekiq-cron 2.4**: Require `rubyzip ~> 3.4`, which fixes
+  path traversal in `Zip::Entry#extract` (CVE-2026-85396), and
+  `sidekiq-cron ~> 2.4`, which fixes reflected XSS on the cron page of the
+  Sidekiq web UI (CVE-2025-67202). Both are major upgrades; see `UPGRADING.md`.
 
 ## [7.7.2] - 2026-07-23
 

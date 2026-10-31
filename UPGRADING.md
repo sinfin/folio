@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+### rubyzip 3 and sidekiq-cron 2
+
+Folio requires `rubyzip ~> 3.4` and `sidekiq-cron ~> 2.4`, the first versions
+that fix CVE-2026-85396 (path traversal in `Zip::Entry#extract`) and
+CVE-2025-67202 (reflected XSS on the cron page of the Sidekiq web UI).
+
+**Action required:**
+
+- Host apps that pin `rubyzip` or `sidekiq-cron` in their Gemfile must allow
+  these versions.
+- rubyzip 3 changes its API. Code that calls rubyzip directly must follow the
+  [upgrade guide](https://github.com/rubyzip/rubyzip/wiki/Updating-to-version-3.x),
+  e.g. `Zip::File.open(path, Zip::File::CREATE)` becomes
+  `Zip::File.open(path, create: true)`.
+- sidekiq-cron 2 adds namespaces (jobs without one belong to `default`) and
+  renames `Sidekiq::Cron::Job#enque!` to `enqueue!`. Read its
+  [changelog](https://github.com/sidekiq-cron/sidekiq-cron/blob/master/CHANGELOG.md)
+  for 2.0 to 2.4 and check the cron page of the Sidekiq web UI after the deploy.
+
 ### Optional public assets
 
 Set `config.folio_public_assets_enabled = true` and run `bin/rails db:migrate`.

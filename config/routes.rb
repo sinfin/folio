@@ -360,6 +360,8 @@ Folio::Engine.routes.draw do
   get "/sitemaps/:id.:format(.:compression)", to: "sitemaps#show"
 
   require "sidekiq/web"
+  # sidekiq/cron/web needs the configuration of sidekiq-cron 2, which only the gem's main file loads.
+  require "sidekiq-cron"
   require "sidekiq/cron/web"
 
   authenticate :user, lambda { |user| user.can_manage_sidekiq? } do

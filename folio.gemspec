@@ -70,11 +70,11 @@ Gem::Specification.new do |s|
   s.add_dependency "recaptcha", "4.13.1"
   s.add_dependency "redcarpet"
   s.add_dependency "responders"
-  s.add_dependency "rubyzip", "~> 2.4" # 3.0 have some api changes see https://github.com/rubyzip/rubyzip/wiki/Updating-to-version-3.x
+  s.add_dependency "rubyzip", "~> 3.4" # 3.4 fixes path traversal in Zip::Entry#extract (CVE-2026-85396)
   s.add_dependency "sass-rails"
   s.add_dependency "show_for"
   s.add_dependency "httpparty"
-  s.add_dependency "sidekiq-cron", "~> 1.10.1"
+  s.add_dependency "sidekiq-cron", "~> 2.4" # 2.4 fixes reflected XSS in the web UI (CVE-2025-67202)
   s.add_dependency "sidekiq", "~> 6.5"
   s.add_dependency "activejob-uniqueness", ">= 0.3.0"
   s.add_dependency "simple_form"

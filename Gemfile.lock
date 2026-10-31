@@ -66,11 +66,11 @@ PATH
       redcarpet
       redis
       responders
-      rubyzip (~> 2.4)
+      rubyzip (~> 3.4)
       sass-rails
       show_for
       sidekiq (~> 6.5)
-      sidekiq-cron (~> 1.10.1)
+      sidekiq-cron (~> 2.4)
       simple_form
       sitemap_generator
       slim
@@ -261,6 +261,9 @@ GEM
       bigdecimal
       rexml
     crass (1.0.6)
+    cronex (0.15.0)
+      tzinfo
+      unicode (>= 0.4.4.5)
     css_parser (1.21.1)
       addressable
     csv (3.3.5)
@@ -686,7 +689,7 @@ GEM
     ruby-vips (2.3.0)
       ffi (~> 1.12)
       logger
-    rubyzip (2.4.1)
+    rubyzip (3.7.0)
     sass-rails (6.0.0)
       sassc-rails (~> 2.1, >= 2.1.1)
     sassc (2.4.0)
@@ -712,10 +715,11 @@ GEM
       connection_pool (>= 2.2.5, < 3)
       rack (~> 2.0)
       redis (>= 4.5.0, < 5)
-    sidekiq-cron (1.10.1)
-      fugit (~> 1.8)
+    sidekiq-cron (2.4.0)
+      cronex (>= 0.13.0)
+      fugit (~> 1.8, >= 1.11.1)
       globalid (>= 1.0.1)
-      sidekiq (>= 6)
+      sidekiq (>= 6.5.0)
     simple_form (5.4.0)
       actionpack (>= 7.0)
       activemodel (>= 7.0)
@@ -772,6 +776,7 @@ GEM
     uglifier (4.2.1)
       execjs (>= 0.3.0, < 3)
     unaccent (0.4.0)
+    unicode (0.4.4.5)
     unicode-display_width (3.2.0)
       unicode-emoji (~> 4.1)
     unicode-emoji (4.1.0)
