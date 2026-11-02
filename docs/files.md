@@ -146,6 +146,41 @@ Folio can automatically extract full **EXIF & IPTC** metadata from uploaded imag
 
 ---
 
+## Shared file usage for child records
+
+Records rendered inside one published parent can share that parent's file
+license. Both models must include `Folio::HasAttachments` and explicitly name
+the associations:
+
+```ruby
+class Blog::Article < ApplicationRecord
+  include Folio::HasAttachments
+  has_many :posts, class_name: "Blog::Post", inverse_of: :article
+
+  self.folio_file_usage_child_associations = [:posts]
+end
+
+class Blog::Post < ApplicationRecord
+  include Folio::HasAttachments
+  belongs_to :article, class_name: "Blog::Article", inverse_of: :posts
+
+  self.folio_file_usage_parent_association = :article
+end
+```
+
+The parent association must be a direct, non-polymorphic `belongs_to`.
+The parent must expose `published` and provide `site` / `site_id` for site-based
+licenses. Published children and their atoms count under the parent's ID and
+site; unpublished children and unpublished parents do not consume a usage.
+Children without a `published` column follow their parent's publication state.
+The same photo across the parent and its children consumes one usage. A new
+child's picker receives the persisted parent's signed context, with the same
+permission and site checks as a picker on the parent.
+
+When enabling this configuration for existing records, recalculate the affected
+files with `update_file_placements_counts!` as part of the host application's
+post-deploy work so stored counts match the new grouping.
+
 ## Navigation
 
 - [← Back to Overview](overview.md)

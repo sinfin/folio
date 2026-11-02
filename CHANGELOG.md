@@ -66,6 +66,8 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- **File usage**: Allow child records to share a published parent's license in file pickers, validation and usage counts, including publication changes.
+
 - **File usage**: Count each published record once and allow file pickers to reuse files already attached to the edited record.
 
 - **Direct S3 uploads of session attachments**: `Folio::S3::CreateFileJob` no longer raises `undefined method 'author'` after saving a `Folio::SessionAttachment::Base` record. The success broadcast now serializes session attachments with the new `Folio::Console::SessionAttachmentSerializer` (`attributes.id` is the `hash_id`, which the dropzone uses to destroy the record) instead of `Folio::Console::FileSerializer`. Previously the upload was reported to the browser as failed although the record was saved.

@@ -4,6 +4,11 @@ module Folio::HasAttachments
   extend ActiveSupport::Concern
 
   included do
+    # Child records can share their parent's file usage instead of consuming
+    # separate licenses. Both sides explicitly name their associations.
+    class_attribute :folio_file_usage_parent_association, default: nil
+    class_attribute :folio_file_usage_child_associations, default: []
+
     has_many :file_placements, class_name: "Folio::FilePlacement::Base",
                                as: :placement,
                                dependent: :destroy
@@ -424,6 +429,7 @@ module Folio::HasAttachments
         placements = placements.or(atom_placements)
       end
 
+      placements = placements.or(Folio::File::UsageRecord.new(self).placements)
       Folio::File.where(id: placements.select(:file_id)).find_each(&:update_file_placements_counts!)
     end
 
@@ -432,10 +438,13 @@ module Folio::HasAttachments
       return unless respond_to?(:published_changed?) && respond_to?(:published)
       return unless published_changed? && published == true
 
-      get_files_with_usage_constraints.each do |file|
-        validation_site = respond_to?(:site) ? site : Folio::Current.site
+      usage_record = Folio::File::UsageRecord.new(self)
+      return unless usage_record.record.try(:published) == true
 
-        if file.usage_limit_exceeded?(site: validation_site)
+      get_files_with_usage_constraints.each do |file|
+        validation_site = usage_record.record.respond_to?(:site) ? usage_record.record.site : Folio::Current.site
+
+        if !usage_record.reuses?(file) && file.usage_limit_exceeded?(site: validation_site)
           errors.add(:base, I18n.t("errors.messages.cannot_publish_with_files_over_usage_limit",
                                    name: file.file_name,
                                    limit: file.effective_attribution_max_usage_count(site: validation_site)))
@@ -463,6 +472,11 @@ module Folio::HasAttachments
 
       # Get files from placements that have HasUsageConstraints concern
       files = placements.filter_map(&:file).compact.uniq
+
+      if self.class.folio_file_usage_child_associations.any?
+        child_placements = Folio::File::UsageRecord.new(self).child_placements
+        files |= Folio::File.where(id: child_placements.select(:file_id)).to_a
+      end
 
       files.select { |file| file.class.included_modules.include?(Folio::File::HasUsageConstraints) }
     end

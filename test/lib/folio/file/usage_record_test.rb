@@ -87,6 +87,86 @@ class Folio::File::UsageRecordTest < ActiveSupport::TestCase
     end
   end
 
+  test "parent and child placements consume one usage including a parent site's count" do
+    parent = ParentRecord.create!(site: @site, published: true)
+    child = ChildRecord.create!(parent:)
+    parent.create_cover_placement!(file: @image)
+    child.image_placements.create!(file: @image)
+
+    assert_equal 1, Folio::File::PublishedUsageCounter.count(@image)
+    assert_equal 1, Folio::File::PublishedUsageCounter.count(@image, site: @site)
+  end
+
+  test "a new child can select a photo used only by a sibling" do
+    parent = ParentRecord.create!(site: @site, published: true)
+    ChildRecord.create!(parent:).image_placements.create!(file: @image)
+    context = Folio::File::UsageRecord.new(ChildRecord.new(parent:))
+
+    assert_equal Folio::File::UsageRecord.sgid_for(parent), context.sgid
+    assert context.reuses?(@image)
+  end
+
+  test "a signed child context is checked against its parent site" do
+    other_site = create_site(force: true)
+    parent = ParentRecord.create!(site: other_site, published: true)
+    child = ChildRecord.create!(parent:)
+    unrestricted_ability = ability(@superadmin)
+    unrestricted_ability.can :do_anything, :all
+
+    assert_nil Folio::File::UsageRecord.from_param(child.to_sgid(for: Folio::File::UsageRecord::SGID_PURPOSE).to_s,
+                                                 user: @superadmin, ability: unrestricted_ability)
+  end
+
+  test "child placement validation uses the parent site without a site on the child" do
+    with_config(folio_shared_files_between_sites: true) do
+      other_site = create_site(force: true)
+      parent = ParentRecord.create!(site: other_site, published: true)
+      child = ChildRecord.create!(parent:)
+      @image.allowed_sites = [other_site]
+
+      assert child.image_placements.build(file: @image).valid?
+    end
+  end
+
+  test "a child without a published column cannot bypass an exhausted license" do
+    @article.create_cover_placement!(file: @image)
+    parent = ParentRecord.create!(site: @site, published: true)
+    child = ChildRecord.create!(parent:)
+
+    assert_not child.image_placements.build(file: @image).valid?
+  end
+
+  test "a child without a published column cannot bypass site restrictions" do
+    with_config(folio_shared_files_between_sites: true) do
+      @image.allowed_sites = [create_site(force: true)]
+      parent = ParentRecord.create!(site: @site, published: true)
+      child = ChildRecord.create!(parent:)
+
+      assert_not child.image_placements.build(file: @image).valid?
+    end
+  end
+
+  class ParentRecord < ActiveRecord::Base
+    self.table_name = "dummy_blog_articles"
+    include Folio::HasAttachments
+
+    belongs_to :site, class_name: "Folio::Site"
+    has_many :children, class_name: "Folio::File::UsageRecordTest::ChildRecord",
+                        foreign_key: :dummy_blog_article_id, inverse_of: :parent
+
+    self.folio_file_usage_child_associations = [:children]
+  end
+
+  class ChildRecord < ActiveRecord::Base
+    self.table_name = "dummy_blog_author_article_links"
+    include Folio::HasAttachments
+
+    belongs_to :parent, class_name: "Folio::File::UsageRecordTest::ParentRecord",
+                        foreign_key: :dummy_blog_article_id, inverse_of: :children
+
+    self.folio_file_usage_parent_association = :parent
+  end
+
   private
     def ability(user)
       Folio::Ability.new(user, @site)

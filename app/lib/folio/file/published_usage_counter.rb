@@ -112,28 +112,32 @@ class Folio::File::PublishedUsageCounter
 
     def usage_select_sql(file_id_sql:, file_ids_sql:, placement_type:, klass:)
       table_name = connection.quote_table_name(klass.table_name)
+      usage_class, usage_table, parent_join = usage_record_context(klass:)
 
       <<~SQL.squish
         SELECT DISTINCT folio_file_published_usage_placements.file_id,
-                        #{usage_record_type_id(klass)} AS usage_record_type,
-                        #{table_name}.id AS usage_record_id
+                        #{usage_record_type_id(usage_class)} AS usage_record_type,
+                        #{usage_table}.id AS usage_record_id
           FROM folio_file_placements folio_file_published_usage_placements
           JOIN #{table_name}
             ON #{table_name}.id = folio_file_published_usage_placements.placement_id
+          #{parent_join}
          WHERE folio_file_published_usage_placements.placement_type = #{connection.quote(placement_type)}
            #{file_condition_sql(file_id_sql:, file_ids_sql:)}
-           #{site_condition_sql(table_name, klass)}
+           #{site_condition_sql(usage_table, usage_class)}
            #{published_condition_sql(table_name, klass)}
+           #{published_condition_sql(usage_table, usage_class) if parent_join.present?}
       SQL
     end
 
     def atom_usage_select_sql(file_id_sql:, file_ids_sql:, placement_type:, klass:)
       table_name = connection.quote_table_name(klass.table_name)
+      usage_class, usage_table, parent_join = usage_record_context(klass:)
 
       <<~SQL.squish
         SELECT DISTINCT folio_file_published_usage_placements.file_id,
-                        #{usage_record_type_id(klass)} AS usage_record_type,
-                        #{table_name}.id AS usage_record_id
+                        #{usage_record_type_id(usage_class)} AS usage_record_type,
+                        #{usage_table}.id AS usage_record_id
           FROM folio_file_placements folio_file_published_usage_placements
           JOIN folio_atoms folio_file_published_usage_atoms
             ON folio_file_published_usage_atoms.id = folio_file_published_usage_placements.placement_id
@@ -141,18 +145,37 @@ class Folio::File::PublishedUsageCounter
           JOIN #{table_name}
             ON #{table_name}.id = folio_file_published_usage_atoms.placement_id
            AND folio_file_published_usage_atoms.placement_type = #{connection.quote(placement_type)}
+          #{parent_join}
          WHERE TRUE
            #{file_condition_sql(file_id_sql:, file_ids_sql:)}
-           #{site_condition_sql(table_name, klass)}
+           #{site_condition_sql(usage_table, usage_class)}
            #{published_condition_sql(table_name, klass)}
+           #{published_condition_sql(usage_table, usage_class) if parent_join.present?}
       SQL
     end
 
     def countable_record_class?(klass)
       return false unless klass && klass < ActiveRecord::Base
-      return false if site && !klass.column_names.include?("site_id")
+      usage_class = Folio::File::UsageRecord.parent_reflection_for(klass)&.klass || klass
+      return false if site && !usage_class.column_names.include?("site_id")
 
       true
+    end
+
+    def usage_record_context(klass:)
+      table_name = connection.quote_table_name(klass.table_name)
+      reflection = Folio::File::UsageRecord.parent_reflection_for(klass)
+      return [klass, table_name, nil] unless reflection
+
+      parent_class = reflection.klass
+      parent_table = "folio_file_usage_parent"
+      parent_join = <<~SQL.squish
+        JOIN #{connection.quote_table_name(parent_class.table_name)} #{parent_table}
+          ON #{parent_table}.#{connection.quote_column_name(reflection.association_primary_key)} =
+             #{table_name}.#{connection.quote_column_name(reflection.foreign_key)}
+      SQL
+
+      [parent_class, parent_table, parent_join]
     end
 
     def file_condition_sql(file_id_sql:, file_ids_sql:)
