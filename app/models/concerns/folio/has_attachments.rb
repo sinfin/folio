@@ -429,7 +429,9 @@ module Folio::HasAttachments
         placements = placements.or(atom_placements)
       end
 
-      placements = placements.or(Folio::File::UsageRecord.new(self).placements)
+      if self.class.folio_file_usage_child_associations.any?
+        placements = placements.or(Folio::File::UsageRecord.new(self).child_placements)
+      end
       Folio::File.where(id: placements.select(:file_id)).find_each(&:update_file_placements_counts!)
     end
 
