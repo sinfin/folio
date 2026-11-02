@@ -20,7 +20,14 @@ class Folio::File::UsageRecord
 
   def self.parent_reflection_for(klass)
     association = klass.try(:folio_file_usage_parent_association)
-    klass.reflect_on_association(association) if association
+    return unless association
+
+    reflection = klass.reflect_on_association(association)
+    if reflection&.polymorphic?
+      raise ArgumentError, "#{klass.name}.#{association} must be a non-polymorphic belongs_to association for shared file usage"
+    end
+
+    reflection
   end
 
   def self.record_for(record)
@@ -85,8 +92,9 @@ class Folio::File::UsageRecord
   end
 
   private
-    # Mirrors Folio::FilePlacement::Base#validate_usage_limit_if_published_placement,
-    # which skips the usage limit for files already placed in a published record.
+    # The in-memory flag is already true while publishing a draft. Reuse requires
+    # the record to be published in the database too, otherwise its own draft
+    # placements could bypass a license already consumed by another record.
     def published?
       record.try(:persisted?) && record.try(:published) == true &&
         record.class.where(id: record.id, published: true).exists?

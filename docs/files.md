@@ -169,6 +169,14 @@ end
 ```
 
 The parent association must be a direct, non-polymorphic `belongs_to`.
+Polymorphic parents raise an `ArgumentError` identifying the misconfigured
+association.
+
+For STI models, set `folio_file_usage_parent_association` on the child model's
+Active Record base class, not only on a subclass. Subclasses inherit the
+configuration. File placements store `base_class.name`, and the usage counter
+resolves the parent association from that base class.
+
 The parent must expose `published` and provide `site` / `site_id` for site-based
 licenses. Published children and their atoms count under the parent's ID and
 site; unpublished children and unpublished parents do not consume a usage.

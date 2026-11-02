@@ -66,7 +66,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
-- **File usage**: Allow child records to share a published parent's license in file pickers, validation and usage counts, including publication changes.
+- **File usage**: Allow child records to share a published parent's license in file pickers, validation and usage counts, including publication changes. Unsupported polymorphic parents report a configuration error.
 
 - **File usage**: Count each published record once and allow file pickers to reuse files already attached to the edited record.
 

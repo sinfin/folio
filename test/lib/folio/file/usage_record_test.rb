@@ -146,6 +146,93 @@ class Folio::File::UsageRecordTest < ActiveSupport::TestCase
     end
   end
 
+  test "only published children share their parent's file usage" do
+    parent = ParentRecord.create!(site: @site, published: true)
+    published_image = create(:folio_file_image, site: @site)
+    PublishedChildRecord.create!(parent:, published: false).image_placements.create!(file: @image)
+    PublishedChildRecord.create!(parent:, published: true).image_placements.create!(file: published_image)
+    context = Folio::File::UsageRecord.new(parent)
+
+    assert_not context.reuses?(@image)
+    assert context.reuses?(published_image)
+    assert_equal 0, Folio::File::PublishedUsageCounter.count(@image)
+    assert_equal 1, Folio::File::PublishedUsageCounter.count(published_image, site: @site)
+  end
+
+  test "child atom usage requires both child and parent to be published" do
+    parent = ParentRecord.create!(site: @site, published: true)
+    child = PublishedChildRecord.create!(parent:, published: false)
+    create_atom(Dummy::Atom::Contents::ImageAndText, placement: child, cover: @image, content: "content")
+    assert_equal 0, Folio::File::PublishedUsageCounter.count(@image)
+
+    child.update!(published: true)
+    assert_equal 1, Folio::File::PublishedUsageCounter.count(@image, site: @site)
+
+    parent.update!(published: false)
+    assert_equal 0, Folio::File::PublishedUsageCounter.count(@image)
+  end
+
+  test "parent publication changes refresh usage of published child files" do
+    parent = ParentRecord.create!(site: @site, published: false)
+    PublishedChildRecord.create!(parent:, published: true).image_placements.create!(file: @image)
+    draft_image = create(:folio_file_image, site: @site)
+    PublishedChildRecord.create!(parent:, published: false).image_placements.create!(file: draft_image)
+    assert_equal 0, @image.reload.published_usage_count
+
+    parent.update!(published: true)
+    assert_equal 1, @image.reload.published_usage_count
+    assert_equal 0, draft_image.reload.published_usage_count
+
+    parent.update!(published: false)
+    assert_equal 0, @image.reload.published_usage_count
+  end
+
+  test "publishing a parent checks exhausted licenses in its published children" do
+    @article.create_cover_placement!(file: @image)
+    parent = ParentRecord.create!(site: @site, published: false)
+    PublishedChildRecord.create!(parent:, published: true).image_placements.create!(file: @image)
+
+    assert_not parent.update(published: true)
+    assert parent.errors[:base].any?
+  end
+
+  test "publishing a parent ignores exhausted licenses in its draft children" do
+    @article.create_cover_placement!(file: @image)
+    parent = ParentRecord.create!(site: @site, published: false)
+    PublishedChildRecord.create!(parent:, published: false).image_placements.create!(file: @image)
+
+    assert parent.update(published: true)
+  end
+
+  test "a parent being published cannot reuse its own draft placements to bypass a license" do
+    @article.create_cover_placement!(file: @image)
+    parent = ParentRecord.create!(site: @site, published: false)
+    parent.create_cover_placement!(file: @image)
+
+    assert_not parent.update(published: true)
+  end
+
+  test "STI children inherit the base class file usage parent configuration" do
+    parent = ParentRecord.create!(site: @site, published: true)
+    parent.create_cover_placement!(file: @image)
+    child = PublishedChildSubtype.create!(parent:, published: true)
+    child.image_placements.create!(file: @image)
+
+    assert_equal Folio::File::UsageRecord.sgid_for(parent), Folio::File::UsageRecord.sgid_for(child)
+    assert_equal 1, Folio::File::PublishedUsageCounter.count(@image)
+    assert_equal 1, Folio::File::PublishedUsageCounter.count(@image, site: @site)
+  end
+
+  test "polymorphic usage parents are rejected with an actionable configuration error" do
+    child = PublishedChildRecord.new
+
+    PublishedChildRecord.stub(:folio_file_usage_parent_association, :polymorphic_parent) do
+      error = assert_raises(ArgumentError) { Folio::File::UsageRecord.sgid_for(child) }
+      assert_includes error.message, "polymorphic_parent"
+      assert_includes error.message, "non-polymorphic belongs_to"
+    end
+  end
+
   class ParentRecord < ActiveRecord::Base
     self.table_name = "dummy_blog_articles"
     include Folio::HasAttachments
@@ -153,8 +240,10 @@ class Folio::File::UsageRecordTest < ActiveSupport::TestCase
     belongs_to :site, class_name: "Folio::Site"
     has_many :children, class_name: "Folio::File::UsageRecordTest::ChildRecord",
                         foreign_key: :dummy_blog_article_id, inverse_of: :parent
+    has_many :published_children, class_name: "Folio::File::UsageRecordTest::PublishedChildRecord",
+                                  foreign_key: :original_id, inverse_of: :parent
 
-    self.folio_file_usage_child_associations = [:children]
+    self.folio_file_usage_child_associations = %i[children published_children]
   end
 
   class ChildRecord < ActiveRecord::Base
@@ -165,6 +254,22 @@ class Folio::File::UsageRecordTest < ActiveSupport::TestCase
                         foreign_key: :dummy_blog_article_id, inverse_of: :children
 
     self.folio_file_usage_parent_association = :parent
+  end
+
+  class PublishedChildRecord < ActiveRecord::Base
+    self.table_name = "folio_pages"
+    include Folio::HasAttachments
+    include Folio::HasAtoms::Basic
+
+    belongs_to :parent, class_name: "Folio::File::UsageRecordTest::ParentRecord",
+                        foreign_key: :original_id, inverse_of: :published_children
+    belongs_to :polymorphic_parent, polymorphic: true,
+                                    foreign_key: :original_id, foreign_type: :locale, optional: true
+
+    self.folio_file_usage_parent_association = :parent
+  end
+
+  class PublishedChildSubtype < PublishedChildRecord
   end
 
   private
