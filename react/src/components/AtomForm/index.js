@@ -333,6 +333,7 @@ class AtomForm extends React.PureComponent {
                   return (
                     <SingleAttachments
                       key={input}
+                      usageRecord={this.props.usageRecord}
                       attachments={atom.record.meta.attachments}
                       atom={atom.record}
                       index={index}

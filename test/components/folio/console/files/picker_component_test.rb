@@ -34,4 +34,19 @@ class Folio::Console::Files::PickerComponentTest < Folio::Console::ComponentTest
 
     assert_no_selector(".f-c-files-picker .invalid-feedback")
   end
+
+  test "exposes the usage record for the file modal" do
+    page = create(:folio_page)
+
+    view = vc_test_controller.view_context
+    view.simple_form_for(page, url: "/") do |f|
+      render_inline(Folio::Console::Files::PickerComponent.new(
+        f:,
+        placement_key: :cover_placement,
+        file_klass: Folio::File::Image,
+      ))
+    end
+
+    assert_selector(".f-c-files-picker[data-f-c-files-picker-usage-record-value='#{Folio::File::UsageRecord.sgid_for(page)}']")
+  end
 end

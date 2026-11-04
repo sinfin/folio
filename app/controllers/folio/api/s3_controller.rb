@@ -128,6 +128,10 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
         props[:primary_action] = params[:primary_action].to_sym
       end
 
+      if props[:primary_action].in?(%i[index_for_modal index_for_picker])
+        props[:usage_record] = Folio::File::UsageRecord.from_param(params[Folio::File::UsageRecord::PARAM])
+      end
+
       render_component_json(Folio::FileList::FileComponent.new(**props), meta:)
     else
       render json: {}, status: 404

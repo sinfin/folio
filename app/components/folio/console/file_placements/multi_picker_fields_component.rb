@@ -16,7 +16,11 @@ class Folio::Console::FilePlacements::MultiPickerFieldsComponent < Folio::Consol
   private
     def before_render
       @turbo_frame_id = @file_klass.console_turbo_frame_id(picker: true)
-      @turbo_frame_src = url_for([:index_for_picker, :console, @file_klass])
+      usage_record = Folio::File::UsageRecord.sgid_for(@f.object)
+      @turbo_frame_src = url_for([:index_for_picker,
+                                  :console,
+                                  @file_klass,
+                                  { Folio::File::UsageRecord::PARAM => usage_record }.compact])
     end
 
     def data

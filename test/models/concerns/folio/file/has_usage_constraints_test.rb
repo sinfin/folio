@@ -383,6 +383,27 @@ class Folio::File::HasUsageConstraintsTest < ActiveSupport::TestCase
     end
   end
 
+  test "counts repeated direct file usage in one published record once" do
+    with_sharing(true) do
+      image = img
+      article = create(:dummy_blog_article, site: @site, published: true)
+      article.create_cover_placement!(file: image)
+      article.image_placements.create!(file: image)
+
+      assert_equal 1, image.reload.published_usage_count
+      assert_equal 1, Folio::File::PublishedUsageCounter.count(image, site: @site)
+
+      files = [Folio::File::Image.find(image.id)]
+      Folio::File::PublishedUsageCounter.preload(files, site: @site)
+      assert_equal 1, files.first.published_usage_count_for_site(@site)
+
+      other_article = create(:dummy_blog_article, site: @site, published: true)
+      other_article.image_placements.create!(file: image)
+
+      assert_equal 2, image.reload.published_usage_count
+    end
+  end
+
   test "publishing parent counts repeated direct and atom file usage once" do
     with_sharing(true) do
       image = img

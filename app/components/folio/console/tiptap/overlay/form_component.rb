@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::ApplicationComponent
-  def initialize(node:)
+  def initialize(node:, usage_record: nil)
     @node = node
+    @usage_record = usage_record
   end
 
   private

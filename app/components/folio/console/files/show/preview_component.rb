@@ -18,4 +18,8 @@ class Folio::Console::Files::Show::PreviewComponent < Folio::Console::Applicatio
     def file_url
       @file_url ||= Folio::S3.url_rewrite(@file.file.remote_url)
     end
+
+    def player_vertical?
+      @file.try(:cra_media_cloud_vertical?) || false
+    end
 end

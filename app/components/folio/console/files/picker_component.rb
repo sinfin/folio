@@ -9,7 +9,8 @@ class Folio::Console::Files::PickerComponent < Folio::Console::ApplicationCompon
                  hint: nil,
                  darker: false,
                  size: "default",
-                 required: false)
+                 required: false,
+                 usage_record: nil)
     @f = f
     @placement_key = placement_key
     @file_klass = file_klass
@@ -19,6 +20,7 @@ class Folio::Console::Files::PickerComponent < Folio::Console::ApplicationCompon
     @file_placement = file_placement
     @size = size
     @in_place_inputs = in_place_inputs
+    @usage_record = usage_record
 
     if @file_placement
       @as_file_placement = true
@@ -41,6 +43,7 @@ class Folio::Console::Files::PickerComponent < Folio::Console::ApplicationCompon
                           serialized_file_json: "",
                           as_file_placement: @as_file_placement,
                           state:,
+                          usage_record: @usage_record&.sgid || Folio::File::UsageRecord.sgid_for(@as_file_placement ? @file_placement : @f.object),
                         },
                         action: {
                           "f-c-files-picker:fileDestroyed" => "onFileDestroyed",
@@ -62,7 +65,9 @@ class Folio::Console::Files::PickerComponent < Folio::Console::ApplicationCompon
   def content_component
     case @file_klass.human_type
     when "audio", "video"
-      Folio::PlayerComponent.new(file: @file_placement.file, show_form_controls: true)
+      Folio::PlayerComponent.new(file: @file_placement.file,
+                                 show_form_controls: true,
+                                 vertical: @file_placement.file.try(:cra_media_cloud_vertical?))
     when "image"
       Folio::Console::Files::Picker::ImageComponent.new(file: @file_placement.file)
     when "document"

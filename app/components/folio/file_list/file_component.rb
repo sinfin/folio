@@ -12,7 +12,8 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
                  selectable: false,
                  batch_actions: false,
                  serialize: false,
-                 primary_action: nil)
+                 primary_action: nil,
+                 usage_record: nil)
     @file = file
     throw ArgumentError, "File is nil" if @file.nil?
     @file_klass = file_klass || file.class
@@ -24,6 +25,7 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
     @batch_actions = batch_actions
     @primary_action = primary_action
     @serialize = serialize
+    @usage_record = usage_record
   end
 
   def data
@@ -39,6 +41,7 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
                           destroyable: @destroyable,
                           batch_actions: @batch_actions,
                           serialized_file_json:,
+                          usage_record: @usage_record&.sgid,
                         },
                         action: @editable ? {
                           "f-file-list-file:updated": "fileUpdated",
@@ -118,7 +121,7 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
     end
 
     if @file.class.included_modules.include?(Folio::File::HasUsageConstraints)
-      if @file.usage_limit_exceeded?
+      if usage_limit_blocks_selection?
         ary << usage_limit_exceeded_html
       end
 
@@ -189,10 +192,14 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
     return false if @file.blank?
 
     if @file.class.included_modules.include?(Folio::File::HasUsageConstraints)
-      @file.can_be_used_on_site?(Folio::Current.site) && !@file.usage_limit_exceeded?
+      @file.can_be_used_on_site?(Folio::Current.site) && !usage_limit_blocks_selection?
     else
       true
     end
+  end
+
+  def usage_limit_blocks_selection?
+    @file.usage_limit_exceeded? && !@usage_record&.reuses?(@file)
   end
 
   def primary_action_data

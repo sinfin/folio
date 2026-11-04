@@ -1,14 +1,15 @@
 # frozen_string_literal: true
 
 module Folio::Console::FilesHelper
-  def file_picker(f:, placement_key:, file_klass:, hint: nil, darker: false, required: nil, in_place_inputs: nil)
+  def file_picker(f:, placement_key:, file_klass:, hint: nil, darker: false, required: nil, in_place_inputs: nil, usage_record: nil)
     component = Folio::Console::Files::PickerComponent.new(f:,
                                                            placement_key:,
                                                            file_klass:,
                                                            hint:,
                                                            darker:,
                                                            required:,
-                                                           in_place_inputs:)
+                                                           in_place_inputs:,
+                                                           usage_record:)
 
     if is_a?(Cell::ViewModel)
       render_view_component(component)

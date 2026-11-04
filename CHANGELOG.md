@@ -37,6 +37,7 @@ All notable changes to this project will be documented in this file.
 - **Input character counter**: Mask long displayed current counts automatically for numeric `character_counter` values, e.g. `150` derives a `999` display limit so `1000` and higher render as `*`. Pass `character_counter_auto_current_count_limit: false` to opt out.
 - **Console icons**: Add the `lock_open_variant` icon.
 - **Embed full-width iframes**: `Folio::Embed::BoxComponent` accepts `full_width_iframes: true` to let embedded iframes grow to the container width instead of stopping at their `width` attribute (560px for a URL-embedded YouTube video, 360px for Shorts). The default is `false`, so host apps opt in per site or per placement. The same option is accepted by `input as: :embed` and by `:embed` tiptap node attributes (where it may be a Proc resolved at render time) so console previews match the frontend.
+- **CRA video previews**: Use encoded output metadata to display vertical videos in Console players and previews.
 - **Console icons**: Add the `close_box` icon.
 - **Special characters popup**: Support inserting characters into Redactor,
   advanced Redactor, and email Redactor inputs while synchronizing editor
@@ -64,6 +65,10 @@ All notable changes to this project will be documented in this file.
   API.
 
 ### Fixed
+
+- **File usage**: Allow child records to share a published parent's license in file pickers, validation and usage counts, including publication changes. Unsupported polymorphic parents report a configuration error.
+
+- **File usage**: Count each published record once and allow file pickers to reuse files already attached to the edited record.
 
 - **Direct S3 uploads of session attachments**: `Folio::S3::CreateFileJob` no longer raises `undefined method 'author'` after saving a `Folio::SessionAttachment::Base` record. The success broadcast now serializes session attachments with the new `Folio::Console::SessionAttachmentSerializer` (`attributes.id` is the `hash_id`, which the dropzone uses to destroy the record) instead of `Folio::Console::FileSerializer`. Previously the upload was reported to the browser as failed although the record was saved.
 - **Date-time input picker selects no text**: Fast clicks on the time arrows or a double click on a day no longer select the digits or day numbers in the Tempus Dominus widget (`user-select: none` with the `-webkit-` prefix on the widget; Tempus Dominus sets it only for buttons).

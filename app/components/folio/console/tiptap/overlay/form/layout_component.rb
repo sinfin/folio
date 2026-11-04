@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 class Folio::Console::Tiptap::Overlay::Form::LayoutComponent < Folio::Console::ApplicationComponent
-  def initialize(f:, node:)
+  def initialize(f:, node:, usage_record: nil)
     @f = f
     @node = node
+    @usage_record = usage_record
   end
 
   private
@@ -127,6 +128,7 @@ class Folio::Console::Tiptap::Overlay::Form::LayoutComponent < Folio::Console::A
         f: @f,
         key:,
         attr_config: structure.fetch(key),
+        usage_record: @usage_record,
       ))
     end
 

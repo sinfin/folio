@@ -71,4 +71,20 @@ class Folio::Console::FilePlacements::MultiPickerFieldsComponentTest < Folio::Co
     assert_selector(".f-c-file-placements-multi-picker-fields__source-header .f-c-ui-tabs__nav-item", count: 1)
     assert_no_selector(:button, text: I18n.t("folio.console.file_placements.multi_picker_fields_component.add_embed"))
   end
+
+  def test_picker_frame_carries_the_usage_record
+    page = create(:folio_page)
+    url_options = nil
+    view = vc_test_controller.view_context
+    vc_test_controller.stub(:url_for, -> (options) { url_options = options; "http://www.example.com/picker" }) do
+      view.simple_form_for(page, url: "/") do |f|
+        render_inline(Folio::Console::FilePlacements::MultiPickerFieldsComponent.new(
+          f:,
+          placement_klass: Folio::FilePlacement::ImageOrEmbed,
+        ))
+      end
+    end
+
+    assert_equal({ usage_record: Folio::File::UsageRecord.sgid_for(page) }, url_options.last)
+  end
 end

@@ -14,4 +14,6 @@
                                                               record: f.object,
                                                               class_name: "mb-4"))
 
-      = render(Folio::Console::Tiptap::Overlay::Form::LayoutComponent.new(f:, node: @node))
+      = render(Folio::Console::Tiptap::Overlay::Form::LayoutComponent.new(f:,
+                                                                         node: @node,
+                                                                         usage_record: @usage_record))

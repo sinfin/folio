@@ -3,6 +3,18 @@
 require "test_helper"
 
 class TiptapInputTest < Folio::Console::CellTest
+  test "exposes the signed parent record context to the Tiptap overlay" do
+    page = create(:folio_page, published: true)
+    html = nil
+
+    controller.view_context.simple_form_for(page, url: "/") do |f|
+      html = f.input(:tiptap_content, as: :tiptap, block: true)
+    end
+
+    node = ::Capybara.string(html)
+    assert node.has_css?("[data-f-input-tiptap-usage-record-value='#{Folio::File::UsageRecord.sgid_for(page)}']")
+  end
+
   test "serializes optional opaque editor context on the input wrapper" do
     node = ::Capybara.string(render_tiptap_input(editor_context: { scope_id: 123 }))
 

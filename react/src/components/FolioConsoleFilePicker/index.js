@@ -48,6 +48,7 @@ class FolioConsoleFilePicker extends React.PureComponent {
       'data-f-c-files-picker-file-type-value': this.props.attachmentType.file_type,
       'data-f-c-files-picker-state-value': this.props.file ? 'filled' : 'empty',
       'data-f-c-files-picker-in-react-value': 'true',
+      'data-f-c-files-picker-usage-record-value': this.props.usageRecord,
       'data-f-c-files-picker-react-file-value': this.props.file ? JSON.stringify(this.props.file) : '{}'
     }
 

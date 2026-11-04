@@ -28,6 +28,8 @@ window.Folio.Stimulus.register('f-c-files-index-modal', class extends window.Sti
       const turboFrame = typeTarget.querySelector('turbo-frame')
 
       if (typeTarget.dataset.type === e.detail.fileType) {
+        this.setUsageRecord(turboFrame, e.detail.usageRecord)
+
         if (turboFrame.disabled) {
           turboFrame.disabled = false
         }
@@ -50,6 +52,24 @@ window.Folio.Stimulus.register('f-c-files-index-modal', class extends window.Sti
     }
 
     window.Folio.Modal.open(this.element)
+  }
+
+  // Files already used by the edited record stay selectable despite an exhausted usage limit.
+  setUsageRecord (turboFrame, usageRecord) {
+    const src = turboFrame.getAttribute('src')
+    if (!src) return
+
+    const current = new URL(src, window.location.origin)
+    const url = new URL(current.href)
+
+    if (usageRecord) {
+      url.searchParams.set('usage_record', usageRecord)
+    } else {
+      url.searchParams.delete('usage_record')
+    }
+
+    // The frame keeps an absolute src and reloads on every change, so compare normalized URLs.
+    if (url.href !== current.href) turboFrame.setAttribute('src', url.href)
   }
 
   onFileSelect (e) {

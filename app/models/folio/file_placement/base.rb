@@ -332,7 +332,8 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
     def validate_usage_limit_if_published_placement
       return if file.blank? || placement.blank?
       return unless file.class.included_modules.include?(Folio::File::HasUsageConstraints)
-      return unless usage_validation_record&.respond_to?(:published) && usage_validation_record.published == true
+      return if usage_validation_record.respond_to?(:published) && usage_validation_record.published != true
+      return unless Folio::File::UsageRecord.record_for(usage_validation_record).try(:published) == true
 
       validation_site = usage_validation_site
 
@@ -360,21 +361,13 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
     end
 
     def usage_validation_site
-      usage_validation_record.respond_to?(:site) ? usage_validation_record.site : Folio::Current.site
+      record = Folio::File::UsageRecord.record_for(usage_validation_record)
+      record.respond_to?(:site) ? record.site : Folio::Current.site
     end
 
     def file_usage_already_represented?
-      validation_record = usage_validation_record
-      placement_type = validation_record.class.base_class.name
-      scope = Folio::FilePlacement::Base.where(file_id: file.id).where.not(id:)
-      direct_placements = scope.where(placement_type:,
-                                      placement_id: validation_record.id)
-      atom_ids = Folio::Atom::Base.where(placement_type:,
-                                         placement_id: validation_record.id)
-      atom_placements = scope.where(placement_type: "Folio::Atom::Base",
-                                    placement_id: atom_ids.select(:id))
-
-      direct_placements.or(atom_placements).exists?
+      Folio::File::UsageRecord.new(usage_validation_record).placements
+                             .where(file_id: file.id).where.not(id:).exists?
     end
 
     def update_placement_counts_unless_inside_nested_attributes

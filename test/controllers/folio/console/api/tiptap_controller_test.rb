@@ -3,6 +3,17 @@
 require "test_helper"
 
 class Folio::Console::Api::TiptapControllerTest < Folio::Console::BaseControllerTest
+  class AttachmentCard < Folio::Tiptap::Node
+    tiptap_node nested: true,
+                structure: { cover: :image }
+  end
+
+  class AttachmentCardGroup < Folio::Tiptap::Node
+    tiptap_node structure: {
+      cards: { type: :nested_nodes, node_class: AttachmentCard },
+    }
+  end
+
   class Node < Folio::Tiptap::Node
     tiptap_node structure: {
       title: :string,
@@ -102,6 +113,59 @@ class Folio::Console::Api::TiptapControllerTest < Folio::Console::BaseController
 
     page = Capybara.string(response.parsed_body["data"])
     assert page.has_css?(".f-c-tiptap-overlay-form")
+  end
+
+  test "attachment picker carries the published parent record's signed context" do
+    article = create(:dummy_blog_article, site: @site, published: true)
+    sgid = Folio::File::UsageRecord.sgid_for(article)
+
+    post edit_node_console_api_tiptap_path(format: :json), params: {
+      tiptap_node_attrs: { type: "Dummy::Tiptap::Node::Card" },
+      tiptap_editor_context: { usage_record: sgid },
+    }
+
+    assert_response :success
+    html = Nokogiri::HTML.fragment(response.parsed_body.fetch("data"))
+    assert_equal sgid, html.at_css(".f-c-files-picker")["data-f-c-files-picker-usage-record-value"]
+  end
+
+  test "nested attachment picker carries the parent record's signed context" do
+    article = create(:dummy_blog_article, site: @site, published: true)
+    sgid = Folio::File::UsageRecord.sgid_for(article)
+
+    post edit_node_console_api_tiptap_path(format: :json), params: {
+      tiptap_node_attrs: { type: "Folio::Console::Api::TiptapControllerTest::AttachmentCardGroup" },
+      tiptap_editor_context: { usage_record: sgid },
+    }
+
+    assert_response :success
+    html = Nokogiri::HTML.fragment(response.parsed_body.fetch("data"))
+    assert_equal sgid, html.at_css(".f-c-tiptap-overlay-form-nested-nodes__item .f-c-files-picker")["data-f-c-files-picker-usage-record-value"]
+  end
+
+  test "invalid node form keeps the parent record's signed context" do
+    article = create(:dummy_blog_article, site: @site, published: true)
+    sgid = Folio::File::UsageRecord.sgid_for(article)
+
+    post save_node_console_api_tiptap_path(format: :json), params: {
+      tiptap_node_attrs: { type: "Dummy::Tiptap::Node::Card", data: { title: "" } },
+      tiptap_editor_context: { usage_record: sgid },
+    }
+
+    assert_response :success
+    html = Nokogiri::HTML.fragment(response.parsed_body.fetch("data"))
+    assert_equal sgid, html.at_css(".f-c-files-picker")["data-f-c-files-picker-usage-record-value"]
+  end
+
+  test "attachment picker ignores a tampered parent record context" do
+    post edit_node_console_api_tiptap_path(format: :json), params: {
+      tiptap_node_attrs: { type: "Dummy::Tiptap::Node::Card" },
+      tiptap_editor_context: { usage_record: "invalid" },
+    }
+
+    assert_response :success
+    html = Nokogiri::HTML.fragment(response.parsed_body.fetch("data"))
+    assert_empty html.at_css(".f-c-files-picker")["data-f-c-files-picker-usage-record-value"].to_s
   end
 
   test "edit_node prebuilds blank nested node row" do

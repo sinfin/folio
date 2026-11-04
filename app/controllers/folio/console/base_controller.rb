@@ -562,6 +562,11 @@ class Folio::Console::BaseController < Folio::ApplicationController
       end
     end
 
+    # Filter params applied through filter_by_params; override to apply some of them differently.
+    def folio_console_collection_filter_params
+      filter_params
+    end
+
     def filter_folio_console_collection
       return unless collection_action?
 
@@ -572,9 +577,11 @@ class Folio::Console::BaseController < Folio::ApplicationController
         instance_variable_set(name, with_include)
       end
 
-      if filter_params.present? &&
+      collection_filter_params = folio_console_collection_filter_params
+
+      if collection_filter_params.present? &&
          instance_variable_get(name).respond_to?(:filter_by_params)
-        filtered = instance_variable_get(name).filter_by_params(filter_params)
+        filtered = instance_variable_get(name).filter_by_params(collection_filter_params)
         instance_variable_set(name, filtered)
       end
 

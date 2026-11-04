@@ -247,6 +247,8 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
       manifest_hls = nil
       manifest_dash = nil
 
+      store_output_metadata(phase_job)
+
       phase_job["output"]&.each do |output_file|
         case output_file["type"]
         when "MP4"
@@ -279,6 +281,7 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
 
     def update_remote_service_data(response)
       media_file.remote_services_data["remote_id"] ||= response["id"]
+      store_output_metadata(response)
 
       case response["status"]
       when "DONE"
@@ -377,11 +380,20 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
         phases_completed << "packaging" if text.include?("copying: started")
       end
 
-      # Extract video duration from outputParams
-      video_duration = response.dig("outputParams", "duration")
-
       media_file.remote_services_data["phases_completed"] = phases_completed.uniq
+    end
+
+    def store_output_metadata(response)
+      output_params = response["outputParams"]
+      return unless output_params.is_a?(Hash)
+
+      video_duration = output_params["duration"]
       media_file.remote_services_data["video_duration"] = video_duration if video_duration
+
+      aspect = output_params["aspect"]
+      if aspect.is_a?(Hash)
+        media_file.remote_services_data["video_aspect"] = aspect.slice("width", "height")
+      end
     end
 
     def process_output_hash(output_data)
