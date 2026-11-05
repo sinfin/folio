@@ -66,6 +66,8 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- **S3 upload replacing a file**: `Folio::Api::S3Controller#after` replaces the file given by `existing_id` only when the current user can `:update` that file. Anyone allowed to upload (including the public with `folio_direct_s3_upload_allow_public`) could previously overwrite any file by id. Host apps that scope `Folio::Current.ability` for their own uploaders must apply that ability to `after` too.
+
 - **File usage**: Allow child records to share a published parent's license in file pickers, validation and usage counts, including publication changes. Unsupported polymorphic parents report a configuration error.
 
 - **File usage**: Count each published record once and allow file pickers to reuse files already attached to the edited record.

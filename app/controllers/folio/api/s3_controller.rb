@@ -210,10 +210,12 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
       file_klass = type.safe_constantize
 
       if file_klass && allowed_klass?(file_klass) && test_aware_s3_exists?(s3_path: @s3_path)
+        existing_id = authorized_existing_file_id(file_klass)
+
         job_klass.perform_later(s3_path: @s3_path,
                                 type:,
                                 message_bus_client_id:,
-                                existing_id: params[:existing_id].try(:to_i),
+                                existing_id:,
                                 web_session_id: session.id.public_id,
                                 user_id: Folio::Current.user.try(:id),
                                 attributes: Rails.application.config.folio_direct_s3_upload_attributes_for_job_proc.call(self))
@@ -221,6 +223,19 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
       else
         render json: {}, status: 422
       end
+    end
+
+    # Replacing an existing file swaps its content for everyone who uses it, so
+    # it requires permission to update that very file. Uploading itself may be
+    # allowed to the public (folio_direct_s3_upload_allow_public) or to any
+    # signed-in user, which must not extend to overwriting other files.
+    def authorized_existing_file_id(file_klass)
+      return if params[:existing_id].blank?
+
+      file = file_klass.find_by(id: params[:existing_id])
+      fail CanCan::AccessDenied unless file && can_now?(:update, file)
+
+      file.id
     end
 
     def site_for_new_files
