@@ -110,6 +110,44 @@ class Folio::Api::S3ControllerTest < Folio::BaseControllerTest
       assert_equal("test-#{klass.model_name.singular}-#{file.id}.gif", file.reload.file_name)
     end
 
+    test "#{klass} - after with existing id is refused without update permission" do
+      file = create(klass.model_name.singular, file_name: "foo.gif")
+      original_uid = file.file_uid
+      sign_out @superadmin
+
+      s3_path = "test-#{klass.model_name.singular}-replace-#{file.id}.gif"
+      test_path = "#{Folio::S3::Client::LOCAL_TEST_PATH}/#{s3_path}"
+      FileUtils.mkdir_p(File.dirname(test_path))
+      FileUtils.cp(Folio::Engine.root.join("test/fixtures/folio/test-black.gif"), test_path)
+
+      [nil, create(:folio_user)].each do |user|
+        sign_in(user) if user
+
+        with_config(folio_direct_s3_upload_allow_public: true) do
+          assert_enqueued_jobs(0) do
+            post after_folio_api_s3_path, params: { s3_path:, type: klass.to_s, existing_id: file.id, message_bus_client_id: "foo" }
+          end
+        end
+
+        assert_response :unauthorized
+        assert_equal original_uid, file.reload.file_uid
+        sign_out(user) if user
+      end
+    end
+
+    test "#{klass} - after with existing id is refused for a missing file" do
+      s3_path = "test-#{klass.model_name.singular}-replace-missing.gif"
+      test_path = "#{Folio::S3::Client::LOCAL_TEST_PATH}/#{s3_path}"
+      FileUtils.mkdir_p(File.dirname(test_path))
+      FileUtils.cp(Folio::Engine.root.join("test/fixtures/folio/test.gif"), test_path)
+
+      assert_enqueued_jobs(0) do
+        post after_folio_api_s3_path, params: { s3_path:, type: klass.to_s, existing_id: 0, message_bus_client_id: "foo" }
+      end
+
+      assert_response :unauthorized
+    end
+
     test "#{klass} - unauthorized for no admin" do
       sign_out @superadmin
 
