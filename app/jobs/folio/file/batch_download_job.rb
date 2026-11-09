@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "zip"
+
 class Folio::File::BatchDownloadJob < Folio::ApplicationJob
   include Folio::S3::Client
 
@@ -23,7 +25,7 @@ class Folio::File::BatchDownloadJob < Folio::ApplicationJob
 
     tmp_zip_file = Tempfile.new("folio-files")
 
-    ::Zip::File.open(tmp_zip_file.path, ::Zip::File::CREATE) do |zip|
+    ::Zip::File.open(tmp_zip_file.path, create: true) do |zip|
       files.each do |file|
         # dragonfly ¯\_(ツ)_/¯
         tmp_file = file.file.file
