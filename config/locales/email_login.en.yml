@@ -13,6 +13,7 @@ en:
         javascript_required: Enable JavaScript and reopen the link from your email to confirm your sign-in.
         prepare_error: Could not load the confirmation. Please try again.
         retry: Try again
+        continue: Continue
         revoke_title: Trusted browsers
         revoke_instruction: Revoke trust for all browsers. Your next sign-in will require email confirmation again. Your current session will stay signed in.
         revoke: Revoke trust for all browsers
@@ -38,6 +39,7 @@ en:
         cross_device_instruction: "You can confirm the email on any device. Keep this page open; this browser will sign in after you confirm."
         magic_link_instruction: "Open the link from the email in this browser. It will not sign you in from another browser or device."
         waiting: "Waiting for email confirmation."
+        completing: "Confirmed, signing you in…"
         expired: "This sign-in has expired. Please start again."
         connection_error: "Connection interrupted. We will try again; you can also check manually."
         check: "Check confirmation"

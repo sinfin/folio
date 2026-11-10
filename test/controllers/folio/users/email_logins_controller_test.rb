@@ -93,6 +93,54 @@ class Folio::Users::EmailLoginsControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "repeating one click approval after completion redirects again instead of rejecting the link" do
+    with_email_login do
+      start_password_login
+      token = delivery_token
+
+      post main_app.prepare_user_email_login_path, params: { email_login_token: token, approve: "1" }, as: :json
+      path = response.parsed_body.dig("data", "url")
+
+      assert_no_difference -> { @user.reload.sign_in_count } do
+        post main_app.prepare_user_email_login_path, params: { email_login_token: token, approve: "1" }, as: :json
+      end
+
+      assert_response :ok
+      assert_equal path, response.parsed_body.dig("data", "url")
+      assert_equal @user, controller.warden.user(:user)
+    end
+  end
+
+  test "a completed link cannot be reused from a browser without that sign-in" do
+    with_email_login do
+      start_password_login
+      token = delivery_token
+      post main_app.prepare_user_email_login_path, params: { email_login_token: token, approve: "1" }, as: :json
+
+      other = open_session
+      other.host! @site.env_aware_domain
+      other.post main_app.prepare_user_email_login_path, params: { email_login_token: token, approve: "1" }, as: :json
+
+      assert_equal 422, other.response.status
+      assert_includes other.response.parsed_body.fetch("data"), I18n.t("folio.users.email_login.invalid")
+    end
+  end
+
+  test "repeating completion in the original browser redirects again" do
+    with_email_login do
+      start_password_login
+      post main_app.prepare_user_email_login_path, params: { email_login_token: delivery_token }, as: :json
+      post main_app.approve_user_email_login_path, params: { challenge_id: @user.email_login_challenges.last.id }
+      post main_app.complete_user_email_login_path
+      path = response.location
+
+      post main_app.complete_user_email_login_path
+
+      assert_redirected_to path
+      assert_equal 1, @user.reload.sign_in_count
+    end
+  end
+
   test "one click approval on another device approves only the original browser" do
     with_email_login do
       start_password_login

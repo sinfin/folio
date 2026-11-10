@@ -21,4 +21,8 @@ class Folio::Users::EmailLogin::ConfirmationComponent < Folio::ApplicationCompon
     def retry_data
       stimulus_merge_data(stimulus_target("retry"), stimulus_action(click: "prepare"))
     end
+
+    def continue_data
+      stimulus_merge_data(stimulus_target("continue"), stimulus_action(click: "continue"))
+    end
 end
