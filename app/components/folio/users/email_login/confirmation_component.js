@@ -49,7 +49,7 @@ window.Folio.Stimulus.register('f-users-email-login-confirmation', class extends
 
   // Offered when sign-in does not finish in time. The server answers a repeated
   // request for an already completed sign-in with the same redirect.
-  continue () {
+  continueSignIn () {
     if (this.completedUrl) {
       window.location.assign(this.completedUrl)
     } else {

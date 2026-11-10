@@ -56,7 +56,7 @@ class Folio::Users::EmailLogin::WaitingComponent < Folio::ApplicationComponent
     end
 
     def continue_data
-      stimulus_merge_data(stimulus_target("continue"), stimulus_action(click: "continue"))
+      stimulus_merge_data(stimulus_target("continue"), stimulus_action(click: "continueSignIn"))
     end
 
     def trust_browser_data

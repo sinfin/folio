@@ -141,7 +141,7 @@ window.Folio.Stimulus.register('f-users-email-login-waiting', class extends wind
   }
 
   // Completion is idempotent: a completed sign-in in this browser redirects again.
-  continue () {
+  continueSignIn () {
     if (this.completedUrl) {
       window.location.assign(this.completedUrl)
     } else {

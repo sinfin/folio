@@ -23,6 +23,6 @@ class Folio::Users::EmailLogin::ConfirmationComponent < Folio::ApplicationCompon
     end
 
     def continue_data
-      stimulus_merge_data(stimulus_target("continue"), stimulus_action(click: "continue"))
+      stimulus_merge_data(stimulus_target("continue"), stimulus_action(click: "continueSignIn"))
     end
 end
