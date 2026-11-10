@@ -13,6 +13,7 @@ cs:
         javascript_required: Pro otevření přihlašovacího odkazu zapněte JavaScript a otevřete odkaz z e-mailu znovu.
         prepare_error: Potvrzení se nepodařilo načíst. Zkuste to znovu.
         retry: Zkusit znovu
+        continue: Pokračovat
         revoke_title: Důvěryhodné prohlížeče
         revoke_instruction: Odvolejte důvěru všech prohlížečů. Při dalším přihlášení bude znovu potřeba potvrzení e-mailem. Vaše současné přihlášení zůstane zachované.
         revoke: Odvolat důvěru všech prohlížečů
@@ -39,6 +40,7 @@ cs:
         cross_device_instruction: "E-mail můžete potvrdit na jakémkoli zařízení. Tuto stránku ponechte otevřenou. Po potvrzení se přihlásíte v tomto prohlížeči."
         magic_link_instruction: "Otevřete odkaz z e-mailu v tomto prohlížeči. V jiném prohlížeči ani na jiném zařízení přihlášení nefunguje."
         waiting: "Čekáme na potvrzení e-mailu."
+        completing: "Potvrzeno, přihlašujeme vás…"
         expired: "Platnost tohoto přihlášení vypršela. Zahajte prosím nový pokus."
         connection_error: "Spojení bylo přerušeno. Kontrolu zopakujeme, případně ji můžete spustit tlačítkem."
         check: "Zkontrolovat potvrzení"

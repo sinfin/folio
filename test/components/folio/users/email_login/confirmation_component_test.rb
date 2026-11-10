@@ -14,6 +14,17 @@ class Folio::Users::EmailLogin::ConfirmationComponentTest < Folio::ComponentTest
     assert_includes rendered_content, site.title
   end
 
+  test "preparation renders a hidden spinner and continue button for the script" do
+    render_inline(Folio::Users::EmailLogin::ConfirmationComponent.new(preparing: true))
+
+    assert_selector "[data-controller='f-users-email-login-confirmation']"
+    assert_selector "[data-f-users-email-login-confirmation-target='spinner'][aria-hidden='true'][hidden] .folio-loader",
+                    visible: :all
+    assert_selector "button[type='button'][hidden][data-f-users-email-login-confirmation-target='continue']",
+                    text: I18n.t("folio.users.email_login.continue"), visible: :all
+    assert_selector "[role='status']", text: I18n.t("folio.users.email_login.preparing")
+  end
+
   test "approval explains that the original browser will sign in" do
     render_inline(Folio::Users::EmailLogin::ConfirmationComponent.new(approved: true))
 

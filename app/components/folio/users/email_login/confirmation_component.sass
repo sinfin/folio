@@ -1,3 +1,22 @@
 .f-users-email-login-confirmation
   margin-top: 3 * $spacer
   margin-bottom: 3 * $spacer
+
+  &__progress
+    display: flex
+    align-items: center
+    gap: $spacer * 0.5
+    margin-bottom: $spacer
+
+    p
+      margin-bottom: 0
+
+  &__spinner
+    position: relative
+    flex: 0 0 16px
+    width: 16px
+    height: 16px
+
+    @media (prefers-reduced-motion: reduce)
+      .folio-loader::before
+        animation: none

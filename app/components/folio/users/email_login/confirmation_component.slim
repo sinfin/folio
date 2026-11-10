@@ -1,8 +1,15 @@
 .f-users-email-login-confirmation.container-fluid data=data
   - if @preparing
     h1 = t('folio.users.email_login.confirm')
-    p[role="status" data=stimulus_target('status')]
-      = t('folio.users.email_login.preparing')
+    .f-users-email-login-confirmation__progress
+      span.f-users-email-login-confirmation__spinner[
+        aria-hidden="true"
+        hidden=true
+        data=stimulus_target('spinner')
+      ]
+        span.folio-loader.folio-loader--tiny.folio-loader--transparent
+      p[role="status" data=stimulus_target('status')]
+        = t('folio.users.email_login.preparing')
     noscript
       p = t('folio.users.email_login.javascript_required')
     button[
@@ -12,6 +19,13 @@
       data=retry_data
     ]
       = t('folio.users.email_login.retry')
+    button[
+      type="button"
+      class="btn btn-primary"
+      hidden=true
+      data=continue_data
+    ]
+      = t('folio.users.email_login.continue')
   - elsif @invalid
     h1 = t('folio.users.email_login.invalid_title')
     p = t('folio.users.email_login.invalid')
