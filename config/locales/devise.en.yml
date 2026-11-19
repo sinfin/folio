@@ -18,6 +18,9 @@ en:
 
   folio:
     devise:
+      modal:
+        close: Close
+
       submit: Submit
       forgotten_password_link: Forgotten password?
       invite_button: Create new account

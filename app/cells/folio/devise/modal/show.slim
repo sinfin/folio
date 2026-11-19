@@ -1,5 +1,7 @@
 .modal.f-devise-modal[
   role="dialog"
+  aria-modal="true"
+  aria-labelledby="f-devise-modal-title-sessions"
   tabindex="-1"
   data=stimulus_modal
 ]
@@ -11,7 +13,7 @@
   ]
     .modal-content
       .modal-header
-        .h4.modal-title = t('folio.devise.sessions.new.title')
+        h2.h4.modal-title#f-devise-modal-title-sessions = t('folio.devise.sessions.new.title')
         = render(:_close)
 
       .modal-body
@@ -24,7 +26,7 @@
   ]
     .modal-content
       .modal-header
-        .h4.modal-title = t('folio.devise.invitations.new.title')
+        h2.h4.modal-title#f-devise-modal-title-registrations = t('folio.devise.invitations.new.title')
         = render(:_close)
 
       .modal-body

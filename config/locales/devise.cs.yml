@@ -26,6 +26,9 @@ cs:
 
   folio:
     devise:
+      modal:
+        close: Zavřít
+
       submit: Odeslat
       forgotten_password_link: Zapomenuté heslo?
       invite_button: Vytvořit nový účet
