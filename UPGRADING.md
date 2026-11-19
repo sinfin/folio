@@ -2,6 +2,38 @@
 
 ## Unreleased
 
+### rubyzip 3 and sidekiq-cron 2 are allowed
+
+Folio accepts `rubyzip` from 2.4 to 3.x and `sidekiq-cron` from 1.10.1 to 2.x
+and works with both the old and the new versions. Nothing changes until the
+host app updates them. The fixes of two security advisories need the new major
+versions:
+
+- rubyzip 3.4 fixes CVE-2026-85396 (path traversal in `Zip::Entry#extract`),
+- sidekiq-cron 2.4 fixes CVE-2025-67202 (reflected XSS on the cron page of the
+  Sidekiq web UI, which Folio mounts at `/sidekiq`).
+
+**When updating rubyzip to 3.x:** code that calls rubyzip directly must follow
+the [upgrade guide](https://github.com/rubyzip/rubyzip/wiki/Updating-to-version-3.x).
+For example `Zip::File::CREATE` no longer exists:
+`Zip::File.open(path, Zip::File::CREATE)` becomes
+`Zip::File.open(path, create: true)`.
+
+**When updating sidekiq-cron to 2.x:**
+
+- Settings move to `Sidekiq::Cron.configure` (`cron_schedule_file`,
+  `cron_poll_interval` and others). Version 2 ignores `cron_schedule_file` and
+  `cron_poll_interval` in `sidekiq.yml` or `Sidekiq::Options`.
+- Jobs belong to namespaces; a job without one belongs to `default`. Version 2.3
+  changed the default of `available_namespaces` to `[default_namespace]`.
+- `Sidekiq::Cron::Job#enque!` is renamed to `enqueue!`.
+- Version 2.0 stores jobs in Redis in a new format. Check the cron page of the
+  Sidekiq web UI after the deploy.
+
+Read the sidekiq-cron
+[changelog](https://github.com/sidekiq-cron/sidekiq-cron/blob/master/CHANGELOG.md)
+for 2.0 to 2.4.
+
 ### Optional public assets
 
 Set `config.folio_public_assets_enabled = true` and run `bin/rails db:migrate`.

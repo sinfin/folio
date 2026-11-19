@@ -360,6 +360,10 @@ Folio::Engine.routes.draw do
   get "/sitemaps/:id.:format(.:compression)", to: "sitemaps#show"
 
   require "sidekiq/web"
+  require "sidekiq/cron/version"
+  # The web extension of sidekiq-cron 2 reads the configuration defined in sidekiq/cron. In 1.x that file also adds the
+  # scheduler to Sidekiq processes and the web extension does not need it.
+  require "sidekiq/cron" if Gem::Version.new(Sidekiq::Cron::VERSION) >= Gem::Version.new("2")
   require "sidekiq/cron/web"
 
   authenticate :user, lambda { |user| user.can_manage_sidekiq? } do
