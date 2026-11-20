@@ -300,7 +300,7 @@ module Folio::Console::Api::FileControllerBase
       webp_url = @file.temporary_url("#{size_key}.webp")
 
       # Clear existing thumbnail and mark for regeneration
-      # With activejob-uniqueness, we don't need started_generating_at coordination
+      # With activejob-unique, we don't need started_generating_at coordination
       thumbnail_sizes[size_key] = {
         uid: nil,
         signature: nil,

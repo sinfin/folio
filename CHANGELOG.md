@@ -91,6 +91,15 @@ All notable changes to this project will be documented in this file.
 
 ### Security
 
+- **activejob-unique instead of activejob-uniqueness**: Folio depends on
+  `activejob-unique` 0.5.1+, the maintained fork of `activejob-uniqueness`
+  (same `ActiveJob::Uniqueness` module, `unique` strategies and
+  configuration). The original gem has had no release since 0.4.0 (12/2024)
+  and caps `activejob` below 8.1, so host apps could not move to Rails 8.1,
+  which gets security fixes until 10/2027 (Rails 8.0 support ended on
+  7. 11. 2026). The fork also releases the right lock when Sidekiq deletes a
+  job with a custom `lock_key` and replaces the deprecated
+  `ActiveSupport::Configurable`. See `UPGRADING.md`.
 - **rubyzip 3.x and sidekiq-cron 2.x allowed**: Folio accepts `rubyzip`
   `>= 2.4, < 4` and `sidekiq-cron` `>= 1.10.1, < 3`, so host apps can install
   rubyzip 3.4+ (fixes path traversal in `Zip::Entry#extract`, CVE-2026-85396)

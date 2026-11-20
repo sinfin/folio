@@ -12,7 +12,7 @@ PATH
   specs:
     folio (7.7.2)
       aasm
-      activejob-uniqueness (>= 0.3.0)
+      activejob-unique (>= 0.5.1)
       acts-as-taggable-on
       after_commit_everywhere
       ancestry
@@ -134,8 +134,8 @@ GEM
     activejob (8.0.4.1)
       activesupport (= 8.0.4.1)
       globalid (>= 0.3.6)
-    activejob-uniqueness (0.4.0)
-      activejob (>= 4.2, < 8.1)
+    activejob-unique (0.5.1)
+      activejob (>= 7.1, < 8.2)
       redlock (>= 2.0, < 3)
     activemodel (8.0.4.1)
       activesupport (= 8.0.4.1)
