@@ -76,7 +76,7 @@ Gem::Specification.new do |s|
   s.add_dependency "httpparty"
   s.add_dependency "sidekiq-cron", ">= 1.10.1", "< 3" # 2.4 fixes reflected XSS in the web UI (CVE-2025-67202)
   s.add_dependency "sidekiq", "~> 6.5"
-  s.add_dependency "activejob-uniqueness", ">= 0.3.0"
+  s.add_dependency "activejob-unique", ">= 0.5.1" # maintained fork of activejob-uniqueness; Rails 8.1 support
   s.add_dependency "simple_form"
   s.add_dependency "sitemap_generator"
   s.add_dependency "cells-slim"

@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+### activejob-unique replaces activejob-uniqueness
+
+Folio now depends on `activejob-unique` (0.5.1 or newer), the maintained fork
+of `activejob-uniqueness`. The module, the `unique` strategies and the
+`ActiveJob::Uniqueness.configure` settings stay the same, so jobs and
+initializers need no change. The fork allows Rails 8.1 (`activejob < 8.2`)
+and needs `activejob` 7.1 or newer.
+
+**In the host app:** remove `activejob-uniqueness` from the `Gemfile` if it is
+listed there (both gems define the same files) and run `bundle update folio`.
+Locks taken before the deploy keep their Redis keys (`activejob_uniqueness`
+prefix), so jobs enqueued before the deploy stay unique.
+
 ### rubyzip 3 and sidekiq-cron 2 are allowed
 
 Folio accepts `rubyzip` from 2.4 to 3.x and `sidekiq-cron` from 1.10.1 to 2.x
