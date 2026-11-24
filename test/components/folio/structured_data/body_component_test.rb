@@ -142,4 +142,69 @@ class Folio::StructuredData::BodyComponentTest < Folio::ComponentTest
     assert_not_nil article_data
     assert_nil article_data["image"]
   end
+
+  test "render article video structured data from provider metadata without original file URL" do
+    create_and_host_site
+    article = create(:dummy_blog_article,
+                     title: "Article with video",
+                     perex: "Article perex",
+                     published_at: Time.current)
+    video = create(:folio_file_video,
+                   headline: "Provider video",
+                   description: "Provider description",
+                   file_uid: "private/original.mp4",
+                   remote_services_data: {
+                     "service" => "cloudflare_stream",
+                     "uid" => "stream-1",
+                     "ready_to_stream" => true,
+                     "thumbnail" => "https://customer-code.cloudflarestream.com/stream-1/thumbnails/thumbnail.jpg",
+                     "playback" => {
+                       "hls" => "https://customer-code.cloudflarestream.com/stream-1/manifest/video.m3u8",
+                     },
+                   })
+    Folio::FilePlacement::VideoCover.create!(file: video, placement: article)
+    article.reload
+
+    render_inline(Folio::StructuredData::BodyComponent.new(record: article, breadcrumbs: []))
+
+    json = JSON.parse(page.find('script[type="application/ld+json"]', visible: false).text(:all))
+    video_data = json["@graph"].find { |item| item["@type"] == "VideoObject" }
+
+    assert_not_nil video_data
+    assert_equal "Article with video", video_data["name"]
+    assert_equal "Provider description", video_data["description"]
+    assert_equal "https://customer-code.cloudflarestream.com/stream-1/thumbnails/thumbnail.jpg", video_data["thumbnailUrl"]
+    assert_equal "https://customer-code.cloudflarestream.com/stream-1/iframe", video_data["embedUrl"]
+    assert_nil video_data["contentUrl"]
+    assert_not_includes video_data.to_json, "private/original.mp4"
+  end
+
+  test "render video record structured data from provider metadata" do
+    create_and_host_site
+    video = create(:folio_file_video,
+                   headline: "Standalone video",
+                   description: "Standalone description",
+                   file_uid: "private/original.mp4",
+                   remote_services_data: {
+                     "service" => "cloudflare_stream",
+                     "uid" => "stream-1",
+                     "ready_to_stream" => true,
+                     "thumbnail" => "https://customer-code.cloudflarestream.com/stream-1/thumbnails/thumbnail.jpg",
+                     "playback" => {
+                       "hls" => "https://customer-code.cloudflarestream.com/stream-1/manifest/video.m3u8",
+                     },
+                   })
+
+    render_inline(Folio::StructuredData::BodyComponent.new(record: video, breadcrumbs: []))
+
+    json = JSON.parse(page.find('script[type="application/ld+json"]', visible: false).text(:all))
+    video_data = json["@graph"].find { |item| item["@type"] == "VideoObject" }
+
+    assert_not_nil video_data
+    assert_equal "Standalone video", video_data["name"]
+    assert_equal "Standalone description", video_data["description"]
+    assert_equal "https://customer-code.cloudflarestream.com/stream-1/iframe", video_data["embedUrl"]
+    assert_nil video_data["contentUrl"]
+    assert_not_includes video_data.to_json, "private/original.mp4"
+  end
 end

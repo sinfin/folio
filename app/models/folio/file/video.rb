@@ -2,6 +2,7 @@
 
 class Folio::File::Video < Folio::File
   include Folio::File::Video::HasSubtitles
+  include Folio::File::Video::Playback
 
   validate_file_format %w[video/mp4 video/webm video/quicktime video/x-m4v]
 
