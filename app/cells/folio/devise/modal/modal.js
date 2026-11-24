@@ -66,6 +66,13 @@ window.Folio.Stimulus.register('f-devise-modal-form', class extends window.Stimu
       dialog.classList.toggle('modal-dialog--active', isActive)
 
       if (isActive) {
+        // the dialog is named by the title of the visible part (sign in or registration)
+        const title = dialog.querySelector('.modal-title[id]')
+
+        if (title) {
+          modal.setAttribute('aria-labelledby', title.id)
+        }
+
         const autofocus = dialog.querySelector('[autofocus]')
 
         if (autofocus) {

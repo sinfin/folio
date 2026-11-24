@@ -39,6 +39,13 @@ window.Folio.Stimulus.register('f-modal', class extends window.Stimulus.Controll
 
         const dialog = this.element.querySelector(e.detail.dialog)
         dialog.classList.add('modal-dialog--active')
+
+        // a modal with several dialogs is named by the title of the visible one
+        const title = dialog.querySelector('.modal-title[id]')
+
+        if (title) {
+          this.element.setAttribute('aria-labelledby', title.id)
+        }
       }
     }
   }
