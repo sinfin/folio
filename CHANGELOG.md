@@ -66,6 +66,8 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- **PDF upload fails with `pdfload: operation is blocked`**: Active Storage 8.1.3.1+ calls `Vips.block_untrusted(true)` on boot, which also blocks libvips's PDF loader that Folio uses for `Folio::File::Document` thumbnails and additional data. Folio now unblocks the loaders listed in `config.folio_vips_unblocked_loaders` (default `%w[VipsForeignLoadPdf]`) after initialization; every other untrusted loader stays blocked. Set it to `[]` to keep PDF loading blocked.
+
 - **S3 upload replacing a file**: `Folio::Api::S3Controller#after` replaces the file given by `existing_id` only when the current user can `:update` that file. Anyone allowed to upload (including the public with `folio_direct_s3_upload_allow_public`) could previously overwrite any file by id. Host apps that scope `Folio::Current.ability` for their own uploaders must apply that ability to `after` too.
 
 - **File usage**: Allow child records to share a published parent's license in file pickers, validation and usage counts, including publication changes. Unsupported polymorphic parents report a configuration error.
