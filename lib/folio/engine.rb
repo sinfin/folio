@@ -18,6 +18,10 @@ module Folio
     config.folio_public_assets_enabled = false
     config.folio_dragonfly_keep_png = true
     config.folio_dragonfly_cwebp_quality = 90
+    # libvips loaders that Folio needs although libvips flags them as untrusted.
+    # Active Storage (Rails 8.1.3.1+) blocks all untrusted loaders on boot,
+    # which breaks PDF thumbnails of Folio::File::Document.
+    config.folio_vips_unblocked_loaders = %w[VipsForeignLoadPdf]
     config.folio_public_page_title_reversed = false
     config.folio_using_traco = false
     config.folio_pages_audited = false
@@ -298,6 +302,34 @@ module Folio
           ]
         end
       end
+    end
+
+    initializer :folio_vips_unblock_loaders do |app|
+      app.config.after_initialize do
+        Folio::Engine.unblock_vips_loaders(app.config.folio_vips_unblocked_loaders)
+      end
+    end
+
+    def self.unblock_vips_loaders(loaders)
+      begin
+        require "vips"
+      rescue LoadError
+        return
+      end
+
+      return unless ::Vips.respond_to?(:block)
+
+      # Load Active Storage's vips setup first, so its Vips.block_untrusted(true)
+      # can't run later and block the loaders again.
+      if defined?(::ActiveStorage::Engine)
+        begin
+          require "active_storage/vips"
+        rescue LoadError
+          # Active Storage < 8.1.3.1 doesn't block anything
+        end
+      end
+
+      Array(loaders).each { |loader| ::Vips.block(loader, false) }
     end
 
     initializer :add_folio_embed_middleware do |app|
