@@ -1,0 +1,15 @@
+aside.f-c-group-by-day.small
+  .f-c-group-by-day__outer
+    .f-c-group-by-day__inner
+      strong.f-c-group-by-day__date
+        = l(@date, format: :console_group_by_day)
+
+      span.f-c-group-by-day__label
+        - if @label_lambda
+          = @label_lambda.call(count)
+        - else
+          = @before_label
+          strong<> = count
+          - if @klass
+            = @klass.model_name.human(count: count)
+          = @after_label
