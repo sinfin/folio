@@ -44,7 +44,7 @@ class MultiSelect extends React.PureComponent {
   }
 
   getFiles = () => {
-    this.props.dispatch(getFiles(this.props.fileType))
+    this.props.dispatch(getFiles(this.props.fileType, this.props.filesUrl))
   }
 
   changeFilesPage = (page) => {
