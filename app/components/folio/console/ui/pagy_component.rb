@@ -19,6 +19,13 @@ class Folio::Console::Ui::PagyComponent < Folio::Console::ApplicationComponent
     @pagy.present?
   end
 
+  # A class gets a new instance per render: pagination renders above and below the list, and ViewComponent
+  # instances are single-use. An instance from a host app still renders as before.
+  def middle_component
+    component = @options[:middle_component]
+    component.is_a?(Class) ? component.new : component
+  end
+
   def link
     @link ||= pagy_anchor(@pagy)
   end
