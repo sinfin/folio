@@ -66,6 +66,10 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- **ViewComponent 4.21+**: Folio no longer sets `config.view_component.capture_compatibility_patch_enabled`. The option has done nothing since ViewComponent 4.0, and 4.21 raises `ViewComponent::UnknownConfigOptionError` for it at boot, so host apps could not update past 4.20. The bundled `view_component` is now 4.25.0.
+
+- **Console file pagination**: The image and video indexes render a new `Folio::Console::Files::DisplayToggleComponent` in each pagination bar. They shared one instance, which ViewComponent 4.14+ refuses to render twice (`ViewComponent instances are single-use`). `Folio::Console::Ui::PagyComponent` accepts a component class as `options[:middle_component]` and builds it per render; an instance still works for a single render. The file controllers now put the class, not an instance, into `@pagy_options[:middle_component]`: a host app that renders that value itself must call `.new` on it.
+
 - **S3 upload replacing a file**: `Folio::Api::S3Controller#after` replaces the file given by `existing_id` only when the current user can `:update` that file. Anyone allowed to upload (including the public with `folio_direct_s3_upload_allow_public`) could previously overwrite any file by id. Host apps that scope `Folio::Current.ability` for their own uploaders must apply that ability to `after` too.
 
 - **File usage**: Allow child records to share a published parent's license in file pickers, validation and usage counts, including publication changes. Unsupported polymorphic parents report a configuration error.

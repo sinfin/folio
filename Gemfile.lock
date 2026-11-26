@@ -785,9 +785,10 @@ GEM
     vcr (6.3.1)
       base64
     version_gem (1.1.9)
-    view_component (4.1.0)
-      activesupport (>= 7.1.0, < 8.2)
-      concurrent-ruby (~> 1)
+    view_component (4.25.0)
+      actionview (>= 7.1.0)
+      activesupport (>= 7.1.0)
+      prism (>= 1.0)
     warden (1.2.9)
       rack (>= 2.0.9)
     webmock (3.26.1)
@@ -810,6 +811,7 @@ PLATFORMS
   arm64-darwin-22
   arm64-darwin-23
   arm64-darwin-24
+  arm64-darwin-25
   x86_64-linux
 
 DEPENDENCIES
