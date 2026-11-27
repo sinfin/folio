@@ -20,4 +20,20 @@ class Folio::Users::ComebacksControllerTest < ActionDispatch::IntegrationTest
     # Get there after sign in
     assert_redirected_to "/foo"
   end
+
+  test "show without to redirects to the root" do
+    create_and_host_site
+
+    get folio.users_comeback_path
+
+    assert_redirected_to main_app.root_path
+  end
+
+  test "show with an external to redirects to the root" do
+    create_and_host_site
+
+    get folio.users_comeback_path, params: { to: "https://example.com/" }
+
+    assert_redirected_to main_app.root_path
+  end
 end
