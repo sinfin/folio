@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_09_14_080656) do
+ActiveRecord::Schema[7.1].define(version: 2026_11_27_090000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -613,6 +613,8 @@ ActiveRecord::Schema[7.1].define(version: 2026_09_14_080656) do
     t.boolean "trust_browser", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "code_digest"
+    t.integer "code_attempts", default: 0, null: false
     t.index ["expires_at"], name: "index_folio_users_email_login_challenges_on_expires_at"
     t.index ["site_id"], name: "index_folio_users_email_login_challenges_on_site_id"
     t.index ["token_digest"], name: "index_folio_users_email_login_challenges_on_token_digest", unique: true

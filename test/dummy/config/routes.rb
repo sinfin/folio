@@ -29,6 +29,7 @@ Rails.application.routes.draw do
       post :prepare
       post :approve
       post :complete
+      post :verify_code
       post :resend
       delete :revoke_trusted_browsers
     end

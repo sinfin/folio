@@ -21,6 +21,24 @@
       .folio-loader::before
         animation: none
 
+  &__code
+    max-width: $folio-devise-narrow-max-width
+    margin-bottom: $spacer * 1.5
+
+    .form-control
+      flex: 1 1 8em
+      min-width: 0
+      font-variant-numeric: tabular-nums
+      letter-spacing: 0.15em
+
+    .invalid-feedback[hidden]
+      display: none !important
+
+  &__code-row
+    display: flex
+    flex-wrap: wrap
+    gap: $spacer * 0.5
+
   &__resend
     display: flex
     align-items: center

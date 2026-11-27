@@ -23,12 +23,14 @@ class Folio::Users::EmailLogin::ConfirmationComponentTest < Folio::ComponentTest
     assert_selector "button[type='button'][hidden][data-f-users-email-login-confirmation-target='continue']",
                     text: I18n.t("folio.users.email_login.continue"), visible: :all
     assert_selector "[role='status']", text: I18n.t("folio.users.email_login.preparing")
+    assert_no_text I18n.t("folio.users.email_login.code_elsewhere")
   end
 
   test "approval explains that the original browser will sign in" do
     render_inline(Folio::Users::EmailLogin::ConfirmationComponent.new(approved: true))
 
     assert_text I18n.t("folio.users.email_login.approved_instruction")
+    assert_text I18n.t("folio.users.email_login.code_elsewhere")
     assert_no_selector "form, script"
   end
 
@@ -37,6 +39,7 @@ class Folio::Users::EmailLogin::ConfirmationComponentTest < Folio::ComponentTest
 
     assert_selector "h1", text: I18n.t("folio.users.email_login.other_browser_title")
     assert_text I18n.t("folio.users.email_login.other_browser_instruction")
+    assert_text I18n.t("folio.users.email_login.code_elsewhere")
     assert_selector "a.btn[href='/users/email_login/new']", text: I18n.t("folio.users.email_login.sign_in_here")
     assert_no_text I18n.t("folio.users.email_login.approved_instruction")
     assert_no_selector "form, script"

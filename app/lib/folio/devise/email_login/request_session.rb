@@ -28,6 +28,8 @@ class Folio::Devise::EmailLogin::RequestSession
 
       record.state
     elsif data["anonymous"]
+      return "revoked" if data["revoked"]
+
       data["expires_at"].to_f > Time.current.to_f ? "waiting" : "expired"
     else
       "revoked"
@@ -67,6 +69,26 @@ class Folio::Devise::EmailLogin::RequestSession
     else
       raise Folio::Devise::EmailLogin::InvalidChallenge
     end
+  end
+
+  # Unknown addresses count attempts in the session so the response matches a real account.
+  # Returns :approved, :invalid or :revoked.
+  def verify_code!(code)
+    if record = challenge
+      record.verify_code!(code:, site:)
+    elsif data["anonymous"] && state == "waiting"
+      attempts = data["code_attempts"].to_i + 1
+      revoked = attempts >= Folio::Devise::EmailLogin::CODE_ATTEMPTS
+      request.session[Folio::Devise::EmailLogin::SESSION_KEY] = data.merge("code_attempts" => attempts, "revoked" => revoked)
+      revoked ? :revoked : :invalid
+    else
+      :revoked
+    end
+  end
+
+  def code_attempts_left
+    used = challenge&.code_attempts || data["code_attempts"].to_i
+    [Folio::Devise::EmailLogin::CODE_ATTEMPTS - used, 0].max
   end
 
   def resend_at

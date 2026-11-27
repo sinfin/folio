@@ -175,8 +175,9 @@ class Folio::Users::EmailLoginsControllerTest < ActionDispatch::IntegrationTest
         2.times { post main_app.complete_user_email_login_path }
         assert_equal %w[created approved completed], events.map { |event| event[:event] }
         events.each do |event|
-          assert_equal({ site_id: @site.id, purpose: "password", count: 1, kind: "counter" }, event.except(:event))
+          assert_equal({ site_id: @site.id, purpose: "password", count: 1, kind: "counter" }, event.except(:event, :via))
         end
+        assert_equal [nil, nil, "link"], events.map { |event| event[:via] }
         assert_not_includes events.to_json, token
         assert_not_includes events.to_json, controller.session[Folio::Devise::EmailLogin::SESSION_KEY]["browser_nonce"]
       end
@@ -1156,6 +1157,235 @@ class Folio::Users::EmailLoginsControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "the emailed code signs in the original browser while the device reading the email stays signed out" do
+    with_email_login do
+      start_password_login
+      code = delivery_code
+      challenge = @user.email_login_challenges.sole
+      phone = open_session
+      phone.host! @site.env_aware_domain
+
+      phone.post main_app.verify_code_user_email_login_path(format: :json), params: { email_login_code: code }, as: :json
+      phone.assert_response :unprocessable_entity
+      assert_nil phone.controller.warden.user(:user)
+      assert_nil challenge.reload.approved_at
+
+      post main_app.verify_code_user_email_login_path(format: :json), params: { email_login_code: code, trust_browser: "0" }, as: :json
+      assert_response :ok
+      assert_equal controller.after_sign_in_path_for(@user), response.parsed_body.dig("data", "url")
+      assert_equal @user, controller.warden.user(:user)
+      assert_equal 1, @user.reload.sign_in_count
+      assert_not_nil challenge.reload.consumed_at
+      assert_equal 0, challenge.code_attempts
+      assert_empty @user.trusted_browsers
+      assert_nil phone.controller.warden.user(:user)
+
+      assert_no_difference -> { @user.reload.sign_in_count } do
+        post main_app.verify_code_user_email_login_path(format: :json), params: { email_login_code: code }, as: :json
+      end
+      assert_response :ok
+      assert_equal controller.after_sign_in_path_for(@user), response.parsed_body.dig("data", "url")
+    end
+  end
+
+  test "a magic link completes with the code read in another app and records the code in metrics" do
+    events = []
+    with_email_login do
+      ActiveSupport::Notifications.subscribed(->(*args) { events << args.last }, "email_login.folio") do
+        post main_app.user_email_login_path, params: { user: { email: @user.email } }
+        post main_app.verify_code_user_email_login_path, params: { email_login_code: delivery_code }
+      end
+      assert_redirected_to controller.after_sign_in_path_for(@user)
+      assert_equal @user, controller.warden.user(:user)
+      assert_equal 1, @user.trusted_browsers.count
+      assert_equal [%w[created], %w[approved], %w[completed code]],
+                   events.map { |event| [event[:event], event[:via]].compact }
+      assert_equal %w[magic_link], events.map { |event| event[:purpose] }.uniq
+    end
+  end
+
+  test "codes with spaces, dashes or surrounding whitespace are accepted" do
+    with_email_login do
+      ["%s %s", "%s-%s", " %s\u2013%s\n"].each do |format|
+        post main_app.user_email_login_path, params: { user: { email: @user.email } }
+        code = delivery_code(job: enqueued_jobs.reverse.find { |job| job[:job] == Folio::Users::EmailLoginDeliveryJob })
+        post main_app.verify_code_user_email_login_path(format: :json),
+             params: { email_login_code: format(format, code[0, 3], code[3, 3]) }, as: :json
+        assert_response :ok
+        assert_equal @user, controller.warden.user(:user)
+        get main_app.destroy_user_session_path
+        travel Folio::Devise::EmailLogin::DELIVERY_WINDOW
+      end
+    end
+  end
+
+  test "a wrong code shows the error at the field without JavaScript and keeps the waiting page" do
+    with_email_login do
+      start_password_login
+      code = delivery_code
+      wrong = code.succ.last(6)
+
+      post main_app.verify_code_user_email_login_path, params: { email_login_code: wrong, trust_browser: "0" }
+      assert_response :unprocessable_entity
+      assert_select "input[name='email_login_code'].is-invalid[aria-invalid='true'][autofocus]"
+      assert_select "#email-login-code-error[role='alert']",
+                    text: I18n.t("folio.users.email_login.code_invalid", count: 4)
+      assert_select "[role='status']", text: I18n.t("folio.users.email_login.waiting")
+      assert_select "input[name='trust_browser'][type='checkbox']:not([checked])"
+      assert_select "input[name='email_login_code'][value]", count: 0
+      assert_nil controller.warden.user(:user)
+
+      post main_app.verify_code_user_email_login_path, params: { email_login_code: "12345" }
+      assert_select "#email-login-code-error", text: I18n.t("folio.users.email_login.code_format")
+      assert_equal 1, @user.email_login_challenges.sole.code_attempts
+
+      post main_app.verify_code_user_email_login_path, params: { email_login_code: code }
+      assert_redirected_to controller.after_sign_in_path_for(@user)
+      assert_equal @user, controller.warden.user(:user)
+      assert_empty @user.trusted_browsers
+    end
+  end
+
+  test "five wrong codes revoke the challenge so its link no longer works" do
+    with_email_login do
+      post main_app.user_email_login_path, params: { user: { email: @user.email } }
+      token = delivery_token
+      code = Folio::Devise::EmailLogin.code(token)
+      wrong = code.succ.last(6)
+      challenge = @user.email_login_challenges.sole
+
+      4.times do |index|
+        post main_app.verify_code_user_email_login_path(format: :json), params: { email_login_code: wrong }, as: :json
+        assert_response :unprocessable_entity
+        assert_equal I18n.t("folio.users.email_login.code_invalid", count: 4 - index), response.parsed_body["error"]
+        assert_equal "waiting", response.parsed_body.dig("data", "state")
+      end
+      post main_app.verify_code_user_email_login_path(format: :json), params: { email_login_code: wrong }, as: :json
+      assert_equal I18n.t("folio.users.email_login.code_locked", count: 5), response.parsed_body["error"]
+      assert_equal "revoked", response.parsed_body.dig("data", "state")
+      assert_not_nil challenge.reload.revoked_at
+
+      post main_app.verify_code_user_email_login_path(format: :json), params: { email_login_code: code }, as: :json
+      assert_response :unprocessable_entity
+      assert_equal 5, challenge.reload.code_attempts
+      post main_app.prepare_user_email_login_path, params: { email_login_token: token, approve: "1" }, as: :json
+      assert_response :unprocessable_entity
+      post main_app.resend_user_email_login_path
+      assert_response :unprocessable_entity
+      assert_nil controller.warden.user(:user)
+    end
+  end
+
+  test "unknown addresses answer wrong codes exactly like a real account" do
+    with_email_login do
+      unknown = open_session
+      unknown.host! @site.env_aware_domain
+      unknown.post main_app.user_email_login_path, params: { user: { email: "unknown@example.test" } }
+      post main_app.user_email_login_path, params: { user: { email: @user.email } }
+      wrong = delivery_code.succ.last(6)
+
+      5.times do
+        [self, unknown].each do |browser|
+          browser.post main_app.verify_code_user_email_login_path(format: :json), params: { email_login_code: wrong }, as: :json
+        end
+        assert_equal response.status, unknown.response.status
+        assert_equal response.parsed_body, unknown.response.parsed_body
+      end
+      unknown.get main_app.status_user_email_login_path(format: :json)
+      assert_equal "revoked", unknown.response.parsed_body.dig("data", "state")
+    end
+  end
+
+  test "a valid code from a browser without the pending challenge signs nobody in" do
+    with_email_login do
+      start_password_login
+      code = delivery_code
+      attacker = open_session
+      attacker.host! @site.env_aware_domain
+      other = create(:folio_user, auth_site: @site)
+      attacker.post main_app.user_email_login_path, params: { user: { email: other.email } }
+
+      attacker.post main_app.verify_code_user_email_login_path(format: :json), params: { email_login_code: code }, as: :json
+      attacker.assert_response :unprocessable_entity
+      assert_nil attacker.controller.warden.user(:user)
+      assert_nil @user.email_login_challenges.sole.approved_at
+      assert_equal 0, @user.email_login_challenges.sole.code_attempts
+    end
+  end
+
+  test "codes from a replaced email or after expiry fail with a clear message" do
+    with_email_login do
+      start_password_login
+      old_code = delivery_code
+      travel Folio::Devise::EmailLogin::RESEND_INTERVAL
+      clear_enqueued_jobs
+      post main_app.resend_user_email_login_path
+      new_code = delivery_code
+
+      post main_app.verify_code_user_email_login_path(format: :json), params: { email_login_code: old_code }, as: :json
+      assert_response :unprocessable_entity
+      assert_equal I18n.t("folio.users.email_login.code_invalid", count: 4), response.parsed_body["error"]
+
+      travel Folio::Devise::EmailLogin::CHALLENGE_LIFETIME
+      post main_app.verify_code_user_email_login_path, params: { email_login_code: new_code }
+      assert_response :unprocessable_entity
+      assert_select "#email-login-code-error", text: I18n.t("folio.users.email_login.code_expired")
+      assert_select "[role='status']", text: I18n.t("folio.users.email_login.expired")
+      assert_nil controller.warden.user(:user)
+    end
+  end
+
+  test "an opened link that cannot sign in this browser points to the code without revealing it" do
+    with_email_login do
+      start_password_login
+      token = delivery_token
+      phone = open_session
+      phone.host! @site.env_aware_domain
+      phone.post main_app.prepare_user_email_login_path, params: { email_login_token: token, approve: "1" }, as: :json
+      page = phone.response.parsed_body.fetch("data")
+      assert_includes page, I18n.t("folio.users.email_login.code_elsewhere")
+      assert_not_includes page, Folio::Devise::EmailLogin.code(token)
+
+      clear_enqueued_jobs
+      magic = open_session
+      magic.host! @site.env_aware_domain
+      magic.post main_app.user_email_login_path, params: { user: { email: create(:folio_user, auth_site: @site).email } }
+      magic_token = delivery_token
+      phone.post main_app.prepare_user_email_login_path, params: { email_login_token: magic_token, approve: "1" }, as: :json
+      page = phone.response.parsed_body.fetch("data")
+      assert_includes page, I18n.t("folio.users.email_login.other_browser_title")
+      assert_includes page, I18n.t("folio.users.email_login.code_elsewhere")
+      assert_not_includes page, Folio::Devise::EmailLogin.code(magic_token)
+
+      post main_app.prepare_user_email_login_path, params: { email_login_token: token, approve: "1" }, as: :json
+      assert_equal @user, controller.warden.user(:user)
+    end
+  end
+
+  test "a code for a sign-in that can no longer complete reports the finished state" do
+    with_email_login do
+      start_password_login
+      code = delivery_code
+      other = create(:folio_user, auth_site: @site)
+      sign_in other
+
+      post main_app.verify_code_user_email_login_path(format: :json), params: { email_login_code: code }, as: :json
+      assert_response :unprocessable_entity
+      assert_equal I18n.t("folio.users.email_login.invalid"), response.parsed_body["error"]
+      assert_equal "revoked", response.parsed_body.dig("data", "state")
+      assert_equal other, controller.warden.user(:user)
+    end
+  end
+
+  test "the code is filtered from logged parameters" do
+    with_email_login do
+      start_password_login
+      code = delivery_code
+      post main_app.verify_code_user_email_login_path, params: { email_login_code: code.succ.last(6) }
+      assert_equal "[FILTERED]", request.filtered_parameters["email_login_code"]
+    end
+  end
+
   private
     def with_failed_captcha
       callback = ->(controller) { controller.render json: { error: "CAPTCHA failed" }, status: :unprocessable_entity }
@@ -1190,6 +1420,10 @@ class Folio::Users::EmailLoginsControllerTest < ActionDispatch::IntegrationTest
 
     def start_password_login
       post main_app.user_session_path, params: { user: { email: @user.email, password: @password } }
+    end
+
+    def delivery_code(job: nil)
+      Folio::Devise::EmailLogin.code(delivery_token(job:))
     end
 
     def delivery_token(job: nil)

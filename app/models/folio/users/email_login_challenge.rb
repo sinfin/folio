@@ -54,6 +54,42 @@ class Folio::Users::EmailLoginChallenge < Folio::ApplicationRecord
     Folio::Devise::EmailLogin.instrument("approved", site_id:, purpose:) if approved
   end
 
+  def code_matches?(code)
+    code_digest.present? && code.is_a?(String) &&
+      ActiveSupport::SecurityUtils.secure_compare(code_digest, Folio::Devise::EmailLogin.code_digest(code, token_digest:))
+  end
+
+  def code_attempts_left
+    [Folio::Devise::EmailLogin::CODE_ATTEMPTS - code_attempts, 0].max
+  end
+
+  # Approves with the emailed code. Every wrong code uses up an attempt and the
+  # last one revokes the challenge, including its link. Returns :approved, :invalid or :revoked.
+  def verify_code!(code:, site:)
+    result = nil
+    approved = false
+    user.with_lock do
+      with_lock do
+        if !usable_for?(site)
+          result = :revoked
+        elsif code_matches?(code)
+          unless approved_at?
+            update!(approved_at: Time.current)
+            approved = true
+          end
+          result = :approved
+        else
+          increment(:code_attempts)
+          self.revoked_at = Time.current if code_attempts_left.zero?
+          save!
+          result = revoked_at? ? :revoked : :invalid
+        end
+      end
+    end
+    Folio::Devise::EmailLogin.instrument("approved", site_id:, purpose:) if approved
+    result
+  end
+
   def consume!(nonce:, site:)
     user.with_lock do
       with_lock do
@@ -88,6 +124,8 @@ end
 #  trust_browser          :boolean          default(TRUE), not null
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
+#  code_digest            :string
+#  code_attempts          :integer          default(0), not null
 #
 # Indexes
 #

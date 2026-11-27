@@ -1,6 +1,10 @@
 <p><%= @mail_instruction %></p>
 <p><%= link_to t("folio.users.email_login.confirm"), @email_login_url %></p>
 <p><%= link_to @email_login_url, @email_login_url %></p>
+<% if @email_login_code %>
+  <p><%= t("folio.users.email_login.mail_code") %></p>
+  <p style="font-size: 24px; font-weight: bold; letter-spacing: 4px;"><%= @email_login_code %></p>
+<% end %>
 <p><%= t("folio.users.email_login.mail_not_requested") %></p>
 <p><%= t("folio.users.email_login.mail_regards") %></p>
 <p><%= @site.title %></p>

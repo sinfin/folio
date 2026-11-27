@@ -25,6 +25,38 @@
     = t('folio.users.email_login.continue')
 
   = form_tag controller.main_app.complete_user_email_login_path, method: :post, data: completion_form_data, authenticity_token: helpers.form_authenticity_token do
+    .f-users-email-login-waiting__code
+      label.form-label for=self.class::CODE_INPUT_ID = t('folio.users.email_login.code_label')
+      .f-users-email-login-waiting__code-row
+        input[
+          type="text"
+          id=self.class::CODE_INPUT_ID
+          name="email_login_code"
+          class=(@code_error ? "form-control is-invalid" : "form-control")
+          inputmode="numeric"
+          autocomplete="one-time-code"
+          autocapitalize="off"
+          autocorrect="off"
+          spellcheck="false"
+          disabled=!waiting?
+          autofocus=(@code_error.present? && waiting?)
+          aria=code_input_aria
+          data=code_input_data
+        ]
+        = submit_tag t('folio.users.email_login.code_submit'),
+                     formaction: controller.main_app.verify_code_user_email_login_path,
+                     class: 'btn btn-primary',
+                     disabled: !waiting?,
+                     data: code_submit_data
+      .invalid-feedback.d-block[
+        id=self.class::CODE_ERROR_ID
+        role="alert"
+        hidden=@code_error.blank?
+        data=code_error_data
+      ]
+        = @code_error
+      small.form-text.d-block id=self.class::CODE_HINT_ID = t('folio.users.email_login.code_hint')
+
     .form-check.mb-3
       = hidden_field_tag :trust_browser, '0'
       = check_box_tag :trust_browser, '1', @trust_browser, class: 'form-check-input', id: 'email-login-trust-browser', data: trust_browser_data
