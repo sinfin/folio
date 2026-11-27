@@ -1,8 +1,11 @@
 ruby:
-  cache_clear_button = link_to(t('.clear_cache'),
-                               clear_cache_console_site_path,
-                               method: :post,
-                               class: 'btn btn-warning')
+  # Only for those who may clear the cache (administrators and superadmins), managers got a 403.
+  if can_now?(:clear_cache, Folio::Current.site)
+    cache_clear_button = link_to(t('.clear_cache'),
+                                 clear_cache_console_site_path,
+                                 method: :post,
+                                 class: 'btn btn-warning')
+  end
 
 = form_header f, right: cache_clear_button
 

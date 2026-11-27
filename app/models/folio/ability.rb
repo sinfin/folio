@@ -40,6 +40,7 @@ class Folio::Ability
       can :impersonate, Folio::User
       can :set_superadmin, Folio::User
       cannot [:create, :new, :destroy], Folio::Site
+      can :clear_cache, Folio::Site
 
       can :do_anything, Folio::PrivateAttachment
       can :do_anything, Folio::ConsoleNote
@@ -59,6 +60,7 @@ class Folio::Ability
         can :read_administrators, Folio::Site
         can :set_administrator, Folio::Site
         can :set_manager, Folio::Site
+        can :clear_cache, Folio::Site, { id: site.id }
 
       elsif user.has_role?(site:, role: :manager)
 
