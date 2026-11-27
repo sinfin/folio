@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Pages cached by `folio_run_unless_cached` render the head meta tags (`charset`, `X-UA-Compatible`, `viewport`) once; the cached head stored the whole output buffer of `layouts/folio/_head`, so the tags before it were repeated.
 - `GET /users/comeback` without a local `to` URL (e.g. from crawlers that drop the query string) redirects to the root page; it failed with `Cannot redirect to nil!`, or with an unsafe redirect error for other hosts.
 - Devise modal is accessible to screen readers: the dialog has `aria-modal="true"` and is labelled by the title of its visible part (sign in or registration), the titles are `h2` headings with the `.h4` look and the close buttons have an accessible name. `folio/modal.js` points `aria-labelledby` to the title of the dialog it opens.
 - React multi-select file pickers (file placements in console forms) load the list of files from their files URL; they requested `undefined` relative to the page, which ended with a 404.
