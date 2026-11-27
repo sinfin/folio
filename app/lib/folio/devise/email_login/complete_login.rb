@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Devise::EmailLogin::CompleteLogin
-  def self.call(controller, trust_browser: nil)
+  def self.call(controller, trust_browser: nil, via: "link")
     pending = Folio::Devise::EmailLogin::RequestSession.new(controller.request)
     challenge = pending.challenge
     raise Folio::Devise::EmailLogin::InvalidChallenge unless challenge
@@ -41,7 +41,7 @@ class Folio::Devise::EmailLogin::CompleteLogin
     path = Folio::Devise::EmailLogin.local_path(controller.after_sign_in_path_for(user), host: pending.request.host)
     path ||= controller.main_app.root_path
     controller.session["folio.email_login_completed_path"] = path
-    Folio::Devise::EmailLogin.instrument("completed", site_id: pending.site.id, purpose: challenge.purpose)
+    Folio::Devise::EmailLogin.instrument("completed", site_id: pending.site.id, purpose: challenge.purpose, via:)
     path
   end
 end

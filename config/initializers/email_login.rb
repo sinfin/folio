@@ -16,4 +16,4 @@ Warden::Manager.after_set_user except: :fetch do |user, warden, _options|
   end
 end
 
-Rails.application.config.filter_parameters += %i[email_login_token browser_nonce]
+Rails.application.config.filter_parameters += %i[email_login_token email_login_code browser_nonce]

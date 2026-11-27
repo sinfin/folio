@@ -19,6 +19,7 @@ class Folio::Devise::EmailLogin::IssueChallenge
   def call
     challenge = nil
     token = SecureRandom.hex(32)
+    token_digest = Folio::Devise::EmailLogin.digest(token)
 
     @user.with_lock do
       @user.authentication_site = @site
@@ -37,7 +38,8 @@ class Folio::Devise::EmailLogin::IssueChallenge
 
       challenge = @user.email_login_challenges.create!(site: @site,
                                                        purpose: @purpose,
-                                                       token_digest: Folio::Devise::EmailLogin.digest(token),
+                                                       token_digest:,
+                                                       code_digest: Folio::Devise::EmailLogin.code_digest(Folio::Devise::EmailLogin.code(token), token_digest:),
                                                        browser_nonce_digest: Folio::Devise::EmailLogin.digest(@nonce),
                                                        expires_at: Folio::Devise::EmailLogin::CHALLENGE_LIFETIME.from_now,
                                                        authentication_version: @user.email_authentication_version,

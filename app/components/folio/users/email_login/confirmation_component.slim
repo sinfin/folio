@@ -32,11 +32,13 @@
     = link_to t('folio.users.email_login.use_password'), controller.main_app.new_user_session_path
   - elsif @other_browser
     h1 = t('folio.users.email_login.other_browser_title')
+    p = t('folio.users.email_login.code_elsewhere')
     p = t('folio.users.email_login.other_browser_instruction')
     = link_to t('folio.users.email_login.sign_in_here'), controller.main_app.new_user_email_login_path, class: 'btn btn-primary'
   - elsif @approved
     h1 = t('folio.users.email_login.approved_title')
     p = t('folio.users.email_login.approved_instruction')
+    p = t('folio.users.email_login.code_elsewhere')
   - else
     h1 = t('folio.users.email_login.confirm')
     p = t('folio.users.email_login.mail_instruction', site: @challenge.site.title)

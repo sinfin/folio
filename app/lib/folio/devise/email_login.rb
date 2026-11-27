@@ -19,6 +19,9 @@ module Folio::Devise::EmailLogin
   RESEND_INTERVAL = 60.seconds
   DELIVERY_WINDOW = 15.minutes
   DELIVERY_LIMIT = 3
+  CODE_LENGTH = 6
+  CODE_FORMAT = /\A\d{#{CODE_LENGTH}}\z/
+  CODE_ATTEMPTS = 5
   SESSION_KEY = "folio.email_login"
   APPROVAL_SESSION_KEY = "folio.email_login_approval"
 
@@ -38,8 +41,34 @@ module Folio::Devise::EmailLogin
     Digest::SHA256.hexdigest(token)
   end
 
-  def self.instrument(event, site_id: nil, purpose: nil, count: 1, kind: "counter")
-    ActiveSupport::Notifications.instrument("email_login.folio", event:, site_id:, purpose:, count:, kind:)
+  # The emailed code is derived from the link token, so delivery needs no extra secret.
+  def self.code(token)
+    number = OpenSSL::HMAC.hexdigest("SHA256", code_key, "code:#{token}").to_i(16) % (10**CODE_LENGTH)
+    number.to_s.rjust(CODE_LENGTH, "0")
+  end
+
+  # Keyed so that a database dump alone cannot brute-force the short code.
+  def self.code_digest(code, token_digest:)
+    OpenSSL::HMAC.hexdigest("SHA256", code_key, "digest:#{token_digest}:#{code}")
+  end
+
+  # Accepts pasted codes with spaces or dashes, e.g. "123 456" or "123-456".
+  def self.normalize_code(value)
+    return unless value.is_a?(String) && value.bytesize <= 64 && value.valid_encoding?
+
+    code = value.gsub(/[[:space:]\-\u2010-\u2015]/, "")
+    code if code.match?(CODE_FORMAT)
+  end
+
+  def self.code_key
+    Rails.application.key_generator.generate_key("folio.email_login.code", 32)
+  end
+  private_class_method :code_key
+
+  def self.instrument(event, site_id: nil, purpose: nil, count: 1, kind: "counter", via: nil)
+    payload = { event:, site_id:, purpose:, count:, kind: }
+    payload[:via] = via if via
+    ActiveSupport::Notifications.instrument("email_login.folio", payload)
   end
 
   def self.local_path(value, host: nil)

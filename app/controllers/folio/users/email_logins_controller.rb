@@ -127,6 +127,27 @@ class Folio::Users::EmailLoginsController < DeviseController
     end
   end
 
+  # The emailed code completes the sign-in only in the browser that requested it,
+  # e.g. when the email is read on a phone or in a mail app's built-in browser.
+  def verify_code
+    raise Folio::Devise::EmailLogin::InvalidChallenge if pending.data.empty?
+
+    pending.trust_browser = Devise::TRUE_VALUES.include?(params[:trust_browser]) if params.key?(:trust_browser)
+    return render_code_verified(completed_path) if completed_path
+
+    code = Folio::Devise::EmailLogin.normalize_code(params[:email_login_code])
+    return render_code_error(I18n.t("folio.users.email_login.code_format")) unless code
+
+    case pending.verify_code!(code)
+    when :approved
+      render_code_verified(Folio::Devise::EmailLogin::CompleteLogin.call(self, trust_browser: pending.trust_browser, via: "code"))
+    when :invalid
+      render_code_error(I18n.t("folio.users.email_login.code_invalid", count: pending.code_attempts_left))
+    else
+      render_code_error(code_unavailable_message)
+    end
+  end
+
   def resend
     pending.trust_browser = Devise::TRUE_VALUES.include?(params[:trust_browser]) if params.key?(:trust_browser)
     pending.resend!
@@ -146,12 +167,39 @@ class Folio::Users::EmailLoginsController < DeviseController
   end
 
   private
-    def render_waiting(status: :ok)
+    def render_waiting(status: :ok, code_error: nil)
       render Folio::Users::EmailLogin::WaitingComponent.new(email: pending.data["email"], state: pending.state,
                                                           expires_at: pending.data["expires_at"],
                                                           resend_at: pending.resend_at.to_f,
                                                           trust_browser: pending.trust_browser,
-                                                          magic_link: magic_link_pending?), status:
+                                                          magic_link: magic_link_pending?,
+                                                          code_error:), status:
+    end
+
+    def render_code_verified(path)
+      if request.format.json?
+        render json: { data: { url: path } }
+      else
+        redirect_to path
+      end
+    end
+
+    def render_code_error(message)
+      if request.format.json?
+        render json: { error: message, data: { state: pending.state } }, status: :unprocessable_entity
+      else
+        render_waiting(status: :unprocessable_entity, code_error: message)
+      end
+    end
+
+    def code_unavailable_message
+      if pending.state == "expired"
+        I18n.t("folio.users.email_login.code_expired")
+      elsif pending.code_attempts_left.zero?
+        I18n.t("folio.users.email_login.code_locked", count: Folio::Devise::EmailLogin::CODE_ATTEMPTS)
+      else
+        I18n.t("folio.users.email_login.code_unavailable")
+      end
     end
 
     # Unknown addresses keep an anonymous magic-link session that must look like a known one.
@@ -249,7 +297,7 @@ class Folio::Users::EmailLoginsController < DeviseController
         render_component_json Folio::Users::EmailLogin::ConfirmationComponent.new(invalid: true), status: :unprocessable_entity
       elsif request.format.json?
         body = { error: I18n.t("folio.users.email_login.invalid") }
-        body[:data] = { state: "revoked" } if action_name == "status"
+        body[:data] = { state: "revoked" } if %w[status verify_code].include?(action_name)
         render json: body, status: :unprocessable_entity
       else
         render Folio::Users::EmailLogin::ConfirmationComponent.new(invalid: true), status: :unprocessable_entity

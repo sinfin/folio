@@ -57,8 +57,11 @@ class Folio::DeviseMailer < Devise::Mailer
       # Magic links work only in the requesting browser; password confirmations work on any device.
       instruction_key = challenge.purpose == "magic_link" ? "mail_instruction_magic_link" : "mail_instruction"
       @mail_instruction = t("folio.users.email_login.#{instruction_key}", site: @site.title)
+      # Challenges issued before codes existed have no code to verify against.
+      @email_login_code = Folio::Devise::EmailLogin.code(token) if challenge.code_digest?
       @data = { LOCALE: user_locale, USER_EMAIL_LOGIN_URL: @email_login_url,
                 EMAIL_LOGIN_INSTRUCTION: @mail_instruction,
+                EMAIL_LOGIN_CODE: @email_login_code,
                 REQUESTED_AT_TIME: l(challenge.created_at, format: :long),
                 VALID_UNTIL_TIME: l(challenge.expires_at, format: :long) }
       devise_mail(challenge.user, :email_login, site: @site)

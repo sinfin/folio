@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - Opt-in email login verification and magic links with explicit email approval on any device, sign-in only in the requesting browser, rolling 30-day browser trust, revocation, delivery limits, and cleanup. Email links require JavaScript and keep tokens in URL fragments until a CSRF-protected preparation POST. Waiting and confirmation pages show a progress spinner and offer "Continue" when completion or the redirect stalls for 5 seconds.
+- Email login emails carry a 6-digit code as an alternative to the link. Entering it on the waiting page signs in that browser (also without JavaScript), e.g. when the email is read on a phone or in a mail app's browser. Codes are bound to the requesting browser session, stored only as keyed digests, revoke the attempt after 5 wrong entries, and are filtered from logs. New `verify_code` route, `EMAIL_LOGIN_CODE` email template keyword and `via` metric field (`link` or `code`) on completion.
 
 - **Help Documents**: New feature for displaying Markdown documentation within the console interface
   - Configurable via `doc/help/index.yml` with support for categories, ordering, and custom paths

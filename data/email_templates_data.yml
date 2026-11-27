@@ -3,6 +3,7 @@
   optional_keywords:
     - USER_EMAIL
     - EMAIL_LOGIN_INSTRUCTION
+    - EMAIL_LOGIN_CODE
     - SITE_TITLE
     - REQUESTED_AT_TIME
     - VALID_UNTIL_TIME
@@ -19,6 +20,10 @@
 
     <p class="small"><a class="text-muted" href="{USER_EMAIL_LOGIN_URL}">{USER_EMAIL_LOGIN_URL}</a></p>
 
+    <p>Nebo zadejte tento kód v okně, ve kterém jste přihlášení zahájili:</p>
+
+    <p><strong style="font-size: 24px; letter-spacing: 4px;">{EMAIL_LOGIN_CODE}</strong></p>
+
     <p>Pokud jste si toto nevyžádali, ignorujte tento e-mail.</p>
 
     <p>S přátelským pozdravem</p>
@@ -31,6 +36,10 @@
 
     <p class="small"><a class="text-muted" href="{USER_EMAIL_LOGIN_URL}">{USER_EMAIL_LOGIN_URL}</a></p>
 
+    <p>Or enter this code in the window where you started signing in:</p>
+
+    <p><strong style="font-size: 24px; letter-spacing: 4px;">{EMAIL_LOGIN_CODE}</strong></p>
+
     <p>If you did not request this, please ignore this email.</p>
 
     <p>With kind regards,</p>
@@ -41,6 +50,8 @@
 
     {USER_EMAIL_LOGIN_URL}
 
+    Nebo zadejte tento kód v okně, ve kterém jste přihlášení zahájili: {EMAIL_LOGIN_CODE}
+
     Pokud jste si toto nevyžádali, ignorujte tento e-mail.
 
     S přátelským pozdravem
@@ -49,6 +60,8 @@
     {EMAIL_LOGIN_INSTRUCTION}
 
     {USER_EMAIL_LOGIN_URL}
+
+    Or enter this code in the window where you started signing in: {EMAIL_LOGIN_CODE}
 
     If you did not request this, please ignore this email.
 

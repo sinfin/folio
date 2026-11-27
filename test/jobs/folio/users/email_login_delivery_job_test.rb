@@ -44,6 +44,28 @@ class Folio::Users::EmailLoginDeliveryJobTest < ActiveJob::TestCase
     assert_equal 0, @user.reload.sign_in_count
   end
 
+  test "the email shows the sign-in code below the link but never in the subject" do
+    code = Folio::Devise::EmailLogin.code(@token)
+    assert_match(/\A\d{6}\z/, code)
+    assert @challenge.code_matches?(code)
+    assert_not_includes @challenge.attributes.values.map(&:to_s), code
+
+    assert_emails(1) { delivery_job(locale: "en").perform_now }
+    mail = ActionMailer::Base.deliveries.last
+    assert_not_includes mail.subject, code
+    body = mail.html_part&.decoded || mail.body.decoded
+    assert_includes body, "Or enter this code in the window where you started signing in:"
+    assert_operator body.index(code), :>, body.rindex(@token)
+  end
+
+  test "challenges issued without a code are delivered without one" do
+    @challenge.update_column(:code_digest, nil)
+    assert_emails(1) { delivery_job(locale: "en").perform_now }
+    body = ActionMailer::Base.deliveries.last.then { |mail| mail.html_part&.decoded || mail.body.decoded }
+    assert_not_includes body, Folio::Devise::EmailLogin.code(@token)
+    assert_not_includes body, "Or enter this code"
+  end
+
   test "debug mail logging cannot expose the sign-in proof" do
     output = StringIO.new
     logger = ActiveSupport::Logger.new(output)
