@@ -17,6 +17,18 @@ class Folio::Users::EmailLogin::WaitingComponentTest < Folio::ComponentTest
     assert_includes rendered_content, "user@example.test"
   end
 
+  test "progress spinner and continue button wait hidden for the script" do
+    render_inline(Folio::Users::EmailLogin::WaitingComponent.new(email: "user@example.test", state: "waiting",
+                                                              expires_at: 10.minutes.from_now.to_f,
+                                                              resend_at: 60.seconds.from_now.to_f))
+
+    assert_selector "[data-f-users-email-login-waiting-target='spinner'][aria-hidden='true'][hidden] .folio-loader",
+                    visible: :all
+    assert_selector "button[type='button'][hidden][data-f-users-email-login-waiting-target='continue']",
+                    text: I18n.t("folio.users.email_login.continue"), visible: :all
+    assert_includes rendered_content, I18n.t("folio.users.email_login.completing")
+  end
+
   test "password confirmations may use any device while magic links stay in this browser" do
     render_inline(Folio::Users::EmailLogin::WaitingComponent.new(email: "user@example.test", state: "waiting",
                                                               expires_at: 10.minutes.from_now.to_f,

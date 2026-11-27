@@ -2,12 +2,27 @@
   h1 = t('folio.users.email_login.waiting_title')
   p = t('folio.users.email_login.sent_to', email: @email)
   p = instruction
-  p[
-    role="status"
-    aria-live="polite"
-    data=status_data
+  .f-users-email-login-waiting__progress
+    span.f-users-email-login-waiting__spinner[
+      aria-hidden="true"
+      hidden=true
+      data=spinner_data
+    ]
+      span.folio-loader.folio-loader--tiny.folio-loader--transparent
+    p[
+      role="status"
+      aria-live="polite"
+      data=status_data
+    ]
+      = message
+
+  button[
+    type="button"
+    class="btn btn-primary mb-3"
+    hidden=true
+    data=continue_data
   ]
-    = message
+    = t('folio.users.email_login.continue')
 
   = form_tag controller.main_app.complete_user_email_login_path, method: :post, data: completion_form_data, authenticity_token: helpers.form_authenticity_token do
     .form-check.mb-3

@@ -1,5 +1,5 @@
 window.Folio.Stimulus.register('f-users-email-login-waiting', class extends window.Stimulus.Controller {
-  static targets = ['completionForm', 'check', 'status', 'resend', 'countdown', 'trustBrowser']
+  static targets = ['completionForm', 'check', 'status', 'resend', 'countdown', 'trustBrowser', 'spinner', 'continue']
   static values = {
     statusUrl: String,
     trustStorageKey: String,
@@ -9,7 +9,9 @@ window.Folio.Stimulus.register('f-users-email-login-waiting', class extends wind
     expiredMessage: String,
     invalidMessage: String,
     waitingMessage: String,
-    connectionErrorMessage: String
+    completingMessage: String,
+    connectionErrorMessage: String,
+    stalledAfter: { type: Number, default: 5000 }
   }
 
   connect () {
@@ -17,6 +19,10 @@ window.Folio.Stimulus.register('f-users-email-login-waiting', class extends wind
     this.stopped = false
     this.submitting = false
     this.checkTarget.hidden = true
+    this.continueTarget.hidden = true
+    this.completedUrl = null
+    window.clearTimeout(this.stallTimeout)
+    this.spinnerTarget.hidden = !['waiting', 'approved', 'consumed'].includes(this.stateValue)
     this.tick()
     if (this.stopped) return
     this.clock = window.setInterval(() => this.tick(), 1000)
@@ -44,6 +50,7 @@ window.Folio.Stimulus.register('f-users-email-login-waiting', class extends wind
 
   disconnect () {
     this.stop()
+    window.clearTimeout(this.stallTimeout)
   }
 
   stop () {
@@ -74,6 +81,7 @@ window.Folio.Stimulus.register('f-users-email-login-waiting', class extends wind
     if (waiting && Date.now() / 1000 >= this.expiresAtValue) {
       this.stateValue = 'expired'
       this.statusTarget.textContent = this.expiredMessageValue
+      this.spinnerTarget.hidden = true
       this.stop()
       this.resendTarget.disabled = true
       this.checkTarget.disabled = true
@@ -94,27 +102,50 @@ window.Folio.Stimulus.register('f-users-email-login-waiting', class extends wind
       this.stateValue = state
       if (url) {
         this.stop()
+        this.showCompleting()
+        this.completedUrl = url
         window.location.assign(url)
       } else if (state === 'approved') {
         this.submitting = true
         this.stop()
+        this.showCompleting()
         this.completionFormTarget.requestSubmit()
       } else if (state !== 'waiting') {
         this.statusTarget.textContent = state === 'expired' ? this.expiredMessageValue : this.invalidMessageValue
+        this.spinnerTarget.hidden = true
         this.stop()
         this.resendTarget.disabled = true
         this.checkTarget.disabled = true
       } else {
         this.statusTarget.textContent = this.waitingMessageValue
+        this.spinnerTarget.hidden = false
       }
     } catch (error) {
       if (!this.stopped && error.name !== 'AbortError') {
         this.statusTarget.textContent = this.connectionErrorMessageValue
+        this.spinnerTarget.hidden = true
         this.checkTarget.hidden = false
       }
     } finally {
       this.loading = false
       if (!this.stopped && !document.hidden) this.timeout = window.setTimeout(() => this.poll(), 3000)
+    }
+  }
+
+  // Offers a manual step when the redirect or completion request does not finish in time.
+  showCompleting () {
+    this.statusTarget.textContent = this.completingMessageValue
+    this.spinnerTarget.hidden = false
+    window.clearTimeout(this.stallTimeout)
+    this.stallTimeout = window.setTimeout(() => { this.continueTarget.hidden = false }, this.stalledAfterValue)
+  }
+
+  // Completion is idempotent: a completed sign-in in this browser redirects again.
+  continueSignIn () {
+    if (this.completedUrl) {
+      window.location.assign(this.completedUrl)
+    } else {
+      this.completionFormTarget.requestSubmit()
     }
   }
 })

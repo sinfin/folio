@@ -31,6 +31,7 @@ class Folio::Users::EmailLogin::WaitingComponent < Folio::ApplicationComponent
                                     expired_message: t("folio.users.email_login.expired"),
                                     invalid_message: t("folio.users.email_login.invalid"),
                                     waiting_message: t("folio.users.email_login.waiting"),
+                                    completing_message: t("folio.users.email_login.completing"),
                                     connection_error_message: t("folio.users.email_login.connection_error") },
                           action: { "visibilitychange@document" => "visibilityChanged",
                                     "pagehide@window" => "stop", "pageshow@window" => "pageShown",
@@ -48,6 +49,14 @@ class Folio::Users::EmailLogin::WaitingComponent < Folio::ApplicationComponent
 
     def status_data
       stimulus_target("status")
+    end
+
+    def spinner_data
+      stimulus_target("spinner")
+    end
+
+    def continue_data
+      stimulus_merge_data(stimulus_target("continue"), stimulus_action(click: "continueSignIn"))
     end
 
     def trust_browser_data

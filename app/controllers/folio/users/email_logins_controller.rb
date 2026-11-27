@@ -75,6 +75,10 @@ class Folio::Users::EmailLoginsController < DeviseController
       raise Folio::Devise::EmailLogin::InvalidChallenge unless token.is_a?(String) && token.match?(/\A[0-9a-f]{64}\z/)
 
       challenge = Folio::Users::EmailLoginChallenge.find_by(token_digest: Folio::Devise::EmailLogin.digest(token), site: pending.site)
+      # Retrying after a lost response must not turn a finished sign-in into an invalid link.
+      if challenge && pending.challenge&.id == challenge.id && (path = completed_path)
+        return render json: { data: { url: path } }
+      end
       raise Folio::Devise::EmailLogin::InvalidChallenge unless challenge&.usable_for?(pending.site)
       return render_magic_link_in_other_browser if magic_link_in_other_browser?(challenge)
 
